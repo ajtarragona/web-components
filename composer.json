@@ -1,0 +1,31 @@
+{
+    "name": "ajtarragona/web-components",
+    "description": "A collection of web components for your blade templates ",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Txomin Medrano Martorell",
+            "email": "tmedrano@tarragona.cat"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.0.0",
+        "laravel/framework": ">=5.6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ajtarragona\\WebComponents\\": "./src"
+        },
+        "files": [
+            "src/Helpers/html.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Ajtarragona\\WebComponents\\WebComponentsServiceProvider"
+            ]
+        }
+    }
+}

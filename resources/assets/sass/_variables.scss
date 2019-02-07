@@ -1,0 +1,175 @@
+// Lux 4.1.1
+// Bootswatch
+
+//
+// Color system
+//
+$grid-gutter-width : 30px !default;
+
+$white:    #fff !default;
+$gray-100: #f8f9fa !default;
+$gray-200: #f7f7f9 !default;
+$gray-300: #eceeef !default;
+$gray-400: #ced4da !default;
+$gray-500: #adb5bd !default;
+$gray-600: #919aa1 !default;
+$gray-700: #55595c !default;
+$gray-800: #343a40 !default;
+$gray-900: #1a1a1a !default;
+$black:    #000 !default;
+
+$blue:    #007bff !default;
+$indigo:  #6610f2 !default;
+$purple:  #6f42c1 !default;
+$pink:    #e83e8c !default;
+$red:     #d9534f !default;
+$orange:  #fd7e14 !default;
+$yellow:  #f0ad4e !default;
+$green:   #4BBF73 !default;
+$teal:    #20c997 !default;
+$cyan:    #1F9BCF !default;
+$tarragona : #bf002c !default;
+
+$primary:       $tarragona !default;
+$secondary:     $gray-700 !default;
+$success:       $green !default;
+$info:          $cyan !default;
+$warning:       $yellow !default;
+$danger:        $red !default;
+$light:         $gray-100 !default;
+$dark:          $gray-800 !default;
+
+$default-border-color: rgba($dark,0.08) !default;
+
+$yiq-contrasted-threshold:  185 !default;
+
+
+//transitions
+$transition-speed : 200ms ease-out !default;
+$transition-speed-slow : 400ms ease-out !default;
+$transition-speed-fast : 0.15s ease-in-out !default;
+// Body
+
+$body-bg:                 	$gray-100 !default;
+$body-color:                $gray-700 !default;
+
+// Components
+
+$border-radius:               0px !default;
+$border-radius-lg:            0px !default;
+$border-radius-sm:            0px !default;
+
+//HR
+$hr-border-color:          $default-border-color !default;
+
+
+// Fonts
+
+$font-family-sans-serif:      "Nunito Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
+
+$font-size-base:              0.875rem !default;
+
+$h1-font-size:                2rem !default;
+$h2-font-size:                1.75rem !default;
+$h3-font-size:                1.5rem !default;
+$h4-font-size:                1.25rem !default;
+$h5-font-size:                1rem !default;
+$h6-font-size:                0.75rem !default;
+
+$headings-font-weight:        400 !default;
+$headings-color:              $gray-900 !default;
+
+
+// Lists
+$list-group-border-color : $default-border-color !default;
+
+// Tables
+
+$table-border-color:          $default-border-color !default;
+$table-cell-padding:          1rem !default;
+$table-cell-padding-sm:       .5rem !default;
+
+// Buttons + Forms
+$input-btn-border-width:      1px !default;
+$input-border-color:      		$default-border-color !default;
+$input-focus-border-color:      $primary !default;
+$input-height: 			2.3rem;
+$input-border-width : 1px;
+
+$input-group-addon-bg : transparent;
+$input-group-addon-border-color : transparent;
+
+// Buttons
+
+$btn-line-height:             1.5rem !default;
+
+$input-btn-padding-y:         1.32rem !default;
+$input-btn-padding-x:         1rem !default;
+
+$input-btn-padding-y-sm:      .7rem !default;
+$input-btn-padding-x-sm:      .7rem !default;
+
+$input-btn-padding-y-lg:      1.55rem !default;
+$input-btn-padding-x-lg:      1.55rem !default;
+
+$btn-font-weight:             400 !default;
+
+// Forms
+
+$input-padding-y:                     0.4rem !default;
+$input-line-height:                     1.5rem !default;
+
+$input-bg:                              transparent !default; //$gray-200 !default;
+$input-disabled-bg:                     $gray-300 !default;
+
+$input-group-addon-bg:                  $gray-300 !default;
+
+$formgrouppadding: 3*$input-padding-y; //1rem !default;
+
+//selects bootstrapselect
+//$custom-select-focus-box-shadow: 0 0 0 0.2rem rgba(26, 26, 26, 0.25) !default;
+
+
+// Navbar
+
+$navbar-padding-y:                  1.5rem !default;
+
+$navbar-dark-hover-color:           $white !default;
+
+$navbar-light-color:                rgba($black,.3) !default;
+$navbar-light-hover-color:          $gray-900 !default;
+$navbar-light-active-color:         $gray-900 !default;
+
+$nav-tabs-border-color : 			  $default-border-color !default;
+$nav-tabs-link-active-bg:          	  $body-bg !default;
+$nav-tabs-link-active-border-color :  $nav-tabs-border-color $nav-tabs-border-color $nav-tabs-link-active-bg !default;
+
+//$nav-tabs-link-active-border-color :  $nav-tabs-border-color;
+// Pagination
+
+$pagination-border-color:           transparent !default;
+$pagination-bg:                     transparent !default;
+$pagination-disabled-bg:			$pagination-bg !default;
+$pagination-hover-border-color:     $pagination-border-color !default;
+
+$pagination-disabled-border-color:  $pagination-border-color !default;
+
+// Breadcrumbs
+
+$breadcrumb-bg:                     transparent !default;
+
+//Cards
+$card-cap-bg : 			$light;
+$card-border-color:      $default-border-color !default;
+
+
+
+
+
+//sidebar
+$dividerborder : 1px solid rgba($light,0.2) !default;
+$sidebarwidthclosed : 60px;
+$sidebarwidth : 300px;
+
+//toolbar
+$toolbarwidth: 80% !default;
