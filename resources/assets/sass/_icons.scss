@@ -1,0 +1,78 @@
+// Icons ======================================================================
+.icon{
+  display:inline-block;
+  vertical-align: middle;
+  position: relative;
+  top: -2px;
+
+  &.size-xs{ 
+    line-height: 19px;
+    font-size: 7pt;
+  }
+
+  &.size-sm{ 
+    line-height: 27px; 
+    font-size:8pt;
+  }
+
+  &.size-lg{  
+    font-size:20pt;
+    //vertical-align: sub;
+  }
+
+
+  &.size-xl{  
+   // vertical-align: middle;
+    font-size:30pt;
+  }
+}
+
+
+.circle-icon {
+	display:inline-block;
+	border-radius:500px;
+	width:32px;
+	height:32px;
+	line-height:32px;
+	overflow:hidden;
+	text-align: center;
+	vertical-align: middle;
+	font-size:11pt;
+
+	&.size-xs{ 
+	  width: 16px;
+	  height: 16px;
+	  line-height: 19px;
+	  font-size: 7pt;
+	  &:before{
+	  	position:relative;
+	  	top:-2px;
+	  }
+	}
+
+	&.size-sm{ 
+	  width: 24px;
+	  height: 24px;
+	  line-height: 27px; 
+	  font-size:8pt;
+	  &:before{
+	  	position:relative;
+	  	top:-2px;
+	  }
+	}
+
+	&.size-lg{  
+	  width: 48px;
+	  height: 48px;
+	  line-height: 48px; 
+	  font-size:20pt;
+	}
+
+
+	&.size-xl{  
+	  width: 64px;
+	  height: 64px;
+	  line-height: 64px; 
+	  font-size:30pt;
+	}
+}

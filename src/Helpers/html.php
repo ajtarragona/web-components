@@ -1,6 +1,12 @@
 <?php
+
 use Ajtarragona\WebComponents\Models\WebComponent;
-use Ajtarragona\WebComponents\Facades\Icon;
+use Ajtarragona\WebComponents\Models\Icon;
+use Ajtarragona\WebComponents\Models\Input;
+use Ajtarragona\WebComponents\Models\Textarea;
+use Ajtarragona\WebComponents\Models\Select;
+use Ajtarragona\WebComponents\Models\Checkbox;
+use Ajtarragona\WebComponents\Models\Radio;
 
 
 if (! function_exists('html_attributes')) {
@@ -11,18 +17,77 @@ if (! function_exists('html_attributes')) {
 
 
 if (! function_exists('icon')) {
-	function icon($iconname,$attributes=[]){
-		return Icon::icon($iconname,$attributes)->render();
+	function icon($iconname,$attributes=[],$data=[]){
+		$icon=new Icon($iconname,$attributes,$data);
+		return $icon->render();
 	}
 }
 
 
 if (! function_exists('circleicon')) {
-	function circleicon($iconname,$attributes=[]){
+	function circleicon($iconname,$attributes=[],$data=[]){
 		$attributes["circle"]=true;
-		return Icon::icon($iconname,$attributes)->render();
+		$icon=new Icon($iconname,$attributes,$data);
+		return $icon->render();
 	}
 }
+
+
+
+if (! function_exists('input')) {
+	function input($attributes=[],$data=[]){
+		$ret = new Input($attributes,$data);
+		return $ret->render();
+	}
+}
+
+
+
+if (! function_exists('textarea')) {
+	function textarea($attributes=[],$data=[]){
+		$ret = new Textarea($attributes,$data);
+		return $ret->render();
+	}
+}
+
+
+
+if (! function_exists('select')) {
+	function select($attributes=[],$data=[]){
+		$ret = new Select($attributes,$data);
+		return $ret->render();
+	}
+}
+
+
+
+if (! function_exists('checkbox')) {
+	function checkbox($attributes=[],$data=[]){
+		$ret = new Checkbox($attributes,$data);
+		return $ret->render();
+	}
+}
+
+
+if (! function_exists('radio')) {
+	function radio($attributes=[],$data=[]){
+		$ret = new Radio($attributes,$data);
+		return $ret->render();
+	}
+}
+
+if (! function_exists('checkboxes')) {
+	function checkboxes($attributes=[],$data=[]){
+		//return HtmlHelper::checkboxes($attributes,$data);
+	}
+}
+
+if (! function_exists('radios')) {
+	function radios($attributes=[],$data=[]){
+		//return HtmlHelper::radios($attributes,$data);
+	}
+}
+
 
 /*
 if (! function_exists('navitem')) {
@@ -45,55 +110,6 @@ if (! function_exists('crumb')) {
 }
 
 
-
-if (! function_exists('input')) {
-	function input($args){
-		return HtmlHelper::input($args);
-	}
-}
-
-
-
-if (! function_exists('textarea')) {
-	function textarea($args){
-		return HtmlHelper::textarea($args);
-	}
-}
-
-
-
-if (! function_exists('select')) {
-	function select($args){
-		return HtmlHelper::select($args);
-	}
-}
-
-
-
-if (! function_exists('checkbox')) {
-	function checkbox($args){
-		return HtmlHelper::checkbox($args);
-	}
-}
-
-
-if (! function_exists('radio')) {
-	function radio($args){
-		return HtmlHelper::radio($args);
-	}
-}
-
-if (! function_exists('checkboxes')) {
-	function checkboxes($args){
-		return HtmlHelper::checkboxes($args);
-	}
-}
-
-if (! function_exists('radios')) {
-	function radios($args){
-		return HtmlHelper::radios($args);
-	}
-}
 
 if (! function_exists('pagination')) {
 	function pagination($args){

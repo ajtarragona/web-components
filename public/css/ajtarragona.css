@@ -10491,3 +10491,78 @@ a.text-dark:focus {
   }
 }
 
+.icon {
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  top: -2px;
+}
+
+.icon.size-xs {
+  line-height: 19px;
+  font-size: 7pt;
+}
+
+.icon.size-sm {
+  line-height: 27px;
+  font-size: 8pt;
+}
+
+.icon.size-lg {
+  font-size: 20pt;
+}
+
+.icon.size-xl {
+  font-size: 30pt;
+}
+
+.circle-icon {
+  display: inline-block;
+  border-radius: 500px;
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  overflow: hidden;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 11pt;
+}
+
+.circle-icon.size-xs {
+  width: 16px;
+  height: 16px;
+  line-height: 19px;
+  font-size: 7pt;
+}
+
+.circle-icon.size-xs:before {
+  position: relative;
+  top: -2px;
+}
+
+.circle-icon.size-sm {
+  width: 24px;
+  height: 24px;
+  line-height: 27px;
+  font-size: 8pt;
+}
+
+.circle-icon.size-sm:before {
+  position: relative;
+  top: -2px;
+}
+
+.circle-icon.size-lg {
+  width: 48px;
+  height: 48px;
+  line-height: 48px;
+  font-size: 20pt;
+}
+
+.circle-icon.size-xl {
+  width: 64px;
+  height: 64px;
+  line-height: 64px;
+  font-size: 30pt;
+}
+

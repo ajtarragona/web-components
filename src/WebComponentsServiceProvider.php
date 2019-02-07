@@ -52,7 +52,6 @@ class WebComponentsServiceProvider extends ServiceProvider
             return "<pre><?php (new \Illuminate\Support\Debug\Dumper)->dump({$param}); ?></pre>";
         });
 
-
         
         Blade::directive('icon', function($expression) {
             return "<?php echo icon({$expression}); ?>";
@@ -63,20 +62,6 @@ class WebComponentsServiceProvider extends ServiceProvider
             return "<?php echo circleicon({$expression}); ?>";
         });
 
-
-
-/*
-        Blade::directive('navitem', function($expression) {
-            return "<?php echo navitem({$expression}); ?>";
-        });
-
-        Blade::directive('nav', function($expression) {
-            return "<?php echo nav({$expression}); ?>";
-        });
-
-        Blade::directive('crumb', function($expression) {
-            return "<?php echo crumb({$expression}); ?>";
-        });
 
         Blade::directive('input', function($expression) {
             return "<?php echo input({$expression}); ?>";
@@ -105,6 +90,22 @@ class WebComponentsServiceProvider extends ServiceProvider
             return "<?php echo radios({$expression}); ?>";
         });
         
+
+
+/*
+        Blade::directive('navitem', function($expression) {
+            return "<?php echo navitem({$expression}); ?>";
+        });
+
+        Blade::directive('nav', function($expression) {
+            return "<?php echo nav({$expression}); ?>";
+        });
+
+        Blade::directive('crumb', function($expression) {
+            return "<?php echo crumb({$expression}); ?>";
+        });
+
+       
         Blade::directive('pagination', function($expression) {
             return "<?php echo pagination({$expression}); ?>";
         });
@@ -147,6 +148,7 @@ class WebComponentsServiceProvider extends ServiceProvider
     public function register()
     {
         
+      
 
         //defino facades
         $this->app->bind('webcomponent', function(){

@@ -7,73 +7,27 @@ class Icon Extends WebComponent
 
 	private $iconname;
 	
-
-	private static function getIconHTML($text=false, $icon=false, $options=false){
-		$iconposition="left";
-		$iconcode="";
-		$iconsize="md";
-		$iconcolor="";
-
-		$ret="";
-		//dump($options);
-
-		if(isset($icon) && $icon){
-	
-			if(isset($options->iconposition)) $iconposition=$options->iconposition;
-			if(isset($options->iconsize)) $iconsize=$options->iconsize;
-			if(isset($options->iconcolor)){
-				$iconcolor=$options->iconcolor;
-			}
-
-			if($iconposition == "top" || $iconposition == "bottom") $iconcode.="<div class='btn-icon nav-icon p-a-sm '>";
-			else $iconcode.="<span class='btn-icon nav-icon'>";
-			if(isset($options->circleicon) && $options->circleicon){
-				$iconcode.=self::circleicon($icon,['color'=>$iconcolor,'size'=>$iconsize]);
-			}else{
-				$iconcode.=self::icon($icon,['color'=>$iconcolor]);
-			}
-			if($iconposition == "top" || $iconposition == "bottom") $iconcode.="</div>";
-			else $iconcode.="</span>";
-				
-		}
-
-		if($iconposition == "top" || $iconposition == "bottom") $ret.="<div class='text-center'>";
-		if($iconposition == "left" || $iconposition == "top") $ret.=$iconcode." ";
-		
-		if(isset($text) && $text) $ret.=' <span class="button-text nav-text">'.$text.'</span> ';
-
-		if($iconposition == "right" || $iconposition == "bottom") $ret.=" ".$iconcode;
-		if($iconposition == "top" || $iconposition == "bottom") $ret.="</div>";
-
-		return $ret;
-
-	}
+	protected $defaults=[
+		'class'=>'icon',
+		'style'=>'',
+		'size' =>'md',
+		'color'=>false,
+		'bg-color'=>false,
+		'circle'=>false
+	];
 
 
-	public function icon($iconname,$attributes=[]){
-		$defaults=[
-			'class'=>'icon',
-			'style'=>'',
-			'size' =>'md',
-			'color'=>false,
-			'bg-color'=>false,
-			'circle'=>false
-		];
-
+	public function __construct($iconname,$attributes=[],$data=[]){
+		parent::__construct($attributes,$data);
 		$this->iconname=$iconname;
-		$this->attributes=array_merge($defaults,$attributes);
-
-
-
-		return $this;
+		$this->prepareAttributes($this->attributes);
 	}
 	
 
-
-    public function render(){
-    	if(!$this->isVisible()) return;
-
-    	$classes=[];
+	protected function prepareAttributes($args){
+		parent::prepareAttributes($args);
+		
+		$classes=[];
     	$cssstyle=[];
 
     	$type="fas";
@@ -143,14 +97,58 @@ class Icon Extends WebComponent
 		
 		$this->attributes["class"] = implode(" ",$classes)." ".$this->attributes["class"];
 
+	}
 
-		$icon ='<i '.$this->renderAttributes(["size","color","bg-color","type","circle"]).' ></i>';
-		
 
+    public function render(){
+    	
+    	if(!$this->isVisible()) return;
+
+		$icon ='<i '.$this->renderAttributes(["size","color","bg-color","type","circle"]).' '.$this->renderData().'></i>';
 		
 		return $icon;
 	}
 
+	/*private static function getIconHTML($text=false, $icon=false, $options=false){
+		$iconposition="left";
+		$iconcode="";
+		$iconsize="md";
+		$iconcolor="";
+
+		$ret="";
+		//dump($options);
+
+		if(isset($icon) && $icon){
+	
+			if(isset($options->iconposition)) $iconposition=$options->iconposition;
+			if(isset($options->iconsize)) $iconsize=$options->iconsize;
+			if(isset($options->iconcolor)){
+				$iconcolor=$options->iconcolor;
+			}
+
+			if($iconposition == "top" || $iconposition == "bottom") $iconcode.="<div class='btn-icon nav-icon p-a-sm '>";
+			else $iconcode.="<span class='btn-icon nav-icon'>";
+			if(isset($options->circleicon) && $options->circleicon){
+				$iconcode.=self::circleicon($icon,['color'=>$iconcolor,'size'=>$iconsize]);
+			}else{
+				$iconcode.=self::icon($icon,['color'=>$iconcolor]);
+			}
+			if($iconposition == "top" || $iconposition == "bottom") $iconcode.="</div>";
+			else $iconcode.="</span>";
+				
+		}
+
+		if($iconposition == "top" || $iconposition == "bottom") $ret.="<div class='text-center'>";
+		if($iconposition == "left" || $iconposition == "top") $ret.=$iconcode." ";
+		
+		if(isset($text) && $text) $ret.=' <span class="button-text nav-text">'.$text.'</span> ';
+
+		if($iconposition == "right" || $iconposition == "bottom") $ret.=" ".$iconcode;
+		if($iconposition == "top" || $iconposition == "bottom") $ret.="</div>";
+
+		return $ret;
+
+	}*/
 
 
 

@@ -9,7 +9,8 @@ class WebComponent
 
 	public $attributes;
 	public $data;
-
+	protected $defaults=[];
+	
 	public function __construct($attributes=[],$data=[]){
 		$this->attributes=$attributes;
 		$this->data=$data;
@@ -34,6 +35,11 @@ class WebComponent
 		return $ret;//uniqid($prefix?$prefix."-":false);
 	}
 
+
+	protected function prepareAttributes($args){
+		$this->attributes=array_merge($this->defaults,$args);
+	}
+
     protected function renderAttributes($excluded=[]) {
     	return self::html_attributes($this->attributes,false,$excluded);
     }
@@ -43,7 +49,10 @@ class WebComponent
     }
 
     protected function isVisible(){
-    	return !isset($attributes["visible"]) || (isset($attributes["visible"]) && $attributes["visible"]);
+    	if(isset($this->attributes["visible"])){
+    		return $this->attributes["visible"];
+    	} 
+    	return true;
     }
 
     public static function html_attributes($array=false, $prefix=false,$excluded=[]) {
