@@ -1,0 +1,182 @@
+/*
+ * typeahead 
+ * 
+ */
+
+
+.tt-hint{
+  opacity:.5 !important;
+}
+.tt-input{
+    &:focus{
+        outline:none;
+        box-shadow:none !important;
+    }
+}
+
+.tt-value{
+    background-color: $gray-100;
+    padding-left:0em;
+    padding-right:0em;
+    text-align:center;
+        
+    &:focus{
+        outline:none;
+        box-shadow:none !important;
+    }
+}
+
+.tt-menu {
+  min-width: 300px;
+  max-width: 100%;
+  margin: 0px;
+  padding: 0px 0;
+  background-color: $white;
+  border: 1px solid $border-color;
+  box-shadow: $box-shadow-sm;
+}
+
+.tt-suggestion {
+  padding: 3px 20px;
+  font-size: 14px;
+  line-height: 24px;
+}
+
+.tt-suggestion:hover {
+  cursor: pointer;
+  color: $white;
+  background-color: $primary;
+}
+
+.tt-suggestion.tt-cursor {
+  color: $white;
+  background-color: $primary;
+
+}
+
+.tt-suggestion p {
+  margin: 0;
+}
+
+
+
+
+
+.twitter-typeahead{
+    display:block !important;
+    width: 100%;
+
+}
+
+
+.twitter-typeahead .deselect-btn{
+  position:absolute;
+  right:1em;
+  top:0;
+  line-height:1.5em;
+  display:inline-block;
+  padding:.5em;
+  z-index:2;
+  cursor:pointer;
+}
+
+
+.twitter-typeahead[class*='btn-'] .deselect-btn{
+  color:$white;
+}
+
+
+.form-group .input-icon.icon-right + .twitter-typeahead  .deselect-btn{
+  right:4em;
+}
+
+.twitter-typeahead .deselect-btn:hover{
+  color:$primary;
+}
+
+.bootstrap-tagsinput {
+  width:100%;
+  display: inline-block;
+  background-image: none;
+  background-color: transparent;
+  border-color: transparent;
+  border-radius: 0px;
+  
+  vertical-align: middle;
+  max-width: 100%;
+  cursor: text;
+  box-shadow: none;
+ 
+  padding:0;
+
+  &:focus{
+    outline: 0;
+    box-shadow: none
+  }
+
+  .twitter-typeahead{
+      /*display:inline-block !important;
+      width:auto;*/
+
+  }
+
+
+   input {
+    border: none;
+    box-shadow: none;
+    outline: none;
+    background-color: transparent;
+    padding: 0.4rem 1rem;
+    margin: 0;
+    width: 100% !important;
+    max-width: inherit;
+    display:block;
+     
+  }
+   input::-moz-placeholder {
+    color: #cccccc;
+    opacity: 1;
+  }
+   input:-ms-input-placeholder {
+    color: #cccccc;
+  }
+   input::-webkit-input-placeholder {
+    color: #cccccc;
+  }
+
+   input:focus {
+    
+    box-shadow: none;
+    border-color:#bf002c;
+  }
+  .tag {
+    margin-right: 0px;
+    margin-bottom: 0px;
+    color: $gray-700;
+    font-size:1em;
+    display:block;
+    padding: 0.4rem 1rem;
+    // float:left;
+    background-color:transparent;
+    border-top:1px solid rgba($gray-700,0.1);
+    &:first-child{
+      border-top-width:0px;
+
+    }
+  }
+  .tag [data-role="remove"] {
+    margin-left: 8px;
+    cursor: pointer;
+    float:right;
+  }
+  .tag [data-role="remove"]:after {
+    content: "x";
+    padding: 0px 2px;
+  }
+  .tag [data-role="remove"]:hover {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+  .tag [data-role="remove"]:hover:active {
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  }
+}

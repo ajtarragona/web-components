@@ -21,6 +21,7 @@
 		@if($renderhelper)
 			<input type="hidden" name="{{$name}}" value="0" />
 		@endif
+
 		<input 
 			type="checkbox" 
 			name="{{$name}}" 
@@ -28,9 +29,10 @@
 			@istrue($checked ,'checked="true"') 
 			@istrue($disabled ,'disabled="true"') 
 			@istrue($readonly ,'readonly="true"')
-			class="custom-control-input" value="{{$value}}" 
-			{!! html_attributes(isset($attributes)?$attributes:false) !!}
-	   		{!! html_attributes(isset($data)?$data:false,'data') !!}
+			class="custom-control-input"
+			 value="{{$value}}" 
+			{!! renderAttributes($attributes, $hiddenattributes) !!} 
+			{!! renderData($data) !!}
 		/>
 
 		

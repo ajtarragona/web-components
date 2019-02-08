@@ -1,0 +1,29 @@
+
+
+//iconpicker
+
+.iconpicker-popover.fade.in{
+    opacity: 1;
+}
+
+
+.file-preview{
+	border-width: 0px;
+	margin-top:-1em;
+	.fileinput-remove{
+		right:0.5em;
+		top: -0.2em;
+	}
+	.file-drop-zone{
+		border-color:$border-color;
+		border-radius:$border-radius;
+		.file-drop-zone-title{
+			color:$gray-400;
+			font-size:1.2em;
+		}
+	}
+}
+
+.bootstrap-touchspin .input-group-btn-vertical{
+	z-index:9;
+}

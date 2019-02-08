@@ -26,8 +26,8 @@
 		@istrue($readonly ,'readonly="true"')
 		class="custom-control-input " 
 		value="{{$value }}"
-		 {!! html_attributes(isset($attributes)?$attributes:false) !!}
-   		{!! html_attributes(isset($data)?$data:false,'data') !!}
+		{!! renderAttributes($attributes, $hiddenattributes) !!} 
+		{!! renderData($data) !!}
 	/>
 
 	@isset($label)

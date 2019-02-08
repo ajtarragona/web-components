@@ -1,0 +1,53 @@
+.map-container{
+	margin-bottom:0.5rem;
+}
+.google-map{
+	min-height:350px;
+	// height:100%;
+	width:100%;
+
+	border:1px solid $border-color;
+	background-color:$white;
+}
+
+.pac-container {
+	z-index: 2000;
+    position: fixed;
+    display: inline-block;
+    float: left;
+}
+
+.pac-item{
+	border-width:0;
+	//font-family:$font-family-sans-serif;
+	font-size:1em;
+	padding:.3em .5em;
+	
+	&:hover{
+		background-color: rgba($primary,0.1);
+	}
+
+	.pac-item-query{
+		font-size:1em;
+		//font-weight:700;
+	
+	}
+	.pac-matched{
+		color:$primary;
+	}
+
+	&.pac-item-selected{
+		background-color: rgba($primary,1);
+		color:$white;
+
+		.pac-icon{
+			color:rgba($white,0.6);
+		}
+		.pac-item-query	{
+			color:$white;
+		}
+		.pac-matched{
+			color:$white;
+		}
+	}
+}

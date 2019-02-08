@@ -15,8 +15,8 @@
 	'class'=>$containerclass
 ])
 
-	@include('ajtarragona-web-components::bootstrap.forms.icon')
-
+	@include('ajtarragona-web-components::bootstrap.forms.inputicon')
+	
 	<input 
 		id="{{$id}}"
 	    type="{{ $type }}" 
@@ -31,8 +31,8 @@
 		placeholder="{{ $placeholder }}" 
 		
 
-		{!! html_attributes(isset($attributes)?$attributes:false) !!}
-   		{!! html_attributes(isset($data)?$data:false,'data') !!}
+		{!! renderAttributes($attributes, $hiddenattributes) !!} 
+		{!! renderData($data) !!}
 
 	/>
 	@include('ajtarragona-web-components::bootstrap.forms.helptext')

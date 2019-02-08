@@ -1,41 +1,76 @@
 @extends('ajtarragona-web-components::layout/master')
 
 @section('title')
-	Kitchen Sink
+	@lang('Kitchen Sink')
 @endsection
-
+{{-- 
 
 @section('breadcrumb')
-    bread
+    @breadcrumb(["attributes"=>["pepe"=>"poop"], 'data'=>["caaca"=>43]])
+    	@crumb(['name'=>__("Home"),"url"=>route('home'),'icon'=>'home'])
+		@crumb(['name'=>__("Kitchen Sink"),'icon'=>'vial'])
+	@endbreadcrumb
+
+	
 @endsection
-              
-@section('actions')
-	actions
-@endsection
+               --}}
 
 @section('body')
-	<h1>Icons</h1>
-	<div>
-		xs: @icon("star",['size'=>'xs','color'=>'success','visible'=>true],['datos'=>"123"])
-		sm: @icon("star",['size'=>'sm','color'=>'info'])
-		default: @icon("star")
-		lg: @icon("star",['size'=>'lg','color'=>'danger'])
-		xl: @icon("star",['size'=>'xl','color'=>'warning','bg-color'=>"secondary"])
-	</div>
+	
+	
+	@row
+	
+		@col(['size'=>2])
+			@list(['flush'=>false,'class'=>'scrollspied sticky-top py-3','id'=>'kitchen-menu'])
+				@li(['href'=>'#kitchen-alerts']) Alerts @icon('chevron-right',['class'=>'float-right mt-1']) @endli
+				@li(['href'=>'#kitchen-badges']) Badges @icon('chevron-right',['class'=>'float-right mt-1']) @endli
+				@li(['href'=>'#kitchen-icons']) Icons @icon('chevron-right',['class'=>'float-right mt-1']) @endli
+				@li(['href'=>'#kitchen-lists']) Lists @icon('chevron-right',['class'=>'float-right mt-1']) @endli
+				@li(['href'=>'#kitchen-tables']) Tables @icon('chevron-right',['class'=>'float-right mt-1']) @endli
+				@li(['href'=>'#kitchen-tabs']) Tabs @icon('chevron-right',['class'=>'float-right mt-1']) @endli
+				@li(['href'=>'#kitchen-cards'])	Cards @icon('chevron-right',['class'=>'float-right mt-1']) @endli
+				@li(['href'=>'#kitchen-buttons']) Buttons @icon('chevron-right',['class'=>'float-right mt-1'])  @endli
+				@li(['href'=>'#kitchen-forms']) Forms @icon('chevron-right',['class'=>'float-right mt-1'])  @endli	
+				@li(['href'=>'#kitchen-navs']) Navs @icon('chevron-right',['class'=>'float-right mt-1']) @endli
+				@li(['href'=>'#kitchen-modals']) Modals @icon('chevron-right',['class'=>'float-right mt-1'])  @endli
+			@endlist
+		@endcol
 
-	<div>
-		xs: @circleicon("star",['size'=>'xs','bg-color'=>'success','color'=>'white'])
-		sm: @circleicon("star",['size'=>'sm','bg-color'=>'info','color'=>'white'])
-		default: @circleicon("star",['bg-color'=>'primary','color'=>'white'])
-		lg: @circleicon("star",['size'=>'lg','bg-color'=>'danger','color'=>'white'])
-		xl: @circleicon("star",['size'=>'xl','bg-color'=>'rgba(100,40,60,0.5)','color'=>"#ffffff"])
-		
-	</div>
 
+		@col(['size'=>10])
+			@include('ajtarragona-web-components::kitchen.alerts')	
+			
+			
+			@include('ajtarragona-web-components::kitchen.badges')	
+			
+			@include('ajtarragona-web-components::kitchen.icons')	
+				
+			
+			@include('ajtarragona-web-components::kitchen.lists')
+			
+			
+			{{-- @include('ajtarragona-web-components::kitchen.tables') --}}
 
-	<h1>Dump</h1>
-	@dump(["a"=>32,"b"=>"dsds"])
+			
+			@include('ajtarragona-web-components::kitchen.tabs')	
+
+			
+			@include('ajtarragona-web-components::kitchen.cards')	
+			
+			
+			@include('ajtarragona-web-components::kitchen.buttons')	
+			
+			
+			@include('ajtarragona-web-components::kitchen.forms')	
+				
+			
+			@include('ajtarragona-web-components::kitchen.navs')	
+
+			
+			@include('ajtarragona-web-components::kitchen.modals')	
+		@endcol
+	@endrow
+	
+
 @endsection
-
-
 

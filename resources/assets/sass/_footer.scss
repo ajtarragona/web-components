@@ -1,0 +1,32 @@
+#meta-footer{
+	bottom:0;
+	left:0;
+	width:100%;
+	background-color:$gray-300;
+	border-top:1px solid $gray-400;
+	font-size:8pt;
+	z-index:100;
+	position:static;
+	text-align:center;
+
+
+}
+#meta-footer .foot-item{
+	padding:1em;
+	display:block;
+	border-bottom:1px solid $gray-400;
+}
+
+@media (min-width: 576px){
+	#meta-footer{
+		position:fixed;
+		text-align:right;
+		white-space: nowrap;
+	}
+	#meta-footer .foot-item{
+		padding:.5em 1em;
+		border-left:1px solid $gray-400;
+		display:inline-block;
+		white-space: nowrap;
+	}
+}

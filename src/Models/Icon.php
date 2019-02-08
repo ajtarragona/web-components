@@ -7,7 +7,7 @@ class Icon Extends WebComponent
 
 	private $iconname;
 	
-	protected $defaults=[
+	protected $defaultattributes=[
 		'class'=>'icon',
 		'style'=>'',
 		'size' =>'md',
@@ -16,17 +16,19 @@ class Icon Extends WebComponent
 		'circle'=>false
 	];
 
+	protected $defaultdata=[];
+
+	protected $hiddenattributes = ["size","color","bg-color","type","circle","visible"];
+	
+	protected $view ='icon';
+
 
 	public function __construct($iconname,$attributes=[],$data=[]){
-		parent::__construct($attributes,$data);
 		$this->iconname=$iconname;
-		$this->prepareAttributes($this->attributes);
-	}
-	
+		parent::__construct($attributes,$data);
 
-	protected function prepareAttributes($args){
-		parent::prepareAttributes($args);
-		
+
+
 		$classes=[];
     	$cssstyle=[];
 
@@ -96,19 +98,14 @@ class Icon Extends WebComponent
 
 		
 		$this->attributes["class"] = implode(" ",$classes)." ".$this->attributes["class"];
-
 	}
+	
+
+	
 
 
-    public function render(){
-    	
-    	if(!$this->isVisible()) return;
 
-		$icon ='<i '.$this->renderAttributes(["size","color","bg-color","type","circle"]).' '.$this->renderData().'></i>';
-		
-		return $icon;
-	}
-
+ 
 	/*private static function getIconHTML($text=false, $icon=false, $options=false){
 		$iconposition="left";
 		$iconcode="";

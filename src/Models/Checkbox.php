@@ -5,41 +5,69 @@ use Illuminate\Support\Str;
 
 class Checkbox extends WebComponent
 {
-	public static function checkbox($args=false){
-		if(isset($args["showif"])  && !$args["showif"]) return;
+	protected $defaultattributes=[
+		'name'=>'unnamed',
+		'value'=>1,
+		'type'=>'checkbox',
+		'checked'=>false,
+		'title'=>'',
+		'placeholder'=>'',
+		'id'=>'',
+		'class'=>'custom-control custom-checkbox',
+		'container'=>false,
+		'containerclass'=>'',
+		'label'=>false,
+		'sidelabel'=>false,
+		'disabled'=>false,
+		'readonly'=>false,
+		'required'=>false,
+		'outlined'=>true,
+		'size'=>'md',
+		'renderhelper' =>true,
+		'color' => false
 		
-		$defaults=[
-			'name'=>'unnamed',
-			'value'=>1,
-			'checked'=>false,
-			'title'=>'',
-			'placeholder'=>'',
-			'id'=>'',
-			'class'=>'custom-control custom-checkbox',
-			'container'=>false,
-			'containerclass'=>'',
-			'label'=>false,
-			'sidelabel'=>false,
-			'disabled'=>false,
-			'readonly'=>false,
-			'required'=>false,
-			'outlined'=>true,
-			'size'=>'md',
-			'renderhelper' =>true,
-			
-		];
+	];
 
-		if(isset($args['class'])) $args['class'].=" ".$defaults['class'];
-		$args=array_merge($defaults,$args);
-		if(!$args['id']) $args['id']='checkbox_'.$args['name'].'_'.kebab_case($args['value']);
 
-		if(isset($args['style'])) $args['class'].=" ".$args['style'];
+	protected $hiddenattributes = ["containerclass",'container','label','outlined','size','sidelabel','renderhelper'];
+	
+	protected $view = 'forms.checkbox';
 
-		return view('components.bootstrap.forms.checkbox', $args);
+	
+
+	public function __construct($attributes=[],$data=[]){
+		parent::__construct($attributes,$data);
+		if(isset($this->attributes['color'])) $this->attributes['class'].=" ".$this->attributes['color'];
+
+		if(isset($this->attributes["options"])){
+			$this->view='forms.checkboxes';
+			if(!$this->attributes['id']) $this->attributes['id']='checkboxes_'.$this->attributes['name'];//.'_'.kebab_case($args['value']);
+			if(!ends_with($this->attributes['name'],"[]")) $this->attributes['name'].="[]";
+		}else{
+
+			if(!$this->attributes['id']) $this->attributes['id']='checkbox_'.$this->attributes['name'].'_'.kebab_case($this->attributes['value']);
+		}
+
 	}
 
-		public static function checkboxes($args=false){
-		if(isset($args["showif"])  && !$args["showif"]) return;
+
+	// public function render($args=[]){
+ //    	if(!$this->isVisible()) return;
+
+
+ //    	$args=array_merge($args,['attributes'=>$this->attributes,'hiddenattributes'=>$this->hiddenattributes,'data'=>$this->data]);
+ //    	$args=array_merge($args,$this->attributes);
+ //    	//dump($args);
+ //    	//dump($this->attributes);
+ //    	if(isset($this->attributes["options"])){
+ //    		return $this->renderView('forms.checkboxes', $args);
+ //    	}else{
+ //    		return $this->renderView($this->view, $args);
+ //    	}
+	// }
+
+	
+	public static function checkboxes($args=false){
 		
 		$defaults=[
 			'name'=>'unnamed',

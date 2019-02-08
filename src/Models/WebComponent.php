@@ -9,16 +9,32 @@ class WebComponent
 
 	public $attributes;
 	public $data;
-	protected $defaults=[];
-	
-	public function __construct($attributes=[],$data=[]){
-		$this->attributes=$attributes;
-		$this->data=$data;
+	protected $defaultattributes=[];
+	protected $defaultdata=[];
+	protected $hiddenattributes = []; //hidden attributes (do not render)
+	protected $view = '';
 
+	public function __construct($attributes=[],$data=[]){
+		//$this->attributes=$attributes;
+		//$this->data=$data;
+		$this->prepareAttributes($attributes);
+		$this->prepareData($data);
 	}
 
 	protected function viewPath($view){
-		return config("webcomponents.views-namespace")."::".config("webcomponents.theme").".".$view;
+		return "ajtarragona-web-components::".config("webcomponents.theme").".".$view;
+	}
+	
+
+
+	public function render($args=[]){
+    	if(!$this->isVisible()) return;
+
+
+    	$args=array_merge($args,['attributes'=>$this->attributes,'hiddenattributes'=>$this->hiddenattributes,'data'=>$this->data]);
+    	$args=array_merge($args,$this->attributes);
+    	//dump($args);
+    	return $this->renderView($this->view, $args);
 	}
 
 	protected function renderView($view,$attributes=[]){
@@ -36,8 +52,13 @@ class WebComponent
 	}
 
 
-	protected function prepareAttributes($args){
-		$this->attributes=array_merge($this->defaults,$args);
+	protected function prepareAttributes($attributes){
+
+		$this->attributes=array_merge($this->defaultattributes,$attributes);
+	}
+
+	protected function prepareData($data){
+		$this->data=array_merge($this->defaultdata,$data);
 	}
 
     protected function renderAttributes($excluded=[]) {

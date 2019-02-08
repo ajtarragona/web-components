@@ -1,0 +1,93 @@
+select{
+	border-width:0;
+	height:39px;
+	padding:.35rem $input-btn-padding-x;
+	line-height:$input-line-height;
+
+}
+select.loading{
+	opacity:0;
+}
+.form-group.outlined .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn){
+	display:block;
+	/*width:100%;*/
+}
+.form-inline .form-group.outlined .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn){
+	/*width:200px;*/
+}
+
+.bootstrap-select > .dropdown-toggle {
+	padding-top: $input-padding-y;
+	padding-bottom: $input-padding-y;
+	text-transform:none;
+	border-color:transparent;
+	display:block;
+	font-size: $font-size-base;
+	font-family: $font-family-base;
+	font-weight: $font-weight-normal;
+	
+	&.btn-light,
+	&:not([class*='btn-']){
+		background-color:transparent;
+
+	}
+// stylelint-enable value-keyword-case
+
+
+}
+.bootstrap-select > .dropdown-toggle:active,
+.bootstrap-select > .dropdown-toggle:focus,
+.bootstrap-select > .dropdown-toggle:hover,
+.bootstrap-select.show > .dropdown-toggle{
+	outline:none  !important;
+	box-shadow:none  !important;
+	border-color:transparent  !important;
+	
+	&.btn-light,
+	&:not([class*='btn-']){
+		background-color:transparent !important;
+	}
+}
+
+.form-group .input-icon:not(.icon-right) + .bootstrap-select > .dropdown-toggle{
+	display:block;
+	padding-left:3em;
+
+}
+.form-group .input-icon.icon-right + .bootstrap-select > .dropdown-toggle{
+	display:block;
+	padding-right:3em;
+
+}
+
+.bootstrap-select .deselect-btn{
+	position:absolute;
+	right:2.2em;
+	top:0;
+	line-height:1.5em;
+	display:inline-block;
+	padding:.5em;
+	z-index:2;
+	cursor:pointer;
+}
+
+.bootstrap-select[class*='btn-'] .deselect-btn{
+	color:$white;
+}
+
+
+.form-group .input-icon.icon-right + .bootstrap-select > .deselect-btn{
+	right:4em;
+}
+
+.bootstrap-select select[required=required] + .deselect-btn{
+	display:none;
+}
+
+.bootstrap-select .deselect-btn:hover{
+	color:$primary;
+}
+
+.bootstrap-select .dropdown-toggle .filter-option-inner-inner{
+	margin-right: 1.5em;
+}

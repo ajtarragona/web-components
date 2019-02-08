@@ -6,45 +6,49 @@ class Radio extends WebComponent
 
 
 
-
-	public static function radio($args=false){
-		if(isset($args["showif"])  && !$args["showif"]) return;
+	protected $defaultattributes=[
+		'name'=>'unnamed',
+		'value'=>1,
+		'checked'=>false,
+		'title'=>'',
+		'placeholder'=>'',
+		'id'=>'',
+		'class'=>'custom-control custom-radio',
+		'container'=>false,
+		'containerclass'=>'',
+		'label'=>false,
+		'sidelabel'=>false,
+		'disabled'=>false,
+		'readonly'=>false,
+		'required'=>false,
+		'outlined'=>true,
+		'size'=>'md'
 		
-		$defaults=[
-			'name'=>'unnamed',
-			'value'=>1,
-			'checked'=>false,
-			'title'=>'',
-			'placeholder'=>'',
-			'id'=>'',
-			'class'=>'custom-control custom-radio',
-			'container'=>false,
-			'containerclass'=>'',
-			'label'=>false,
-			'sidelabel'=>false,
-			'disabled'=>false,
-			'readonly'=>false,
-			'required'=>false,
-			'outlined'=>true,
-			'size'=>'md'
-			
-		];
+	];
 
-		if(isset($args['class'])) $args['class'].=" ".$defaults['class'];
-		$args=array_merge($defaults,$args);
-		if(!$args['id']) $args['id']='radio_'.$args['name'].'_'.kebab_case($args['value']);
 
-		if(isset($args['style'])) $args['class'].=" ".$args['style'];
+	protected $hiddenattributes = ["containerclass",'container','label','sidelabel','renderhelper','outlined','size'];
+	
+	protected $view = 'forms.radio';
 
-		return view('components.bootstrap.forms.radio', $args);
+
+	public function __construct($attributes=[],$data=[]){
+		parent::__construct($attributes,$data);
+
+		if(isset($this->attributes['color'])) $this->attributes['class'].=" ".$this->attributes['color'];
+
+		if(isset($this->attributes["options"])){
+			$this->view='forms.radios';
+			if(!$this->attributes['id']) $this->attributes['id']='radios_'.$this->attributes['name'];//.'_'.kebab_case($args['value']);
+			if(!ends_with($this->attributes['name'],"[]")) $this->attributes['name'].="[]";
+		}else{
+			if(!$this->attributes['id']) $this->attributes['id']='radio_'.$this->attributes['name'].'_'.kebab_case($this->attributes['value']);
+		}
+		
 	}
 
 
-
-
-
-
-
+	
 
 
 	public static function radios($args=false){

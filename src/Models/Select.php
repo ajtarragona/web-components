@@ -4,41 +4,41 @@ namespace Ajtarragona\WebComponents\Models;
 class Select extends WebComponent
 {
 
-	public static function select($args=false){
-		if(isset($args["showif"])  && !$args["showif"]) return;
-		
-		$defaults=[
-			'name'=>'unnamed',
-			'value'=>'',
-			'selected'=>[],
-			'title'=>'',
-			'placeholder'=>'--',
-			'id'=>'',
-			'class'=>'',
-			'container'=>true,
-			'containerclass'=>'',
-			'label'=>false,
-			'sidelabel'=>false,
-			'disabled'=>false,
-			'readonly'=>false,
-			'required'=>true,
-			'outlined'=>true,
-			'size'=>'md',
-			'multiple'=>false,
-			'renderhelper' =>false,
-		];
+	protected $defaultattributes=[
+		'name'=>'unnamed',
+		'value'=>'',
+		'selected'=>[],
+		'title'=>'',
+		'placeholder'=>'--',
+		'id'=>'',
+		'class'=>'',
+		'container'=>true,
+		'containerclass'=>'',
+		'label'=>false,
+		'sidelabel'=>false,
+		'disabled'=>false,
+		'readonly'=>false,
+		'required'=>true,
+		'outlined'=>true,
+		'size'=>'md',
+		'multiple'=>false,
+		'renderhelper' =>false,
+	];
 
-		if(isset($args['class'])) $args['class'].=" ".$defaults['class'];
-		$args=array_merge($defaults,$args);
-
-		if($args["multiple"] && !ends_with($args['name'],"[]")) $args["name"].="[]";
-
-		if(!$args['id']) $args['id']='select_'.$args['name'];
-		if(ends_with($args['id'],"[]")) $args['id']=str_replace("[]", "", $args['id']);
+	protected $hiddenattributes = ["containerclass",'container','label','sidelabel','renderhelper','outlined','size'];
+	
+	protected $view = 'forms.select';
 
 
-		if(!is_array($args['selected'])) $args['selected']=[$args['selected']];
+	public function __construct($attributes=[],$data=[]){
+		parent::__construct($attributes,$data);
 
-		return view('components.bootstrap.forms.select', $args);
+		if(!$this->attributes['id']) $this->attributes['id']='select_'.$this->attributes['name'];
+		if($this->attributes["multiple"] && !ends_with($this->attributes['name'],"[]")) $this->attributes["name"].="[]";
+		if(ends_with($this->attributes['id'],"[]")) $this->attributes['id']=str_replace("[]", "", $this->attributes['id']);
+		if(!is_array($this->attributes['selected'])) $this->attributes['selected']=[$this->attributes['selected']];
+
+
 	}
+
 }

@@ -16,5 +16,56 @@
 @import "~bootstrap/scss/bootstrap";
 
 
+//@import '~select2/dist/css/select2.css';
+@import '~flatpickr/dist/flatpickr.css';
+@import '~bootstrap-select/dist/css/bootstrap-select.css';
 
-@import "icons";
+
+
+//jquery ui
+@import '~jquery-ui/themes/base/all.css';
+
+
+// Bootstrap file inputs
+@import "~bootstrap-fileinput/scss/fileinput";
+//@import "~bootstrap-fileinput/scss/themes/fileinput";
+
+
+
+// Bootstrap touchspin
+@import "~bootstrap-touchspin/src/jquery.bootstrap-touchspin.css";
+
+// fontawesome icon picker
+@import "~fontawesome-iconpicker/dist/css/fontawesome-iconpicker.min.css";
+
+//colorpicker
+@import "~bootstrap-colorpicker/src/sass/colorpicker";
+
+
+//autocomplete mentions
+@import "~tributejs/dist/tribute.css";
+
+@import "~bootstrap-tagsinput/dist/bootstrap-tagsinput.css";
+
+//framework styles
+@import "scrollbar";
+@import "animations";
+@import "grid";
+@import "core";
+@import "footer";
+@import "tabs";
+@import "toolbar";
+@import "navbars";
+@import "sidebar";
+@import "forms";
+@import "formcontrols";
+@import "selects";
+@import "datepicker";
+@import "tables";
+@import "autocomplete";
+@import "maps";
+@import "myapp";
+@import "formdesigner";
+@import "typeahead";
+
+

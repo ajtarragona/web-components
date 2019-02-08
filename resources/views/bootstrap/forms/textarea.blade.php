@@ -15,7 +15,7 @@
 	'class'=>$containerclass
 ])
 
-	@include('ajtarragona-web-components::bootstrap.forms.icon')
+	@include('ajtarragona-web-components::bootstrap.forms.inputicon')
 
 	<textarea 
 		id="{{$id}}"
@@ -27,10 +27,12 @@
 		title="{{ $title }}" 
 		placeholder="{{ $placeholder }}" 
 		rows="{{ $rows  }}"
-		{!! html_attributes(isset($attributes)?$attributes:false) !!}
-   		{!! html_attributes(isset($data)?$data:false,'data') !!}
+
+		{!! renderAttributes($attributes, $hiddenattributes) !!} 
+		{!! renderData($data) !!}
 
 	>{{ $value or old($name) }}</textarea>
+	
 	@include('ajtarragona-web-components::bootstrap.forms.helptext')
 
 @endformgroup

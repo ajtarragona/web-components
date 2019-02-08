@@ -1,0 +1,120 @@
+/**toolbar*/
+
+#maintoolbar{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  z-index:10;
+  background-color:$white;
+  min-height:72px;
+  border-bottom:1px solid $default-border-color;
+}
+
+ #maintoolbar  .toolbar-toggle{
+  display:none;
+}
+#maintoolbar .toolbar-content{
+  padding-left:$sidebarwidthclosed;
+}
+
+
+#maintoolbar .toolbar-content .the-actions{
+  white-space: nowrap;
+  
+}
+
+@media (max-width: 767px) {
+  #maintoolbar{
+     position:fixed;
+     top:0;
+     left:0;
+     width:100%;
+     z-index:10;
+  }
+
+  #maintoolbar  .toolbar-toggle{
+    position:fixed;
+      display:block;
+    right:0em;
+    top:0em;
+    padding:0 !important;
+    font-size:1.2em;
+    z-index:10;
+    background-color:$light;
+    color:$secondary;
+    border-radius:50%;
+    box-shadow: 0 0 0 0.2rem rgba($gray-400, 0.5);
+    width: 42px;
+      height: 42px;
+      line-height: 42px;
+    text-align:center;
+    margin:1em !important;
+    
+  }
+
+  #maintoolbar .toolbar-content{
+    position:fixed;
+    display:flex;
+    align-items:flex-end;
+    right:0px;
+    top:0;
+    margin-right:-$toolbarwidth;
+    width:$toolbarwidth;
+    height:100%;
+    background-color:$gray-200;
+    /*border-left:1px solid $gray-300;*/
+    padding:0;
+    z-index:9;
+    border-left:1px solid $gray-300;
+  }
+  #maintoolbar .toolbar-content > .container-fluid,
+  #maintoolbar .toolbar-content > .container-fluid >.row{
+    align-self: start;
+     display:flex;
+    align-items:flex-end;
+
+  }
+  #maintoolbar .toolbar-content .the-breadcrumb{
+    align-self: flex-start;
+  }
+  #maintoolbar .toolbar-content .the-actions{
+    align-self:flex-end;
+    text-align:left;
+    border-top:1px solid rgba(0,0,0,0.05);
+
+  }
+
+  body.toolbar-open #maintoolbar .toolbar-content{
+     margin-right:0px;
+   
+  }
+  body.toolbar-open {
+    margin-right:$toolbarwidth;
+    margin-left:-$toolbarwidth;
+  }
+  body.toolbar-open  #maintoolbar  .toolbar-toggle{
+    right:$toolbarwidth;
+    background-color:$secondary;
+    color:$white;
+  }
+
+  
+  #maintoolbar .the-actions .form-group,
+  #maintoolbar .the-actions .btn-group,
+  #maintoolbar .the-actions form,
+  #maintoolbar .the-actions .btn{
+    display:block !important;
+    width:100%;
+    margin-bottom:5px;
+
+  }
+  #maintoolbar .the-actions .btn-group .btn + .btn, 
+  #maintoolbar .the-actions .btn-group .btn + .btn-group, 
+  #maintoolbar .the-actions .btn-group .btn-group + .btn, 
+  #maintoolbar .the-actions .btn-group .btn-group + .btn-group {
+      margin-left: 0px;
+  }
+
+}
+

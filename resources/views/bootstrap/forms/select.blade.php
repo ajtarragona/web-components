@@ -15,7 +15,7 @@
 	'class'=>$containerclass
 ])
 
-	@include('ajtarragona-web-components::bootstrap.forms.icon')
+	@include('ajtarragona-web-components::bootstrap.forms.inputicon')
 
 	@if($renderhelper)
 		<input type="hidden" name="{{$name}}" value="" />
@@ -33,8 +33,8 @@
 		title="{{ istrue($required)?'':$placeholder }}" 
 		placeholder="{{ $placeholder }}" 
 		
-		{!! html_attributes(isset($attributes)?$attributes:false) !!}
-   		{!! html_attributes(isset($data)?$data:false,'data') !!}
+		{!! renderAttributes($attributes, $hiddenattributes) !!} 
+		{!! renderData($data) !!}
 	>
 	{{-- 	@isfalse($required) 
 			<option value="">{{ $placeholder }}</option>

@@ -3,7 +3,7 @@ namespace Ajtarragona\WebComponents\Models;
 
 class Input extends WebComponent
 {	
-	protected $defaults=[
+	protected $defaultattributes=[
 		'name'=>'unnamed',
 		'value'=>'',
 		'type'=>'text',
@@ -23,24 +23,16 @@ class Input extends WebComponent
 		'size'=>'md'
 		
 	];
+	protected $hiddenattributes = ["containerclass",'container','label','outlined','size','sidelabel'];
+	
+	protected $view = 'forms.input';
 
 
+	
 	public function __construct($attributes=[],$data=[]){
 		parent::__construct($attributes,$data);
-		$this->prepareAttributes($this->attributes);
-	}
-	
-	
-	public static function input($args=false){
-		if(isset($args["showif"])  && !$args["showif"]) return;
-		
-		
-		//dump($args);
-		if(isset($args['class'])) $args['class'].=" ".$defaults['class'];
-		$args=array_merge($defaults,$args);
-		if(!$args['id']) $args['id']='input_'.$args['name'];
-		
-		return view('components.bootstrap.forms.input', $args);
+
+		if(!$this->attributes['id']) $this->attributes['id']='input_'.$this->attributes['name'];
 	}
 	
 }

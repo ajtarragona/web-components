@@ -1,0 +1,111 @@
+
+// Tables ======================================================================
+
+th {
+  font-size: $font-size-sm;
+  text-transform: uppercase;
+}
+
+.table {
+  th, td {
+    
+  }
+}
+
+
+.table thead th{
+  white-space: nowrap;     
+  overflow: hidden;   
+  text-overflow: ellipsis;
+
+}
+.table thead th a{
+  color:$gray-800;
+}
+
+.table thead th i.fa-sort-up,
+.table thead th i.fa-sort-numeric-down,
+.table thead th i.fa-sort-numeric-up,
+.table thead th i.fa-sort-alpha-up,
+.table thead th i.fa-sort-alpha-down,
+.table thead th i.fa-sort-down {
+  color:$primary;
+}
+
+.table-selectable tbody tr,
+.table-clickable tbody tr{
+  cursor: default;
+}
+
+
+/*responsive tables */
+@media (max-width: 575px){
+//@media (max-width: 767px) {
+  table.table-response thead{
+    display:none !important;
+  }
+
+
+  table.table-response tbody tr{
+    display:block;
+    border-bottom:1px solid #dedede;
+  }
+  table.table-response tbody tr:last-child{
+    border-bottom-width:0px;
+  }
+  table.table-response tbody td{
+    display:block;
+    
+
+  }
+  table.table-response>tbody>tr>td{
+    border-width:0px;
+    border-bottom:1px solid #efefef;
+    padding-bottom:.8em;
+      
+  }
+  table.table-response tbody td:before{
+    
+    content: attr(data-title) " ";
+    font-weight: 700;
+    font-size:.9em;
+    /*float: left;
+    width:30%;*/
+    overflow: hidden;
+      text-overflow: ellipsis;
+      display:block;
+      // margin-left:1em;
+      // margin-top:1em;
+      margin-bottom:.5em;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      opacity: .5;
+      /*border-bottom:1px solid rgba(0,0,0,0.1);*/
+    }
+  
+    table.table-response tbody td:after{
+    content: '';
+      display: block;
+      clear: both;
+   }
+
+  table.table-response tfoot tr{
+    display:block;
+  }
+  
+  table.table-response tfoot td{
+    display:block;
+    
+
+  }
+  table.table-response>tfoot>tr>td{
+    border-width:0px;
+  }
+  table.table-response tfoot td:before{
+    content: attr(data-title) " ";
+      font-weight: 700;
+      float: left;
+      width:30%;
+    }
+}
+

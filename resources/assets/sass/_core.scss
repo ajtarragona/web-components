@@ -1,0 +1,434 @@
+// Variables ===================================================================
+
+
+
+// Core ===================================================================
+ *{
+ // transition: none !important;
+}
+
+
+body{
+  font-weight: 400;
+  letter-spacing: 0px;
+  
+}
+
+
+//transitions
+html{
+  &.loading{
+    body{
+       filter: grayscale(60%);
+       pointer-events:none;
+       overflow:hidden;
+      &:after{
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        position:absolute;
+        right:1em;
+        bottom:4em;
+        content: "\f110";
+        font-size:.8em;
+            -moz-osx-font-smoothing: grayscale;
+          -webkit-font-smoothing: antialiased;
+          display: inline-block;
+          font-style: normal;
+          font-variant: normal;
+          text-rendering: auto;
+          line-height: 1;
+          animation: a 2s infinite linear;
+          z-index:1000;
+
+      }
+    }
+    select{
+      visibility:hidden;
+    }
+  }
+
+  &:not(.loading){
+    body{
+      transition:margin $transition-speed;
+    }
+    #main-container{
+      transition: margin $transition-speed;
+    }
+    .sidebar{
+      transition: margin-left $transition-speed;
+
+      header .sidebar-toggle{
+        transition:left $transition-speed;
+      }
+    }
+    #maintoolbar  .toolbar-toggle{
+      transition:right $transition-speed, left $transition-speed;
+    }
+    
+    #maintoolbar .toolbar-content{
+      transition:padding-left  $transition-speed, margin $transition-speed;
+    }
+
+    .form-group.outlined{ 
+       transition:outline $transition-speed-fast , border $transition-speed-fast ;
+     }
+
+    .tgn-nav-dropdown .toggler,
+    .tgn-nav-collapse .toggler,
+    .tgn-nav-accordion .toggler,
+    .drilldown-wrap,
+    .tgn-nav-drilldown,
+    .tgn-nav-drilldown ul ,
+    .tgn-nav-drilldown .opener-icon,
+    .tgn-nav-drilldown .back{
+      transition: all $transition-speed;
+    }
+
+  }
+
+}
+
+ #app{
+    height:100vh;
+ }
+
+
+
+//preloader
+
+body .loading{
+   filter: grayscale(60%);
+   pointer-events:none;
+   opacity:.6;
+
+    &:after{
+      font-family: "Font Awesome 5 Free";
+      font-weight: 900;
+      position:absolute;
+      right:.5em;
+      bottom:0.5em;
+      content: "\f110";
+      font-size:.8em;
+          -moz-osx-font-smoothing: grayscale;
+        -webkit-font-smoothing: antialiased;
+        display: inline-block;
+        font-style: normal;
+        font-variant: normal;
+        text-rendering: auto;
+        line-height: 1;
+        animation: a 2s infinite linear;
+        z-index:1000;
+
+    }
+  }
+
+// Typography ==================================================================
+
+
+h1, h2, h3, h4, h5, h6 {
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+
+
+// Navbar ======================================================================
+
+.navbar {
+  font-size: $font-size-sm;
+  text-transform: uppercase;
+  font-weight: 400;
+
+  &-nav {
+    .nav-link {
+      padding-top: 0.2rem;
+      padding-bottom: 0.2rem;
+    }
+  }
+  
+}
+
+.dropdown-menu {
+  font-size: $font-size-sm;
+  text-transform: none;
+  
+  &.show{
+    z-index:1030;
+  }
+}
+
+
+
+// Messages ======================================================================
+
+#messages{
+  position:fixed;
+  top:70px;
+  right:0px;
+  z-index:30;
+  padding:1em;
+}
+
+#messages .alert:last-child{
+    margin:0;
+}
+
+@media (max-width: 767px) {
+  #messages{
+    top:auto;
+    bottom:0;
+    padding:0;
+    width:100%;
+  }
+}
+
+
+
+// Color tweaks ======================================================================
+.bg-light{
+    color:$dark;
+}
+.bg-gray-100{  background-color:$gray-100; }
+.bg-gray-200{  background-color:$gray-200; }
+.bg-gray-300{  background-color:$gray-300; }
+.bg-gray-400{  background-color:$gray-400; }
+.bg-gray-500{  background-color:$gray-500; }
+.bg-gray-600{  background-color:$gray-600; }
+.bg-gray-700{  background-color:$gray-700; }
+.bg-gray-800{  background-color:$gray-800; }
+
+.text-blue { color: $blue }
+.text-indigo { color: $indigo  }
+.text-purple { color: $purple; }
+.text-pink { color: $pink, }
+.text-red { color: $red; }
+.text-orange { color: $orange; }
+.text-yellow { color: $yellow; }
+.text-green { color: $green; }
+.text-teal { color: $teal; }
+.text-cyan { color: $cyan; }
+
+.bg-blue { background-color: $blue }
+.bg-indigo { background-color: $indigo  }
+.bg-purple { background-color: $purple; }
+.bg-pink { background-color: $pink, }
+.bg-red { background-color: $red; }
+.bg-orange { background-color: $orange; }
+.bg-yellow { background-color: $yellow; }
+.bg-green { background-color: $green; }
+.bg-teal { background-color: $teal; }
+.bg-cyan { background-color: $cyan; }
+
+.border-gray-100{  border-color:$gray-100 !important; }
+.border-gray-200{  border-color:$gray-200 !important; }
+.border-gray-300{  border-color:$gray-300 !important; }
+.border-gray-400{  border-color:$gray-400 !important; }
+.border-gray-500{  border-color:$gray-500 !important; }
+.border-gray-600{  border-color:$gray-600 !important; }
+.border-gray-700{  border-color:$gray-700 !important; }
+.border-gray-800{  border-color:$gray-800 !important; }
+
+.bg-warning{
+   color:$dark;
+ } 
+
+
+
+.border-secondary {
+  border-color: $secondary;
+}
+
+
+
+// Containers ==================================================================
+
+.list-group-item {
+  h1, h2, h3, h4, h5, h6,
+  .h1, .h2, .h3, .h4, .h5, .h6 {
+    color: inherit;
+  }
+
+  &.active > a{
+    color:$white;
+  }
+}
+
+
+
+.card {
+  &-title,
+  &-header {
+    color: inherit;
+  }
+}
+
+ .card[class*="bg-"] .card-footer,
+ .card[class*="bg-"] .card-header{
+    background-color:rgba(0,0,0,0.05);
+ 
+  }
+ .card[class*="bg-"] .card-subtitle {
+    color:rgba(255,255,255,.6);
+ }
+
+
+
+// Buttons =====================================================================
+
+.btn {
+  font-size: $font-size-sm;
+  text-transform: uppercase;
+
+  &-xs {
+    padding:.3em .5em;
+    line-height:1em;
+    font-size: 10px;
+  }
+  &-sm {
+    font-size: 10px;
+  }
+
+  &-warning {
+    &,
+    &:hover,
+    &:not([disabled]):not(.disabled):active,
+    &:focus {
+      color: $dark;
+    }
+  }
+}
+
+
+[class*="btn-outline-"] {
+  border-width: 2px;
+}
+
+
+
+
+// Tabs =====================================================================
+
+
+
+
+// Badges ======================================================================
+
+
+.badge .icon{
+   font-size: 0.9em;
+}
+
+
+// Utils ======================================================================
+.ellipsed{
+  white-space: nowrap;     
+  overflow: hidden;    
+  text-overflow: ellipsis;
+}
+
+
+
+
+//jquery ui
+.ui-state-highlight{
+  background-color: rgba($info,.3);
+}
+.ui-draggable-handle,.ui-sortable-handle{
+  cursor:move;
+
+}
+
+//modals
+
+@media (min-width: 992px){
+  .modal-xl {
+      max-width: 1180px;
+  }
+}
+
+.modal{
+
+  .modal-header button.maximize {
+    padding: 1rem 0.5rem;
+    background-color: transparent;
+    border: 0;
+    -webkit-appearance: none;
+     margin: -1rem 0 -1rem auto;
+     opacity: .5;
+     outline:none !important;
+     cursor:pointer;
+     &:hover{
+      opacity: .75;
+     }
+  }   
+
+  .modal-inner{
+     max-height:70vh;
+     overflow-y: auto;
+     padding-left:1rem;
+     padding-right:1rem;
+     margin-left:-1rem;
+     margin-right:-1rem;
+  }
+
+
+  &.modal-maximized{
+    .modal-dialog{
+      left:0 !important;
+      top:0 !important;
+      margin-left:0;
+      margin-top:0;
+    }
+    .modal-content{
+        height: 98vh;
+        width: 98vw;
+        margin: 1vh 1vw;
+    }
+    .modal-body{
+      height: 100vh;
+      overflow-y:auto;
+    }
+    .modal-header.ui-draggable-handle{
+      cursor:default;
+    }
+    .modal-inner{
+        max-height:none;
+        overflow-y:hidden;
+    }
+
+
+  }
+}
+body.modal-maximized.modal-open .modal{
+  overflow-y:hidden;
+}
+
+
+
+ #main-container{
+    padding-bottom:3em;
+}
+
+
+
+.card-columns {
+  @include media-breakpoint-only(xl) {
+    column-count: 4;
+  }
+  @include media-breakpoint-only(lg) {
+    column-count: 3;
+  }
+  @include media-breakpoint-only(sm) {
+    column-count: 2;
+  }
+  @include media-breakpoint-only(xs) {
+    column-count: 1;
+  }
+}
+
+
+.text-nowrap{
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}

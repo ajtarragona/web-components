@@ -1,0 +1,505 @@
+/** FRAMEWORK NAVS */
+
+$nav-padding-x : 1.5em !default;
+$nav-padding-y : 1em !default;
+$nav-padding: $nav-padding-y $nav-padding-x;
+.tgn-nav{
+	margin:0;
+	padding:0;
+	list-style: none;
+	display:inline-block;
+}
+
+.tgn-nav.fullwidth{
+	display:block;
+}
+
+.tgn-nav:after{
+	content: " ";
+    display: table;
+    clear: both;
+}
+.tgn-nav ul{
+	margin:0;
+	padding:0;
+}
+.tgn-nav li{
+	margin:0;
+	padding:0;
+	display:block;
+	position:relative;
+}
+.tgn-nav li > a,
+.tgn-nav li > span{
+	padding:$nav-padding;
+	display:block;
+	text-align: left;
+}
+
+.tgn-nav li.has-submenu > span{
+	cursor:pointer;
+}
+
+.tgn-nav li > a:hover,
+.tgn-nav li > a:focus,
+.tgn-nav li > a:active,
+.tgn-nav li.open > a,
+.tgn-nav li.open > span{
+	opacity:1;
+	background-color: rgba(255,255,255,0.2);
+}
+
+.tgn-nav li.active > a,
+.tgn-nav li.active > span{
+	background-color: rgba(255,255,255,0.3);
+}
+
+
+.tgn-nav.horizontal > li{
+	display:inline-block;
+	vertical-align: top;
+
+}
+
+.tgn-nav-dropdown .toggler{
+}
+
+
+
+
+
+
+/* NAVBAR dropdown*/
+.tgn-nav-dropdown .nav-item{
+	position:relative;
+}
+.tgn-nav-dropdown li.open>.dropdown-menu{
+	display:block;
+}
+
+.tgn-nav-dropdown li.has-submenu > a,
+.tgn-nav-dropdown li.has-submenu > span{
+	padding-right:3em;
+}
+
+.tgn-nav-dropdown .toggler{
+	position: absolute;
+	right:0;
+	bottom:0;
+	padding:$nav-padding;
+	transform:rotate(90deg);
+}
+.tgn-nav-dropdown li.has-submenu > span:hover{
+	background-color: rgba(255,255,255,0.2);
+}
+
+.tgn-nav-dropdown li.open > .toggler{
+	transform:translateX($nav-padding-x/2) rotate(90deg) ;
+}
+
+.tgn-nav-dropdown .dropdown-menu{
+	position: absolute;
+	left:100%;
+	top:0;
+}
+.tgn-nav-dropdown .dropdown-menu a:hover,
+.tgn-nav-dropdown .dropdown-menu li.open > a,
+.tgn-nav-dropdown .dropdown-menu li.open > span{
+	background-color: rgba(0,0,0,0.05);
+}
+
+
+/*dropdown vertical to left*/
+.tgn-nav-dropdown.vertical[data-dropdown-direction=left] li > a,
+.tgn-nav-dropdown.vertical[data-dropdown-direction=left] li > span{
+	text-align: right;
+}
+
+.tgn-nav-dropdown.vertical[data-dropdown-direction=left] li.has-submenu > a,
+.tgn-nav-dropdown.vertical[data-dropdown-direction=left] li.has-submenu > span{
+	padding-right:$nav-padding;
+	padding-left:3em;
+}
+
+.tgn-nav-dropdown.vertical[data-dropdown-direction=left] .toggler{
+	right:auto;
+	left:0;
+	transform:rotate(-90deg);
+}
+
+.tgn-nav-dropdown.vertical[data-dropdown-direction=left] li.open > .toggler{
+	transform:translateX($nav-padding-x/2) rotate(-90deg) ;
+}
+
+.tgn-nav-dropdown.vertical[data-dropdown-direction=left] .dropdown-menu{
+	left:auto;
+	right:100%;
+
+}
+
+.tgn-nav-dropdown.vertical[data-dropdown-vertical-direction=top] .dropdown-menu{
+	top:auto;
+	bottom:0;
+}
+
+.tgn-nav-dropdown.vertical[data-dropdown-vertical-direction=middle] .dropdown-menu{
+	top:50%;
+	transform: translateY(-50%);
+}
+
+
+
+/*dropdown horizontal*/
+
+.tgn-nav-dropdown.horizontal >li > .toggler{
+	transform:rotate(180deg);
+}
+
+.tgn-nav-dropdown.horizontal >li.open > .toggler{
+	transform:translateY($nav-padding-y/2)  rotate(180deg);
+}
+
+
+.tgn-nav-dropdown.horizontal >li > .dropdown-menu{
+	left:0;
+	top:100%;
+	bottom:auto;
+}
+
+/*dropdown horizontal to left*/
+.tgn-nav-dropdown.horizontal[data-dropdown-direction=left] > li > .dropdown-menu li > a,
+.tgn-nav-dropdown.horizontal[data-dropdown-direction=left] > li > .dropdown-menu li > span{
+	text-align: right;
+}
+
+.tgn-nav-dropdown.horizontal[data-dropdown-direction=left] > li > .dropdown-menu li.has-submenu > a,
+.tgn-nav-dropdown.horizontal[data-dropdown-direction=left] > li > .dropdown-menu li.has-submenu > span{
+	padding-right:$nav-padding-x;
+	padding-left:3em;
+}
+
+.tgn-nav-dropdown.horizontal[data-dropdown-direction=left] > li > .dropdown-menu .toggler{
+	right:auto;
+	left:0;
+	transform:rotate(-90deg);
+}
+
+.tgn-nav-dropdown.horizontal[data-dropdown-direction=left] > li > .dropdown-menu li.open > .toggler{
+	transform:translateX($nav-padding-x/2) rotate(-90deg) ;
+}
+
+.tgn-nav-dropdown.horizontal[data-dropdown-direction=left] > li > .dropdown-menu{
+	left:auto;
+	right:0;
+}
+
+.tgn-nav-dropdown.horizontal[data-dropdown-direction=left] > li > .dropdown-menu .dropdown-menu{
+	left:auto;
+	right:100%;
+
+}
+
+/*dropdown horitzontal to top*/
+
+.tgn-nav-dropdown.horizontal[data-dropdown-vertical-direction=top] > li > .dropdown-menu {
+	top:auto;
+	bottom:100%;
+}
+
+.tgn-nav-dropdown.horizontal[data-dropdown-vertical-direction=top] > li > .dropdown-menu .dropdown-menu{
+	top:auto;
+	bottom:0;
+
+}
+.tgn-nav-dropdown.horizontal[data-dropdown-vertical-direction=top] >li > .toggler{
+	transform:rotate(0deg);
+}
+
+.tgn-nav-dropdown.horizontal[data-dropdown-vertical-direction=top] >li.open > .toggler{
+	transform:translateY($nav-padding-y/2)  rotate(0deg);
+}
+
+
+
+
+
+
+/* navbar collapse */
+
+.tgn-nav-collapse li.has-submenu > a,
+.tgn-nav-collapse li.has-submenu > span{
+	padding-right:3em;
+}
+
+.tgn-nav-collapse .toggler{
+	position: absolute;
+	right:0;
+	top:0;
+	padding:$nav-padding;
+	cursor:pointer;
+}
+.tgn-nav-collapse .toggler.collapsed{
+	transform: rotate(180deg) ;
+}
+.tgn-nav-collapse .toggler:not(.collapsed){
+	transform: rotate(0deg) ;
+}
+
+.tgn-nav-collapse li.open{
+	outline:1px solid rgba(0,0,0,0.2);
+	background-color:rgba(0,0,0,0.05);
+}
+
+.tgn-nav-collapse.navbar-primary li.open,
+.tgn-nav-collapse.navbar-success li.open,
+.tgn-nav-collapse.navbar-danger li.open,
+.tgn-nav-collapse.navbar-dark li.open,
+.tgn-nav-collapse.navbar-info li.open{
+	outline:1px solid rgba(255,255,255,0.2);
+	background-color:rgba(0,0,0,0.05);
+}
+
+.tgn-nav-collapse li.open:not(.active) > a,
+.tgn-nav-collapse li.open:not(.active) > span{
+	background-color: transparent;
+}
+.tgn-nav-collapse li.has-submenu > span:hover{
+	background-color: rgba(255,255,255,0.2);
+}
+
+.tgn-nav-collapse ul > li{
+	/*padding-left:1em;*/
+}
+
+.tgn-nav-collapse ul li > a,
+.tgn-nav-collapse ul li > span{
+	padding:$nav-padding;
+}
+.tgn-nav-collapse ul li > .toggler{
+	padding:$nav-padding;
+}
+
+
+
+/* navbar accordion */
+
+.tgn-nav-accordion li.has-submenu > a,
+.tgn-nav-accordion li.has-submenu > span{
+	padding-right:3em;
+}
+
+.tgn-nav-accordion .toggler{
+	position: absolute;
+	right:0;
+	top:0;
+	padding:$nav-padding;
+	cursor:pointer;
+}
+.tgn-nav-accordion .toggler.collapsed{
+	transform: rotate(180deg) ;
+}
+.tgn-nav-accordion .toggler:not(.collapsed){
+	transform: rotate(0deg) ;
+}
+
+.tgn-nav-accordion li.open{
+	outline:1px solid rgba(0,0,0,0.2);
+}
+
+.tgn-nav-accordion.navbar-primary li.open,
+.tgn-nav-accordion.navbar-success li.open,
+.tgn-nav-accordion.navbar-danger li.open,
+.tgn-nav-accordion.navbar-dark li.open,
+.tgn-nav-accordion.navbar-info li.open{
+	outline:1px solid rgba(255,255,255,0.5);
+}
+
+.tgn-nav-accordion li.open:not(.active) > a,
+.tgn-nav-accordion li.open:not(.active) > span{
+	background-color: transparent;
+}
+.tgn-nav-accordion li.has-submenu > span:hover{
+	background-color: rgba(255,255,255,0.2);
+}
+
+.tgn-nav-accordion ul > li{
+	/*padding-left:1em;*/
+}
+
+.tgn-nav-accordion ul li > a,
+.tgn-nav-accordion ul li > span{
+	padding:$nav-padding;
+}
+.tgn-nav-accordion ul li > .toggler{
+	padding:$nav-padding;
+}
+
+
+
+
+
+/* navbar drilldown */
+
+
+.drilldown-wrap,
+.tgn-nav-drilldown,
+.tgn-nav-drilldown ul ,
+.tgn-nav-drilldown .opener-icon,
+.tgn-nav-drilldown .back{
+	
+}
+
+
+.drilldown-wrap{
+	overflow: hidden;
+
+
+}
+.tgn-nav-drilldown{
+	list-style: none;
+	overflow: hidden;
+	/*outline:1px solid #ccc;*/
+	position:relative;
+ 	transform:translateX(0);
+}
+.tgn-nav-drilldown.init{
+	overflow:initial;
+}
+
+.tgn-nav-drilldown li{
+	position:static;
+}
+
+.tgn-nav-drilldown >li > a ,
+.tgn-nav-drilldown ul >li > a{
+	 display: block;
+	 position:relative;
+	 padding: $nav-padding;
+}
+
+.tgn-nav-drilldown >li.has-submenu > a,
+.tgn-nav-drilldown >li.has-submenu > span{
+	padding-right:3em;
+}
+
+.tgn-nav-drilldown > li > a:hover,
+.tgn-nav-drilldown ul > li > a:hover {
+  	background-color: rgba(255,255,255,0.2);
+}
+
+
+.tgn-nav-drilldown li { margin:0; padding: 0; }
+
+.tgn-nav-drilldown ul {
+	position: absolute;
+	display: block;
+	width: 100%;
+	top: 0;
+	left: 100%;
+	padding:0;
+	margin:0;
+	list-style: none;
+	/*outline:1px solid #ccc;*/
+	transform:translateX(0);
+	opacity:0;
+	visibility: hidden;
+}
+
+
+
+
+.tgn-nav-drilldown .opener{
+	position: absolute;
+	right:0;
+	top:0;
+	/*color:#bf002c;*/
+}
+.tgn-nav-drilldown .opener:hover{
+	/*color:#73001a;*/
+}
+.tgn-nav-drilldown .opener-icon{
+	position: absolute;
+	right:0;
+	top:0;
+	padding:$nav-padding;
+	display: inline-block;
+}
+
+.tgn-nav-drilldown li > .opener{
+	position: relative;
+	display: block;
+	padding:$nav-padding;
+	cursor:pointer;
+	
+}
+
+.tgn-nav-drilldown li > .opener .opener-icon{
+	position: absolute;
+	right:0;
+	top:0;
+	padding:$nav-padding;
+}
+
+
+.tgn-nav-drilldown .opener-icon:hover,
+.tgn-nav-drilldown li > .opener:hover .opener-icon{
+ 	padding-right:$nav-padding-x;
+}
+
+
+
+.tgn-nav-drilldown .back{
+	 border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+	 display: block;
+	 padding:$nav-padding;
+	 background-color: rgba(255,255,255, 0.1);
+	font-size:1em;
+}
+
+.tgn-nav-drilldown .back:hover{
+ 	padding-left:$nav-padding-x;
+	text-decoration:none;
+}
+.tgn-nav-drilldown .back i{
+	padding-right:.5em;
+}
+
+.tgn-nav-drilldown li.opened > ul {
+  /*left: 0;*/
+  opacity:1;
+  visibility: visible;
+}
+
+.tgn-nav-drilldown .close {
+  /*left: -100%;*/
+  /*visibility: hidden;*/
+}
+
+.tgn-nav-drilldown.opened,
+.tgn-nav-drilldown ul.opened{
+	transform:translateX(-100%);
+}
+
+/*
+.tgn-nav-drilldown.opened >li:not(.active),
+.tgn-nav-drilldown ul.opened >li:not(.active){
+ opacity:0;
+}
+
+.tgn-nav-drilldown.opened >li.active > a,
+.tgn-nav-drilldown.opened >li.active > .opener,
+.tgn-nav-drilldown ul.opened >li.active > a,
+.tgn-nav-drilldown ul.opened >li.active > .opener{
+	opacity:0;
+}*/
+
+
+.nav-dark,
+.nav-dark a{
+	color:$white;
+}
+
+
+.tgn-nav-dropdown.nav-dark > li ul a{
+	color:$body-color;
+}
