@@ -51,7 +51,7 @@ class Radio extends WebComponent
 	
 
 
-	public static function radios($args=false){
+/*	public static function radios($args=false){
 		if(isset($args["showif"])  && !$args["showif"]) return;
 		
 		$defaults=[
@@ -81,5 +81,5 @@ class Radio extends WebComponent
 		if(isset($args['style'])) $args['class'].=" ".$args['style'];
 
 		return view('components.bootstrap.forms.radios', $args);
-	}
+	}*/
 }

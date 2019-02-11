@@ -33,6 +33,7 @@ class WebComponent
 
     	$args=array_merge($args,['attributes'=>$this->attributes,'hiddenattributes'=>$this->hiddenattributes,'data'=>$this->data]);
     	$args=array_merge($args,$this->attributes);
+    	$args["object"]=$this;
     	//dump($args);
     	return $this->renderView($this->view, $args);
 	}
@@ -53,7 +54,7 @@ class WebComponent
 
 
 	protected function prepareAttributes($attributes){
-
+		//if(isset($attributes['class'])) $this->attributes['class']=$this->attributes['class'] . 
 		$this->attributes=array_merge($this->defaultattributes,$attributes);
 	}
 
@@ -73,6 +74,17 @@ class WebComponent
     	if(isset($this->attributes["visible"])){
     		return $this->attributes["visible"];
     	} 
+
+    	/*	if(isset($navitem->role)){
+			if(!Auth::user()) return;
+			if(!Auth::user()->hasRole($navitem->role)) return;
+		}
+
+
+		if(isset($navitem->permission)){
+			if(!Auth::user()) return;
+			if(!Auth::user()->hasPermission($navitem->permission)) return;
+		}*/
     	return true;
     }
 

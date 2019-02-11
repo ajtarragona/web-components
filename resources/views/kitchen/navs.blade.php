@@ -8,50 +8,55 @@
 				<h5>Drilldown</h5>
 				@card(['withbody'=>false,'class'=>'mb-3'])
 					
+					
 					@nav([
-						'navigation' => 'drilldown',
-						'fullwidth' => true,
-						'items' => [
+							'items' => [
 							[
 								'title' => 'Item 1'  ,
 								'icon' => 'home',
-								'url' => '#',
+								'url' => 'http://www.google.com',
 								'active ' => true,
-								'showif' => false
+								'visible' => false
 							],
 							[
 								'title' => 'Item 2'  ,
 								'icon' => 'star',
-								'url' => '#',
+								'iconoptions' =>[
+									'position' => 'top',
+									'color' => 'success',
+									'bg-color'=>'primary',
+									'circle'=>true
+								],
+								'url' => '',
 								'children' => [
 									[
 										'title' => 'Subifds ff tem 2.1'  ,
-										'url' => '#'
+										'url' => ''
 									],
 									[
 										'title' => 'Subitem 2.2'  ,
-										'url' => '#',
+										'url' => '',
 										'children' => [
 											[
 												'title' => 'Subitemfdf fd fds fds 2.2.1'  ,
-												'url' => '#'
+												'url' => ''
 											],
 											[
 												'title' => 'Subitem 2.2.2'  ,
-												'url' => '#'
+												'url' => ''
 											]
 										]
 									],
 									[
 										'title' => 'Subitem 2.3'  ,
-										'url' => '#'
+										'url' => ''
 									]
 								]
 							],
 							[
 								'title' => 'Item 3'  ,
 								'icon' => 'file',
-								'url' => '#',
+								'url' => '',
 							],
 							[
 								'title' => 'Item 4'  ,
@@ -59,16 +64,22 @@
 								'children' => [
 									[
 										'title' => 'Subitem 4.1'  ,
-										'url' => '#'
+										'url' => ''
 									],
 									[
 										'title' => 'Subitem 4.2'  ,
-										'url' => '#'
+										'url' => ''
 									]
 								]
 							]
-						]
+						],
+						'navigation' => 'drilldown',
+						'fullwidth' => true
+						
 					])
+
+					
+
 				@endcard
 			</div>
 
@@ -79,25 +90,22 @@
 				@card(['withbody'=>false,'type'=>'success','class'=>'mb-3'])
 					
 					@nav([
-						'navigation' => 'dropdown',
-						'fullwidth' => true,
-						'class' => 'nav-dark ',
-						'items' => [
+							'items' => [
 							[
 								'title' => 'Item 1'  ,
 								'icon' => 'home',
-								'url' => '#',
+								'url' => 'http://www.google.com',
 								'active ' => true,
-								'showif' => false
+								'visible' => false
 							],
 							[
 								'title' => 'Item 2'  ,
 								'icon' => 'star',
-								'url' => '#',
+								'url' => '',
 								'children' => [
 									[
 										'title' => 'Subifds ff tem 2.1'  ,
-										'url' => '#'
+										'url' => ''
 									],
 									[
 										'title' => 'Subitem 2.2'  ,
@@ -105,24 +113,24 @@
 										'children' => [
 											[
 												'title' => 'Subitemfdf fd fds fds 2.2.1'  ,
-												'url' => '#'
+												'url' => ''
 											],
 											[
 												'title' => 'Subitem 2.2.2'  ,
-												'url' => '#'
+												'url' => ''
 											]
 										]
 									],
 									[
 										'title' => 'Subitem 2.3'  ,
-										'url' => '#'
+										'url' => ''
 									]
 								]
 							],
 							[
 								'title' => 'Item 3'  ,
 								'icon' => 'file',
-								'url' => '#',
+								'url' => '',
 							],
 							[
 								'title' => 'Item 4'  ,
@@ -130,16 +138,23 @@
 								'children' => [
 									[
 										'title' => 'Subitem 4.1'  ,
-										'url' => '#'
+										'url' => ''
 									],
 									[
 										'title' => 'Subitem 4.2'  ,
-										'url' => '#'
+										'url' => ''
 									]
 								]
 							]
-						]
+						],
+						'navigation' => 'dropdown',
+						'fullwidth' => true,
+						'class' => 'nav-dark ',
+						
 					])
+
+
+
 				@endcard
 			</div>
 			<div class="mb-3">
@@ -147,51 +162,49 @@
 
 				@card(['withbody'=>false,'type'=>'danger','class'=>'mb-3'])
 					
+					
 					@nav([
-						'navigation' => 'collapse',
-						'fullwidth' => true,
-						'class' => 'nav-dark ',
-						'items' => [
+							'items' => [
 							[
 								'title' => 'Item 1'  ,
 								'icon' => 'home',
-								'url' => '#',
+								'url' => 'http://www.google.com',
 								'active ' => true,
-								'showif' => false
+								'visible' => false
 							],
 							[
 								'title' => 'Item 2'  ,
 								'icon' => 'star',
-								'url' => '#',
+								'url' => '',
 								'children' => [
 									[
 										'title' => 'Subifds ff tem 2.1'  ,
-										'url' => '#'
+										'url' => ''
 									],
 									[
 										'title' => 'Subitem 2.2'  ,
-										'url' => '#',
+										'url' => '',
 										'children' => [
 											[
 												'title' => 'Subitemfdf fd fds fds 2.2.1'  ,
-												'url' => '#'
+												'url' => ''
 											],
 											[
 												'title' => 'Subitem 2.2.2'  ,
-												'url' => '#'
+												'url' => ''
 											]
 										]
 									],
 									[
 										'title' => 'Subitem 2.3'  ,
-										'url' => '#'
+										'url' => ''
 									]
 								]
 							],
 							[
 								'title' => 'Item 3'  ,
 								'icon' => 'file',
-								'url' => '#',
+								'url' => '',
 							],
 							[
 								'title' => 'Item 4'  ,
@@ -199,16 +212,24 @@
 								'children' => [
 									[
 										'title' => 'Subitem 4.1'  ,
-										'url' => '#'
+										'url' => ''
 									],
 									[
 										'title' => 'Subitem 4.2'  ,
-										'url' => '#'
+										'url' => ''
 									]
 								]
 							]
-						]
+						],
+						'navigation' => 'collapse',
+						'fullwidth' => true,
+						'class' => 'nav-dark ',
+						''
+						
 					])
+
+
+					
 				@endcard
 			</div>
 		@endcol

@@ -7,6 +7,8 @@ use Ajtarragona\WebComponents\Models\Textarea;
 use Ajtarragona\WebComponents\Models\Select;
 use Ajtarragona\WebComponents\Models\Checkbox;
 use Ajtarragona\WebComponents\Models\Radio;
+use Ajtarragona\WebComponents\Models\Nav;
+use Ajtarragona\WebComponents\Models\NavItem;
 
 
 if (! function_exists('renderAttributes')) {
@@ -33,6 +35,13 @@ if (! function_exists('icon')) {
 	function icon($iconname,$attributes=[],$data=[]){
 		$icon=new Icon($iconname,$attributes,$data);
 		return $icon->render();
+	}
+}
+
+
+if (! function_exists('textAndIcon')) {
+	function textAndIcon($text,$icon,$options=[]){
+		return Icon::getIconHTML($text,$icon,$options);
 	}
 }
 
@@ -107,15 +116,19 @@ if (! function_exists('radios')) {
 
 
 if (! function_exists('navitem')) {
-	function navitem($navitem, $parentid, $navigation="dropdown"){
-
-		return HtmlHelper::navitem($navitem, $parentid, $navigation);
+	function navitem($attributes=[],$data=[]){
+		$ret = new NavItem($attributes,$data);
+		return $ret->render();
+		//return HtmlHelper::navitem($navitem, $parentid, $navigation);
 	}
 }
 
 if (! function_exists('nav')) {
-	function nav($nav){
-		return HtmlHelper::nav($nav);
+	function nav($attributes=[],$data=[]){
+		$ret = new Nav($attributes,$data);
+		return $ret->render();
+
+		//return HtmlHelper::nav($nav);
 	}
 }
 
@@ -139,3 +152,14 @@ if (! function_exists('tablecount')) {
 		return HtmlHelper::tablecount($args);
 	}
 }
+
+
+
+if (! function_exists('currentpath')) {
+	function currentpath($args=false){
+		return request()->path();
+	}
+}
+
+
+

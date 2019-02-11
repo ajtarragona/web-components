@@ -26,7 +26,7 @@
 
 				@form(['method'=>'POST','action'=>route('webcomponents.kitchen.handle')])
 					
-					@row(['class'=>'gap-sm'])
+					@row(['class'=>'gap-0'])
 						@col(['size'=>5])
 							@input(['container'=>true, 'required'=>true,'name'=>'campo_texto3', 'icon'=>'align-right', 'iconposition'=>'right', 'label'=>'Text', 'placeholder'=>'Enter text...', 'value'=>123]) 
 							@input(['container'=>true, 'required'=>true,'name'=>'campo_texto_mascara', 'icon'=>'phone', 'iconposition'=>'left', 'label'=>'Phone', 'placeholder'=>'Enter phone...', 'value'=>'','data'=>['mask'=>'(+00) 000 000 000']]) 

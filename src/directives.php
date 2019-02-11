@@ -305,6 +305,9 @@ return [
     'circleicon' => function($expression) {
         return "<?php echo circleicon({$expression}); ?>";
     },
+    'textAndIcon' => function($expression) {
+        return "<?php echo textAndIcon({$expression}); ?>";
+    },
 
 
     'input' => function($expression) {
@@ -353,6 +356,9 @@ return [
 
     'tablecount' => function($expression) {
         return "<?php echo tablecount({$expression}); ?>";
+    }, 
+    'currentpath' => function($expression) {
+        return "<?php echo currentpath({$expression}); ?>";
     },   
 ];
         

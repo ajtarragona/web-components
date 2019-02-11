@@ -1,7 +1,28 @@
-@extends('ajtarragona-web-components::layout/master')
+@extends('ajtarragona-web-components::layout/master-sidebar')
 
 @section('title')
 	@lang('Kitchen Sink')
+@endsection
+
+@section('menu')
+	
+
+@nav([
+	'items' => [	
+		[
+			"title" => __('Home'),
+			"icon" => 'home',
+			"route" => 'webcomponents.kitchen'
+		]
+	],
+	"navigation"=> 'drilldown',
+	'id'=>'main-menu',
+	'class'=>'nav-dark',
+	'fullwidth'=>true
+
+])
+
+
 @endsection
 {{-- 
 

@@ -12,10 +12,10 @@
 	
 	<hr/>
 	@circleicon('check',['size'=>'xs'])
-	@circleicon('check',['size'=>'sm','color'=>'info'])
-	@circleicon('check',['size'=>'md','color'=>'danger'])
-	@circleicon('check',['size'=>'lg','color'=>'warning']) 
-	@circleicon('check',['size'=>'xl','color'=>'success']) 
-	@circleicon('check',['size'=>'xl','color'=>'light']) 
-	@circleicon('check',['size'=>'xl','color'=>'dark'])
+	@circleicon('check',['size'=>'sm','bg-color'=>'info','color'=>'white'])
+	@circleicon('check',['size'=>'md','bg-color'=>'danger','color'=>'white'])
+	@circleicon('check',['size'=>'lg','bg-color'=>'warning','color'=>'#ff0000']) 
+	@circleicon('check',['size'=>'xl','bg-color'=>'success','color'=>'white']) 
+	@circleicon('check',['size'=>'xl','bg-color'=>'light','color'=>'success']) 
+	@circleicon('check',['size'=>'xl','bg-color'=>'dark','color'=>'white'])
 </section>

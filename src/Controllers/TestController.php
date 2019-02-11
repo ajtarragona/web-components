@@ -28,7 +28,7 @@ class TestController extends Controller
     {
        
 
-       return view('kitchen.modals.basic', compact('faker'));
+       return $this->packageView('kitchen.modals.basic', compact('faker'));
     }
 
 

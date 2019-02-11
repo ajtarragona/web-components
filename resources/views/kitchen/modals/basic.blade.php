@@ -1,4 +1,4 @@
-@extends('layout/modal')
+@extends('ajtarragona-web-components::layout.modal')
 
 
 @section('title', $faker->words(3,true) )

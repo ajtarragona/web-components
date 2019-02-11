@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ app()->getLocale() }}" class="loading">
+<html lang="{{ app()->getLocale() }}" class="loading ">
 <head>
 	<!-- Required meta tags -->
 	<meta charset="utf-8">
@@ -17,8 +17,13 @@
 	<title>@yield('title') | {{ config('app.name')}}</title>
 </head>
 
-<body data-spy="scroll" data-target=".scrollspied" data-offset="0"  >
+<body data-spy="scroll" data-target=".scrollspied" data-offset="0" class="with-toolbar with-sidebar {{ session('sidebar')?"sidebar-open":"" }}" >
 	<div id="app">
+		@include('ajtarragona-web-components::layout.parts.sidebar')
+		@include('ajtarragona-web-components::layout.parts.toolbar')
+
+			
+
 		
 		<main role="main" id="main-container">
 			
@@ -30,6 +35,7 @@
 
 		</main>
 		
+		@include('ajtarragona-web-components::layout.parts.footer')
 
 	</div>
 
