@@ -164,11 +164,12 @@ function tgnFormClass(obj,options){
 	        });
 
 		     //focus groups
-		     $form.on('focus',':input,.select2-container',function(){
+		     $form.on('focus',':input,.bootstrap-select .dropdown-toggle',function(){
+		     	//al("focused");
 		     	var group=$(this).closest('.form-group');
 		     	if(!group.is(".disabled"))
 		     		group.addClass('focused');
-		     }).on('blur',':input,.select2-container',function(){
+		     }).on('blur',':input,.bootstrap-select .dropdown-toggle',function(){
 		     	var group=$(this).closest('.form-group');
 		     	if(!group.is(".disabled"))
 		     		group.removeClass('focused');

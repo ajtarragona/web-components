@@ -67856,10 +67856,11 @@ function tgnFormClass(obj, options) {
         }
       }); //focus groups
 
-      $form.on('focus', ':input,.select2-container', function () {
+      $form.on('focus', ':input,.bootstrap-select .dropdown-toggle', function () {
+        //al("focused");
         var group = $(this).closest('.form-group');
         if (!group.is(".disabled")) group.addClass('focused');
-      }).on('blur', ':input,.select2-container', function () {
+      }).on('blur', ':input,.bootstrap-select .dropdown-toggle', function () {
         var group = $(this).closest('.form-group');
         if (!group.is(".disabled")) group.removeClass('focused');
       });
@@ -69563,22 +69564,24 @@ $.fn.tgnAjaxTable = function () {
 /***/ (function(module, exports) {
 
 initToolbar = function initToolbar() {
-  $(document).on('keyup', function (evt) {
-    if (evt.keyCode == 27) {
-      $('body').removeClass('toolbar-open'); //$('body').removeClass('sidebar-open');
-    }
-  });
-  $('body').on('click', function (e) {
-    if ($(e.target).closest('.toolbar-toggle').length == 0 && $(e.target).closest('.sidebar-toggle').length == 0) {
-      if ($(this).is('.toolbar-open')) $(this).removeClass('toolbar-open'); //if($(this).is('.sidebar-open')) $(this).removeClass('sidebar-open');
-    }
-  });
-  $('#maintoolbar .toolbar-toggle').on('click', function () {
-    $('body').toggleClass('toolbar-open');
-  });
+  if ($('#maintoolbar').length > 0) {
+    $(document).on('keyup', function (evt) {
+      if (evt.keyCode == 27) {
+        $('body').removeClass('toolbar-open'); //$('body').removeClass('sidebar-open');
+      }
+    });
+    $('body').on('click', function (e) {
+      if ($(e.target).closest('.toolbar-toggle').length == 0 && $(e.target).closest('.sidebar-toggle').length == 0) {
+        if ($(this).is('.toolbar-open')) $(this).removeClass('toolbar-open'); //if($(this).is('.sidebar-open')) $(this).removeClass('sidebar-open');
+      }
+    });
+    $('#maintoolbar .toolbar-toggle').on('click', function () {
+      $('body').toggleClass('toolbar-open');
+    });
 
-  if (!$('#maintoolbar .the-actions').html().trim()) {
-    $('#maintoolbar .toolbar-toggle').hide();
+    if (!$('#maintoolbar .the-actions').html().trim()) {
+      $('#maintoolbar .toolbar-toggle').hide();
+    }
   }
 };
 

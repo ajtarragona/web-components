@@ -19,12 +19,13 @@ class WebComponentsServiceProvider extends ServiceProvider
     {
      
 
+        //cargo rutas
+        $this->loadRoutesFrom(__DIR__.'/routes.php');
+        
+
         //vistas   
         $this->loadViewsFrom(dirname(__DIR__).'/resources/views', 'ajtarragona-web-components');
         
-        //cargo rutas
-        $this->loadRoutesFrom(__DIR__.'/routes.php');
-
         //publico vistas
         if ($this->app->runningInConsole()) {
             $this->publishes([
@@ -71,9 +72,9 @@ class WebComponentsServiceProvider extends ServiceProvider
             return new \Ajtarragona\WebComponents\Models\WebComponent;
         });
         
-        $this->app->bind('icon', function(){
-            return new \Ajtarragona\WebComponents\Models\Icon;
-        });
+        // $this->app->bind('icon', function(){
+        //     return new \Ajtarragona\WebComponents\Models\Icon;
+        // });
 
 
         //helpers
