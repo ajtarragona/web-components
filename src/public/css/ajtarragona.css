@@ -16527,7 +16527,7 @@ form.validating {
 
 .custom-control-label:empty::before,
 .custom-control-label:empty::after {
-  top: -0.7rem;
+  top: 0rem;
 }
 
 .col-form-label {
@@ -17164,6 +17164,10 @@ select.loading {
   padding: 0.5em;
   z-index: 2;
   cursor: pointer;
+}
+
+.bootstrap-select .dropdown-toggle.disabled .deselect-btn {
+  display: none;
 }
 
 .bootstrap-select[class*=btn-] .deselect-btn {

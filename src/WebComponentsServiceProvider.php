@@ -24,12 +24,12 @@ class WebComponentsServiceProvider extends ServiceProvider
         
 
         //vistas   
-        $this->loadViewsFrom(dirname(__DIR__).'/resources/views', 'ajtarragona-web-components');
+        $this->loadViewsFrom(__DIR__.'/resources/views', 'ajtarragona-web-components');
         
         //publico vistas
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                dirname(__DIR__).'/resources/views' => $this->app->resourcePath('views/vendor/ajtarragona/web-components'),
+                __DIR__.'/resources/views' => $this->app->resourcePath('views/vendor/ajtarragona/web-components'),
             ], 'ajtarragona-web-components-views');
         }
 
@@ -45,7 +45,7 @@ class WebComponentsServiceProvider extends ServiceProvider
 
         //publico assets
         $this->publishes([
-            dirname(__DIR__).'/public' => public_path('vendor/ajtarragona'),
+            __DIR__.'/public' => public_path('vendor/ajtarragona'),
         ], 'ajtarragona-web-components-assets');
 
         $this->mergeConfigFrom($config, 'webcomponents');
@@ -102,7 +102,7 @@ class WebComponentsServiceProvider extends ServiceProvider
         Blade::component('ajtarragona-web-components::bootstrap.alert', 'alert');
         Blade::component('ajtarragona-web-components::bootstrap.badge', 'badge');
         Blade::component('ajtarragona-web-components::bootstrap.card', 'card');
-        Blade::component('ajtarragona-web-components::bootstrap.breadcrumb', 'breadcrumb');
+        //Blade::component('ajtarragona-web-components::bootstrap.breadcrumb', 'breadcrumb');
         Blade::component('ajtarragona-web-components::bootstrap.list-group', 'listgroup');
         Blade::component('ajtarragona-web-components::bootstrap.table', 'table');
         Blade::component('ajtarragona-web-components::bootstrap.tabs', 'tabs');

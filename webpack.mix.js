@@ -11,6 +11,6 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/assets/js/ajtarragona.js', 'public/js')
-	.sass('resources/assets/sass/ajtarragona.scss', 'public/css');
+mix.js('src/resources/assets/js/ajtarragona.js', 'src/public/js')
+	.sass('src/resources/assets/sass/ajtarragona.scss', 'src/public/css');
 

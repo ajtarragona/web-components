@@ -15,9 +15,10 @@ form.validating{
 	
 	&:empty::before,
 	&:empty::after{
-		top:-0.7rem;
+		top:0rem;
 	}
 }
+
 .col-form-label{
 	padding-top: 0rem;
 	padding-bottom: 0.5rem;

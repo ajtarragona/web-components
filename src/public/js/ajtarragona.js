@@ -66807,10 +66807,10 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ "./resources/assets/js/ajtarragona.js":
-/*!********************************************!*\
-  !*** ./resources/assets/js/ajtarragona.js ***!
-  \********************************************/
+/***/ "./src/resources/assets/js/ajtarragona.js":
+/*!************************************************!*\
+  !*** ./src/resources/assets/js/ajtarragona.js ***!
+  \************************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -66822,9 +66822,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var jquery_ui_ui_widgets_sortable_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(jquery_ui_ui_widgets_sortable_js__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var jquery_ui_ui_widgets_droppable_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! jquery-ui/ui/widgets/droppable.js */ "./node_modules/jquery-ui/ui/widgets/droppable.js");
 /* harmony import */ var jquery_ui_ui_widgets_droppable_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(jquery_ui_ui_widgets_droppable_js__WEBPACK_IMPORTED_MODULE_2__);
-__webpack_require__(/*! ./bootstrap */ "./resources/assets/js/bootstrap.js");
+__webpack_require__(/*! ./bootstrap */ "./src/resources/assets/js/bootstrap.js");
 
-__webpack_require__(/*! ./functions */ "./resources/assets/js/functions.js"); //import 'select2/dist/js/select2.js';
+__webpack_require__(/*! ./functions */ "./src/resources/assets/js/functions.js"); //import 'select2/dist/js/select2.js';
 
 
 var lang = 'es'; //currentLanguage();
@@ -66872,41 +66872,41 @@ __webpack_require__(/*! tributejs/dist/tribute.js */ "./node_modules/tributejs/d
 
 __webpack_require__(/*! autosize/dist/autosize.js */ "./node_modules/autosize/dist/autosize.js");
 
-__webpack_require__(/*! ./vendor/typeahead.bundle.min.js */ "./resources/assets/js/vendor/typeahead.bundle.min.js");
+__webpack_require__(/*! ./vendor/typeahead.bundle.min.js */ "./src/resources/assets/js/vendor/typeahead.bundle.min.js");
 
 __webpack_require__(/*! bootstrap-tagsinput/dist/bootstrap-tagsinput.js */ "./node_modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.js"); //require('./vendor/bootstrap3-typeahead.min.js');
 
 
-__webpack_require__(/*! ./forms */ "./resources/assets/js/forms.js");
+__webpack_require__(/*! ./forms */ "./src/resources/assets/js/forms.js");
 
-__webpack_require__(/*! ./formcontrols */ "./resources/assets/js/formcontrols.js");
+__webpack_require__(/*! ./formcontrols */ "./src/resources/assets/js/formcontrols.js");
 
-__webpack_require__(/*! ./navs */ "./resources/assets/js/navs.js");
+__webpack_require__(/*! ./navs */ "./src/resources/assets/js/navs.js");
 
-__webpack_require__(/*! ./flash */ "./resources/assets/js/flash.js");
+__webpack_require__(/*! ./flash */ "./src/resources/assets/js/flash.js");
 
-__webpack_require__(/*! ./toolbar */ "./resources/assets/js/toolbar.js");
+__webpack_require__(/*! ./toolbar */ "./src/resources/assets/js/toolbar.js");
 
-__webpack_require__(/*! ./sidebar */ "./resources/assets/js/sidebar.js");
+__webpack_require__(/*! ./sidebar */ "./src/resources/assets/js/sidebar.js");
 
-__webpack_require__(/*! ./modals */ "./resources/assets/js/modals.js");
+__webpack_require__(/*! ./modals */ "./src/resources/assets/js/modals.js");
 
-__webpack_require__(/*! ./tables */ "./resources/assets/js/tables.js");
+__webpack_require__(/*! ./tables */ "./src/resources/assets/js/tables.js");
 
-__webpack_require__(/*! ./selects */ "./resources/assets/js/selects.js");
+__webpack_require__(/*! ./selects */ "./src/resources/assets/js/selects.js");
 
-__webpack_require__(/*! ./maps */ "./resources/assets/js/maps.js");
+__webpack_require__(/*! ./maps */ "./src/resources/assets/js/maps.js");
 
-__webpack_require__(/*! ./sessiontriggers */ "./resources/assets/js/sessiontriggers.js");
+__webpack_require__(/*! ./sessiontriggers */ "./src/resources/assets/js/sessiontriggers.js");
 
-__webpack_require__(/*! ./main */ "./resources/assets/js/main.js");
+__webpack_require__(/*! ./main */ "./src/resources/assets/js/main.js");
 
 /***/ }),
 
-/***/ "./resources/assets/js/bootstrap.js":
-/*!******************************************!*\
-  !*** ./resources/assets/js/bootstrap.js ***!
-  \******************************************/
+/***/ "./src/resources/assets/js/bootstrap.js":
+/*!**********************************************!*\
+  !*** ./src/resources/assets/js/bootstrap.js ***!
+  \**********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -66965,10 +66965,10 @@ if (token) {
 
 /***/ }),
 
-/***/ "./resources/assets/js/flash.js":
-/*!**************************************!*\
-  !*** ./resources/assets/js/flash.js ***!
-  \**************************************/
+/***/ "./src/resources/assets/js/flash.js":
+/*!******************************************!*\
+  !*** ./src/resources/assets/js/flash.js ***!
+  \******************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -67062,10 +67062,10 @@ TgnFlash.success = function (body, title, options) {
 
 /***/ }),
 
-/***/ "./resources/assets/js/formcontrols.js":
-/*!*********************************************!*\
-  !*** ./resources/assets/js/formcontrols.js ***!
-  \*********************************************/
+/***/ "./src/resources/assets/js/formcontrols.js":
+/*!*************************************************!*\
+  !*** ./src/resources/assets/js/formcontrols.js ***!
+  \*************************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -67712,10 +67712,10 @@ $.fn.initToggleClass = function () {
 
 /***/ }),
 
-/***/ "./resources/assets/js/forms.js":
-/*!**************************************!*\
-  !*** ./resources/assets/js/forms.js ***!
-  \**************************************/
+/***/ "./src/resources/assets/js/forms.js":
+/*!******************************************!*\
+  !*** ./src/resources/assets/js/forms.js ***!
+  \******************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -67983,10 +67983,10 @@ function tgnFormClass(obj, options) {
 
 /***/ }),
 
-/***/ "./resources/assets/js/functions.js":
-/*!******************************************!*\
-  !*** ./resources/assets/js/functions.js ***!
-  \******************************************/
+/***/ "./src/resources/assets/js/functions.js":
+/*!**********************************************!*\
+  !*** ./src/resources/assets/js/functions.js ***!
+  \**********************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -68221,10 +68221,10 @@ String.prototype.strToDate = String.prototype.strToDate || function (format, del
 
 /***/ }),
 
-/***/ "./resources/assets/js/main.js":
-/*!*************************************!*\
-  !*** ./resources/assets/js/main.js ***!
-  \*************************************/
+/***/ "./src/resources/assets/js/main.js":
+/*!*****************************************!*\
+  !*** ./src/resources/assets/js/main.js ***!
+  \*****************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -68271,10 +68271,10 @@ $(document).ready(function () {
 
 /***/ }),
 
-/***/ "./resources/assets/js/maps.js":
-/*!*************************************!*\
-  !*** ./resources/assets/js/maps.js ***!
-  \*************************************/
+/***/ "./src/resources/assets/js/maps.js":
+/*!*****************************************!*\
+  !*** ./src/resources/assets/js/maps.js ***!
+  \*****************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -68782,10 +68782,10 @@ $.fn.tgnMap = function (options) {
 
 /***/ }),
 
-/***/ "./resources/assets/js/modals.js":
-/*!***************************************!*\
-  !*** ./resources/assets/js/modals.js ***!
-  \***************************************/
+/***/ "./src/resources/assets/js/modals.js":
+/*!*******************************************!*\
+  !*** ./src/resources/assets/js/modals.js ***!
+  \*******************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -69079,10 +69079,10 @@ TgnModal.confirm = function (body, callback, options) {
 
 /***/ }),
 
-/***/ "./resources/assets/js/navs.js":
-/*!*************************************!*\
-  !*** ./resources/assets/js/navs.js ***!
-  \*************************************/
+/***/ "./src/resources/assets/js/navs.js":
+/*!*****************************************!*\
+  !*** ./src/resources/assets/js/navs.js ***!
+  \*****************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -69264,10 +69264,10 @@ TgnNav = function TgnNav(obj, options) {
 
 /***/ }),
 
-/***/ "./resources/assets/js/selects.js":
-/*!****************************************!*\
-  !*** ./resources/assets/js/selects.js ***!
-  \****************************************/
+/***/ "./src/resources/assets/js/selects.js":
+/*!********************************************!*\
+  !*** ./src/resources/assets/js/selects.js ***!
+  \********************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -69312,20 +69312,22 @@ $.fn.createSelectPicker = function () {
 
         var showdeselector = typeof $(this).data('show-deselector') == 'undefined' || $(this).data("show-deselector");
 
-        if (!$(this).prop('disabled') && showdeselector) {
+        if (showdeselector) {
           var $deselector = $("<div class='deselect-btn'>&times;</div>");
           $deselector.on('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            var select = $(this).closest('.bootstrap-select').find('select');
+            if (!$(this).prop('disabled')) {
+              e.preventDefault();
+              e.stopPropagation();
+              var select = $(this).closest('.bootstrap-select').find('select');
 
-            if (select.attr('multiple')) {
-              select.selectpicker('deselectAll');
-            } else {
-              select.selectpicker('val', false);
+              if (select.attr('multiple')) {
+                select.selectpicker('deselectAll');
+              } else {
+                select.selectpicker('val', false);
+              }
+
+              select.trigger("change");
             }
-
-            select.trigger("change");
           });
           $(this).siblings('.dropdown-toggle').append($deselector);
         } //}
@@ -69404,10 +69406,10 @@ $.fn.initSelectPicker = function () {
 
 /***/ }),
 
-/***/ "./resources/assets/js/sessiontriggers.js":
-/*!************************************************!*\
-  !*** ./resources/assets/js/sessiontriggers.js ***!
-  \************************************************/
+/***/ "./src/resources/assets/js/sessiontriggers.js":
+/*!****************************************************!*\
+  !*** ./src/resources/assets/js/sessiontriggers.js ***!
+  \****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -69442,10 +69444,10 @@ $.fn.initSessionTriggers = function () {
 
 /***/ }),
 
-/***/ "./resources/assets/js/sidebar.js":
-/*!****************************************!*\
-  !*** ./resources/assets/js/sidebar.js ***!
-  \****************************************/
+/***/ "./src/resources/assets/js/sidebar.js":
+/*!********************************************!*\
+  !*** ./src/resources/assets/js/sidebar.js ***!
+  \********************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -69473,10 +69475,10 @@ initSidebar = function initSidebar() {
 
 /***/ }),
 
-/***/ "./resources/assets/js/tables.js":
-/*!***************************************!*\
-  !*** ./resources/assets/js/tables.js ***!
-  \***************************************/
+/***/ "./src/resources/assets/js/tables.js":
+/*!*******************************************!*\
+  !*** ./src/resources/assets/js/tables.js ***!
+  \*******************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -69556,10 +69558,10 @@ $.fn.tgnAjaxTable = function () {
 
 /***/ }),
 
-/***/ "./resources/assets/js/toolbar.js":
-/*!****************************************!*\
-  !*** ./resources/assets/js/toolbar.js ***!
-  \****************************************/
+/***/ "./src/resources/assets/js/toolbar.js":
+/*!********************************************!*\
+  !*** ./src/resources/assets/js/toolbar.js ***!
+  \********************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -69587,10 +69589,10 @@ initToolbar = function initToolbar() {
 
 /***/ }),
 
-/***/ "./resources/assets/js/vendor/typeahead.bundle.min.js":
-/*!************************************************************!*\
-  !*** ./resources/assets/js/vendor/typeahead.bundle.min.js ***!
-  \************************************************************/
+/***/ "./src/resources/assets/js/vendor/typeahead.bundle.min.js":
+/*!****************************************************************!*\
+  !*** ./src/resources/assets/js/vendor/typeahead.bundle.min.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -72476,14 +72478,14 @@ initToolbar = function initToolbar() {
     }
   })();
 });
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../node_modules/timers-browserify/main.js */ "./node_modules/timers-browserify/main.js").setImmediate))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../node_modules/timers-browserify/main.js */ "./node_modules/timers-browserify/main.js").setImmediate))
 
 /***/ }),
 
-/***/ "./resources/assets/sass/ajtarragona.scss":
-/*!************************************************!*\
-  !*** ./resources/assets/sass/ajtarragona.scss ***!
-  \************************************************/
+/***/ "./src/resources/assets/sass/ajtarragona.scss":
+/*!****************************************************!*\
+  !*** ./src/resources/assets/sass/ajtarragona.scss ***!
+  \****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -72492,14 +72494,14 @@ initToolbar = function initToolbar() {
 /***/ }),
 
 /***/ 0:
-/*!*******************************************************************************************!*\
-  !*** multi ./resources/assets/js/ajtarragona.js ./resources/assets/sass/ajtarragona.scss ***!
-  \*******************************************************************************************/
+/*!***************************************************************************************************!*\
+  !*** multi ./src/resources/assets/js/ajtarragona.js ./src/resources/assets/sass/ajtarragona.scss ***!
+  \***************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\tmedrano\DEVELOP\xampp\htdocs\laravel\packages\ajtarragona\web-components\resources\assets\js\ajtarragona.js */"./resources/assets/js/ajtarragona.js");
-module.exports = __webpack_require__(/*! C:\Users\tmedrano\DEVELOP\xampp\htdocs\laravel\packages\ajtarragona\web-components\resources\assets\sass\ajtarragona.scss */"./resources/assets/sass/ajtarragona.scss");
+__webpack_require__(/*! C:\Users\tmedrano\DEVELOP\xampp\htdocs\laravel\packages\ajtarragona\web-components\src\resources\assets\js\ajtarragona.js */"./src/resources/assets/js/ajtarragona.js");
+module.exports = __webpack_require__(/*! C:\Users\tmedrano\DEVELOP\xampp\htdocs\laravel\packages\ajtarragona\web-components\src\resources\assets\sass\ajtarragona.scss */"./src/resources/assets/sass/ajtarragona.scss");
 
 
 /***/ }),

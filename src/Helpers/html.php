@@ -9,6 +9,8 @@ use Ajtarragona\WebComponents\Models\Checkbox;
 use Ajtarragona\WebComponents\Models\Radio;
 use Ajtarragona\WebComponents\Models\Nav;
 use Ajtarragona\WebComponents\Models\NavItem;
+use Ajtarragona\WebComponents\Models\Breadcrumb;
+use Ajtarragona\WebComponents\Models\Crumb;
 
 
 if (! function_exists('renderAttributes')) {
@@ -133,9 +135,18 @@ if (! function_exists('nav')) {
 }
 
 
+if (! function_exists('breadcrumb')) {
+	function breadcrumb($attributes=[],$data=[]){
+		$ret = new Breadcrumb($attributes,$data);
+		return $ret->render();
+	}
+}
+
+
 if (! function_exists('crumb')) {
-	function crumb($items){
-		return HtmlHelper::crumb($items);
+	function crumb($attributes=[],$data=[]){
+		$ret = new Crumb($attributes,$data);
+		return $ret->render();
 	}
 }
 

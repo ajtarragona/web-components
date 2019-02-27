@@ -71,6 +71,9 @@ select.loading{
 	cursor:pointer;
 }
 
+.bootstrap-select .dropdown-toggle.disabled .deselect-btn{
+	display: none;
+}
 .bootstrap-select[class*='btn-'] .deselect-btn{
 	color:$white;
 }

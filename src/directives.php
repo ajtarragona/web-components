@@ -345,6 +345,10 @@ return [
         return "<?php echo nav({$expression}); ?>";
     },
 
+    'breadcrumb' => function($expression) {
+        return "<?php echo breadcrumb({$expression}); ?>";
+    },
+    
     'crumb' => function($expression) {
         return "<?php echo crumb({$expression}); ?>";
     },

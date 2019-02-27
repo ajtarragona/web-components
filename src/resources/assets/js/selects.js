@@ -52,20 +52,22 @@ $.fn.createSelectPicker = function(){
          // if(!$(this).attr('multiple')){
           var showdeselector = (typeof  $(this).data('show-deselector') == 'undefined') ||  $(this).data("show-deselector");
  
-          if(!$(this).prop('disabled') && showdeselector){
+          if(showdeselector){
               var $deselector=$("<div class='deselect-btn'>&times;</div>");
 
               $deselector.on('click',function(e){
-                 e.preventDefault();
-                 e.stopPropagation();
-                 var select= $(this).closest('.bootstrap-select').find('select');
-                   if(select.attr('multiple')){
-                      select.selectpicker('deselectAll');
+                 if(!$(this).prop('disabled')){
+                   e.preventDefault();
+                   e.stopPropagation();
+                   var select= $(this).closest('.bootstrap-select').find('select');
+                     if(select.attr('multiple')){
+                        select.selectpicker('deselectAll');
 
-                   }else{
-                      select.selectpicker('val', false);
-                   }
-                   select.trigger( "change" );
+                     }else{
+                        select.selectpicker('val', false);
+                     }
+                     select.trigger( "change" );
+                  }
               });
               $(this).siblings('.dropdown-toggle').append($deselector);
            }

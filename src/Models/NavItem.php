@@ -61,22 +61,24 @@ class NavItem extends WebComponent
 		
 		$this->attributes['class'].="  ";
 
-		$activeroute =$this->attributes["activeroute"]?true:($this->attributes["route"]?$this->attributes["route"]:false);
-     	$activeurl =$this->attributes["activeurl"]?true:($this->attributes["url"]?$this->attributes["url"]:false);
-     	$activematch =$this->attributes["activematch"]?true:false;
-
+		$activeroute =$this->attributes["activeroute"]?$this->attributes["activeroute"]:($this->attributes["route"]?$this->attributes["route"]:false);
+     	$activeurl =$this->attributes["activeurl"]?$this->attributes["activeurl"]:($this->attributes["url"]?$this->attributes["url"]:false);
+     	$activematch =$this->attributes["activematch"]?$this->attributes["activematch"]:false;
+     	//dump($this->attributes);
      	if($this->attributes["children"]) $this->attributes["class"].=" has-submenu ";
 
+	 	//dump($activeroute);
      	if($activematch){
      		$this->attributes['active'] = isActiveMatch($activematch);
 	 	}else if($activeroute){
+	 		//dump(isActiveRoute($activeroute));
      		$this->attributes['active'] = isActiveRoute($activeroute);
      	}else if($activeurl){
      		$this->attributes['active'] = isActiveURL($activeurl);
      	}
 		if($this->attributes['active']) $this->attributes["class"].=' active ';
 
-
+		//dump($this->attributes['active']);
 
 		$linkclasses=['nav-link'];
 		if($this->attributes['linkclass']) $linkclasses=explode(" ",$this->attributes['linkclass']);

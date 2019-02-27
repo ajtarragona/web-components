@@ -3,6 +3,10 @@
 
 
 ## Instalació
+Components web
+validacio de forms ajax
+taules amb paginacio i ordenacio ajax
+settings de sessio
 
 ```bash
 composer require ajtarragona/web-components:"@dev"
