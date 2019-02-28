@@ -67077,6 +67077,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var autosize__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(autosize__WEBPACK_IMPORTED_MODULE_1__);
 $.fn.initConfirm = function (options) {
   return this.each(function () {
+    al("initConfirm()");
     var $element = $(this);
     var defaults = {
       title: __("Segur?"),
@@ -67090,6 +67091,7 @@ $.fn.initConfirm = function (options) {
       btnCancelIconClass: 'fa fa-times'
     };
     if ($element.data()) defaults = $.extend(true, {}, defaults, $element.data());
+    if ($element.data('confirm')) defaults.title = $element.data('confirm');
     if (options) defaults = $.extend({}, defaults, options);
     $element.confirmation(defaults);
   });
@@ -68267,6 +68269,7 @@ $.fn.tgnInitAll = function () {
   this.find('textarea.autoheight').initAutoheight();
   this.find('input.autocomplete:not(.tt-input):not(.tt-hint)').initTypeahead();
   this.find('[data-toggleclass]').initToggleClass();
+  this.find('a[data-confirm], button[data-confirm]').initConfirm();
   this.initSessionTriggers(); //initNavs(this);
 
   return this;
