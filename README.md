@@ -41,14 +41,16 @@ composer require ajtarragona/web-components:"@dev"
 ## Configuració
 
 
-1. Publicar assets en tu app
+1. Publicar assets en tu app:
 ```bash
 php artisan vendor:publish  --tag=ajtarragona-web-components-assets --force
 ```
 Això copiarà els scripts i estils a la carpeta public del nostre projecte  `public\vendor\ajtarragona`.
 
 
-2. Publicar rutes per javascript
+
+2. Publicar rutes per javascript:
+
 Afegir Provider Laroute a l'arxiu `config/app.php`
 
 ```php
