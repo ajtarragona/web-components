@@ -38,7 +38,7 @@ composer require ajtarragona/web-components:"@dev"
 ```
 
 
-##Configuració
+## Configuració
 
 
 - Publicar assets en tu app
@@ -55,7 +55,7 @@ php artisan laroute:generate
 ```
 
 
-##Ús
+## Ús
 
 En tus vistas puedes extender la plantilla que incorpora el paquete
 ```php
@@ -82,7 +82,7 @@ Això copiarà l'arxiu a `config/webcomponents.php`.
 
 
 
-##Publicar vistes
+## Publicar vistes
 Si volguéssim modificar alguna vista del paquet, les podem publicar dins del nostre projecte:
 ```bash
 php artisan vendor:publish --tag=ajtarragona-web-components-views
