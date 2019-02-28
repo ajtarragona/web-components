@@ -1,8 +1,9 @@
 <figure 
 	@isset($id) id="{{$id}}" @endif
     class="figure {{ $class or '' }}"
-    {!! html_attributes(isset($attributes)?$attributes:false) !!}
-    {!! html_attributes(isset($data)?$data:false,'data') !!}
+    {!! renderAttributes(isset($attributes)?$attributes:false) !!}
+    {!! renderData(isset($data)?$data:false) !!}
+
 >
     {{ $slot }}
 

@@ -10,8 +10,8 @@
 	id="{{ $id or ''}}"
 	class="tab-pane @istrue($fade,'fade')  @istrue($active,'show active') {{ $class or ''}} " 
 	role="tabpanel" 
-	{!! html_attributes(isset($attributes)?$attributes:false) !!}
-    {!! html_attributes(isset($data)?$data:false,'data') !!}
+	{!! renderAttributes(isset($attributes)?$attributes:false) !!}
+    {!! renderData(isset($data)?$data:false) !!}
 >
 	{{ $slot }}
 </div>

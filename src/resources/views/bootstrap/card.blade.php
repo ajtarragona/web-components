@@ -2,8 +2,9 @@
     @isset($id) id="{{$id}}" @endif
 
     class="card  @if(isset($type)) bg-{{$type}} text-white @endif {{ $class or '' }}"
-    {!! html_attributes(isset($attributes)?$attributes:false) !!}
-    {!! html_attributes(isset($data)?$data:false,'data') !!}
+     {!! renderAttributes(isset($attributes)?$attributes:false) !!}
+    {!! renderData(isset($data)?$data:false) !!}
+
 >
     @isset($header)
         <div class="card-header">

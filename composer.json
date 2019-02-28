@@ -2,6 +2,7 @@
     "name": "ajtarragona/web-components",
     "description": "A collection of view components for your laravel application ",
     "type": "library",
+    "license": "MIT",
     "authors": [
         {
             "name": "Txomin Medrano Martorell",

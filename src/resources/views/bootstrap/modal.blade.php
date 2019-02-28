@@ -1,8 +1,9 @@
 <div
     class="modal {{ $animation or 'fade' }} {{ $class or '' }}"
     id="{{ $id or 'modal' }}"
-    {!! html_attributes(isset($attributes)?$attributes:false) !!}
-    {!! html_attributes(isset($data)?$data:false,'data') !!}
+    {!! renderAttributes(isset($attributes)?$attributes:false) !!}
+    {!! renderData(isset($data)?$data:false) !!}
+
 >
     <div class="modal-dialog" role="document">
         <div class="modal-content">

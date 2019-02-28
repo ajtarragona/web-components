@@ -3,8 +3,10 @@
 Aquest paquet incorpora:
  - Components web (en forma de directives i components blade)
  	- Formularis
- 		- Inputs
+ 		- Text Inputs
 		- Textareas
+		- Date inputs
+		- File Inputs
 		- Checkboxes & Radios
 		- Selects
 		- Autocomplete selects
@@ -30,7 +32,7 @@ Aquest paquet incorpora:
  - Validacio de forms ajax
  - Taules amb paginacio i ordenacio ajax
  - Settings de sessio
- 
+ - Helpers
 
 ## Instalació
 ```bash

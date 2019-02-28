@@ -1,8 +1,8 @@
 <div 
 	id="{{ $id or ''}}"
 	class="tab-content {{ $class or ''}} @istrue($responsive,'responsive')" 
-	{!! html_attributes(isset($attributes)?$attributes:false) !!}
-    {!! html_attributes(isset($data)?$data:false,'data') !!}
+	{!! renderAttributes(isset($attributes)?$attributes:false) !!}
+    {!! renderData(isset($data)?$data:false) !!}
 >
 	{{ $slot }}
 </div>
