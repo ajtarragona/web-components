@@ -50,7 +50,7 @@ Això copiarà els scripts i estils a la carpeta public del nostre projecte  `pu
 
 2. Publicar rutes per javascript
 	- Afegir Provider Laroute a l'arxiu `config/app.php`
- ```php
+```php
  'providers' => [
  	...
  	Lord\Laroute\LarouteServiceProvider::class,
