@@ -1,5 +1,5 @@
 al = function (msg){
-	console.log(msg);
+	//console.log(msg);
 }
 
 __ = function( text ){
