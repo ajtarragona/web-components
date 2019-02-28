@@ -66,6 +66,7 @@ php artisan vendor:publish --provider='Lord\Laroute\LarouteServiceProvider'
 ```
 
 Posar rutes absolutes a `app/config/laroute.php`
+
 Publicar scripts laroute cada vegada que canviem una ruta
 ```bash
 php artisan laroute:generate
@@ -81,10 +82,11 @@ En tus vistas puedes extender la plantilla que incorpora el paquete
 ```
 
 O bien, incluir los assets en tu plantilla
+```html
 <link href="{{ asset('vendor/ajtarragona/css/ajtarragona.css') }}" rel="stylesheet">
 <script src="{{ asset('js/laroute.js')}}" language="JavaScript"></script>
 <script src="{{ asset('vendor/ajtarragona/js/ajtarragona.js')}}" language="JavaScript"></script>
-
+```
 
 
 
