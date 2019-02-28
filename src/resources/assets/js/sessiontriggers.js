@@ -12,11 +12,10 @@ $.fn.initSessionTriggers = function(){
 
 			if($(this).data("session-toggle")) value=((value==1)?0:1);
 			
-			var url=baseUrl()+"/setting/"+setting+"/"+value;
-			//al("Setting session: "+setting+" to value "+value);
+			var url = route('webcomponents.setting.set',{name:setting});
 			
 			$.ajax({
-				url: baseUrl()+'/setting/'+setting,
+				url: url,
 	            type: 'put',
 	            data: { value : value, _token: csrfToken() },
 	            dataType: 'json',

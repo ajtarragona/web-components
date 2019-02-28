@@ -9,7 +9,7 @@
 	method="{{ $formmethod }}" 
 	action="{{ $action or ''}}" 
 	class="{{ $class or '' }} tgn-form @istrue($inline) form-inline @endistrue @istrue($validator) validate @endistrue " 
-	@istrue($validator) data-validateurl="{{ url('validation') }}" data-validator="{{$validator}}" data-validate-on-submit="true" @endistrue 
+	@istrue($validator) data-validateurl="{{ route('webcomponents.formvalidator') }}" data-validator="{{$validator}}" data-validate-on-submit="true" @endistrue 
 	@istrue($validateonstart) data-validate-on-start="true" @endistrue 
 	@istrue($validateonchange) data-validate-on-change="true" @endistrue 
 	@istrue($autofocus) data-autofocus="true" @endistrue 

@@ -20,6 +20,12 @@ baseUrl = function( ){
  
 }
 
+
+
+route = function( name, params ){
+  return laroute.route(name,params);
+}
+
 csrfToken = function( ){
  return $('meta[name="csrf-token"]').attr('content');
 }
@@ -74,6 +80,16 @@ executeCallback = function(func , params ){
     }
   }
 }
+
+
+ $.fn.scrollToElement = function($element) {
+  var top= $element.offset().top;
+  if($('#maintoolbar').length>0) top-=$('#maintoolbar').height();
+
+  return this.animate({
+      scrollTop: (top)
+  },300);
+};
 
 
  $.fn.disableSelection = function() {

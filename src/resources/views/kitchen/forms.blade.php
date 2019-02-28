@@ -24,7 +24,14 @@
 				<h5>Form layout</h5>
 				
 
-				@form(['method'=>'POST','action'=>route('webcomponents.kitchen.handle')])
+				@form([
+					'method'=>'POST',
+					'action'=>route('webcomponents.kitchen.handle'),
+					'validator'=>'Ajtarragona\WebComponents\Requests\TestValidate', 
+					'validateonstart'=>false, 
+					'validateonchange'=>false, 
+					'autofocus'=>true
+				])
 					
 					@row(['class'=>'gap-0'])
 						@col(['size'=>5])
@@ -32,7 +39,7 @@
 							@input(['container'=>true, 'required'=>true,'name'=>'campo_texto_mascara', 'icon'=>'phone', 'iconposition'=>'left', 'label'=>'Phone', 'placeholder'=>'Enter phone...', 'value'=>'','data'=>['mask'=>'(+00) 000 000 000']]) 
 						@endcol
 						@col(['size'=>6])
-							@input(['container'=>true, 'name'=>'campo_texto4', 'icon'=>'align-left', 'label'=>'Text 2', 'placeholder'=>'Enter text...', 'value'=>123]) 
+							@input(['container'=>true, 'required'=>true,'name'=>'campo_texto4', 'icon'=>'align-left', 'label'=>'Numeric', 'placeholder'=>'Enter text...', 'value'=>123]) 
 						@endcol
 						@col(['size'=>1])
 							@button(['style'=>'secondary','type'=>'button','name'=>'action','value'=>'test','size'=>'lg','class'=>'btn-block'])

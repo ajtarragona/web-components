@@ -133,7 +133,7 @@ function tgnFormClass(obj,options){
 			}
 			
 
-		     $form.find("[type=submit]").on('click',function(e){
+		     $form.find("[type=submit]").on('click', function(e){
 	            e.preventDefault();
 	           	var btn=$(this);
 
@@ -249,6 +249,8 @@ function tgnFormClass(obj,options){
                         father.find('div[class*=-feedback]').html(data[0]);
                         campos_error.push(key);
 
+
+                        //resalto la pestaña si está oculta
                         if(campo.closest('.tab-pane').length>0){
                         	//al("EN TAB");
                         	var tabpane=campo.closest('.tab-pane');
@@ -279,7 +281,10 @@ function tgnFormClass(obj,options){
                         }
                     });
                     TgnFlash.warning(__("Hi ha errors de validació al formulari"));
-								
+					
+					//scroll to element			
+					$('html, body').scrollToElement($form);
+
                     o.validated = false;
                     o.buton_submit = false;
                 }

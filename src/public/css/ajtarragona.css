@@ -16697,6 +16697,10 @@ form.validating {
   border-color: transparent;
 }
 
+.form-group.outlined .form-control.is-invalid {
+  background-image: none;
+}
+
 .form-group.outlined > input,
 .form-group.outlined > textarea,
 .form-group.outlined > .file-input .form-control,
@@ -16764,6 +16768,7 @@ form.validating {
 
 .form-group.outlined.is-invalid > .input-icon {
   color: #d9534f;
+  bottom: 1.5em;
 }
 
 .form-group.outlined.is-invalid > input,

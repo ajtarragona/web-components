@@ -67927,7 +67927,7 @@ function tgnFormClass(obj, options) {
             campo.addClass('is-invalid');
             father.addClass('is-invalid');
             father.find('div[class*=-feedback]').html(data[0]);
-            campos_error.push(key);
+            campos_error.push(key); //resalto la pestaña si está oculta
 
             if (campo.closest('.tab-pane').length > 0) {
               //al("EN TAB");
@@ -67953,7 +67953,9 @@ function tgnFormClass(obj, options) {
               father.find('div[class*=-feedback]').html('');
             }
           });
-          TgnFlash.warning(__("Hi ha errors de validació al formulari"));
+          TgnFlash.warning(__("Hi ha errors de validació al formulari")); //scroll to element			
+
+          $('html, body').scrollToElement($form);
           o.validated = false;
           o.buton_submit = false;
         }
@@ -68012,6 +68014,10 @@ baseUrl = function baseUrl() {
   return $('meta[name="base-url"]').attr('content');
 };
 
+route = function route(name, params) {
+  return laroute.route(name, params);
+};
+
 csrfToken = function csrfToken() {
   return $('meta[name="csrf-token"]').attr('content');
 };
@@ -68062,6 +68068,14 @@ executeCallback = function executeCallback(func, params) {
       executeFunctionByName(func, window, params);
     }
   }
+};
+
+$.fn.scrollToElement = function ($element) {
+  var top = $element.offset().top;
+  if ($('#maintoolbar').length > 0) top -= $('#maintoolbar').height();
+  return this.animate({
+    scrollTop: top
+  }, 300);
 };
 
 $.fn.disableSelection = function () {
@@ -69423,10 +69437,11 @@ $.fn.initSessionTriggers = function () {
       var value = $(this).data("session-value"); //al("setSessionSetting("+setting+"="+value+")");
 
       if ($(this).data("session-toggle")) value = value == 1 ? 0 : 1;
-      var url = baseUrl() + "/setting/" + setting + "/" + value; //al("Setting session: "+setting+" to value "+value);
-
+      var url = route('webcomponents.setting.set', {
+        name: setting
+      });
       $.ajax({
-        url: baseUrl() + '/setting/' + setting,
+        url: url,
         type: 'put',
         data: {
           value: value,

@@ -217,6 +217,11 @@ $sidelabel-size : 160px;
 		// margin-right:.5em;
 	}
 	
+	.form-control.is-invalid{
+		background-image:none;
+	}
+
+
 	> input,
 	> textarea,
 	>.file-input .form-control,
@@ -290,6 +295,7 @@ $sidelabel-size : 160px;
 
 	&.is-invalid >.input-icon{
 		color: $danger;
+		bottom: 1.5em;
 	}
 
 	&.is-invalid > input,
