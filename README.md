@@ -23,13 +23,14 @@ Aquest paquet incorpora:
 		- Modals
 		- Navs
 		- Paginació
-
-
-
-
-validacio de forms ajax
-taules amb paginacio i ordenacio ajax
-settings de sessio
+ - Plantilles Blade
+ 	- Master
+ 	- Master amb sidebar i toolbar
+ 	- Modal
+ - Validacio de forms ajax
+ - Taules amb paginacio i ordenacio ajax
+ - Settings de sessio
+ 
 
 ## Instalació
 ```bash
