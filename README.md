@@ -3,26 +3,26 @@
 Aquest paquet incorpora:
  - Components web (en forma de directives i components blade)
  	- Formularis
- 	 - Inputs
- 	 - Textareas
- 	 - Checkboxes & Radios
-	 - Selects
-	 - Autocomplete selects
-	 - Buttons
+ 		- Inputs
+		- Textareas
+		- Checkboxes & Radios
+		- Selects
+		- Autocomplete selects
+		- Buttons
  	- Maquetació
- 	 - Rows & Columns
- 	 - Lists
- 	 - Cards
- 	 - Tabs
- 	 - Tables
+		- Rows & Columns
+		- Lists
+		- Cards
+		- Tabs
+		- Tables
  	- Utils
- 	 - Alerts
- 	 - Badges
- 	 - Breadcrumb
- 	 - Icones Fontawesome
- 	 - Modals
- 	 - Navs
- 	 - Paginació
+		- Alerts
+		- Badges
+		- Breadcrumb
+		- Icones Fontawesome
+		- Modals
+		- Navs
+		- Paginació
 
 
 
