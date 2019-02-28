@@ -30,7 +30,7 @@
 					'validator'=>'Ajtarragona\WebComponents\Requests\TestValidate', 
 					'validateonstart'=>false, 
 					'validateonchange'=>false, 
-					'autofocus'=>true
+					'autofocus'=>false
 				])
 					
 					@row(['class'=>'gap-0'])
