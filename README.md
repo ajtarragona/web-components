@@ -41,19 +41,32 @@ composer require ajtarragona/web-components:"@dev"
 ## Configuració
 
 
-- Publicar assets en tu app
+1. Publicar assets en tu app
 ```bash
 php artisan vendor:publish  --tag=ajtarragona-web-components-assets --force
 ```
 Això copiarà els scripts i estils a la carpeta public del nostre projecte  `public\vendor\ajtarragona`.
 
 
-- Publicar rutes per javascript
+2. Publicar rutes per javascript
+	- Afegir Provider Laroute a l'arxiu `config/app.php`
+ ```php
+ 'providers' => [
+ 	...
+ 	Lord\Laroute\LarouteServiceProvider::class,
+ ]
+```
 
+	- Publicar configuració Laroute
+```bash
+php artisan vendor:publish --provider='Lord\Laroute\LarouteServiceProvider'
+```
+	
+	- Posar rutes absolutes a `app/config/laroute.php`
+	- Publicar scripts laroute cada vegada que canviem una ruta
 ```bash
 php artisan laroute:generate
 ```
-
 
 ## Ús
 
