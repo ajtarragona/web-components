@@ -69,6 +69,8 @@ php artisan vendor:publish --provider='Lord\Laroute\LarouteServiceProvider'
 
 Posar rutes absolutes a `app/config/laroute.php`
 
+Configurar correctament la ruta de l'aplicació `APP_URL` a l'arxiu `.env`
+
 Publicar scripts laroute cada vegada que canviem una ruta
 ```bash
 php artisan laroute:generate
@@ -100,6 +102,11 @@ php artisan vendor:publish --tag=ajtarragona-web-components-config
 Això copiarà l'arxiu a `config/webcomponents.php`.
  -->
 
+## Demo
+Disposem d'una demo dels diferents components a la ruta:
+```bash
+http://***/ajtarragona/webcomponents
+```
 
 
 ## Publicar vistes
