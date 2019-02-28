@@ -45,7 +45,7 @@ composer require ajtarragona/web-components:"@dev"
 ```bash
 php artisan vendor:publish  --tag=ajtarragona-web-components-assets --force
 ```
-Això copiarà els scripts i estils a la carpeta public del nostre projecte  `public\vendor\ajtarragona`.
+<small>Això copiarà els scripts i estils a la carpeta public del nostre projecte  `public\vendor\ajtarragona`.</small>
 
 
 
