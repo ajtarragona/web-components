@@ -13,7 +13,8 @@ class Icon Extends WebComponent
 		'size' =>'md',
 		'color'=>false,
 		'bg-color'=>false,
-		'circle'=>false
+		'circle'=>false,
+		'type' =>'fas'
 	];
 
 	protected $defaultdata=[];
