@@ -118,5 +118,8 @@ class WebComponentsServiceProvider extends ServiceProvider
         Blade::component('ajtarragona-web-components::bootstrap.forms.formgroup', 'formgroup');
         Blade::component('ajtarragona-web-components::bootstrap.forms.inputgroup', 'inputgroup');
         Blade::component('ajtarragona-web-components::bootstrap.forms.buttongroup', 'buttongroup');
+        
+        Blade::component('ajtarragona-web-components::bootstrap.code', 'code');
+        Blade::component('ajtarragona-web-components::bootstrap.block', 'block');
     }
 }

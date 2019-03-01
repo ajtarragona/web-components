@@ -64,6 +64,11 @@ require('bootstrap-tagsinput/dist/bootstrap-tagsinput.js');
 //require('./vendor/bootstrap3-typeahead.min.js');
 
 
+require('code-prettify/loader/prettify.js');
+require('clipboard/dist/clipboard.js');
+
+
+
 
 require('./forms');
 require('./formcontrols');
@@ -76,4 +81,5 @@ require('./tables');
 require('./selects');
 require('./maps');
 require('./sessiontriggers');
+require('./prettyprint');
 require('./main');

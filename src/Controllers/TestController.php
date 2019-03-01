@@ -5,11 +5,22 @@ namespace Ajtarragona\WebComponents\Controllers;
 use App\Http\Controllers\Controller;
 use Faker\Generator as Faker;
 use Illuminate\Http\Request;
+use \Artisan;
 
 
 class TestController extends Controller
 {
 
+  protected function publishPackageAssets(){
+      /*quitar en producció!!*/
+      
+      Artisan::call('vendor:publish', [
+          '--tag' => 'ajtarragona-web-components-assets', 
+          '--force' => 1
+      ]);
+
+      /**/
+  }
 	
 	protected function packageView($view, $args){
 		return view("ajtarragona-web-components::".$view, $args);
@@ -18,7 +29,7 @@ class TestController extends Controller
 	public function kitchen(Faker $faker){ 
 		
        $params=session('params','');
-       
+       $this->publishPackageAssets();
        return $this->packageView("kitchen",compact('faker','params'));
 	}
 
@@ -43,6 +54,14 @@ class TestController extends Controller
        return redirect()->route('webcomponents.kitchen');
        
     }
+
+
+    public function docs($page='start.introduction'){ 
+      
+       $this->publishPackageAssets();
+       return $this->packageView("docs",compact('faker','page'));
+  }
+
 
 }
 

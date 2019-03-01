@@ -11,6 +11,7 @@ use Ajtarragona\WebComponents\Models\Nav;
 use Ajtarragona\WebComponents\Models\NavItem;
 use Ajtarragona\WebComponents\Models\Breadcrumb;
 use Ajtarragona\WebComponents\Models\Crumb;
+use \InvalidArgumentException as InvalidArgumentException;
 
 
 if (! function_exists('renderAttributes')) {
@@ -172,5 +173,28 @@ if (! function_exists('currentpath')) {
 	}
 }
 
+
+
+
+if (! function_exists('includeSrc')) {
+	function includeSrc($p=false){
+		try{
+			$view= view($p);//->with('products', $products)->render();
+			if($view){
+
+				$path=$view->getPath();
+
+				//echo $path;
+				//if(strpos($p,".")===false) $path.=".blade.php";
+				
+				if(is_file($path)){
+					return file_get_contents($path);
+				}
+			}
+		}catch(InvalidArgumentException $e){
+			return "";
+		}
+	}
+}
 
 

@@ -1,0 +1,1 @@
+<li class="{{ $page==$route?'active':'' }}"><a href="{{ route('webcomponents.docs',['page'=>$route]) }}"> {{ $title }} </a></li>

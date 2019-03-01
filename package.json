@@ -28,9 +28,6 @@
     "sass": "^1.17.0",
     "sass-loader": "^7.1.0",
     "vue-template-compiler": "^2.6.3"
-
-
-    
   },
   "dependencies": {
     "@claviska/jquery-minicolors": "github:claviska/jquery-minicolors",
@@ -43,6 +40,9 @@
     "bootstrap-select": "^1.13.3",
     "bootstrap-tagsinput": "^0.7.1",
     "bootstrap-touchspin": "^4.2.5",
+    "clipboard": "^2.0.4",
+    "code-prettify": "^0.1.0",
+    "color-themes-for-google-code-prettify": "^2.0.4",
     "flatpickr": "^4.5.2",
     "fontawesome-iconpicker": "^3.2.0",
     "handlebars": "^4.0.12",

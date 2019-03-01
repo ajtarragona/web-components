@@ -13,6 +13,11 @@
 			"title" => __('Home'),
 			"icon" => 'home',
 			"route" => 'webcomponents.kitchen'
+		],
+		[
+			"title" => __('Documentació'),
+			"icon" => 'file',
+			"route" => 'webcomponents.docs'
 		]
 	],
 	"navigation"=> 'drilldown',

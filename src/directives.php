@@ -363,7 +363,10 @@ return [
     }, 
     'currentpath' => function($expression) {
         return "<?php echo currentpath({$expression}); ?>";
-    },   
+    }, 
+    'includeSrc' => function($expression) {
+        return "<?php echo includeSrc({$expression}); ?>";
+    },  
 ];
         
 

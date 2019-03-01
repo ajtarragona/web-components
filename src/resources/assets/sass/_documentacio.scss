@@ -1,0 +1,62 @@
+@media (min-width: 768px){
+  .docs-sidebar{
+    position: sticky;
+    border-right:1px solid $border-color;
+    border-bottom-width:0px;
+    height:calc(100vh);
+    top:0px;
+  }  
+}
+
+
+.docs-sidebar{
+  border-bottom:1px solid $border-color;
+    
+  padding-top:2em;
+  padding-bottom:2em;
+
+  .docs-menu{
+    margin:0;
+    padding:0;
+
+    >li > a{
+      font-weight: bold;
+      color:$gray-700;
+      padding:.3em 1em .3em .8em;
+      font-size:1.1em;
+    }
+
+    ul{
+      margin:0;
+      padding:0;
+      margin-bottom:.6em;
+      display: none;
+    }
+
+    li{
+      margin:0;
+      padding:0;
+      display: block;
+
+      &.active > ul{
+        display: block;
+      }
+    }
+
+    a{
+      padding:.2em 1em;
+      display: block;
+      color:$gray-600;
+      text-decoration: none;
+      
+      &:hover{
+        color:$gray-800;
+      }
+    }
+    
+    li.active > a{
+      color: $black;
+    }
+
+  }
+}

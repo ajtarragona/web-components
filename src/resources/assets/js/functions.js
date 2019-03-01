@@ -1,5 +1,5 @@
 al = function (msg){
-	//console.log(msg);
+	console.log(msg);
 }
 
 __ = function( text ){
@@ -21,6 +21,35 @@ baseUrl = function( ){
 }
 
 
+_UUID = function (prefix){
+    var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+    var uniqid = randLetter + Date.now();
+    return uniqid;
+}
+
+
+
+
+htmlspecialchars = function(str) {
+ if (typeof(str) == "string") {
+  str = str.replace(/&/g, "&amp;"); /* must do &amp; first */
+  str = str.replace(/"/g, "&quot;");
+  str = str.replace(/'/g, "&#039;");
+  str = str.replace(/</g, "&lt;");
+  str = str.replace(/>/g, "&gt;");
+  }
+ return str;
+}
+rhtmlspecialchars = function(str) {
+ if (typeof(str) == "string") {
+  str = str.replace(/&gt;/ig, ">");
+  str = str.replace(/&lt;/ig, "<");
+  str = str.replace(/&#039;/g, "'");
+  str = str.replace(/&quot;/ig, '"');
+  str = str.replace(/&amp;/ig, '&'); /* must do &amp; last */
+  }
+ return str;
+}
 
 route = function( name, params ){
   return laroute.route(name,params);

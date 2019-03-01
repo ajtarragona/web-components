@@ -25,6 +25,7 @@ $.fn.tgnInitAll = function( ){
   this.find('input.autocomplete:not(.tt-input):not(.tt-hint)').initTypeahead();
   this.find('[data-toggleclass]').initToggleClass();
   this.find('a[data-confirm], button[data-confirm]').initConfirm();
+  this.find('pre.prettyprint').initPrettyprint();
   
   this.initSessionTriggers();
   

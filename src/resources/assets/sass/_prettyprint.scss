@@ -1,0 +1,32 @@
+.prettyprint-container{
+	position:relative;
+
+	.prettycopy{
+		position:absolute;
+		right:0;
+		top:0;
+		opacity:0;
+		transition: opacity $transition-speed;
+	}
+
+	&:hover{
+		.prettycopy{
+			opacity:1;
+		}
+	}
+}
+.prettyprint{
+    padding: 1em;
+    tab-size: 3;
+    &.linenums{
+      
+      ol.linenums{
+        margin-left: -1em;
+      }
+
+      li.L0, li.L1, li.L2, li.L3,
+      li.L5, li.L6, li.L7, li.L8 {
+        list-style-type: decimal !important;
+      }
+    }
+}

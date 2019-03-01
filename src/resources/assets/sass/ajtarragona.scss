@@ -47,6 +47,10 @@
 
 @import "~bootstrap-tagsinput/dist/bootstrap-tagsinput.css";
 
+//pretty print
+// @import "~color-themes-for-google-code-prettify/dist/themes/tranquil-heart.min.css";
+@import "~color-themes-for-google-code-prettify/dist/themes/tomorrow-night-eighties.min.css";
+
 //framework styles
 @import "scrollbar";
 @import "animations";
@@ -68,5 +72,9 @@
 @import "myapp";
 @import "formdesigner";
 @import "typeahead";
+@import "prettyprint";
+@import "documentacio";
+
+
 
 
