@@ -96,30 +96,7 @@ class WebComponentsServiceProvider extends ServiceProvider
     public function registerComponents()
     {
         
-        Blade::component('ajtarragona-web-components::bootstrap.row', 'row');
-        Blade::component('ajtarragona-web-components::bootstrap.col', 'col');
-
-        Blade::component('ajtarragona-web-components::bootstrap.alert', 'alert');
-        Blade::component('ajtarragona-web-components::bootstrap.badge', 'badge');
-        Blade::component('ajtarragona-web-components::bootstrap.card', 'card');
-        //Blade::component('ajtarragona-web-components::bootstrap.breadcrumb', 'breadcrumb');
-        Blade::component('ajtarragona-web-components::bootstrap.list-group', 'listgroup');
-        Blade::component('ajtarragona-web-components::bootstrap.table', 'table');
-        Blade::component('ajtarragona-web-components::bootstrap.tabs', 'tabs');
-        Blade::component('ajtarragona-web-components::bootstrap.tab', 'tab');
-        Blade::component('ajtarragona-web-components::bootstrap.tabcontent', 'tabcontent');
-        Blade::component('ajtarragona-web-components::bootstrap.tabpane', 'tabpane');
-        Blade::component('ajtarragona-web-components::bootstrap.list', 'list');
-        Blade::component('ajtarragona-web-components::bootstrap.listitem', 'li');
-        Blade::component('ajtarragona-web-components::bootstrap.forms.form', 'form');
-        Blade::component('ajtarragona-web-components::bootstrap.forms.button', 'button');
-        
-        
-        Blade::component('ajtarragona-web-components::bootstrap.forms.formgroup', 'formgroup');
-        Blade::component('ajtarragona-web-components::bootstrap.forms.inputgroup', 'inputgroup');
-        Blade::component('ajtarragona-web-components::bootstrap.forms.buttongroup', 'buttongroup');
-        
-        Blade::component('ajtarragona-web-components::bootstrap.code', 'code');
-        Blade::component('ajtarragona-web-components::bootstrap.block', 'block');
+        $components = require __DIR__.'/components.php';
+        DirectivesRepository::registerComponents($components);
     }
 }

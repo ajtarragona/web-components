@@ -480,7 +480,7 @@ $.fn.initAjaxContainer = function (){
         }
 
         if(o.settings.autoload){
-          al("DELAY:"+o.settings.delay);
+          //al("DELAY:"+o.settings.delay);
           if(o.settings.delay){
             setTimeout(function(){
               o.loadContainer();
@@ -757,4 +757,90 @@ $.fn.initToggleClass = function (){
         }
          //al($(this));
    });
+}
+
+
+
+import * as Quill from 'quill';
+
+
+$.fn.initTextEditor = function(){
+
+  var advancedtoolbar=[
+      ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+      ['blockquote', 'code-block'],
+
+      //[{ 'header': 1 }, { 'header': 2 }],               // custom button values
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+      [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+      //[{ 'direction': 'rtl' }],                         // text direction
+
+      [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+      [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+      [{ 'font': [] }],
+      [{ 'align': [] }],
+
+      ['clean']                                         // remove formatting button
+    ];
+
+  var simpletoolbar=[
+      [{ 'header': [1, 2, 3, 4,false] }],
+      ['bold', 'italic', 'underline'],        // toggled buttons
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'align': [] }],
+      ['clean']                                         // remove formatting button
+    ];
+
+
+  var defaults={
+     theme: 'snow',
+     readOnly : false,
+      modules: {
+        toolbar: simpletoolbar
+      }
+  };
+
+  return this.each(function(){
+    var o=this;
+    o.$element=$(this); 
+    if(!o.$element.attr('id')) o.$element.attr('id',_UUID());
+
+    o.$hidden=$('<input type="hidden" />');
+    o.$hidden.attr('name',o.$element.attr('name')).attr('for',o.$element.attr('id'));
+    o.$element.after(o.$hidden);
+
+
+    o.updateContent = function() {
+        var content=o.$element.find('> .ql-editor').html();
+        if(content=='<p><br></p>') content='';
+        o.$hidden.val(content);
+    }
+    
+
+    var settings = $.extend({}, defaults, $(this).data()); 
+    //al(settings);
+    if(settings.tools=='advanced') settings.modules.toolbar=advancedtoolbar;
+    else settings.modules.toolbar=simpletoolbar;
+
+    var quill = new Quill(o, settings);
+
+    if(settings.readOnly){
+      o.$element.parent().find('.ql-toolbar').css({
+        opacity:0.7,
+        pointerEvents:'none'
+      });
+
+      
+    }
+
+    quill.on('editor-change', function(eventName, ...args) {
+      o.updateContent();
+    });
+
+    o.updateContent();
+
+  });
 }

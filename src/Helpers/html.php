@@ -4,6 +4,7 @@ use Ajtarragona\WebComponents\Models\WebComponent;
 use Ajtarragona\WebComponents\Models\Icon;
 use Ajtarragona\WebComponents\Models\Input;
 use Ajtarragona\WebComponents\Models\Textarea;
+use Ajtarragona\WebComponents\Models\Texteditor;
 use Ajtarragona\WebComponents\Models\Select;
 use Ajtarragona\WebComponents\Models\Checkbox;
 use Ajtarragona\WebComponents\Models\Radio;
@@ -72,6 +73,14 @@ if (! function_exists('input')) {
 if (! function_exists('textarea')) {
 	function textarea($attributes=[],$data=[]){
 		$ret = new Textarea($attributes,$data);
+		return $ret->render();
+	}
+}
+
+
+if (! function_exists('texteditor')) {
+	function texteditor($attributes=[],$data=[]){
+		$ret = new Texteditor($attributes,$data);
 		return $ret->render();
 	}
 }

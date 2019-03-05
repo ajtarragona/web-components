@@ -51,6 +51,13 @@
 // @import "~color-themes-for-google-code-prettify/dist/themes/tranquil-heart.min.css";
 @import "~color-themes-for-google-code-prettify/dist/themes/tomorrow-night-eighties.min.css";
 
+
+//quill text editor
+// @import "~quill/dist/quill.core.css";
+@import "~quill/dist/quill.snow.css";
+@import "~quill/dist/quill.bubble.css";
+
+
 //framework styles
 @import "scrollbar";
 @import "animations";
@@ -69,10 +76,9 @@
 @import "tables";
 @import "autocomplete";
 @import "maps";
-@import "myapp";
-@import "formdesigner";
 @import "typeahead";
 @import "prettyprint";
+@import "quill";
 @import "documentacio";
 
 

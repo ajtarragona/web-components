@@ -1,6 +1,7 @@
 <h1 class="display-4">Configuració</h1>
 
-<hr/>
+<hr class="big"/>
+
 <p>El paquet no disposa de cap opció de configuració.</p>
 
 <p>Si volguéssim modificar alguna vista del paquet, les podem publicar dins del nostre projecte:</p>

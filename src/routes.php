@@ -3,11 +3,15 @@
 Route::group(['prefix' => 'ajtarragona/webcomponents','middleware' => ['web']], function () {
 	
 	//rutas de demo
-	Route::get('/', 'Ajtarragona\WebComponents\Controllers\TestController@kitchen')->name('webcomponents.kitchen');
-	Route::post('/', 'Ajtarragona\WebComponents\Controllers\TestController@kitchenHandle')->name('webcomponents.kitchen.handle');
+	Route::get('/', 'Ajtarragona\WebComponents\Controllers\TestController@home')->name('webcomponents.home');
+	
+	Route::get('/kitchen', 'Ajtarragona\WebComponents\Controllers\TestController@kitchen')->name('webcomponents.kitchen');
+	Route::post('/kitchen', 'Ajtarragona\WebComponents\Controllers\TestController@kitchenHandle')->name('webcomponents.kitchen.handle');
 	Route::get('/modal', 'Ajtarragona\WebComponents\Controllers\TestController@kitchenModal')->name('webcomponents.kitchen.modal');
 	
-	Route::get('/docs/{page?}', 'Ajtarragona\WebComponents\Controllers\TestController@docs')->name('webcomponents.docs');
+	
+	Route::get('/docs/{page?}', 'Ajtarragona\WebComponents\Controllers\DocsController@docs')->name('webcomponents.docs');
+	Route::post('/docs/{page?}', 'Ajtarragona\WebComponents\Controllers\DocsController@docsHandle')->name('webcomponents.docs.handle');
 
 	
 

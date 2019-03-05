@@ -50,7 +50,7 @@ $.fn.createSelectPicker = function(){
           //al($select);
           //$select.stopLoading();
          // if(!$(this).attr('multiple')){
-          var showdeselector = (typeof  $(this).data('show-deselector') == 'undefined') ||  $(this).data("show-deselector");
+          var showdeselector = $(this).data("show-deselector");
  
           if(showdeselector){
               var $deselector=$("<div class='deselect-btn'>&times;</div>");

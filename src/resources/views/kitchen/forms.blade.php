@@ -59,11 +59,26 @@
 					@input(['container'=>true, 'name'=>'campo_disabled',  'disabled'=>true, 'label'=>'Text disabled', 'placeholder'=>'Enter text...', 'value'=>123]) 
 
 					@input(['container'=>true, 'type'=>'date', 'icon'=>'calendar-alt', 'name'=>'campo_fecha', 'label'=>'Date', 'placeholder'=>'Enter date...']) 
+
+					@input(['type'=>'number','name'=>'campo_number', 'label'=>'Numero', 'placeholder'=>'Enter number...']) 
 						
 
 					@textarea(['container'=>true, 'icon'=>'bookmark', 'iconposition'=>'right','label'=>'Textarea', 'rows'=>4, 'name'=>'campo_textarea','placeholder'=>'Enter text...','value'=>123]) 
 
 
+					@input([
+						'name'=>'campo_icon', 
+						'type' => 'icon',
+						'label'=>__('Icon'),
+						'value'=>''
+					]) 
+
+					@input([
+						'name'=>'campo_color', 
+						'type' => 'color',
+						'label'=>__('Color'),
+						'value'=>''
+					]) 
 					
 
 					@select(['container'=>true, 'icon'=>'archive', 'iconposition'=>'right','label'=>'Select field', 'name'=>'campo_select','placeholder'=>'Choose item...','options'=>['1'=>'Opción 1','2'=>'Opción 2','3'=>'Opción 3','4'=>'Opción 4','5'=>'Opción 5','6'=>'Opción 6','7'=>'Opción 7','8'=>'Opción 8','9'=>'Opción 9','10'=>'Opción 10'], 'selected'=>2, 'required'=>false,'data'=>['size'=>5,'live-search'=>true,'width'=>'100%'] ]) 

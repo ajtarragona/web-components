@@ -17,8 +17,6 @@ import 'jquery-ui/ui/widgets/droppable.js';
 
 
 require("flatpickr");
-//require("flatpickr/dist/themes/material_green.css");
-
 
 if(lang=='es'){
 	require("bootstrap-select/dist/js/i18n/defaults-es_ES.js");
@@ -30,45 +28,46 @@ if(lang=='es'){
 }
 
 
-require('bootstrap-confirmation2/dist/bootstrap-confirmation.js');
+require('bootstrap-confirmation2');
 
 //fileinput
-require('bootstrap-fileinput/js/fileinput.js');
+require('bootstrap-fileinput');
 require('bootstrap-fileinput/themes/fa/theme.js');
 //import 'bootstrap-fileinput/js/locales/'+lang+'.js';
 
 
 //touchspin
-require('bootstrap-touchspin/src/jquery.bootstrap-touchspin.js');
+require('bootstrap-touchspin');
 
 //iconpicker
-require('fontawesome-iconpicker/dist/js/fontawesome-iconpicker.min.js');
+require('fontawesome-iconpicker');
 
 
 //colorpicker
-require('bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js');
+require('bootstrap-colorpicker');
 
 
 //tribute autocomplete
 
-require('tributejs/dist/tribute.js');
+require('tributejs');
 
 //textarea autoheight
-require('autosize/dist/autosize.js');
+require('autosize');
 
 
 require('./vendor/typeahead.bundle.min.js');
-require('bootstrap-tagsinput/dist/bootstrap-tagsinput.js');
+require('bootstrap-tagsinput');
 
 
 //require('./vendor/bootstrap3-typeahead.min.js');
 
 
 require('code-prettify/loader/prettify.js');
-require('clipboard/dist/clipboard.js');
+require('clipboard');
 
 
-
+//rich text editor
+require('quill');
 
 require('./forms');
 require('./formcontrols');

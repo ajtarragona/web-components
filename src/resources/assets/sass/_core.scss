@@ -203,16 +203,38 @@ body.with-toolbar #messages{
 .bg-gray-700{  background-color:$gray-700; }
 .bg-gray-800{  background-color:$gray-800; }
 
+.bg-blue { background-color: $blue }
+.bg-indigo { background-color: $indigo  }
+.bg-purple { background-color: $purple; }
+.bg-pink { background-color: $pink, }
+.bg-red { background-color: $red; }
+.bg-orange { background-color: $orange; }
+.bg-yellow { background-color: $yellow; }
+.bg-green { background-color: $green; }
+.bg-teal { background-color: $teal; }
+.bg-cyan { background-color: $cyan; }
+
+
+.text-gray-100{  color:$gray-100; }
+.text-gray-200{  color:$gray-200; }
+.text-gray-300{  color:$gray-300; }
+.text-gray-400{  color:$gray-400; }
+.text-gray-500{  color:$gray-500; }
+.text-gray-600{  color:$gray-600; }
+.text-gray-700{  color:$gray-700; }
+.text-gray-800{  color:$gray-800; }
+
 .text-blue { color: $blue }
 .text-indigo { color: $indigo  }
 .text-purple { color: $purple; }
-.text-pink { color: $pink, }
+.text-pink { color: $pink }
 .text-red { color: $red; }
 .text-orange { color: $orange; }
 .text-yellow { color: $yellow; }
 .text-green { color: $green; }
 .text-teal { color: $teal; }
 .text-cyan { color: $cyan; }
+
 
 .bg-blue { background-color: $blue }
 .bg-indigo { background-color: $indigo  }
@@ -233,6 +255,20 @@ body.with-toolbar #messages{
 .border-gray-600{  border-color:$gray-600 !important; }
 .border-gray-700{  border-color:$gray-700 !important; }
 .border-gray-800{  border-color:$gray-800 !important; }
+
+
+.border-blue { border-color: $blue !important;}
+.border-indigo { border-color: $indigo !important; }
+.border-purple { border-color: $purple !important; }
+.border-pink { border-color: $pink !important; }
+.border-red { border-color: $red !important; }
+.border-orange { border-color: $orange !important; }
+.border-yellow { border-color: $yellow !important; }
+.border-green { border-color: $green !important; }
+.border-teal { border-color: $teal !important;}
+.border-cyan { border-color: $cyan !important; }
+
+
 
 .bg-warning{
    color:$dark;
@@ -277,7 +313,11 @@ body.with-toolbar #messages{
     color:rgba(255,255,255,.6);
  }
 
-
+hr.big{
+  margin-top:2em;
+  margin-bottom:2em;
+  border-top-color:transparent;
+}
 
 // Buttons =====================================================================
 

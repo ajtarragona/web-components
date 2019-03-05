@@ -6,11 +6,11 @@
 
 @section('body')
 	
-	
+
 	@row(['class'=>''])
 	
-		@col(['size'=>3,'class'=>'docs-sidebar','style'=>''])
-			<h1 >TGN Web components</h1>
+		@col(['size'=>2,'class'=>'docs-sidebar','style'=>''])
+			<h1 ><a class="doc-link" href="{{ route('webcomponents.docs',['page'=>'start.introduction']) }}">TGN</a></h1>
 			<hr/>
 			<ul class="docs-menu">
 
@@ -31,37 +31,53 @@
 					</a>
 					<ul>
 						@include('ajtarragona-web-components::docs.menuitem',['route'=>'layout.templates','title'=>'Plantilles'])
-						@include('ajtarragona-web-components::docs.menuitem',['route'=>'layout.grid','title'=>'Grid'])
-						@include('ajtarragona-web-components::docs.menuitem',['route'=>'layout.blocs','title'=>'Blocs'])
+						@include('ajtarragona-web-components::docs.menuitem',['route'=>'layout.grid','title'=>'Graella'])
+						@include('ajtarragona-web-components::docs.menuitem',['route'=>'layout.blocks','title'=>'Blocs'])
 						
 						
 					</ul>
 				</li>
     			<li class="{{ starts_with($page,'components')?'active':'' }}">
-					<a class="doc-link" href="{{ route('webcomponents.docs',['page'=>'components.alerts']) }}">
+					<a class="doc-link" href="{{ route('webcomponents.docs',['page'=>'components.introduction']) }}">
 			        	Components
 					</a>
 
-					<ul>
-						@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.alerts','title'=>'Alerts'])
-						@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.badges','title'=>'Badges'])
-						@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.icons','title'=>'Icons'])
-						@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.lists','title'=>'Lists'])
-						@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.tables','title'=>'Tables'])
-						@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.cards','title'=>'Cards'])
-						@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.buttons','title'=>'Buttons'])
-						@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.forms','title'=>'Forms'])
-						@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.modals','title'=>'Modals'])
-
-					</ul>
+					@include('ajtarragona-web-components::docs.components.menu')	
+					
 			    </li>
-    		</ul>
 
-			
+			    <li class="{{ starts_with($page,'forms')?'active':'' }}">
+					<a class="doc-link" href="{{ route('webcomponents.docs',['page'=>'forms.introduction']) }}">
+			        	Forms
+					</a>
+
+					
+					@include('ajtarragona-web-components::docs.forms.menu')
+					
+			    </li>
+			    <li class="{{ starts_with($page,'utils')?'active':'' }}">
+					<a class="doc-link" href="{{ route('webcomponents.docs',['page'=>'utils']) }}">
+			        	Utilitats
+					</a>
+				</li>
+
+			    <hr/>
+			    <li class="text-info">
+					<a class="doc-link text-info" href="{{ route('webcomponents.kitchen') }}">
+			        	@icon('chalkboard') Demo
+					</a>
+
+				</li>
+			    <hr/>
+				<li><a  href="https://getbootstrap.com/docs/4.3/getting-started/introduction/" target="_blank">@icon('external-link-alt') Documentació Bootstrap</a></li>
+	    		<li><a  href="https://fontawesome.com/icons?d=gallery&m=free" target="_blank">@icon('external-link-alt') Icones Fontawesome</a></li>
+    		</ul>
+    		
+    		
 		@endcol
 
 
-		@col(['size'=>9,'class'=>''])
+		@col()
 			<div class="p-3">
 				@includeif('ajtarragona-web-components::docs.'.$page)
 			</div>

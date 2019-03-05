@@ -317,6 +317,9 @@ return [
     'textarea' => function($expression) {
         return "<?php echo textarea({$expression}); ?>";
     }, 
+    'texteditor' => function($expression) {
+        return "<?php echo texteditor({$expression}); ?>";
+    }, 
 
     'select' => function($expression) {
         return "<?php echo select({$expression}); ?>";

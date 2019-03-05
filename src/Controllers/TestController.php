@@ -22,9 +22,14 @@ class TestController extends Controller
       /**/
   }
 	
-	protected function packageView($view, $args){
+	protected function packageView($view, $args=[]){
 		return view("ajtarragona-web-components::".$view, $args);
 	}
+
+  public function home(){ 
+      $this->publishPackageAssets();
+      return $this->packageView("home");
+  }
 
 	public function kitchen(Faker $faker){ 
 		
@@ -56,7 +61,7 @@ class TestController extends Controller
     }
 
 
-    public function docs($page='start.introduction'){ 
+    public function docs($page='start.introduction',Faker $faker){ 
       
        $this->publishPackageAssets();
        return $this->packageView("docs",compact('faker','page'));

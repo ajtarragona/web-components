@@ -21,7 +21,8 @@ class Textarea extends WebComponent
 		'outlined'=>true,
 		'size'=>'md',
 		'rows'=>3,
-		'maxlength'=>''
+		'maxlength'=>'',
+		'autoheight'=>false
 	];
 
 	protected $hiddenattributes = ["containerclass",'container','label','outlined','size','sidelabel'];
@@ -32,6 +33,7 @@ class Textarea extends WebComponent
 	public function __construct($attributes=[],$data=[]){
 		parent::__construct($attributes,$data);
 
+		if($this->attributes['autoheight']) $this->attributes['class'].=' autoheight';
 		if(!$this->attributes['id']) $this->attributes['id']='textarea_'.$this->attributes['name'];
 	}
 

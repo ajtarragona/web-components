@@ -9,7 +9,11 @@
 	@if (session('success'))
 		
 		@alert(['type'=>'success','title'=> icon("check")." Genial!" ,'dismissible'=>true,'autohide'=>true])
-		    {!! session('success') !!}
+		   @if(is_array(session('success')) || is_object(session('success')))
+		   	<pre>{{ var_dump(session('success')) }}</pre>
+		   @else
+		   		{!! session('success') !!}
+		   @endif
 		@endalert
 
 
@@ -18,7 +22,11 @@
 
 	@if (session('error'))
 		@alert(['type'=>'danger','title'=> icon("exclamation-circle")." Error!" ,'dismissible'=>true,'autohide'=>true])
-		    {!! session('error') !!}
+		   @if(is_array(session('error')) || is_object(session('error')))
+		   		<pre>{{ var_dump(session('error')) }}</pre>
+		   @else
+		   		{!! session('error') !!}
+		   @endif
 		@endalert
 
 
@@ -27,8 +35,12 @@
 
 
 	@if (session('info'))
-		@alert(['type'=>'info','title'=> icon("info-circle")." Info" ,'dismissible'=>true,'autohide'=>true])
-		    {!! session('info') !!}
+		@alert(['type'=>'info','title'=> icon("info-circle")." Info" ,'dismissible'=>true,'autohide'=>false])
+		   @if(is_array(session('info')) || is_object(session('info')))
+		   		<pre>{{ var_dump(session('info')) }}</pre>
+		   @else
+		   		{!! session('info') !!}
+		   @endif
 		@endalert
 
 	@endif

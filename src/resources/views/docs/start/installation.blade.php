@@ -1,7 +1,8 @@
 <h1 class="display-4">Instal·lació</h1>
 <p class="lead">Segueix les següents instruccions per instal·lar el paquet</p>
 
-<hr/>
+<hr class="big"/>
+
 
 <p>Des de la carpeta del teu projecte laravel:
 

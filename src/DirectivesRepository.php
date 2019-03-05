@@ -21,6 +21,22 @@ class DirectivesRepository
     }
 
     /**
+     * Register the directives.
+     *
+     * @param  array $components
+     * @return void
+     */
+    public static function registerComponents(array $components)
+    {
+        
+        collect($components)->each(function ($view, $name) {
+            Blade::component($view, $name);
+        
+           // Blade::directive($key, $item);
+        });
+    }
+
+    /**
      * Parse expression.
      *
      * @param  string $expression

@@ -1,8 +1,9 @@
 <div id="maintoolbar" >
 	<div class="toolbar-toggle">@icon("cogs")</div>
 	<div class="toolbar-content ">
-		<div class="container-fluid">
-			<div class="row  align-items-center  " >
+		@container
+			@row(['class'=>'align-items-center'])
+			
 				<div class="col-md-6 the-breadcrumb">
 					{{-- <h3 class=" pb-0 mb-0">@yield('title')</h3> --}}
 					
@@ -18,7 +19,8 @@
 							@yield('actions')
 					@endif
 				</div>
-			</div>
-		</div>
+			@endrow
+		@endcontainer
+		
 	</div>
 </div>

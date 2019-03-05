@@ -1,11 +1,11 @@
 <h1 class="display-4">Plantilles</h1>
 <p class="lead">El paquet proporciona tres plantilles per fer servir a les nostres vistes blade.</p>
 
-<hr/>
+<hr class="big"/>
+
 
 <h1>Master</h1>
-<p>Aquesta pàgina utilitza la plantilla master.</p>
-<p><mark>ajtarragona-web-components::layout/master</mark></p>
+<p><mark>@icon('file') ajtarragona-web-components::layout/master</mark></p>
 
 @row
 	
@@ -53,11 +53,12 @@
 	@endcol
 @endrow
 
-<hr/>
+<hr class="big"/>
+
 
 <h1>Master-sidebar</h1>
 <p>La <a href="{{ route('webcomponents.kitchen') }}">Demo</a> utilitza la plantilla master-sidebar.</p>
-<p><mark>ajtarragona-web-components::layout/master-sidebar</mark></p>
+<p><mark>@icon('file')  ajtarragona-web-components::layout/master-sidebar</mark></p>
 
 @row
 	
@@ -118,11 +119,12 @@
 	@endcol
 @endrow
 
-<hr/>
+<hr class="big"/>
+
 
 <h1>Modal</h1>
 <p>Si voleu mostrar modals, podeu extendre aquesta plantilla, que només conté la estructura necessària per mostrar finestres modals de Bootstrap.</p>
-<p><mark>ajtarragona-web-components::layout/modal</mark></p>
+<p><mark>@icon('file') ajtarragona-web-components::layout/modal</mark></p>
 @row
 	
 	@col(['size'=>7])
@@ -169,7 +171,8 @@
 @endrow
 
 
-<hr>
+<hr class="big"/>
+
 <p>Anternativament, si no es volen fer servir les plantilles que proporciona el paquet, podeu incloure tant els estils com els scripts manualment a les vostres plantilles:</p>
 
 @code

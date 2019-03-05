@@ -1,7 +1,8 @@
 <h1 class="display-4">Introducció</h1>
 <p class="lead">El paquet Webcomponent de l'Ajuntament de Tarragona es lo más.</p>
 
-<hr/>
+<hr class="big"/>
+
 
 
 Aquest paquet incorpora:
