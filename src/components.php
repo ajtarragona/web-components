@@ -21,7 +21,9 @@ return [
 	'inputgroup' => 'ajtarragona-web-components::bootstrap.forms.inputgroup',
 	'buttongroup' => 'ajtarragona-web-components::bootstrap.forms.buttongroup',
 	'code' => 'ajtarragona-web-components::bootstrap.code',
-	'block' => 'ajtarragona-web-components::bootstrap.block'
+	'block' => 'ajtarragona-web-components::bootstrap.block',
+	'modal' => 'ajtarragona-web-components::bootstrap.modal',
+	'modalopener' => 'ajtarragona-web-components::bootstrap.modalopener'
 ];
 
 		

@@ -7,12 +7,11 @@
 		'name'=>'campo_select',
 		'placeholder'=>'Choose item...',
 		'options'=>$selectoptions, 
-		'selected'=>2, 
 		'required'=>false,
-		'show-deselector' => false,
+		'show-deselector' => true,
 		'size'=>5,
 		'live-search'=>true,
-		'width'=>'100%'
+		
 	]
 ) 
 						
@@ -26,23 +25,47 @@
 		'multiple'=>true,
 		'selected'=>[2,4],
 		'actions-box'=>true,
-		'width'=>'100%'
+		'show-deselector' => false,
+		
 	]
 ) 
 								
 @select(
 	[
-		'container'=>false,
 		'name'=>'campo_select_multi2', 
-		'label'=>'',
+		'label'=>'aaa',
 		'options'=> $selectoptions,
 		'multiple'=>true,
 		'selected'=>[2,4],
 		'actions-box'=>true,
-		'width'=>'100%'
+		'icon' =>'star',
+		'iconposition'=>'right',
+		'type' => 'info'
 	],
 	[
-		'style'=>'btn-info'
+		'selected-text-format' => "count > 3",
+		'max-options' => 5
+	]
+) 
+											
+@select(
+	[
+		'name'=>'campo_select_multi2', 
+		'label'=>'aaa',
+		'icon' =>'star',
+		'options'=> $selectoptions,
+		'multiple'=>false,
+		'type' => 'primary'
+	]
+) 											
+@select(
+	[
+		'name'=>'campo_select_multi2', 
+		'label'=>'aaa',
+		'options'=> $selectoptions,
+		'icon' =>'star',
+		'multiple'=>false,
+		'type' => 'secondary'
 	]
 ) 
 			

@@ -35028,6 +35028,184 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
+/***/ "./node_modules/is-in-viewport/lib/isInViewport.es6.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/is-in-viewport/lib/isInViewport.es6.js ***!
+  \*************************************************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+
+
+/**
+ * @author  Mudit Ameta
+ * @license https://github.com/zeusdeux/isInViewport/blob/master/license.md MIT
+ */
+
+// expose isInViewport as a custom pseudo-selector
+jquery__WEBPACK_IMPORTED_MODULE_0___default.a.extend(jquery__WEBPACK_IMPORTED_MODULE_0___default.a.expr.pseudos || jquery__WEBPACK_IMPORTED_MODULE_0___default.a.expr[':'], {
+  // if $.expr.createPseudo is available, use it
+  'in-viewport': jquery__WEBPACK_IMPORTED_MODULE_0___default.a.expr.createPseudo
+    ? jquery__WEBPACK_IMPORTED_MODULE_0___default.a.expr.createPseudo(function (argsString) { return function (currElement) { return isInViewport(currElement, getSelectorArgs(argsString)); }; })
+  : function (currObj, index, meta) { return isInViewport(currObj, getSelectorArgs(meta[3])); }
+})
+
+
+// expose isInViewport as a function too
+// this lets folks pass around actual objects as options (like custom viewport)
+// and doesn't tie 'em down to strings. It also prevents isInViewport from
+// having to look up and wrap the dom element corresponding to the viewport selector
+jquery__WEBPACK_IMPORTED_MODULE_0___default.a.fn.isInViewport = function(options) {
+  return this.filter(function (i, el) { return isInViewport(el, options); })
+}
+
+jquery__WEBPACK_IMPORTED_MODULE_0___default.a.fn.run = run
+
+// lets you chain any arbitrary function or an array of functions and returns a jquery object
+function run(args) {
+  var this$1 = this;
+
+  if (arguments.length === 1 && typeof args === 'function') {
+    args = [args]
+  }
+
+  if (!(args instanceof Array)) {
+    throw new SyntaxError('isInViewport: Argument(s) passed to .do/.run should be a function or an array of functions')
+  }
+
+  args.forEach(function (arg) {
+    if (typeof arg !== 'function') {
+      console.warn('isInViewport: Argument(s) passed to .do/.run should be a function or an array of functions')
+      console.warn('isInViewport: Ignoring non-function values in array and moving on')
+    } else {
+      [].slice.call(this$1).forEach(function (t) { return arg.call(jquery__WEBPACK_IMPORTED_MODULE_0___default()(t)); })
+    }
+  })
+
+  return this
+}
+
+
+// gets the width of the scrollbar
+function getScrollbarWidth(viewport) {
+  // append a div that has 100% width to get true width of viewport
+  var el = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div></div>').css({
+    width: '100%'
+  })
+  viewport.append(el)
+
+  // subtract true width from the viewport width which is inclusive
+  // of scrollbar by default
+  var scrollBarWidth = viewport.width() - el.width()
+
+  // remove our element from DOM
+  el.remove()
+  return scrollBarWidth
+}
+
+
+// Returns true if DOM element `element` is in viewport
+function isInViewport(element, options) {
+  var ref = element.getBoundingClientRect();
+  var top = ref.top;
+  var bottom = ref.bottom;
+  var left = ref.left;
+  var right = ref.right;
+
+  var settings = jquery__WEBPACK_IMPORTED_MODULE_0___default.a.extend({
+    tolerance: 0,
+    viewport: window
+  }, options)
+  var isVisibleFlag = false
+  var $viewport = settings.viewport.jquery ? settings.viewport : jquery__WEBPACK_IMPORTED_MODULE_0___default()(settings.viewport)
+
+  if (!$viewport.length) {
+    console.warn('isInViewport: The viewport selector you have provided matches no element on page.')
+    console.warn('isInViewport: Defaulting to viewport as window')
+    $viewport = jquery__WEBPACK_IMPORTED_MODULE_0___default()(window)
+  }
+
+  var $viewportHeight = $viewport.height()
+  var $viewportWidth = $viewport.width()
+  var typeofViewport = $viewport[0].toString()
+
+  // if the viewport is other than window recalculate the top,
+  // bottom,left and right wrt the new viewport
+  // the [object DOMWindow] check is for window object type in PhantomJS
+  if ($viewport[0] !== window && typeofViewport !== '[object Window]' && typeofViewport !== '[object DOMWindow]') {
+    // use getBoundingClientRect() instead of $.Offset()
+    // since the original top/bottom positions are calculated relative to browser viewport and not document
+    var viewportRect = $viewport[0].getBoundingClientRect()
+
+    // recalculate these relative to viewport
+    top = top - viewportRect.top
+    bottom = bottom - viewportRect.top
+    left = left - viewportRect.left
+    right = right - viewportRect.left
+
+    // get the scrollbar width from cache or calculate it
+    isInViewport.scrollBarWidth = isInViewport.scrollBarWidth || getScrollbarWidth($viewport)
+
+    // remove the width of the scrollbar from the viewport width
+    $viewportWidth -= isInViewport.scrollBarWidth
+  }
+
+  // handle falsy, non-number and non-integer tolerance value
+  // same as checking using isNaN and then setting to 0
+  // bitwise operators deserve some love too you know
+  settings.tolerance = ~~Math.round(parseFloat(settings.tolerance))
+
+  if (settings.tolerance < 0) {
+    settings.tolerance = $viewportHeight + settings.tolerance // viewport height - tol
+  }
+
+  // the element is NOT in viewport iff it is completely out of
+  // viewport laterally or if it is completely out of the tolerance
+  // region. Therefore, if it is partially in view then it is considered
+  // to be in the viewport and hence true is returned. Because we have adjusted
+  // the left/right positions relative to the viewport, we should check the
+  // element's right against the viewport's 0 (left side), and the element's
+  // left against the viewport's width to see if it is outside of the viewport.
+
+  if (right <= 0 || left >= $viewportWidth) {
+    return isVisibleFlag
+  }
+
+  // if the element is bound to some tolerance
+  isVisibleFlag = settings.tolerance ? top <= settings.tolerance && bottom >= settings.tolerance : bottom > 0 && top <= $viewportHeight
+
+  return isVisibleFlag
+}
+
+
+// get the selector args from the args string proved by Sizzle
+function getSelectorArgs(argsString) {
+  if (argsString) {
+    var args = argsString.split(',')
+
+    // when user only gives viewport and no tolerance
+    if (args.length === 1 && isNaN(args[0])) {
+      args[1] = args[0]
+      args[0] = void 0
+    }
+
+    return {
+      tolerance: args[0] ? args[0].trim() : void 0,
+      viewport: args[1] ? jquery__WEBPACK_IMPORTED_MODULE_0___default()(args[1].trim()) : void 0
+    }
+  }
+  return {}
+}
+
+//# sourceMappingURL=isInViewport.es6.js.map
+
+
+/***/ }),
+
 /***/ "./node_modules/isarray/index.js":
 /*!***************************************!*\
   !*** ./node_modules/isarray/index.js ***!
@@ -86792,6 +86970,8 @@ __webpack_require__(/*! clipboard */ "./node_modules/clipboard/dist/clipboard.js
 
 __webpack_require__(/*! quill */ "./node_modules/quill/dist/quill.js");
 
+__webpack_require__(/*! is-in-viewport */ "./node_modules/is-in-viewport/lib/isInViewport.es6.js");
+
 __webpack_require__(/*! ./forms */ "./src/resources/assets/js/forms.js");
 
 __webpack_require__(/*! ./formcontrols */ "./src/resources/assets/js/formcontrols.js");
@@ -86816,7 +86996,55 @@ __webpack_require__(/*! ./sessiontriggers */ "./src/resources/assets/js/sessiont
 
 __webpack_require__(/*! ./prettyprint */ "./src/resources/assets/js/prettyprint.js");
 
+__webpack_require__(/*! ./animations */ "./src/resources/assets/js/animations.js");
+
 __webpack_require__(/*! ./main */ "./src/resources/assets/js/main.js");
+
+/***/ }),
+
+/***/ "./src/resources/assets/js/animations.js":
+/*!***********************************************!*\
+  !*** ./src/resources/assets/js/animations.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var ANIMS = [];
+
+animScrollManager = function animScrollManager() {
+  //al(ANIMS);
+  for (i in ANIMS) {
+    var anim = ANIMS[i];
+
+    if (anim.settings.scrollwatch) {
+      // al(anim.settings);
+      // al(anim.$element);
+      // al(anim.$element.isInViewport());
+      if (anim.$element.isInViewport().length > 0) anim.$element.addClass('in'); //.removeClass('out');
+      else anim.$element.removeClass('in'); //.addClass('out');
+    } else {
+      anim.$element.addClass('in');
+    }
+  }
+};
+
+$.fn.initAnimation = function (options) {
+  var ret = this.each(function () {
+    al("initAnimation()");
+    this.$element = $(this);
+    this.settings = {
+      scrollwatch: true
+    };
+    if (this.$element.data()) this.settings = $.extend(true, {}, this.settings, this.$element.data());
+    if (options) this.settings = $.extend({}, this.settings, options); //al(this);
+
+    ANIMS.push(this);
+  });
+  animScrollManager();
+  return ret;
+};
+
+$(window).scroll(animScrollManager);
 
 /***/ }),
 
@@ -88310,6 +88538,7 @@ $.fn.tgnInitAll = function () {
   this.find('a[data-confirm], button[data-confirm]').initConfirm();
   this.find('pre.prettyprint').initPrettyprint();
   this.find('.text-editor').initTextEditor();
+  this.find('.anim').initAnimation();
   this.initSessionTriggers(); //initNavs(this);
 
   return this;
@@ -88849,13 +89078,15 @@ $.fn.tgnMap = function (options) {
 var MODALS = [];
 var tgnmodaldefaults = {
   url: '',
+  target: false,
   method: 'get',
   closable: true,
   maximizable: true,
   toggable: false,
   draggable: true,
   valign: 'top',
-  size: 'small',
+  halign: 'center',
+  size: 'sm',
   animate: true,
   style: 'default',
   padding: true,
@@ -88909,6 +89140,24 @@ TgnModal = function TgnModal(options) {
     this.render(); //}
   };
 
+  this.setProperties = function () {
+    var o = this;
+    if (o.settings.animate) o.$dialog.addClass('fade');
+    o.$dialog.find('.modal-dialog').addClass('modal-' + o.settings.size);
+    o.$dialog.find('.modal-dialog').addClass('halign-' + o.settings.halign);
+    if (o.settings.valign == 'center') o.$dialog.find('.modal-dialog').addClass('modal-dialog-centered');
+    if (o.settings.valign == 'bottom') o.$dialog.find('.modal-dialog').addClass('modal-dialog-bottom');
+
+    if (o.settings.maximizable) {
+      o.$dialog.find('.modal-buttons').append($('<button type="button" class="maximize"><i class="far fa-window-maximize"></i></button>'));
+    }
+
+    if (o.settings.closable) {
+      o.$dialog.find('.modal-buttons').append($('<button type="button" class="close " data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'));
+    } //this.render();
+
+  };
+
   this.setId = function (id) {
     if (id) {
       this.id = id;
@@ -88935,39 +89184,50 @@ TgnModal = function TgnModal(options) {
   this.construct = function () {
     var o = this; //al(isdark);
 
-    var dialoghtml = '<div class="modal ' + (o.settings.animate ? 'fade' : '') + '" tabindex="-1" role="dialog" >' + '	<div class="modal-dialog modal-' + o.settings.size + ' ' + (o.settings.valign == 'center' ? 'modal-dialog-centered' : '') + '">' + '		<div class="modal-content ">' + '			<div class="modal-header  "><h5 class="modal-title "></h5><span class="modal-buttons">' + (o.settings.maximizable ? '<button type="button" class="maximize"><i class="far fa-window-maximize"></i></button>' : '') + '' + (o.settings.closable ? '<button type="button" class="close " data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' : '') + '</span></div>' + '		</div>' + '	</div>' + '</div>';
-    o.$dialog = $(dialoghtml);
-    o.$dialog.prependTo('body');
-    o.setStyle(o.settings.style);
-    o.$dialog.on('hide.bs.modal', function (e) {
-      o.destroy();
-    }); //para multiples modales, manejo el zindex
-
-    o.$dialog.on('show.bs.modal', function (event) {
-      var idx = $('.modal:visible').length;
-      $(this).css('z-index', 1040 + 10 * idx);
-    });
-    o.$dialog.on('shown.bs.modal', function (event) {
-      var idx = $('.modal:visible').length - 1; // raise backdrop after animation.
-
-      $('.modal-backdrop').not('.stacked').css('z-index', 1039 + 10 * idx);
-      $('.modal-backdrop').not('.stacked').addClass('stacked');
-      o.initAutofocus();
-    });
-
-    if (o.settings.draggable) {
-      o.$dialog.find('.modal-dialog').draggable({
-        handle: '.modal-header'
-      });
+    if (o.isLocal()) {
+      //al("construct local");
+      o.$dialog = $(o.settings.target); //al(o.$dialog);
+    } else {
+      var dialoghtml = '<div class="modal" tabindex="-1" role="dialog" >' + '	<div class="modal-dialog">' + '		<div class="modal-content ">' + '			<div class="modal-header  "><h5 class="modal-title "></h5><span class="modal-buttons"></span></div>' + '		</div>' + '	</div>' + '</div>';
+      o.$dialog = $(dialoghtml);
+      o.$dialog.prependTo('body');
     }
 
-    if (o.settings.maximizable) {
-      o.$dialog.find('.modal-header').on('dblclick', function () {
-        o.toggleMaximized();
+    if (!o.$dialog.is(".modalinit")) {
+      o.$dialog.addClass('modalinit');
+      o.setProperties();
+      o.setStyle(o.settings.style); //eventos
+
+      o.$dialog.on('hide.bs.modal', function (e) {
+        if (!o.isLocal()) o.destroy();
+      }); //para multiples modales, manejo el zindex
+
+      o.$dialog.on('show.bs.modal', function (event) {
+        var idx = $('.modal:visible').length;
+        $(this).css('z-index', 1040 + 10 * idx);
       });
-      o.$dialog.find('.modal-header button.maximize').on('click', function () {
-        o.toggleMaximized();
+      o.$dialog.on('shown.bs.modal', function (event) {
+        var idx = $('.modal:visible').length - 1; // raise backdrop after animation.
+
+        $('.modal-backdrop').not('.stacked').css('z-index', 1039 + 10 * idx);
+        $('.modal-backdrop').not('.stacked').addClass('stacked');
+        o.initAutofocus();
       });
+
+      if (o.settings.draggable) {
+        o.$dialog.find('.modal-dialog').draggable({
+          handle: '.modal-header'
+        });
+      }
+
+      if (o.settings.maximizable) {
+        o.$dialog.find('.modal-header').on('dblclick', function () {
+          o.toggleMaximized();
+        });
+        o.$dialog.find('.modal-header button.maximize').on('click', function () {
+          o.toggleMaximized();
+        });
+      }
     }
   };
 
@@ -89028,42 +89288,50 @@ TgnModal = function TgnModal(options) {
     al("tgnModal destroyed"); //o.$opener.off('click');
   };
 
+  this.isLocal = function () {
+    //al("isLocal:"+this.settings.url + "."+this.settings.target);
+    return this.settings.url == '#';
+  };
+
   this.doRequest = function () {
-    var o = this; //al("opening:" +o.settings.url);
+    var o = this;
 
-    o.setTitle('<span class="fa fa-spinner spin d-inline-block"></span> ' + o.settings.strings.loading + ' ...');
-    o.open();
-    var params = o.settings.params;
-    if (o.settings.method != "get") params = $.extend(true, {}, params, {
-      _token: csrfToken()
-    }); //al(params);    
+    if (!o.isLocal()) {
+      //al("opening:" +o.settings.url);
+      o.setTitle('<span class="fa fa-spinner spin d-inline-block"></span> ' + o.settings.strings.loading + ' ...');
+      o.open();
+      var params = o.settings.params;
+      if (o.settings.method != "get") params = $.extend(true, {}, params, {
+        _token: csrfToken()
+      }); //al(params);    
 
-    $.ajax({
-      url: o.settings.url,
-      type: o.settings.method,
-      data: params,
-      dataType: 'html',
-      success: function success(data) {
-        var content = $(data);
+      $.ajax({
+        url: o.settings.url,
+        type: o.settings.method,
+        data: params,
+        dataType: 'html',
+        success: function success(data) {
+          var content = $(data);
 
-        if (o.$dialog.length > 0) {
-          o.setId(content.attr('id'));
-          o.setTitle(content.find('.modal-title').html());
-          o.setBody(content.find('.modal-body').html());
-          o.setFooter(content.find('.modal-footer').html());
+          if (o.$dialog.length > 0) {
+            o.setId(content.attr('id'));
+            o.setTitle(content.find('.modal-title').html());
+            o.setBody(content.find('.modal-body').html());
+            o.setFooter(content.find('.modal-footer').html());
+          }
+
+          o.initAutofocus();
+          executeCallback(o.settings.onsuccess, o.$dialog);
+        },
+        error: function error(xhr) {
+          //al(xhr);
+          o.setStyle('danger');
+          o.setTitle(o.settings.strings.error + " " + xhr.status);
+          o.setBody("<code>" + xhr.statusText + "</code>");
+          executeCallback(o.settings.onerror, o.$dialog);
         }
-
-        o.initAutofocus();
-        executeCallback(o.settings.onsuccess, o.$dialog);
-      },
-      error: function error(xhr) {
-        //al(xhr);
-        o.setStyle('danger');
-        o.setTitle(o.settings.strings.error + " " + xhr.status);
-        o.setBody("<code>" + xhr.statusText + "</code>");
-        executeCallback(o.settings.onerror, o.$dialog);
-      }
-    });
+      });
+    } else {}
   };
 
   this.initOpener = function (btn) {
@@ -89073,14 +89341,16 @@ TgnModal = function TgnModal(options) {
 
     if (!o.$opener.is(".modalinit")) {
       o.$opener.addClass('modalinit');
+      o.settings.url = o.$opener.attr("href");
       MODALS.push(this); //al(this.settings);
+      //if(o.$opener.attr('href')!='#'){
 
       o.$opener.on("click", function (e) {
         o.construct();
-        e.preventDefault();
-        o.settings.url = o.$opener.attr("href");
+        e.preventDefault(); //e.stopPropagation();
+
         o.doRequest();
-      });
+      }); //}
     }
   };
 };
@@ -89371,8 +89641,8 @@ $.fn.initPrettyprint = function (options) {
         button.addClass('prettycopy btn btn-sm btn-light').html(_icon("copy") + __("Copiar")).attr('id', uuid);
         button.data("clipboard-target", "#" + uuidhidden);
         $element.after(button); //al(button[0]);
+        //al("#"+uuid);
 
-        al("#" + uuid);
         var client = new clipboard__WEBPACK_IMPORTED_MODULE_0___default.a("#" + uuid, {
           text: function text(trigger) {
             return rhtmlspecialchars($($(trigger).data("clipboard-target")).val());
@@ -89421,17 +89691,31 @@ $.fn.createSelectPicker = function () {
     if (!$select.is(".init")) {
       o.picker = $select.selectpicker(args);
       $select.addClass("init");
+      var $button = o.picker.siblings('.dropdown-toggle');
+      var $menu = o.picker.parent().find("> .dropdown-menu");
+      $button.on('focus', function () {
+        $(this).closest('.form-group').addClass("focused");
+      });
+      $button.on('blur', function () {
+        if (!$(this).closest('.bootstrap-select').is('.show')) {
+          $(this).closest('.form-group').removeClass("focused");
+        }
+      });
       $select.closest('.bootstrap-select').siblings('label').on('click', function (e) {
         e.preventDefault();
-        e.stopPropagation();
-        $(this).blur();
-        $(this).closest('.form-group').addClass("focused"); // al($select);
+        e.stopPropagation(); //$(this).blur();
+        //$(this).closest('.form-group').addClass("focused");
+        // al($select);
 
         o.picker.selectpicker('open');
-        var $button = o.picker.siblings('.dropdown-toggle');
-        var $menu = o.picker.parent().find("> .dropdown-menu");
         $button.click();
         $menu.find(".inner").focus();
+      });
+      $select.on('show.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+        $(this).closest('.form-group').addClass("focused");
+      });
+      $select.on('hidden.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+        $(this).closest('.form-group').removeClass("focused");
       });
       $select.on('loaded.bs.select', function (e, clickedIndex, isSelected, previousValue) {
         //al('select initialized');

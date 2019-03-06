@@ -4,13 +4,15 @@ var MODALS=[];
 
 var tgnmodaldefaults = {
 	url: '',
+	target: false,
 	method : 'get',
 	closable: true,
 	maximizable: true,
 	toggable: false,
 	draggable: true,
 	valign: 'top',
-	size:'small',
+	halign: 'center',
+	size:'sm',
 	animate: true,
 	style:'default',
 	padding: true,
@@ -73,6 +75,26 @@ TgnModal = function(options){
 			this.render();
 		//}
 	}
+
+	this.setProperties= function(){
+		var o=this;
+		
+		if(o.settings.animate) o.$dialog.addClass('fade');
+		o.$dialog.find('.modal-dialog').addClass('modal-'+o.settings.size);
+		o.$dialog.find('.modal-dialog').addClass('halign-'+o.settings.halign);
+		if(o.settings.valign=='center') o.$dialog.find('.modal-dialog').addClass('modal-dialog-centered');
+		if(o.settings.valign=='bottom') o.$dialog.find('.modal-dialog').addClass('modal-dialog-bottom');
+
+
+		if(o.settings.maximizable){
+			o.$dialog.find('.modal-buttons').append($('<button type="button" class="maximize"><i class="far fa-window-maximize"></i></button>'));
+		}
+		if(o.settings.closable){
+			o.$dialog.find('.modal-buttons').append($('<button type="button" class="close " data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'));
+		}
+		//this.render();
+	}
+
 	this.setId = function(id){
 		if(id){
 			this.id=id;
@@ -99,54 +121,70 @@ TgnModal = function(options){
 	this.construct = function(){
 		var o=this;
 		//al(isdark);
+		if(o.isLocal()){
+			//al("construct local");
+			o.$dialog=$(o.settings.target);
+			//al(o.$dialog);
 
-		
-		var dialoghtml= 
-		'<div class="modal '+(o.settings.animate?'fade':'')+'" tabindex="-1" role="dialog" >'+
-		'	<div class="modal-dialog modal-'+o.settings.size+' ' +(o.settings.valign=='center'?'modal-dialog-centered':'')+'">'+
-		'		<div class="modal-content ">'+
-		'			<div class="modal-header  "><h5 class="modal-title "></h5><span class="modal-buttons">'+(o.settings.maximizable?'<button type="button" class="maximize"><i class="far fa-window-maximize"></i></button>':'')+''+(o.settings.closable?'<button type="button" class="close " data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>':'')+'</span></div>'+
-		'		</div>'+
-		'	</div>'+
-		'</div>';
+		}else{
 
-		o.$dialog=$(dialoghtml);
+			
+			var dialoghtml= 
+			'<div class="modal" tabindex="-1" role="dialog" >'+
+			'	<div class="modal-dialog">'+
+			'		<div class="modal-content ">'+
+			'			<div class="modal-header  "><h5 class="modal-title "></h5><span class="modal-buttons"></span></div>'+
+			'		</div>'+
+			'	</div>'+
+			'</div>';
 
-		
-		o.$dialog.prependTo('body');
-		o.setStyle(o.settings.style);
+			o.$dialog=$(dialoghtml);
 
-		o.$dialog.on('hide.bs.modal', function (e) {
-			o.destroy();
-		});
-
-		//para multiples modales, manejo el zindex
-		o.$dialog.on('show.bs.modal', function(event) {
-		    var idx = $('.modal:visible').length;
-		    $(this).css('z-index', 1040 + (10 * idx));
-		});
-
-		o.$dialog.on('shown.bs.modal', function(event) {
-		    var idx = ($('.modal:visible').length) -1; // raise backdrop after animation.
-		    $('.modal-backdrop').not('.stacked').css('z-index', 1039 + (10 * idx));
-		    $('.modal-backdrop').not('.stacked').addClass('stacked');
-
-		    o.initAutofocus();
-		});
-
-
-
-		if(o.settings.draggable){
-			o.$dialog.find('.modal-dialog').draggable({handle:'.modal-header'});
+			
+			o.$dialog.prependTo('body');
 		}
 
-		if(o.settings.maximizable){
-			o.$dialog.find('.modal-header').on('dblclick',function(){
-				o.toggleMaximized();
+		if(!o.$dialog.is(".modalinit")){
+			o.$dialog.addClass('modalinit');
+			o.setProperties();
+			
+			o.setStyle(o.settings.style);
+
+
+			//eventos
+
+			o.$dialog.on('hide.bs.modal', function (e) {
+				if(!o.isLocal()) o.destroy();
 			});
-			o.$dialog.find('.modal-header button.maximize').on('click',function(){
-				o.toggleMaximized();
+
+			//para multiples modales, manejo el zindex
+			o.$dialog.on('show.bs.modal', function(event) {
+			    var idx = $('.modal:visible').length;
+			    $(this).css('z-index', 1040 + (10 * idx));
 			});
+
+			o.$dialog.on('shown.bs.modal', function(event) {
+			    var idx = ($('.modal:visible').length) -1; // raise backdrop after animation.
+			    $('.modal-backdrop').not('.stacked').css('z-index', 1039 + (10 * idx));
+			    $('.modal-backdrop').not('.stacked').addClass('stacked');
+
+			    o.initAutofocus();
+			});
+
+
+
+			if(o.settings.draggable){
+				o.$dialog.find('.modal-dialog').draggable({handle:'.modal-header'});
+			}
+
+			if(o.settings.maximizable){
+				o.$dialog.find('.modal-header').on('dblclick',function(){
+					o.toggleMaximized();
+				});
+				o.$dialog.find('.modal-header button.maximize').on('click',function(){
+					o.toggleMaximized();
+				});
+			}
 		}
 	}
 
@@ -212,45 +250,54 @@ TgnModal = function(options){
 		al("tgnModal destroyed");
 		//o.$opener.off('click');
 	}
+ 
+	this.isLocal = function(){
+		//al("isLocal:"+this.settings.url + "."+this.settings.target);
+		return this.settings.url=='#';
 
-	
+	}
+
 	this.doRequest = function(){
 		var o=this;
-		//al("opening:" +o.settings.url);
-		o.setTitle('<span class="fa fa-spinner spin d-inline-block"></span> '+o.settings.strings.loading+' ...');
-		
-		o.open();
 
-		var params= o.settings.params;
-		if(o.settings.method!="get") params=$.extend(true, {}, params, { _token: csrfToken() } ); 
-	    //al(params);    
+		if(!o.isLocal()){
+			//al("opening:" +o.settings.url);
+			o.setTitle('<span class="fa fa-spinner spin d-inline-block"></span> '+o.settings.strings.loading+' ...');
+			
+			o.open();
+			var params= o.settings.params;
+			if(o.settings.method!="get") params=$.extend(true, {}, params, { _token: csrfToken() } ); 
+		    //al(params);    
 
-		$.ajax({
-            url: o.settings.url,
-            type: o.settings.method,
-            data: params,
-            dataType: 'html',
-            success: function(data){
-            	var content=$(data);
-				if(o.$dialog.length>0){
-					o.setId(content.attr('id'));
-					o.setTitle(content.find('.modal-title').html());
-					o.setBody(content.find('.modal-body').html());
-					o.setFooter(content.find('.modal-footer').html());
-					
-				}
-				 
-				o.initAutofocus();
-				executeCallback(o.settings.onsuccess,o.$dialog);	
-			},
-            error: function(xhr){
-            	//al(xhr);
-                o.setStyle('danger');
-				o.setTitle(o.settings.strings.error +" "+xhr.status );
-				o.setBody("<code>"+xhr.statusText+"</code>");
-				executeCallback(o.settings.onerror,o.$dialog);
-            }
-        });
+			$.ajax({
+	            url: o.settings.url,
+	            type: o.settings.method,
+	            data: params,
+	            dataType: 'html',
+	            success: function(data){
+	            	var content=$(data);
+					if(o.$dialog.length>0){
+						o.setId(content.attr('id'));
+						o.setTitle(content.find('.modal-title').html());
+						o.setBody(content.find('.modal-body').html());
+						o.setFooter(content.find('.modal-footer').html());
+						
+					}
+					 
+					o.initAutofocus();
+					executeCallback(o.settings.onsuccess,o.$dialog);	
+				},
+	            error: function(xhr){
+	            	//al(xhr);
+	                o.setStyle('danger');
+					o.setTitle(o.settings.strings.error +" "+xhr.status );
+					o.setBody("<code>"+xhr.statusText+"</code>");
+					executeCallback(o.settings.onerror,o.$dialog);
+	            }
+	        });
+	    }else{
+
+	    }
 	}
 
 
@@ -263,17 +310,22 @@ TgnModal = function(options){
 		al("init() tgnModal");
 		if(!o.$opener.is(".modalinit")){
 			o.$opener.addClass('modalinit');
-	    	MODALS.push(this);
+	    	o.settings.url=o.$opener.attr("href");
+	    	
+			MODALS.push(this);
+
 	    	//al(this.settings);
-	    	o.$opener.on("click",function(e){
-	    		o.construct();
-			
-				e.preventDefault();
-	    		o.settings.url=o.$opener.attr("href");
+	    	//if(o.$opener.attr('href')!='#'){
+		    	o.$opener.on("click",function(e){
+		    		o.construct();
 				
-				o.doRequest();
-				
-			});
+					e.preventDefault();
+					//e.stopPropagation();
+		    		
+					o.doRequest();
+					
+				});
+			//}
 			
 		}
 	};

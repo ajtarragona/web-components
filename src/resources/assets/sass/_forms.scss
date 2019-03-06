@@ -190,6 +190,8 @@ $sidelabel-size : 160px;
 		font-weight:700;
 	}
 
+	
+
 	&.form-group-lg{
 		> label{
 			font-size:1.2em;
@@ -207,6 +209,21 @@ $sidelabel-size : 160px;
 
 	&.disabled > label{
 		opacity:.6;
+	}
+
+	&.bg-success,
+	&.bg-danger,
+	&.bg-dark,
+	&.bg-primary,
+	&.bg-secondary,
+	&.bg-info{
+		> label{
+			color:$white;
+		}
+		.input-icon{
+			color: $white;
+		}
+
 	}
 
 	.custom-select {
@@ -531,7 +548,8 @@ label.btn{
 	padding: $input-padding-y $input-padding-x;
 	font-size:1rem;
 	pointer-events:none;
-	color:$gray-400;
+	// color:$gray-400;
+	opacity:.6;
 }
 .form-group-textarea .input-icon{
 	bottom:auto;
@@ -575,7 +593,8 @@ label + .input-icon{
 }
 
 .form-group.focused .input-icon{
-	color:$secondary;
+	//color:$secondary;
+	opacity:1;
 }
 
 .form-inline .input-icon{

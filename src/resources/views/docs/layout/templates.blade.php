@@ -1,10 +1,10 @@
 <h1 class="display-4">Plantilles</h1>
 <p class="lead">El paquet proporciona tres plantilles per fer servir a les nostres vistes blade.</p>
 
-<hr class="big"/>
+<hr class="big"  id="template-master"/>
 
 
-<h1>Master</h1>
+<h1 >Master</h1>
 <p><mark>@icon('file') ajtarragona-web-components::layout/master</mark></p>
 
 @row
@@ -53,7 +53,7 @@
 	@endcol
 @endrow
 
-<hr class="big"/>
+<hr class="big" id="template-master-sidebar"/>
 
 
 <h1>Master-sidebar</h1>
@@ -119,7 +119,7 @@
 	@endcol
 @endrow
 
-<hr class="big"/>
+<hr class="big" id="template-modal"/>
 
 
 <h1>Modal</h1>

@@ -1,0 +1,91 @@
+
+//modals
+
+@media (min-width: 992px){
+  .modal-xl {
+      max-width: 1180px;
+  }
+}
+
+.modal{
+
+  .modal-header button.maximize {
+    padding: 1rem 0.5rem;
+    background-color: transparent;
+    border: 0;
+    -webkit-appearance: none;
+     margin: -1rem 0 -1rem auto;
+     opacity: .5;
+     outline:none !important;
+     cursor:pointer;
+     &:hover{
+      opacity: .75;
+     }
+  }   
+
+  .modal-inner{
+     max-height:70vh;
+     overflow-y: auto;
+     padding-left:1rem;
+     padding-right:1rem;
+     margin-left:-1rem;
+     margin-right:-1rem;
+  }
+
+
+  &.modal-maximized{
+    .modal-dialog{
+      left:0 !important;
+      top:0 !important;
+      margin-left:0;
+      margin-top:0;
+      max-width: 100% !important;
+    }
+    .modal-content{
+        height: 98vh;
+        width: 98vw;
+        margin: 1vh 1vw;
+    }
+    .modal-body{
+      height: 100vh;
+      overflow-y:auto;
+    }
+    .modal-header.ui-draggable-handle{
+      cursor:default;
+    }
+    .modal-inner{
+        max-height:none;
+        overflow-y:hidden;
+    }
+
+
+  }
+}
+body.modal-maximized.modal-open .modal{
+  overflow-y:hidden;
+}
+
+
+.modal-dialog-bottom{
+  min-height: calc(100% - (1.75rem * 2));
+  display: flex;
+  align-items: flex-end;
+}
+
+.modal-dialog.halign-left{
+  margin: 1.75rem auto auto 1.75rem
+}
+
+.modal-dialog.halign-right{
+  margin: 1.75rem 1.75rem auto auto;
+}
+
+.bg-success .modal-buttons button,
+.bg-danger .modal-buttons button,
+.bg-dark .modal-buttons button,
+.bg-primary .modal-buttons button,
+.bg-secondary .modal-buttons button,
+.bg-info .modal-buttons button{
+  color:$white;
+
+}

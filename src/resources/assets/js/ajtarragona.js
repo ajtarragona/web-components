@@ -69,6 +69,8 @@ require('clipboard');
 //rich text editor
 require('quill');
 
+require('is-in-viewport') 
+
 require('./forms');
 require('./formcontrols');
 require('./navs');
@@ -81,4 +83,5 @@ require('./selects');
 require('./maps');
 require('./sessiontriggers');
 require('./prettyprint');
+require('./animations');
 require('./main');

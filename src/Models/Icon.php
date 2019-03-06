@@ -68,6 +68,8 @@ class Icon Extends WebComponent
 			
 			
 		
+		}else if($this->attributes["circle"]){
+			$classes[]= 'text-white';
 		}
 
 
@@ -81,6 +83,8 @@ class Icon Extends WebComponent
 			}
 	
 		
+		}else if($this->attributes["circle"]){
+			$classes[]= 'bg-primary';
 		}
 
 

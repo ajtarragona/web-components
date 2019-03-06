@@ -3,7 +3,7 @@
 <div class="btn-group drop{{ $dropdirection or ''}}">
 @endisset
 
-<button 
+<{{ isset($href)?'a':'button' }} 
 	@isset($id) id="{{$id}}" @endisset
 	@isset($name) name="{{ $name }}" @endisset
 	@isset($value) value="{{ $value }}" @endisset
@@ -14,7 +14,13 @@
 	@istrue($readonly ,'readonly="true"')
 	@istrue($hidden ,'style="display:none"')
 		
-	type="{{ $type or 'button'}}" 
+	@if(!isset($href)) 
+		type="{{ $type or 'button'}}" 
+	@else 
+		href="{{ $href }}"
+	@endif
+
+	
 	class="
 		btn 
 		btn-@istrue($outline, 'outline-'){{ $style or 'primary' }}  
@@ -30,7 +36,7 @@
 
 	 @include('ajtarragona-web-components::bootstrap.parts.icontext')
 
-</button>
+</{{ isset($href)?'a':'button' }} >
 
 
 @isset($dropdown)

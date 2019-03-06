@@ -34,6 +34,10 @@
 					<td><code>size</code></td>
 					<td>Mida de la icona (xs,sm,md,lg,xl)</td>
 				</tr>
+				<tr>
+					<td><code>type</code></td>
+					<td>Tipus d'icona fontawesome (<code>fas</code>, <code>far</code>,<code>fal</code>,<code>fab</code>)</td>
+				</tr>
 				
 				
 				

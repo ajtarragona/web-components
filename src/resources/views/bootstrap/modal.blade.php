@@ -1,5 +1,5 @@
 <div
-    class="modal {{ $animation or 'fade' }} {{ $class or '' }}"
+    class="modal {{ $class or '' }}"
     id="{{ $id or 'modal' }}"
     {!! renderAttributes(isset($attributes)?$attributes:false) !!}
     {!! renderData(isset($data)?$data:false) !!}
@@ -7,23 +7,19 @@
 >
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            @isset($title)
                 <div class="modal-header">
-                    <h5 class="modal-title">{{ $title }}</h5>
-
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    
+                    <h5 class="modal-title">{!! $title or '&nbsp;' !!}</h5>
+                    <span class="modal-buttons"></span>
                 </div>
-            @endisset
 
             <div class="modal-body">
-                {{ $slot }}
+                {!! $slot !!}
             </div>
 
             @isset($footer)
                 <div class="modal-footer">
-                    {{ $footer }}
+                    {!! $footer !!}
                 </div>
             @endisset
         </div>

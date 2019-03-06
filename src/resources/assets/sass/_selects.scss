@@ -21,16 +21,17 @@ select.loading{
 	padding-bottom: $input-padding-y;
 	text-transform:none;
 	border-color:transparent;
+	background-color:transparent !important;
 	display:block;
 	font-size: $font-size-base;
 	font-family: $font-family-base;
 	font-weight: $font-weight-normal;
 	
-	&.btn-light,
-	&:not([class*='btn-']){
-		background-color:transparent;
+	// &.btn-light,
+	// &:not([class*='btn-']){
+	// 	background-color:transparent;
 
-	}
+	// }
 // stylelint-enable value-keyword-case
 
 
@@ -42,7 +43,7 @@ select.loading{
 	outline:none  !important;
 	box-shadow:none  !important;
 	border-color:transparent  !important;
-	
+	background-color: transparent !important;
 	&.btn-light,
 	&:not([class*='btn-']){
 		background-color:transparent !important;
@@ -79,8 +80,8 @@ select.loading{
 }
 
 
-.form-group .input-icon.icon-right + .bootstrap-select > .deselect-btn{
-	right:4em;
+.form-group .input-icon.icon-right + .selectpicker-wrapper   .deselect-btn{
+	right:3.5em;
 }
 
 .bootstrap-select select[required=required] + .deselect-btn{
@@ -88,7 +89,7 @@ select.loading{
 }
 
 .bootstrap-select .deselect-btn:hover{
-	color:$primary;
+	opacity:.5;
 }
 
 .bootstrap-select .dropdown-toggle .filter-option-inner-inner{

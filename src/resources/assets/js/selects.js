@@ -20,25 +20,41 @@ $.fn.createSelectPicker = function(){
         
         o.picker= $select.selectpicker(args);
         $select.addClass("init");
-      
+        var $button= o.picker.siblings('.dropdown-toggle');
+        var $menu= o.picker.parent().find("> .dropdown-menu");
+
+        $button.on('focus',function(){
+          $(this).closest('.form-group').addClass("focused");
+        }); 
+        $button.on('blur',function(){
+            if(!$(this).closest('.bootstrap-select').is('.show')) {
+              $(this).closest('.form-group').removeClass("focused");
+            }
+        });
+
         $select.closest('.bootstrap-select').siblings('label').on('click',function(e){
            e.preventDefault();
            e.stopPropagation();
            
-           $(this).blur();
-           $(this).closest('.form-group').addClass("focused");
+           //$(this).blur();
+           //$(this).closest('.form-group').addClass("focused");
             // al($select);
            o.picker.selectpicker('open');
-           var $button= o.picker.siblings('.dropdown-toggle');
-           var $menu= o.picker.parent().find("> .dropdown-menu");
+           
            $button.click();
 
        
            $menu.find(".inner").focus();
         }); 
 
+        $select.on('show.bs.select', function(e, clickedIndex, isSelected, previousValue){
+          $(this).closest('.form-group').addClass("focused");
+        });
 
-      
+        $select.on('hidden.bs.select', function(e, clickedIndex, isSelected, previousValue){
+          $(this).closest('.form-group').removeClass("focused");
+        });
+        
         $select.on('loaded.bs.select', function (e, clickedIndex, isSelected, previousValue) {
           //al('select initialized');
           //al($(this).val());

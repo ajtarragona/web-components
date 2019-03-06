@@ -55,7 +55,7 @@ $.fn.initPrettyprint = function(options){
 
 			$element.after(button);
 			//al(button[0]);
-			al("#"+uuid);
+			//al("#"+uuid);
 			var client = new ClipboardJS("#"+uuid,  {
 			    text: function(trigger) {
 			        return rhtmlspecialchars($($(trigger).data("clipboard-target")).val());

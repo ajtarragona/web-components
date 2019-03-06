@@ -27,9 +27,10 @@ class Select extends WebComponent
 		'live-search' => false,
 		'width' => '100%',
 		'actions-box' => false,
+		'type' =>'default'
 	];
 
-	protected $hiddenattributes = ["containerclass",'container','label','sidelabel','renderhelper','outlined','size','show-deselector','options','data','icon','iconposition','live-search','width','actions-box'];
+	protected $hiddenattributes = ["containerclass",'container','label','sidelabel','renderhelper','outlined','size','show-deselector','options','data','icon','iconposition','live-search','width','actions-box','type'];
 	
 	protected $view = 'forms.select';
 
@@ -44,6 +45,9 @@ class Select extends WebComponent
 		$this->data["live-search"] = $this->attributes["live-search"];
 		$this->data["actions-box"] = $this->attributes["actions-box"];
 		$this->data["width"] = $this->attributes["width"];
+		$this->data["style"] = 'btn-'.$this->attributes["type"];
+		$this->data["size"] = $this->attributes["size"];
+		$this->attributes["containerclass"].=" bg-".$this->attributes["type"];
 		//dump($this->data);
 
 		if(ends_with($this->attributes['id'],"[]")) $this->attributes['id']=str_replace("[]", "", $this->attributes['id']);

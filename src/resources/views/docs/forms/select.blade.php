@@ -36,20 +36,25 @@
 				</tr>
 				<tr>
 					<td><code>renderhelper</code></td>
-					<td>Mostra la creueta per deseleccionar</td>
+					<td>Per defecte un camp select que no tingui cap valor seleccionat no s'envia als formularis. Si posem aquest paràmetre a <code>true</code> sempre s'enviarà, en cas de no tenir res seleccionat s'enviarà amb valor null. </td>
 				</tr>
 				<tr>
 					<td><code>size</code></td>
 					<td>Mida del desplegable</td>
 				</tr>
+
+				<tr>
+					<td><code>type</code></td>
+					<td>Estil del desplegable (success, info, danger, etc.)</td>
+				</tr>
 				<tr>
 					<td><code>live-search</code></td>
 					<td>Mostra o amaga la caixa de búsqueda</td>
 				</tr>
-				<tr>
+				{{-- <tr>
 					<td><code>width</code></td>
 					<td>Ample de l'element (fit, auto, %, px). Per defecte 100%</td>
-				</tr>
+				</tr> --}}
 				<tr>
 					<td><code>actions-box</code></td>
 					<td>Mostra els botons de seleccionar o deseleccionar tot (útil per selects multiples)</td>
@@ -58,7 +63,7 @@
 				
 			</tbody>
 		</table>
-		
+	
 		
 		@includeIf('ajtarragona-web-components::docs.source.forms.select')
 		

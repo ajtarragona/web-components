@@ -27,6 +27,7 @@ $.fn.tgnInitAll = function( ){
   this.find('a[data-confirm], button[data-confirm]').initConfirm();
   this.find('pre.prettyprint').initPrettyprint();
   this.find('.text-editor').initTextEditor();
+  this.find('.anim').initAnimation();
   
   this.initSessionTriggers();
   

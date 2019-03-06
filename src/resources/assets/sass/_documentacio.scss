@@ -26,6 +26,8 @@
       font-size:1.1em;
     }
 
+   
+
     ul{
       margin:0;
       padding:0;
@@ -58,5 +60,17 @@
       color: $black;
     }
 
+    >li.active > a{
+      color:$info;
+    }
+
   }
+}
+
+
+.docs-menu{
+    li.active > a{
+      color: $black;
+      font-weight: bold;
+    }
 }
