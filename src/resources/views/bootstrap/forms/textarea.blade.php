@@ -12,7 +12,8 @@
 	'outlined'=> $outlined, 
 	'id'=> $id, 
 	'size'=> $size, 
-	'class'=>$containerclass
+	'class'=>$containerclass,
+	'hasfeedback' => (isset($helptext) && $helptext)
 ])
 
 	@include('ajtarragona-web-components::bootstrap.forms.inputicon')

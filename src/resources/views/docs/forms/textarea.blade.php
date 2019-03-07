@@ -28,9 +28,9 @@
 			</tbody>
 		</table>
 	
-		
-		@includeIf('ajtarragona-web-components::docs.source.forms.textarea')
-		
+		@form
+			@includeIf('ajtarragona-web-components::docs.source.forms.textarea')
+		@endform
 	@endcol
 
 	@col(['size'=>6])

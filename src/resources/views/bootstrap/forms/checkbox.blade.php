@@ -11,7 +11,8 @@
 	'size'=> $size, 
 	'class'=>$containerclass,
 	'sidelabel' => $sidelabel,
-	'label' => $sidelabel?$label:false
+	'label' => $sidelabel?$label:false,
+	'hasfeedback' => (isset($helptext) && $helptext)
 ])
 
 @if($sidelabel)

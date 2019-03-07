@@ -35,7 +35,9 @@
 		</table>
 	
 
-		@includeIf('ajtarragona-web-components::docs.source.forms.texteditor')
+		@form
+			@includeIf('ajtarragona-web-components::docs.source.forms.texteditor')
+		@endform
 		
 	@endcol
 

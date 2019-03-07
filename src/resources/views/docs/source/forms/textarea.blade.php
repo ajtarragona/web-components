@@ -13,3 +13,11 @@
 	'autoheight' =>true
 ]) 
 
+@textarea([
+	'label'=>'Color', 
+	'rows'=>2, 
+	'containerclass'=>'bg-success',
+	'placeholder'=>'Enter long text...',
+	'autoheight' =>true
+]) 
+

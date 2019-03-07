@@ -63,9 +63,10 @@
 				
 			</tbody>
 		</table>
-	
 		
-		@includeIf('ajtarragona-web-components::docs.source.forms.select')
+		@form
+			@includeIf('ajtarragona-web-components::docs.source.forms.select')
+		@endform
 		
 	@endcol
 

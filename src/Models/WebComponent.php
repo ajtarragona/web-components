@@ -54,9 +54,13 @@ class WebComponent
 
 
 	protected function prepareAttributes($attributes){
-		//if(isset($attributes['class'])) $this->attributes['class']=$this->attributes['class'] . 
-		$this->attributes=array_merge($this->defaultattributes,$attributes);
+		if(!$this->attributes) $this->attributes=$this->defaultattributes;
+		if(isset($attributes['class']) && isset($this->attributes['class']) ){
+			$attributes['class'].=" ".$this->attributes['class'];
+		}
+		$this->attributes=array_merge($this->attributes,$attributes);
 	}
+	
 
 	protected function prepareData($data){
 		$this->data=array_merge($this->defaultdata,$data);

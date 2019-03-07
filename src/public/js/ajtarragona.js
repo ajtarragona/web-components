@@ -87252,6 +87252,7 @@ $.fn.initDatePicker = function () {
       locale: "es",
       time_24hr: true
     };
+    if ($input.data()) args = $.extend(true, {}, args, $input.data());
     var format = "d/m/Y";
     if ($input.data('date-format')) format = $input.data('date-format'); //al(format);
 
@@ -87754,8 +87755,9 @@ $.fn.initTypeahead = function () {
         }
       }
     } else {
+      $input.wrap($('<div class="form-row"/>'));
+
       if (settings.savevalue) {
-        $input.wrap($('<div class="form-row"/>'));
         var $hidden = $('<input/>');
         $input.before($hidden);
         $hidden.val(settings.value);
@@ -88021,6 +88023,11 @@ function tgnFormClass(obj, options) {
     al("init() tgnForm"); //al(this.settings);
 
     if (!$form.is(".forminit")) {
+      $form.find(':input').each(function () {
+        if ($(this).closest('.form-group').is('.with-feedback')) {
+          $(this).data('had-feedback', true);
+        }
+      });
       $form.addClass('forminit');
       TGN_FORMS.push(this); //al(this.settings);
 
@@ -88091,11 +88098,10 @@ function tgnFormClass(obj, options) {
         }
       }); //focus groups
 
-      $form.on('focus', ':input,.bootstrap-select .dropdown-toggle', function () {
-        //al("focused");
+      $form.on('focus', ':input:not(.btn)', function () {
         var group = $(this).closest('.form-group');
         if (!group.is(".disabled")) group.addClass('focused');
-      }).on('blur', ':input,.bootstrap-select .dropdown-toggle', function () {
+      }).on('blur', ':input:not(.btn)', function () {
         var group = $(this).closest('.form-group');
         if (!group.is(".disabled")) group.removeClass('focused');
       });
@@ -88140,6 +88146,7 @@ function tgnFormClass(obj, options) {
             campo.removeClass('is-invalid'); //campo.addClass('is-valid');
 
             father.removeClass('is-invalid');
+            if (!campo.data('had-feedback')) father.removeClass('with-feedback');
             father.find('div[class*=-feedback]').html('');
           });
           o.validated = true;
@@ -88160,7 +88167,7 @@ function tgnFormClass(obj, options) {
             var father = campo.parents('.form-group'); //campo.removeClass('is-valid');
 
             campo.addClass('is-invalid');
-            father.addClass('is-invalid');
+            father.addClass('is-invalid').addClass('with-feedback');
             father.find('div[class*=-feedback]').html(data[0]);
             campos_error.push(key); //resalto la pestaña si está oculta
 
@@ -88183,7 +88190,8 @@ function tgnFormClass(obj, options) {
               var campo = $form.find("[name='" + field.name + "']");
               var father = campo.closest('.form-group');
               campo.removeClass('is-invalid');
-              father.removeClass('is-invalid'); //campo.addClass('is-valid');
+              father.removeClass('is-invalid');
+              if (!campo.data('had-feedback')) father.removeClass('with-feedback'); //campo.addClass('is-valid');
 
               father.find('div[class*=-feedback]').html('');
             }

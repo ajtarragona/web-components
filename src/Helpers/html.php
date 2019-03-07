@@ -96,6 +96,30 @@ if (! function_exists('select')) {
 
 
 
+if (! function_exists('autocomplete')) {
+	function autocomplete($attributes=[],$data=[]){
+		if(!isset($attributes["class"])) $attributes["class"]="";
+		$attributes["class"].=" form-control autocomplete";
+
+		$newdata=[];
+
+		if(isset($attributes["multiple"])) $newdata["multiple"]=$attributes["multiple"];
+		if(isset($attributes["url"])) $newdata["url"]=$attributes["url"];
+		if(isset($attributes["value"])) $newdata["value"]=$attributes["value"];
+		if(isset($attributes["valuename"])) $attributes["value"]=$attributes["valuename"];
+		if(isset($attributes["savevalue"])) $newdata["savevalue"]=$attributes["savevalue"];
+		if(isset($attributes["showvalue"])) $newdata["showvalue"]=$attributes["showvalue"];
+		if(isset($attributes["min-length"])) $newdata["min-length"]=$attributes["min-length"];
+
+		$newdata=array_merge($newdata,$data);
+		
+		$ret = new Input($attributes,$newdata);
+		return $ret->render();
+	}
+}
+
+
+
 if (! function_exists('checkbox')) {
 	function checkbox($attributes=[],$data=[]){
 		$ret = new Checkbox($attributes,$data);

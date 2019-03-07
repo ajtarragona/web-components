@@ -85,7 +85,11 @@ function tgnFormClass(obj,options){
 		if(!$form.is(".forminit")){
 
 			
-
+			$form.find(':input').each(function(){
+				if($(this).closest('.form-group').is('.with-feedback')){
+					$(this).data('had-feedback',true);
+				}
+			});
 
 			$form.addClass('forminit');
 	    	TGN_FORMS.push(this);
@@ -164,12 +168,11 @@ function tgnFormClass(obj,options){
 	        });
 
 		     //focus groups
-		     $form.on('focus',':input,.bootstrap-select .dropdown-toggle',function(){
-		     	//al("focused");
+		     $form.on('focus',':input:not(.btn)',function(){
 		     	var group=$(this).closest('.form-group');
 		     	if(!group.is(".disabled"))
 		     		group.addClass('focused');
-		     }).on('blur',':input,.bootstrap-select .dropdown-toggle',function(){
+		     }).on('blur',':input:not(.btn)',function(){
 		     	var group=$(this).closest('.form-group');
 		     	if(!group.is(".disabled"))
 		     		group.removeClass('focused');
@@ -222,6 +225,7 @@ function tgnFormClass(obj,options){
                         campo.removeClass('is-invalid');
                         //campo.addClass('is-valid');
                         father.removeClass('is-invalid');
+                        if(!campo.data('had-feedback')) father.removeClass('with-feedback');
                         father.find('div[class*=-feedback]').html('');
                     });
 
@@ -245,7 +249,7 @@ function tgnFormClass(obj,options){
                         var father = campo.parents('.form-group');
                         //campo.removeClass('is-valid');
                         campo.addClass('is-invalid');
-                        father.addClass('is-invalid');
+                        father.addClass('is-invalid').addClass('with-feedback');
                         father.find('div[class*=-feedback]').html(data[0]);
                         campos_error.push(key);
 
@@ -273,6 +277,7 @@ function tgnFormClass(obj,options){
                             var father = campo.closest('.form-group');
                             campo.removeClass('is-invalid');
                             father.removeClass('is-invalid');
+                            if(!campo.data('had-feedback')) father.removeClass('with-feedback');
                             //campo.addClass('is-valid');
 
                             father.find('div[class*=-feedback]').html('');

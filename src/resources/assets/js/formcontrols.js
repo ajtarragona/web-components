@@ -38,6 +38,9 @@ $.fn.initConfirm = function(options){
           locale: "es",
           time_24hr:true
       };
+     
+      if($input.data()) args = $.extend(true, {}, args, $input.data()); 
+
       var format="d/m/Y";
       if($input.data('date-format')) format=$input.data('date-format');
 
@@ -641,8 +644,9 @@ $.fn.initTypeahead = function (){
 
          
 
+          $input.wrap($('<div class="form-row"/>'));
+          
           if(settings.savevalue){
-            $input.wrap($('<div class="form-row"/>'));
             var $hidden=$('<input/>');
             $input.before($hidden);
             $hidden.val(settings.value);

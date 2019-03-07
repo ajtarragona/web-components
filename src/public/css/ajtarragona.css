@@ -17272,10 +17272,6 @@ h6 {
   padding: 1em;
 }
 
-body.with-toolbar #messages {
-  top: 70px;
-}
-
 #messages .alert:last-child {
   margin: 0;
 }
@@ -17286,6 +17282,12 @@ body.with-toolbar #messages {
     bottom: 0;
     padding: 0;
     width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  body.with-toolbar #messages {
+    top: 70px;
   }
 }
 
@@ -18597,6 +18599,10 @@ body.modal-maximized.modal-open .modal {
   padding-top: 4.5rem;
 }
 
+.with-sidebar.with-toolbar #main-container {
+  padding-top: 6.5em;
+}
+
 .with-sidebar .sidebar {
   position: fixed;
   top: 0;
@@ -18739,7 +18745,7 @@ body.modal-maximized.modal-open .modal {
 @media (max-width: 767px) {
   .with-sidebar.with-toolbar #main-container {
     margin-left: 0;
-    padding-top: 70px;
+    padding-top: 85px;
   }
 
   .with-sidebar.with-toolbar #maintoolbar .toolbar-content {
@@ -18773,7 +18779,7 @@ body.modal-maximized.modal-open .modal {
     margin-right: -300px;
   }
 
-  .with-sidebar.sidebar-open .sidebar-toggle {
+  .with-sidebar.sidebar-open .sidebar header .sidebar-toggle {
     /*right:$toolbarwidth;*/
     background-color: #55595c;
     color: #fff;
@@ -19033,22 +19039,118 @@ form.validating {
   opacity: 0.6;
 }
 
+.form-group.outlined.bg-success input,
+.form-group.outlined.bg-success textarea,
+.form-group.outlined.bg-success .input-icon,
+.form-group.outlined.bg-danger input,
+.form-group.outlined.bg-danger textarea,
+.form-group.outlined.bg-danger .input-icon,
+.form-group.outlined.bg-dark input,
+.form-group.outlined.bg-dark textarea,
+.form-group.outlined.bg-dark .input-icon,
+.form-group.outlined.bg-primary input,
+.form-group.outlined.bg-primary textarea,
+.form-group.outlined.bg-primary .input-icon,
+.form-group.outlined.bg-secondary input,
+.form-group.outlined.bg-secondary textarea,
+.form-group.outlined.bg-secondary .input-icon,
+.form-group.outlined.bg-info input,
+.form-group.outlined.bg-info textarea,
+.form-group.outlined.bg-info .input-icon {
+  color: #fff;
+}
+
+.form-group.outlined.bg-success input::-webkit-input-placeholder,
+.form-group.outlined.bg-success textarea::-webkit-input-placeholder,
+.form-group.outlined.bg-success .input-icon::-webkit-input-placeholder,
+.form-group.outlined.bg-danger input::-webkit-input-placeholder,
+.form-group.outlined.bg-danger textarea::-webkit-input-placeholder,
+.form-group.outlined.bg-danger .input-icon::-webkit-input-placeholder,
+.form-group.outlined.bg-dark input::-webkit-input-placeholder,
+.form-group.outlined.bg-dark textarea::-webkit-input-placeholder,
+.form-group.outlined.bg-dark .input-icon::-webkit-input-placeholder,
+.form-group.outlined.bg-primary input::-webkit-input-placeholder,
+.form-group.outlined.bg-primary textarea::-webkit-input-placeholder,
+.form-group.outlined.bg-primary .input-icon::-webkit-input-placeholder,
+.form-group.outlined.bg-secondary input::-webkit-input-placeholder,
+.form-group.outlined.bg-secondary textarea::-webkit-input-placeholder,
+.form-group.outlined.bg-secondary .input-icon::-webkit-input-placeholder,
+.form-group.outlined.bg-info input::-webkit-input-placeholder,
+.form-group.outlined.bg-info textarea::-webkit-input-placeholder,
+.form-group.outlined.bg-info .input-icon::-webkit-input-placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.form-group.outlined.bg-success input:-ms-input-placeholder,
+.form-group.outlined.bg-success textarea:-ms-input-placeholder,
+.form-group.outlined.bg-success .input-icon:-ms-input-placeholder,
+.form-group.outlined.bg-danger input:-ms-input-placeholder,
+.form-group.outlined.bg-danger textarea:-ms-input-placeholder,
+.form-group.outlined.bg-danger .input-icon:-ms-input-placeholder,
+.form-group.outlined.bg-dark input:-ms-input-placeholder,
+.form-group.outlined.bg-dark textarea:-ms-input-placeholder,
+.form-group.outlined.bg-dark .input-icon:-ms-input-placeholder,
+.form-group.outlined.bg-primary input:-ms-input-placeholder,
+.form-group.outlined.bg-primary textarea:-ms-input-placeholder,
+.form-group.outlined.bg-primary .input-icon:-ms-input-placeholder,
+.form-group.outlined.bg-secondary input:-ms-input-placeholder,
+.form-group.outlined.bg-secondary textarea:-ms-input-placeholder,
+.form-group.outlined.bg-secondary .input-icon:-ms-input-placeholder,
+.form-group.outlined.bg-info input:-ms-input-placeholder,
+.form-group.outlined.bg-info textarea:-ms-input-placeholder,
+.form-group.outlined.bg-info .input-icon:-ms-input-placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.form-group.outlined.bg-success input::-ms-input-placeholder,
+.form-group.outlined.bg-success textarea::-ms-input-placeholder,
+.form-group.outlined.bg-success .input-icon::-ms-input-placeholder,
+.form-group.outlined.bg-danger input::-ms-input-placeholder,
+.form-group.outlined.bg-danger textarea::-ms-input-placeholder,
+.form-group.outlined.bg-danger .input-icon::-ms-input-placeholder,
+.form-group.outlined.bg-dark input::-ms-input-placeholder,
+.form-group.outlined.bg-dark textarea::-ms-input-placeholder,
+.form-group.outlined.bg-dark .input-icon::-ms-input-placeholder,
+.form-group.outlined.bg-primary input::-ms-input-placeholder,
+.form-group.outlined.bg-primary textarea::-ms-input-placeholder,
+.form-group.outlined.bg-primary .input-icon::-ms-input-placeholder,
+.form-group.outlined.bg-secondary input::-ms-input-placeholder,
+.form-group.outlined.bg-secondary textarea::-ms-input-placeholder,
+.form-group.outlined.bg-secondary .input-icon::-ms-input-placeholder,
+.form-group.outlined.bg-info input::-ms-input-placeholder,
+.form-group.outlined.bg-info textarea::-ms-input-placeholder,
+.form-group.outlined.bg-info .input-icon::-ms-input-placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.form-group.outlined.bg-success input::placeholder,
+.form-group.outlined.bg-success textarea::placeholder,
+.form-group.outlined.bg-success .input-icon::placeholder,
+.form-group.outlined.bg-danger input::placeholder,
+.form-group.outlined.bg-danger textarea::placeholder,
+.form-group.outlined.bg-danger .input-icon::placeholder,
+.form-group.outlined.bg-dark input::placeholder,
+.form-group.outlined.bg-dark textarea::placeholder,
+.form-group.outlined.bg-dark .input-icon::placeholder,
+.form-group.outlined.bg-primary input::placeholder,
+.form-group.outlined.bg-primary textarea::placeholder,
+.form-group.outlined.bg-primary .input-icon::placeholder,
+.form-group.outlined.bg-secondary input::placeholder,
+.form-group.outlined.bg-secondary textarea::placeholder,
+.form-group.outlined.bg-secondary .input-icon::placeholder,
+.form-group.outlined.bg-info input::placeholder,
+.form-group.outlined.bg-info textarea::placeholder,
+.form-group.outlined.bg-info .input-icon::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
 .form-group.outlined.bg-success > label,
 .form-group.outlined.bg-danger > label,
 .form-group.outlined.bg-dark > label,
 .form-group.outlined.bg-primary > label,
 .form-group.outlined.bg-secondary > label,
 .form-group.outlined.bg-info > label {
-  color: #fff;
-}
-
-.form-group.outlined.bg-success .input-icon,
-.form-group.outlined.bg-danger .input-icon,
-.form-group.outlined.bg-dark .input-icon,
-.form-group.outlined.bg-primary .input-icon,
-.form-group.outlined.bg-secondary .input-icon,
-.form-group.outlined.bg-info .input-icon {
-  color: #fff;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .form-group.outlined .custom-select {
@@ -19126,13 +19228,20 @@ form.validating {
 
 .form-group.outlined.is-invalid > .input-icon {
   color: #d9534f;
-  bottom: 1.5em;
+}
+
+.form-group.outlined.is-invalid .form-text {
+  display: none;
 }
 
 .form-group.outlined.is-invalid > input,
 .form-group.outlined.is-invalid > textarea,
 .form-group.outlined.is-invalid > select {
   border-color: transparent !important;
+}
+
+.form-group.outlined.with-feedback .input-icon {
+  bottom: 1.5em;
 }
 
 .form-group.outlined > .custom-control {
@@ -19737,33 +19846,6 @@ th {
     float: left;
     width: 30%;
   }
-}
-
-.ui-widget.ui-widget-content {
-  background-color: #fff;
-  border: 1px solid #eceeef;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-}
-
-.ui-autocomplete {
-  max-height: 300px;
-  overflow-y: auto;
-  /* prevent horizontal scrollbar */
-  overflow-x: hidden;
-}
-
-.ui-menu .ui-menu-item-wrapper {
-  padding: 0.4rem 1rem;
-}
-
-.ui-state-active,
-.ui-widget-content .ui-state-active,
-.ui-widget-header .ui-state-active,
-a.ui-button:active,
-.ui-button:active,
-.ui-button.ui-state-active:hover {
-  background-color: #bf002c;
-  border-color: transparent;
 }
 
 .map-container {

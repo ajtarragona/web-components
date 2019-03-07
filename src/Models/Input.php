@@ -29,8 +29,9 @@ class Input extends WebComponent
 
 
 	
-	public function __construct($attributes=[],$data=[]){
+	public function __construct($attributes=[], $data=[]){
 		parent::__construct($attributes,$data);
+
 		if($this->attributes['type']=="color"){
 			$this->attributes["type"]="text";
 			$this->attributes["class"].=" colorinput";

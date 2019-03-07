@@ -4,6 +4,9 @@
 	if(isset($name) && $errors->has($name)){
 		$class.=' is-invalid ';
 	}
+	if(isset($hasfeedback) && $hasfeedback){
+		$class.=' with-feedback ';
+	}
 	
 @endphp
 

@@ -11,7 +11,8 @@
 	'required'=> $required, 
 	'outlined'=> $outlined, 
 	'id'=> $id, 
-	'class'=>$containerclass
+	'class'=>$containerclass,
+	'hasfeedback' => (isset($helptext) && $helptext)
 ])
 
 	@include('ajtarragona-web-components::bootstrap.forms.inputicon')

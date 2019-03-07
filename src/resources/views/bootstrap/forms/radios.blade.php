@@ -9,7 +9,8 @@
 	'outlined'=> $outlined, 
 	'id'=> $id, 
 	'size'=> $size, 
-	'class'=>$containerclass
+	'class'=>$containerclass,
+	'hasfeedback' => (isset($helptext) && $helptext)
 ])
 
 

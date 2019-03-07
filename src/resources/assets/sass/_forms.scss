@@ -217,11 +217,16 @@ $sidelabel-size : 160px;
 	&.bg-primary,
 	&.bg-secondary,
 	&.bg-info{
-		> label{
-			color:$white;
-		}
+		input,
+		textarea,
 		.input-icon{
 			color: $white;
+			&::placeholder{
+				color: rgba($white,0.5);
+			}
+		}
+		> label{
+			color: rgba($white,0.9);
 		}
 
 	}
@@ -300,27 +305,35 @@ $sidelabel-size : 160px;
 	&.is-invalid{
 		border-color:$danger;
 		background-color:rgba($danger,0.1);
+		.invalid-feedback{
+			padding: 0 $input-padding-x $input-padding-y $input-padding-x;
+			display:block;
+		}
+		>label{
+			color: $danger;
+		}
+
+		>.input-icon{
+			color: $danger;
+		}
+
+		.form-text{
+			display:none;
+		}
+
+		> input,
+		> textarea,
+		> select{
+			border-color:transparent !important;
+		}
 	}
 
-	&.is-invalid .invalid-feedback{
-		padding: 0 $input-padding-x $input-padding-y $input-padding-x;
-		display:block;
-	}
-	&.is-invalid >label{
-		color: $danger;
-	}
 
-	&.is-invalid >.input-icon{
-		color: $danger;
-		bottom: 1.5em;
+	&.with-feedback{
+		.input-icon{
+			bottom: 1.5em;
+		}
 	}
-
-	&.is-invalid > input,
-	&.is-invalid > textarea,
-	&.is-invalid > select{
-		border-color:transparent !important;
-	}
-
 
  	> .custom-control{
  		margin:$input-padding-y $input-padding-x ;

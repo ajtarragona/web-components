@@ -62,6 +62,10 @@
 			<td>Indica si es renderitzarà el contenidor de l'element (per defecte <code>true</code>)</td>
 		</tr>
 		<tr>
+			<td><code>containerclass</code></td>
+			<td>Classes CSS extra que s'afegiran al contenidor del camp, separades per espais </td>
+		</tr>
+		<tr>
 			<td><code>icon</code></td>
 			<td>Nom de la icona fontawesome</td>
 		</tr>

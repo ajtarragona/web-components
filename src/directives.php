@@ -324,6 +324,9 @@ return [
     'select' => function($expression) {
         return "<?php echo select({$expression}); ?>";
     },
+    'autocomplete' => function($expression) {
+        return "<?php echo autocomplete({$expression}); ?>";
+    },
     
     'checkbox' => function($expression) {
         return "<?php echo checkbox({$expression}); ?>";

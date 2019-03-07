@@ -7,6 +7,10 @@
   }
 
 
+  &.with-toolbar #main-container{
+    padding-top:6.5em;
+  }
+
 
 
   /*
@@ -184,7 +188,7 @@
     	
     &.with-toolbar #main-container{
       margin-left:0;
-      padding-top:70px;
+      padding-top:85px;
     }
 
      &.with-toolbar #maintoolbar .toolbar-content{
@@ -218,13 +222,13 @@
 
     }
 
-     &.sidebar-open{
+    &.sidebar-open{
     
   	  #main-container{
   	    margin-right:-$sidebarwidth;
   	  }
 
-  	   .sidebar-toggle{
+  	  .sidebar header .sidebar-toggle{
   	    /*right:$toolbarwidth;*/
   	    background-color:$secondary;
   	    color:$white;

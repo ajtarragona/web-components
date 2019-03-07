@@ -10,6 +10,7 @@ Route::group(['prefix' => 'ajtarragona/webcomponents','middleware' => ['web']], 
 	Route::get('/modal', 'Ajtarragona\WebComponents\Controllers\TestController@kitchenModal')->name('webcomponents.kitchen.modal');
 	
 	
+	Route::get('/docs/testcombo', 'Ajtarragona\WebComponents\Controllers\DocsController@testCombo')->name('webcomponents.combo');
 	Route::get('/docs/{page?}', 'Ajtarragona\WebComponents\Controllers\DocsController@docs')->name('webcomponents.docs');
 	Route::post('/docs/{page?}', 'Ajtarragona\WebComponents\Controllers\DocsController@docsHandle')->name('webcomponents.docs.handle');
 

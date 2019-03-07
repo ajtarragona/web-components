@@ -23,9 +23,10 @@
 				
 			</tbody>
 		</table>
-	
-
-		@includeIf('ajtarragona-web-components::docs.source.forms.input')
+		
+		@form
+			@includeIf('ajtarragona-web-components::docs.source.forms.input')
+		@endform
 		
 	@endcol
 

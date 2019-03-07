@@ -8,8 +8,8 @@
 	'autofocus'=>true
 ])	
 
-	@input(['name'=>'campo_texto_mascara','label'=>'Camp text','required'=>true])	
-	@input(['name'=>'campo_texto3','label'=>'Camp text 2','required'=>true])	
+	@input(['name'=>'campo_texto_mascara','icon'=>'plus','label'=>'Camp text','required'=>true,'helptext'=>'fds'])	
+	@input(['name'=>'campo_texto3','icon'=>'plus','label'=>'Camp text 2','required'=>true])	
 	@input(['name'=>'campo_texto4','label'=>'Camp text numerico','required'=>true])	
 
 	@button(['type'=>'submit'])
