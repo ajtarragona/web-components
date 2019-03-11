@@ -47,15 +47,15 @@
 @list(['flush'=>true, 'class'=>'mb-3'])
 	
 	@li
-		@include('ajtarragona-web-components::kitchen.fakecontent')
+		@include('ajtarragona-web-components::docs.fakecontent')
 	@endli
 
 	@li
-		@include('ajtarragona-web-components::kitchen.fakecontent')
+		@include('ajtarragona-web-components::docs.fakecontent')
 	@endli
 
 	@li
-		@include('ajtarragona-web-components::kitchen.fakecontent')
+		@include('ajtarragona-web-components::docs.fakecontent')
 	@endli
 
 @endlist

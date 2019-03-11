@@ -43,7 +43,7 @@
 				</tr>
 				<tr>
 					<td><code>autofocus</code></td>
-					<td>Booleà que posarà el cursor sobre el primer camp del formulari</td>
+					<td>Podem indicar el nom del camp que vulguem que s'enfoqui automàticament, o bé posar <code>true</code> per enfocar el primer </td>
 				</tr>
 				<tr>
 					<td><code>inline</code></td>

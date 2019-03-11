@@ -1,17 +1,20 @@
 <?php
 
-use Ajtarragona\WebComponents\Models\WebComponent;
-use Ajtarragona\WebComponents\Models\Icon;
-use Ajtarragona\WebComponents\Models\Input;
-use Ajtarragona\WebComponents\Models\Textarea;
-use Ajtarragona\WebComponents\Models\Texteditor;
-use Ajtarragona\WebComponents\Models\Select;
-use Ajtarragona\WebComponents\Models\Checkbox;
-use Ajtarragona\WebComponents\Models\Radio;
-use Ajtarragona\WebComponents\Models\Nav;
-use Ajtarragona\WebComponents\Models\NavItem;
-use Ajtarragona\WebComponents\Models\Breadcrumb;
-use Ajtarragona\WebComponents\Models\Crumb;
+use Ajtarragona\WebComponents\Models\Components\WebComponent;
+use Ajtarragona\WebComponents\Models\Components\Icon;
+use Ajtarragona\WebComponents\Models\Components\Input;
+use Ajtarragona\WebComponents\Models\Components\Textarea;
+use Ajtarragona\WebComponents\Models\Components\Texteditor;
+use Ajtarragona\WebComponents\Models\Components\Select;
+use Ajtarragona\WebComponents\Models\Components\Checkbox;
+use Ajtarragona\WebComponents\Models\Components\Radio;
+use Ajtarragona\WebComponents\Models\Components\Nav;
+use Ajtarragona\WebComponents\Models\Components\NavItem;
+use Ajtarragona\WebComponents\Models\Components\Breadcrumb;
+use Ajtarragona\WebComponents\Models\Components\Crumb;
+use Ajtarragona\WebComponents\Models\Components\Pagination;
+use Ajtarragona\WebComponents\Models\Components\Tablecount;
+
 use \InvalidArgumentException as InvalidArgumentException;
 
 
@@ -187,14 +190,16 @@ if (! function_exists('crumb')) {
 
 
 if (! function_exists('pagination')) {
-	function pagination($args){
-		return HtmlHelper::pagination($args);
+	function pagination($attributes=[],$data=[]){
+		$ret = new Pagination($attributes,$data);
+		return $ret->render();
 	}
 }
 
 if (! function_exists('tablecount')) {
-	function tablecount($args){
-		return HtmlHelper::tablecount($args);
+	function tablecount($attributes=[],$data=[]){
+		$ret = new Tablecount($attributes,$data);
+		return $ret->render();
 	}
 }
 

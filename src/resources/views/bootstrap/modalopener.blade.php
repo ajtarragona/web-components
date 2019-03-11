@@ -2,7 +2,7 @@
 		class="tgn-modal-opener {{ $class or '' }}"
 
 		@if(isset($href))
-			href="{{ route('webcomponents.kitchen.modal') }}" 
+			href="{{ $href }}" 
 		@else
 			{{-- type="button" --}}
 			href="#" 

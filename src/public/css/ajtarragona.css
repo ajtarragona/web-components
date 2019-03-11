@@ -19848,6 +19848,22 @@ th {
   }
 }
 
+.pagination-container > .pagination {
+  justify-content: flex-start;
+}
+
+.pagination-container.align-center > .pagination {
+  justify-content: center;
+}
+
+.pagination-container.align-right > .pagination {
+  justify-content: flex-end;
+}
+
+.pagination-container.align-justify > .pagination {
+  justify-content: space-around;
+}
+
 .map-container {
   margin-bottom: 0.5rem;
 }

@@ -3,7 +3,6 @@
 namespace Ajtarragona\WebComponents\Requests;
 
 use Ajtarragona\WebComponents\Requests\BaseRequest;
-use Illuminate\Foundation\Http\FormRequest;
 
 class TestValidate extends BaseRequest
 {

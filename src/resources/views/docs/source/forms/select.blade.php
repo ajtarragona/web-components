@@ -50,7 +50,7 @@
 											
 @select(
 	[
-		'name'=>'campo_select_multi2', 
+		'name'=>'campo_select_multi3', 
 		'label'=>'aaa',
 		'icon' =>'star',
 		'options'=> $selectoptions,
@@ -60,7 +60,7 @@
 ) 											
 @select(
 	[
-		'name'=>'campo_select_multi2', 
+		'name'=>'campo_select_multi4', 
 		'label'=>'aaa',
 		'options'=> $selectoptions,
 		'icon' =>'star',

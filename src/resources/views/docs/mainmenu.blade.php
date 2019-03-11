@@ -42,14 +42,18 @@
 		
     </li>
     <li class="{{ starts_with($page,'utils')?'active':'' }}">
-		<a class="doc-link" href="{{ route('webcomponents.docs',['page'=>'utils']) }}">
+		<a class="doc-link" href="{{ route('webcomponents.docs',['page'=>'utils.css']) }}">
         	Utilitats
 		</a>
+		<ul>
+			@include('ajtarragona-web-components::docs.menuitem',['route'=>'utils.css','title'=>'Utilitats CSS'])
+			@include('ajtarragona-web-components::docs.menuitem',['route'=>'utils.helpers','title'=>'Helpers Laravel'])
+		</ul>
 	</li>
 
     <hr/>
     <li class="text-info">
-		<a class="doc-link text-info" href="{{ route('webcomponents.kitchen') }}">
+		<a class="doc-link text-info" href="{{ route('webcomponents.demo') }}">
         	@icon('chalkboard') Demo
 		</a>
 

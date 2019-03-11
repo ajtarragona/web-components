@@ -109,3 +109,33 @@ th {
     }
 }
 
+
+
+
+
+//pagination
+
+.pagination-container{
+  
+  >.pagination{
+    justify-content: flex-start;
+  }
+
+  &.align-center{
+    >.pagination{
+      justify-content: center;
+    }
+  }
+
+  &.align-right{
+    >.pagination{
+      justify-content: flex-end;
+    }
+  }
+
+  &.align-justify{
+    >.pagination{
+      justify-content: space-around;
+    }
+  }
+}

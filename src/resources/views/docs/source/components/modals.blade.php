@@ -1,5 +1,5 @@
 @modalopener([
-	'href'=>route('webcomponents.kitchen.modal'),
+	'href'=>route('webcomponents.docs.modal'),
 	'maximizable'=>false,
 	'draggable'=>false,
 	'closable'=>true,
@@ -12,7 +12,7 @@
 
 
 @modalopener([
-	'href'=>route('webcomponents.kitchen.modal'),
+	'href'=>route('webcomponents.docs.modal'),
 	'icon' => 'external-link-square-alt',
 	'style' => 'success',
 	'class' =>'btn btn-success btn-sm'

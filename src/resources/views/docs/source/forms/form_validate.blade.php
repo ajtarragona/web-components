@@ -4,8 +4,7 @@
 	'action' => route('webcomponents.docs.handle',['forms.form']), 
 	'validator'=>'Ajtarragona\WebComponents\Requests\TestValidate', 
 	'validateonstart'=>false, 
-	'validateonchange'=>true, 
-	'autofocus'=>true
+	'validateonchange'=>true
 ])	
 
 	@input(['name'=>'campo_texto_mascara','icon'=>'plus','label'=>'Camp text','required'=>true,'helptext'=>'fds'])	

@@ -2,7 +2,7 @@
 
 namespace Ajtarragona\WebComponents\Controllers; 
 
-use App\Http\Controllers\Controller;
+use Ajtarragona\WebComponents\Controllers\BaseController as Controller;
 use Faker\Generator as Faker;
 use Faker\Factory as FakerFactory;
 use Illuminate\Http\Request;
@@ -12,21 +12,13 @@ use \Artisan;
 class DocsController extends Controller
 {
 
-  protected function publishPackageAssets(){
-      /*quitar en producció!!*/
-      
-      Artisan::call('vendor:publish', [
-          '--tag' => 'ajtarragona-web-components-assets', 
-          '--force' => 1
-      ]);
+  
 
-      /**/
+  public function docsModal(Request $request, Faker $faker)
+  {
+       
+       return $this->view('docs.source.layout.modal', compact('faker'));
   }
-	
-  protected function packageView($view, $args=[]){
-		return view("ajtarragona-web-components::".$view, $args);
-  }
-
  
   public function docsHandle($page='start.introduction',Request $request)
   {
@@ -61,7 +53,7 @@ class DocsController extends Controller
        }
 
        
-       return $this->packageView("docs",$args);
+       return $this->view("docs",$args);
   }
 
 

@@ -63,9 +63,16 @@
 				
 			</tbody>
 		</table>
-		
-		@form
+	
+		@form([
+			'method'=>'POST',
+			'action'=>route('webcomponents.docs.handle',['forms.select'])
+		])
+			
 			@includeIf('ajtarragona-web-components::docs.source.forms.select')
+			@button(['type'=>'submit','size'=>'sm'])
+				Test @icon('chevron-right') 
+			@endbutton
 		@endform
 		
 	@endcol

@@ -8,5 +8,7 @@
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.tables','title'=>'Tables'])
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.cards','title'=>'Cards'])
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.modals','title'=>'Modals'])
+	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.navs','title'=>'Navs'])
+	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.tabs','title'=>'Tabs'])
 
 </ul>

@@ -1,13 +1,10 @@
 @extends('ajtarragona-web-components::layout/modal')
 
-@section('title')
-	Titol modal
-@endsection
+@section('title', $faker->words(3,true) )
 
 
 @section('body')
-
-Aqui el contingut de la modal
-
+	
+	{{ $faker->paragraph() }}
+	
 @endsection
-

@@ -12,7 +12,7 @@
 	@istrue($validator) data-validateurl="{{ route('webcomponents.formvalidator') }}" data-validator="{{$validator}}" data-validate-on-submit="true" @endistrue 
 	@istrue($validateonstart) data-validate-on-start="true" @endistrue 
 	@istrue($validateonchange) data-validate-on-change="true" @endistrue 
-	@istrue($autofocus) data-autofocus="true" @endistrue 
+	@isset($autofocus) data-autofocus="{{$autofocus}}" @endisset 
 	@istrue($confirm) data-confirm="{{$confirm}}" @endistrue 
 	
 	{!! html_attributes(isset($attributes)?$attributes:false) !!}

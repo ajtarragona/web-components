@@ -57,7 +57,7 @@
 
 
 <h1>Master-sidebar</h1>
-<p>La <a href="{{ route('webcomponents.kitchen') }}">Demo</a> utilitza la plantilla master-sidebar.</p>
+<p>La <a href="{{ route('webcomponents.demo') }}">Demo</a> utilitza la plantilla master-sidebar.</p>
 <p><mark>@icon('file')  ajtarragona-web-components::layout/master-sidebar</mark></p>
 
 @row

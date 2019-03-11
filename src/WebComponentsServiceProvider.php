@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
 use Ajtarragona\WebComponents\DirectivesRepository;
+use Ajtarragona\WebComponents\Commands\InstallDemo;
 
 
 class WebComponentsServiceProvider extends ServiceProvider
@@ -54,6 +55,8 @@ class WebComponentsServiceProvider extends ServiceProvider
         $this->registerDirectives();
 
         $this->registerComponents();
+        
+        $this->registerCommands();
 
     }
 
@@ -98,5 +101,16 @@ class WebComponentsServiceProvider extends ServiceProvider
         
         $components = require __DIR__.'/components.php';
         DirectivesRepository::registerComponents($components);
+    }
+
+    public function registerCommands()
+    {
+        
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                InstallDemo::class,
+                
+            ]);
+        }
     }
 }

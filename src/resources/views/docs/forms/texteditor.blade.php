@@ -35,8 +35,14 @@
 		</table>
 	
 
-		@form
+		@form([
+			'method'=>'POST',
+			'action'=>route('webcomponents.docs.handle',['forms.texteditor'])
+		])
 			@includeIf('ajtarragona-web-components::docs.source.forms.texteditor')
+			@button(['type'=>'submit','size'=>'sm'])
+				Test @icon('chevron-right') 
+			@endbutton
 		@endform
 		
 	@endcol

@@ -88032,7 +88032,14 @@ function tgnFormClass(obj, options) {
       TGN_FORMS.push(this); //al(this.settings);
 
       if (this.settings.autofocus) {
-        if ($form.find('input:enabled:visible:first').length > 0) $form.find('input:enabled:visible:first').get(0).focus();
+        if (this.settings.autofocus === true || this.settings.autofocus === "true" || this.settings.autofocus === 1) {
+          $input = $form.find('input:enabled:visible:first');
+        } else {
+          $input = $form.find("[name=" + this.settings.autofocus + "]");
+        }
+
+        if ($input.length > 0) $input.get(0).focus();
+        $input.closest('.form-group').addClass('focused');
       }
 
       if (this.settings.validator) {
