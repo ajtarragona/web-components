@@ -7,7 +7,7 @@ $.fn.tgnInitAll = function( ){
   this.find("table.table").tgnTable();
   this.find('.tgn-ajax-table').tgnAjaxTable();
   
-  this.find("select").initSelectPicker();
+  this.find("select").tgnSelectPicker();
   this.find("input[type=date]").initDatePicker();
   this.find("input.dateinput").initDatePicker();
   this.find("input.number").initNumberInput();

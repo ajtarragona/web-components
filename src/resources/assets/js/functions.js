@@ -275,3 +275,25 @@ String.prototype.strToDate = String.prototype.strToDate || function(format, deli
     return formatedDate;
 
 }
+
+
+
+buildUrl = function (url,params){
+  
+  var ret=url;
+  if(params && Object.getOwnPropertyNames(params).length>0){
+    var esc = encodeURIComponent;
+  
+    var query = Object.keys(params)
+      .map(k => esc(k) + '=' + esc(params[k]))
+      .join('&');
+
+    var glue="?";
+    
+    if(url.includes("?")) glue="&";
+    
+    ret = ret + glue + query;
+  }
+
+  return ret;
+}

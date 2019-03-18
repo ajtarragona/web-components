@@ -59,6 +59,11 @@
 					<td><code>actions-box</code></td>
 					<td>Mostra els botons de seleccionar o deseleccionar tot (útil per selects multiples)</td>
 				</tr>
+
+				<tr>
+					<td><code>url</code></td>
+					<td>Si passem una url es carregaran els valors per ajax. La url ha de retornar un array d'objectes en format JSON amb els atributs <code>value</code> i <code>name</code>.</td>
+				</tr>
 				
 				
 			</tbody>

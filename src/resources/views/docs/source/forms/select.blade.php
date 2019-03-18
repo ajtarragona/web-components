@@ -69,3 +69,25 @@
 	]
 ) 
 			
+
+
+
+@select(
+	[
+		'label'=>'Ajax select', 
+		'name'=>'campo_select_ajax',
+		'placeholder'=>'Choose item...',
+		'url'=> route('webcomponents.combo'),
+		'selected'=>[5,6,10,20],
+		'multiple' =>true,
+		'required'=>false,
+		'show-deselector' => true,
+		'size'=>5,
+		'live-search'=>true,
+		
+	],
+	[
+		'selected-text-format' => "count > 3"
+	]
+) 
+	

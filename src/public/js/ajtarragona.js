@@ -88516,6 +88516,22 @@ String.prototype.strToDate = String.prototype.strToDate || function (format, del
   return formatedDate;
 };
 
+buildUrl = function buildUrl(url, params) {
+  var ret = url;
+
+  if (params && Object.getOwnPropertyNames(params).length > 0) {
+    var esc = encodeURIComponent;
+    var query = Object.keys(params).map(function (k) {
+      return esc(k) + '=' + esc(params[k]);
+    }).join('&');
+    var glue = "?";
+    if (url.includes("?")) glue = "&";
+    ret = ret + glue + query;
+  }
+
+  return ret;
+};
+
 /***/ }),
 
 /***/ "./src/resources/assets/js/main.js":
@@ -88532,7 +88548,7 @@ $.fn.tgnInitAll = function () {
   this.find(".tgn-form").tgnForm();
   this.find("table.table").tgnTable();
   this.find('.tgn-ajax-table').tgnAjaxTable();
-  this.find("select").initSelectPicker();
+  this.find("select").tgnSelectPicker();
   this.find("input[type=date]").initDatePicker();
   this.find("input.dateinput").initDatePicker();
   this.find("input.number").initNumberInput();
@@ -89690,152 +89706,223 @@ $.fn.initPrettyprint = function (options) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-$.fn.createSelectPicker = function () {
-  return this.each(function () {
-    var $select = $(this);
+$.widget("ajtarragona.tgnSelectPicker", {
+  options: {
+    url: '',
+    params: {},
+    autoload: true,
+    value: [],
+    container: 'body',
+    showDeselector: true,
+    multiple: false
+  },
+  isInit: false,
+  _create: function _create() {
     var o = this;
-    var args = {};
+    al("creating tgnSelectPicker");
+    this.options = $.extend({}, this.options, this.element.data());
 
-    if ($select.closest(".modal").length > 0) {
-      args = {
-        container: '.modal'
-      };
-    } //al(args);
+    this._startLoading();
+
+    this.options.multiple = this.element.attr('multiple');
+
+    if (this.options.multiple && !$.isArray(this.options.value)) {
+      tmp = [];
+      tmp.push(this.options.value);
+      this.options.value = tmp;
+    } //al(this.options);
 
 
-    if (!$select.is(".init")) {
-      o.picker = $select.selectpicker(args);
-      $select.addClass("init");
-      var $button = o.picker.siblings('.dropdown-toggle');
-      var $menu = o.picker.parent().find("> .dropdown-menu");
-      $button.on('focus', function () {
+    if (this.element.closest(".modal").length > 0) {
+      this.options.container = '.modal';
+    }
+
+    if (!this.isInit) {
+      this.isInit = true;
+      this.element = this.element.selectpicker(this.options);
+
+      this._prepare();
+    } else {
+      this.refresh();
+    }
+  },
+  setUrl: function setUrl(url) {
+    this.options.url = url;
+    this.reload();
+  },
+  addParam: function addParam(name, value) {
+    //al("addParam "+name+"="+value);
+    this.options.params[name] = value;
+  },
+  setParams: function setParams(params) {
+    this.options.params = params;
+  },
+  getUrl: function getUrl() {
+    // al("getURL");
+    // al(this.options.url);
+    // al(this.options.params);
+    var url = buildUrl(this.options.url, this.options.params); //al("URL:"+url);
+
+    return url;
+  },
+  addOption: function addOption(value, name, content) {
+    var o = this;
+    var $option = $("<option/>");
+    $option.val(value);
+    $option.append(name);
+    if ($.inArray(value, o.options.value) >= 0 || $.inArray("" + value, o.options.value) >= 0 || $.inArray(parseInt(value), o.options.value) >= 0) $option.attr("selected", true);
+    if (content) $option.data("content", content);
+    o.element.append($option);
+  },
+  removeOption: function removeOption(value) {
+    if (this.element.find('option[value="' + value + '"]').length > 0) {
+      this.element.find('option[value="' + value + '"]').remove();
+      this.refresh();
+    }
+  },
+  _stopLoading: function _stopLoading() {
+    this.element.stopLoading();
+    this.container.stopLoading();
+  },
+  _startLoading: function _startLoading() {
+    this.element.startLoading();
+  },
+  load: function load() {
+    var o = this;
+
+    o._startLoading();
+
+    al("Loading Select from: " + o.getUrl());
+    $.getJSON(o.getUrl(), function (data) {
+      //al("LOADED");
+      o.element.trigger("tgnselect.loaded", {
+        element: o.element,
+        data: data
+      });
+      o.element.empty();
+
+      if (data) {
+        $(data).each(function () {
+          o.addOption(this.value, this.name);
+        });
+        o.refresh();
+        o.value(o.options.value);
+        o.element.trigger("tgnselect.success", {
+          element: o.element,
+          data: data
+        });
+      } else {
+        o.element.trigger("tgnselect.error", {
+          element: o.element,
+          data: data
+        });
+      }
+
+      o._stopLoading();
+    }).fail(function () {
+      o._stopLoading();
+
+      o.element.trigger("tgnselect.error", {
+        element: o.element,
+        data: null
+      });
+    });
+  },
+  refresh: function refresh(argument) {
+    this._startLoading();
+
+    this.element.selectpicker('refresh');
+
+    this._stopLoading();
+  },
+  value: function value(argument) {
+    if (argument) {
+      //al("set value ");
+      //al(argument);
+      this.element.selectpicker('val', argument);
+    } else {
+      //al("get value");
+      return this.element.val();
+    }
+  },
+  _createDeselector: function _createDeselector(argument) {
+    var o = this;
+    o.deselector = $("<div class='deselect-btn'>&times;</div>");
+    o.deselector.on('click', function (e) {
+      if (!$(this).prop('disabled')) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (o.options.multiple) {
+          o.element.selectpicker('deselectAll');
+        } else {
+          o.element.selectpicker('val', false);
+        }
+
+        o.element.trigger("change");
+      }
+    });
+    o.button.append(o.deselector);
+  },
+  _prepare: function _prepare(argument) {
+    //al("_prepare call");
+    var o = this; //cuando se inicializa el select picker
+
+    this.element.on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+      $(this).trigger("tgnselect.changed", {
+        element: $(this),
+        clickedIndex: clickedIndex,
+        isSelected: isSelected,
+        previousValue: previousValue
+      });
+    });
+    this.element.on('loaded.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+      o.container = $(this).closest('.bootstrap-select');
+      o.container.wrap($("<div class='selectpicker-wrapper'/>"));
+      o.wrapper = o.container.parent();
+      o.button = $(this).siblings('.dropdown-toggle');
+      o.dropdown = $(this).siblings('.dropdown-menu');
+      o.button.on('focus', function () {
         $(this).closest('.form-group').addClass("focused");
       });
-      $button.on('blur', function () {
-        if (!$(this).closest('.bootstrap-select').is('.show')) {
+      o.button.on('blur', function () {
+        if (!o.container.is('.show')) {
           $(this).closest('.form-group').removeClass("focused");
         }
       });
-      $select.closest('.bootstrap-select').siblings('label').on('click', function (e) {
+      o.element.on('show.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+        $(this).closest('.form-group').addClass("focused");
+      });
+      o.element.on('hidden.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+        $(this).closest('.form-group').removeClass("focused");
+      });
+      o.container.siblings('label').on('click', function (e) {
         e.preventDefault();
         e.stopPropagation(); //$(this).blur();
         //$(this).closest('.form-group').addClass("focused");
-        // al($select);
 
-        o.picker.selectpicker('open');
-        $button.click();
-        $menu.find(".inner").focus();
+        o.element.selectpicker('open');
+        o.button.click();
+        o.dropdown.find(".inner").focus();
       });
-      $select.on('show.bs.select', function (e, clickedIndex, isSelected, previousValue) {
-        $(this).closest('.form-group').addClass("focused");
+
+      if (o.options.showDeselector) {
+        o._createDeselector();
+      }
+
+      if (o.options.url && o.options.autoload) {
+        o.load();
+      } else {
+        o.refresh();
+      } //al("INITIALIZED");
+
+
+      $(this).trigger("tgnselect.init", {
+        element: $(this)
       });
-      $select.on('hidden.bs.select', function (e, clickedIndex, isSelected, previousValue) {
-        $(this).closest('.form-group').removeClass("focused");
-      });
-      $select.on('loaded.bs.select', function (e, clickedIndex, isSelected, previousValue) {
-        //al('select initialized');
-        //al($(this).val());
-        //al(e);
-        $(this).addClass("init");
-        $(this).parent().wrap("<div class='selectpicker-wrapper'/>");
-        $(this).stopLoading();
-        $(this).closest('.bootstrap-select').stopLoading(); //al($select);
-        //$select.stopLoading();
-        // if(!$(this).attr('multiple')){
-
-        var showdeselector = $(this).data("show-deselector");
-
-        if (showdeselector) {
-          var $deselector = $("<div class='deselect-btn'>&times;</div>");
-          $deselector.on('click', function (e) {
-            if (!$(this).prop('disabled')) {
-              e.preventDefault();
-              e.stopPropagation();
-              var select = $(this).closest('.bootstrap-select').find('select');
-
-              if (select.attr('multiple')) {
-                select.selectpicker('deselectAll');
-              } else {
-                select.selectpicker('val', false);
-              }
-
-              select.trigger("change");
-            }
-          });
-          $(this).siblings('.dropdown-toggle').append($deselector);
-        } //}
-
-      });
-    } else {
-      o.picker = $select.selectpicker('refresh');
-      $select.closest('.bootstrap-select').stopLoading();
-      $select.stopLoading();
-    }
-  });
-};
-
-$.fn.initSelectPicker = function () {
-  $.fn.selectpicker.Constructor.DEFAULTS.container = 'body';
-  return this.each(function () {
-    al('initSelectPicker');
-    var $select = $(this);
-    $select.startLoading(); // if(!$select.is(".init")){
-
-    if ($select.data("url")) {
-      //al($select.data("url"));
-      $.getJSON($select.data("url"), function (data) {
-        var selectedVal = $select.data('value');
-
-        if (!$.isArray(selectedVal)) {
-          tmp = [];
-          tmp.push(selectedVal);
-          selectedVal = tmp;
-        }
-
-        $select.empty();
-
-        if (data) {
-          $(data).each(function () {
-            var $option = $("<option/>");
-            $option.val(this.value);
-            $option.append(this.name); //al(this.value);
-            //al(selectedVal);
-            //al($.inArray(parseInt(this.value), selectedVal));
-
-            if ($.inArray(this.value, selectedVal) >= 0 || $.inArray("" + this.value, selectedVal) >= 0 || $.inArray(parseInt(this.value), selectedVal) >= 0) $option.attr("selected", true);
-            if (this.content) $option.data("content", this.content);
-            $select.append($option);
-          });
-          executeCallback($select.data('on-success'), {
-            target: $select,
-            data: data
-          });
-        } else {
-          //al("empty");
-          $select.append($("<option/>"));
-          executeCallback($select.data('on-error'), {
-            target: $select,
-            data: data
-          });
-        }
-
-        $select.createSelectPicker();
-        $select.stopLoading();
-      }).fail(function () {
-        $select.append($("<option/>"));
-        $select.createSelectPicker();
-        $select.stopLoading();
-        executeCallback($select.data('on-error'), {
-          target: $select
-        });
-      });
-    } else {
-      $select.createSelectPicker();
-      $select.stopLoading();
-    } // }
-
-  });
-};
+    });
+  }
+});
 
 /***/ }),
 
