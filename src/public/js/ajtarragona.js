@@ -86988,6 +86988,8 @@ __webpack_require__(/*! ./modals */ "./src/resources/assets/js/modals.js");
 
 __webpack_require__(/*! ./tables */ "./src/resources/assets/js/tables.js");
 
+__webpack_require__(/*! ./autocomplete */ "./src/resources/assets/js/autocomplete.js");
+
 __webpack_require__(/*! ./selects */ "./src/resources/assets/js/selects.js");
 
 __webpack_require__(/*! ./maps */ "./src/resources/assets/js/maps.js");
@@ -87045,6 +87047,264 @@ $.fn.initAnimation = function (options) {
 };
 
 $(window).scroll(animScrollManager);
+
+/***/ }),
+
+/***/ "./src/resources/assets/js/autocomplete.js":
+/*!*************************************************!*\
+  !*** ./src/resources/assets/js/autocomplete.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Bloodhound = __webpack_require__(/*! bloodhound-js */ "./node_modules/bloodhound-js/index.js");
+
+var Typeahead = __webpack_require__(/*! typeahead */ "./node_modules/typeahead/typeahead.js");
+
+$.widget("ajtarragona.tgnAutocomplete", {
+  options: {
+    url: '',
+    params: {},
+    value: [],
+    showDeselector: true,
+    multiple: false,
+    hint: true,
+    highlight: true,
+    minLength: 1,
+    savevalue: false,
+    saved: 'name',
+    showvalue: false,
+    limit: 15,
+    disabled: false
+  },
+  isInit: false,
+  hidden: false,
+  datasource: false,
+  _create: function _create() {
+    var o = this;
+    al("creating tgnAutocomplete()");
+    this.options = $.extend({}, this.options, this.element.data());
+    this.options.inputname = this.element.attr('name').replaceAll('[', '_').replaceAll(']', '_');
+    this.options.query = ''; //this.addParam('lala','12');
+
+    this.addParam('term', 'WILDCARD');
+    if (this.options.savevalue) this.options.saved = 'value';
+    if (this.options.disabled) this.element.prop('disabled'); //al(this.getUrl());
+    //al(this.options);
+
+    this.datasource = new Bloodhound({
+      initialize: false,
+      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name', 'value'),
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      identify: function identify(obj) {
+        return obj.value;
+      },
+      //prefetch: settings.url,
+      remote: {
+        url: this.getUrl(),
+        //wildcard: '%QUERY'
+        prepare: function prepare(query, settings) {
+          var url = o.getUrl(); // al(url);
+
+          if (o.options.multiple) return url.replace('WILDCARD', o.input.val());else return url.replace('WILDCARD', o.element.val());
+        }
+      }
+    }); //al(this.options);
+
+    if (this.options.multiple) {
+      this._initMultiple();
+    } else {
+      this._initSingle();
+    }
+  },
+  _addOption: function _addOption(value, name) {
+    if (this.options.multiple) {
+      this.element.tagsinput('add', {
+        value: value,
+        name: name
+      });
+    }
+  },
+  _initMultiple: function _initMultiple() {
+    var o = this;
+    this.element.tagsinput({
+      itemValue: this.options.saved,
+      itemText: 'name',
+      freeInput: false,
+      hint: true,
+      highlight: true,
+      minLength: this.options.minLength,
+      delimiter: '##',
+      typeaheadjs: {
+        limit: this.options.limit,
+        name: this.options.inputname,
+        displayKey: 'name',
+        source: this.datasource.ttAdapter(),
+        minLength: this.options.minLength
+      }
+    });
+    this.input = this.element.tagsinput('input'); //al(this.input);
+
+    this.input.bind('typeahead:asyncrequest', function (ev, suggestion) {
+      o._startLoading();
+    });
+    this.input.bind('typeahead:asyncreceive', function (ev, suggestion) {
+      o._stopLoading();
+    });
+    this.element.on('itemAdded', function (event) {
+      o.element.trigger("tgnautocomplete:change", {
+        element: o.element,
+        item: event.item
+      });
+      o.element.trigger("tgnautocomplete:select", {
+        element: o.element,
+        item: event.item
+      });
+    });
+    this.element.on('itemRemoved', function (event) {
+      o.element.trigger("tgnautocomplete:change", {
+        element: o.element,
+        item: event.item
+      });
+      o.element.trigger("tgnautocomplete:select", {
+        element: o.element,
+        item: event.item
+      });
+    });
+
+    this._setDefaultValue();
+  },
+  _setDefaultValue: function _setDefaultValue() {
+    //init default value
+    if (this.element.val()) {
+      var names = this.element.val().split("##");
+      var vals = names; // al($input.data('value'));
+
+      if (this.options.saved == 'value') vals = this.options.value;
+
+      for (var index in names) {
+        this._addOption(vals[index], names[index]);
+      }
+    }
+  },
+  _initSingle: function _initSingle() {
+    var o = this;
+    this.element.wrap($('<div class="form-row"/>'));
+
+    if (this.options.savevalue) {
+      this.hidden = $('<input/>');
+      this.element.before(this.hidden);
+      this.hidden.val(this.options.value);
+      this.element.attr('name', 'content_' + this.options.inputname);
+      this.hidden.attr('type', 'hidden').attr('name', this.options.inputname).attr('id', this.options.inputname + '_code');
+
+      if (this.options.showvalue) {
+        o.hidden.attr('type', 'text').addClass("form-control tt-value").attr('readonly', true).wrap($('<div class="col-2"/>'));
+        o.element.wrap($('<div class="col-10"/>'));
+      }
+
+      this.element.on('keyup', function (e) {
+        if ($(this).val() == "") o.hidden.val("");
+      });
+      this.element.bind('typeahead:select', function (ev, suggestion) {
+        o.hidden.val(suggestion.value);
+      });
+      this.element.bind('typeahead:autocomplete', function (ev, suggestion) {
+        o.hidden.val(suggestion.value);
+      });
+    }
+
+    this.element.on('focus', function (e) {
+      $(this).closest('.form-group.outlined').addClass('focused');
+    });
+    this.element.on('blur', function (e) {
+      $(this).closest('.form-group.outlined').removeClass('focused');
+    });
+    this.element.typeahead(this.options, {
+      limit: this.options.limit,
+      //10 no va
+      name: this.options.inputname,
+      displayKey: 'name',
+      //display: 'name',
+      source: this.datasource.ttAdapter()
+    });
+
+    this._createDeselector();
+
+    this.element.bind('typeahead:asyncrequest', function (ev, suggestion) {
+      o._startLoading();
+    });
+    this.element.bind('typeahead:asyncreceive', function (ev, suggestion) {
+      o._stopLoading();
+    }); //callback
+
+    this.element.bind('typeahead:select', function (ev, suggestion) {
+      o.element.trigger("tgnautocomplete:change", {
+        element: o.element,
+        item: suggestion
+      });
+      o.element.trigger("tgnautocomplete:select", {
+        element: o.element,
+        item: suggestion
+      }); //executeCallback( $input.data('on-select'), {target: ev.currentTarget, data:suggestion});
+    });
+  },
+  setUrl: function setUrl(url) {
+    this.options.url = url;
+  },
+  addParam: function addParam(name, value) {
+    this.options.params[name] = value;
+  },
+  setParams: function setParams(params) {
+    this.options.params = params;
+    this.addParam('term', 'WILDCARD');
+  },
+  getUrl: function getUrl() {
+    var url = buildUrl(this.options.url, this.options.params);
+    return url;
+  },
+  _stopLoading: function _stopLoading() {
+    this.element.parent().stopLoading();
+  },
+  _startLoading: function _startLoading() {
+    this.element.parent().startLoading();
+  },
+  value: function value(argument) {
+    if (argument === undefined) {
+      //al("getValue");
+      if (this.options.multiple) {
+        return this.element.val().split(',');
+      } else {
+        if (this.options.savevalue) return this.hidden.val();else return this.element.val();
+      }
+    } else {
+      //al("setValue");
+      //al(argument);
+      if (this.options.savevalue) {
+        this.hidden.val(argument);
+      }
+
+      this.element.val(argument);
+      this.element.trigger("typeahead:select", [argument]);
+      this.element.trigger("tgnautocomplete:change", {
+        element: this.element
+      });
+    }
+  },
+  _createDeselector: function _createDeselector(argument) {
+    var o = this;
+
+    if (!this.options.disabled) {
+      this.deselector = $("<div class='deselect-btn'>&times;</div>");
+      this.element.after(this.deselector);
+      this.deselector.on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        o.value('');
+      });
+    }
+  }
+});
 
 /***/ }),
 
@@ -87651,186 +87911,6 @@ $.fn.initAutoheight = function () {
     } else {
       //al("UPDATE AUTOSIZE");
       autosize__WEBPACK_IMPORTED_MODULE_1__["update"](this);
-    }
-  });
-};
-
-var Bloodhound = __webpack_require__(/*! bloodhound-js */ "./node_modules/bloodhound-js/index.js");
-
-var Typeahead = __webpack_require__(/*! typeahead */ "./node_modules/typeahead/typeahead.js"); //var Handlebars  = require('handlebars');
-
-
-$.fn.initTypeahead = function () {
-  var defaults = {
-    url: '',
-    multiple: false,
-    hint: true,
-    highlight: true,
-    minLength: 1,
-    savevalue: false,
-    showvalue: false,
-    limit: 15
-  };
-  return this.each(function () {
-    var o = this;
-    var $input = $(this);
-    al("initTypeahead");
-    var settings = $.extend({}, defaults, $(this).data()); // al($input);
-
-    var inputname = $input.attr('name');
-    var queryurl;
-
-    if (settings.url.indexOf("?") == -1) {
-      queryurl = settings.url + '?term=%QUERY';
-    } else {
-      queryurl = settings.url + '&term=%QUERY';
-    }
-
-    var dades = new Bloodhound({
-      initialize: false,
-      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name', 'value'),
-      queryTokenizer: Bloodhound.tokenizers.whitespace,
-      identify: function identify(obj) {
-        return obj.value;
-      },
-      //prefetch: settings.url,
-      remote: {
-        url: queryurl,
-        wildcard: '%QUERY'
-      }
-    });
-    dades.initialize(); // al(settings);
-
-    if (settings.multiple) {
-      var saved = 'name';
-      if (settings.savevalue) saved = 'value';
-      $input.tagsinput({
-        itemValue: saved,
-        itemText: 'name',
-        freeInput: false,
-        hint: true,
-        highlight: true,
-        minLength: settings.minLength,
-        delimiter: '##',
-        typeaheadjs: {
-          limit: settings.limit,
-          name: inputname.replaceAll('[', '_').replaceAll(']', '_'),
-          displayKey: 'name',
-          source: dades.ttAdapter(),
-          minLength: settings.minLength
-        }
-      });
-      $input.siblings(".bootstrap-tagsinput").find(".twitter-typeahead input").bind('typeahead:asyncrequest', function (ev, suggestion) {
-        //al("asyncrequest");
-        $input.parent().startLoading();
-      });
-      $input.siblings(".bootstrap-tagsinput").find(".twitter-typeahead input").bind('typeahead:asyncreceive', function (ev, suggestion) {
-        //al("asyncreceive");
-        $input.parent().stopLoading();
-      });
-      /* $input.siblings(".bootstrap-tagsinput").find(".twitter-typeahead input").on('keyup',function(e){
-        //disable form submit
-        if(e.which == 13){
-          al("keyup");
-          e.preventDefault();
-          e.stopPropagation();
-          return false;
-        }
-        //if(e.which=="") $hidden.val("");
-       });
-      */
-
-      if ($input.val()) {
-        var names = $input.val().split("##");
-        var vals = names; // al($input.data('value'));
-
-        if (saved == 'value') vals = $input.data('value'); // al(names);
-
-        for (var index in names) {
-          //al(names[index]);
-          $input.tagsinput('add', {
-            value: vals[index],
-            name: names[index]
-          });
-        }
-      }
-    } else {
-      $input.wrap($('<div class="form-row"/>'));
-
-      if (settings.savevalue) {
-        var $hidden = $('<input/>');
-        $input.before($hidden);
-        $hidden.val(settings.value);
-        $input.attr('name', 'content_' + inputname);
-        $hidden.attr('type', 'hidden').attr('name', inputname).attr('id', inputname + '_code');
-
-        if (settings.showvalue) {
-          $hidden.attr('type', 'text').addClass("form-control tt-value").attr('readonly', true).wrap($('<div class="col-2"/>'));
-          $input.wrap($('<div class="col-10"/>'));
-        }
-
-        $input.on('keyup', function (e) {
-          if ($(this).val() == "") $hidden.val("");
-        });
-        $input.bind('typeahead:select', function (ev, suggestion) {
-          $hidden.val(suggestion.value);
-        });
-        $input.bind('typeahead:autocomplete', function (ev, suggestion) {
-          $hidden.val(suggestion.value);
-        });
-      }
-
-      $input.on('focus', function (e) {
-        $(this).closest('.form-group.outlined').addClass('focused');
-      });
-      $input.on('blur', function (e) {
-        $(this).closest('.form-group.outlined').removeClass('focused');
-      });
-      var iname = inputname; //al(iname);
-
-      iname = iname.replaceAll('[', '_').replaceAll(']', '_');
-      $input.typeahead(settings, {
-        limit: settings.limit,
-        //10 no va
-        name: iname,
-        displayKey: 'name',
-        //display: 'name',
-        source: dades.ttAdapter()
-      });
-
-      if (!$input.prop('disabled')) {
-        var $deselector = $("<div class='deselect-btn'>&times;</div>");
-        $input.after($deselector);
-        $deselector.on('click', function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          $input.val('');
-
-          if (settings.savevalue) {
-            $(this).closest('.twitter-typeahead').siblings('input[type=hidden]').val('');
-          }
-
-          $input.trigger("typeahead:select", ['']);
-        });
-      }
-
-      $input.bind('typeahead:asyncrequest', function (ev, suggestion) {
-        //al("asyncrequest");
-        $input.parent().startLoading();
-      });
-      $input.bind('typeahead:asyncreceive', function (ev, suggestion) {
-        //al("asyncreceive");
-        $input.parent().stopLoading();
-      }); //callback
-
-      if ($input.data('on-select')) {
-        $input.bind('typeahead:select', function (ev, suggestion) {
-          executeCallback($input.data('on-select'), {
-            target: ev.currentTarget,
-            data: suggestion
-          });
-        });
-      }
     }
   });
 };
@@ -88564,7 +88644,7 @@ $.fn.tgnInitAll = function () {
   this.find('.conditional-container').initConditional();
   this.find('.ajax-container').initAjaxContainer();
   this.find('textarea.autoheight').initAutoheight();
-  this.find('input.autocomplete:not(.tt-input):not(.tt-hint)').initTypeahead();
+  this.find('input.autocomplete:not(.tt-input):not(.tt-hint)').tgnAutocomplete();
   this.find('[data-toggleclass]').initToggleClass();
   this.find('a[data-confirm], button[data-confirm]').initConfirm();
   this.find('pre.prettyprint').initPrettyprint();
@@ -89719,7 +89799,7 @@ $.widget("ajtarragona.tgnSelectPicker", {
   isInit: false,
   _create: function _create() {
     var o = this;
-    al("creating tgnSelectPicker");
+    al("creating tgnSelectPicker()");
     this.options = $.extend({}, this.options, this.element.data());
 
     this._startLoading();
@@ -89795,7 +89875,7 @@ $.widget("ajtarragona.tgnSelectPicker", {
     al("Loading Select from: " + o.getUrl());
     $.getJSON(o.getUrl(), function (data) {
       //al("LOADED");
-      o.element.trigger("tgnselect.loaded", {
+      o.element.trigger("tgnselect:loaded", {
         element: o.element,
         data: data
       });
@@ -89807,12 +89887,12 @@ $.widget("ajtarragona.tgnSelectPicker", {
         });
         o.refresh();
         o.value(o.options.value);
-        o.element.trigger("tgnselect.success", {
+        o.element.trigger("tgnselect:success", {
           element: o.element,
           data: data
         });
       } else {
-        o.element.trigger("tgnselect.error", {
+        o.element.trigger("tgnselect:error", {
           element: o.element,
           data: data
         });
@@ -89822,7 +89902,7 @@ $.widget("ajtarragona.tgnSelectPicker", {
     }).fail(function () {
       o._stopLoading();
 
-      o.element.trigger("tgnselect.error", {
+      o.element.trigger("tgnselect:error", {
         element: o.element,
         data: null
       });
@@ -89836,13 +89916,13 @@ $.widget("ajtarragona.tgnSelectPicker", {
     this._stopLoading();
   },
   value: function value(argument) {
-    if (argument) {
+    if (argument === undefined) {
+      //al("get value");
+      return this.element.val();
+    } else {
       //al("set value ");
       //al(argument);
       this.element.selectpicker('val', argument);
-    } else {
-      //al("get value");
-      return this.element.val();
     }
   },
   _createDeselector: function _createDeselector(argument) {
@@ -89869,7 +89949,7 @@ $.widget("ajtarragona.tgnSelectPicker", {
     var o = this; //cuando se inicializa el select picker
 
     this.element.on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
-      $(this).trigger("tgnselect.changed", {
+      $(this).trigger("tgnselect:changed", {
         element: $(this),
         clickedIndex: clickedIndex,
         isSelected: isSelected,
@@ -89917,7 +89997,7 @@ $.widget("ajtarragona.tgnSelectPicker", {
       } //al("INITIALIZED");
 
 
-      $(this).trigger("tgnselect.init", {
+      $(this).trigger("tgnselect:init", {
         element: $(this)
       });
     });

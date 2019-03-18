@@ -17,7 +17,7 @@ $.widget( "ajtarragona.tgnSelectPicker", {
 
     _create: function() {
         var o=this;
-        al("creating tgnSelectPicker");
+        al("creating tgnSelectPicker()");
         
         this.options = $.extend({}, this.options, this.element.data()); 
 
@@ -119,7 +119,7 @@ $.widget( "ajtarragona.tgnSelectPicker", {
 
        $.getJSON(o.getUrl(), function(data){
           //al("LOADED");
-          o.element.trigger("tgnselect.loaded", {element:o.element, data:data});
+          o.element.trigger("tgnselect:loaded", {element:o.element, data:data});
 
           o.element.empty();
           
@@ -129,10 +129,10 @@ $.widget( "ajtarragona.tgnSelectPicker", {
             });
             o.refresh();
             o.value(o.options.value);
-            o.element.trigger( "tgnselect.success", { element: o.element, data:data} );
+            o.element.trigger( "tgnselect:success", { element: o.element, data:data} );
               
           }else{
-            o.element.trigger("tgnselect.error", { element: o.element,  data:data});
+            o.element.trigger("tgnselect:error", { element: o.element,  data:data});
             
           }
 
@@ -140,7 +140,7 @@ $.widget( "ajtarragona.tgnSelectPicker", {
 
         }).fail(function() {
             o._stopLoading();
-            o.element.trigger("tgnselect.error", { element: o.element,  data:null});
+            o.element.trigger("tgnselect:error", { element: o.element,  data:null});
         })
 
       
@@ -155,13 +155,13 @@ $.widget( "ajtarragona.tgnSelectPicker", {
 
     value : function( argument ){
 
-       if(argument){
+       if (argument === undefined) {
+         //al("get value");
+         return this.element.val();
+       }else{
          //al("set value ");
          //al(argument);
          this.element.selectpicker('val', argument);
-       }else{
-         //al("get value");
-         return this.element.val();
        }
     },
 
@@ -199,7 +199,7 @@ $.widget( "ajtarragona.tgnSelectPicker", {
 
        //cuando se inicializa el select picker
        this.element.on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
-          $(this).trigger( "tgnselect.changed", {element: $(this), clickedIndex:clickedIndex, isSelected:isSelected, previousValue:previousValue });
+          $(this).trigger( "tgnselect:changed", {element: $(this), clickedIndex:clickedIndex, isSelected:isSelected, previousValue:previousValue });
        });
 
 
@@ -256,7 +256,7 @@ $.widget( "ajtarragona.tgnSelectPicker", {
             }
             
             //al("INITIALIZED");
-            $(this).trigger( "tgnselect.init", {element: $(this) });
+            $(this).trigger( "tgnselect:init", {element: $(this) });
 
        });
 

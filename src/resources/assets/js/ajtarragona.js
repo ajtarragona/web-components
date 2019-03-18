@@ -79,6 +79,7 @@ require('./toolbar');
 require('./sidebar');
 require('./modals');
 require('./tables');
+require('./autocomplete');
 require('./selects');
 require('./maps');
 require('./sessiontriggers');

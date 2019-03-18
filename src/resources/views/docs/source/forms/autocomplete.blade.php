@@ -2,6 +2,7 @@
 @autocomplete([
 	'label'=>'Auto', 
 	'name'=>'field_auto',
+	'id' => 'auto1',
 	'multiple'=> false,
 	'url' => route('webcomponents.combo'),
 	'savevalue' => false,
@@ -12,6 +13,7 @@
 @autocomplete([
 	'label'=>'Auto valor', 
 	'name'=>'field_auto_valor',
+	'id' => 'auto2',
 	'value' => 4,
 	'valuename' => 'Opció 4',
 	'multiple'=> false,
@@ -28,6 +30,7 @@
 @autocomplete([
 	'label'=>'Auto mostra valor', 
 	'name'=>'field_auto_valor2',
+	'id' => 'auto3',
 	'value' => 4,
 	'valuename' => 'Opció 4',
 	'multiple'=> false,
@@ -41,6 +44,7 @@
 @autocomplete([
 	'label'=>'Auto multiple', 
 	'name'=>'field_auto_multi',
+	'id' => 'auto4',
 	'value' => [3,5],
 	'valuename' => 'Opció 3##Opció 5',
 	'multiple'=> true,

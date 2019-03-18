@@ -56,6 +56,8 @@
 			</tbody>
 		</table>
 
+		<p><mark>El text escrit al camp s'enviarà a la request del controlador com a un paràmetre amb el nom <code>term</code>.</mark></p>
+			
 		<p><mark>En els camps que tinguin <code>savevalue</code> a <code>true</code> a més del propi valor del camp també s'enviarà el nom amb un paràmetre <code>content_{nom_camp}</code>.</mark></p>
 
 		<p><mark>En els camps multiples, el valor s'enviarà com un string amb els valors separats per comes.</mark></p>
