@@ -10,14 +10,15 @@ $.widget( "ajtarragona.tgnSelectPicker", {
         value: [],
         container: 'body',
         showDeselector : true,
-        multiple:false,
+        multiple: false,
+        watch:false
     },
 
     isInit: false,
 
     _create: function() {
         var o=this;
-        al("creating tgnSelectPicker()");
+        al("creating tgnSelectPicker");
         
         this.options = $.extend({}, this.options, this.element.data()); 
 
@@ -33,7 +34,7 @@ $.widget( "ajtarragona.tgnSelectPicker", {
         }
 
         
-        //al(this.options);
+       // al(this.options);
         
 
         if(this.element.closest(".modal").length>0){
@@ -56,7 +57,7 @@ $.widget( "ajtarragona.tgnSelectPicker", {
 
     setUrl: function( url ) {
       this.options.url = url;
-      this.reload();
+      //this.reload();
     },
 
 
@@ -103,12 +104,13 @@ $.widget( "ajtarragona.tgnSelectPicker", {
 
 
     _stopLoading: function( ) {
-      this.element.stopLoading();
-      this.container.stopLoading();
+      //this.element.stopLoading();
+      this.element.closest('.form-group').stopLoading();
     },
     
     _startLoading: function( ) {
-      this.element.startLoading();
+      //this.element.startLoading();
+      this.element.closest('.form-group').startLoading();
       
     },
 
@@ -116,10 +118,12 @@ $.widget( "ajtarragona.tgnSelectPicker", {
        var o=this;
        o._startLoading();
        al("Loading Select from: "+o.getUrl());
+       
+       o.element.trigger("tgnselect:beforeload", { element: o.element }); 
 
        $.getJSON(o.getUrl(), function(data){
           //al("LOADED");
-          o.element.trigger("tgnselect:loaded", {element:o.element, data:data});
+          o.element.trigger("tgnselect:load", {element:o.element, data:data});
 
           o.element.empty();
           
@@ -145,6 +149,16 @@ $.widget( "ajtarragona.tgnSelectPicker", {
 
       
        
+    },
+
+    disable: function( ) {
+      this.element.addClass('disabled').prop('disabled',true);
+      this.element.closest('.form-group').addClass('disabled');
+    },
+
+    enable: function( ) {
+      this.element.removeClass('disabled').prop('disabled',false);
+      this.element.closest('.form-group').removeClass('disabled');
     },
 
     refresh: function( argument ) {
@@ -183,7 +197,10 @@ $.widget( "ajtarragona.tgnSelectPicker", {
               o.element.selectpicker('val', false);
            }
 
-           o.element.trigger( "change" );
+
+           //o.element.trigger( "tgnselect:change", {element: o.element });
+
+          // o.element.trigger( "change" );
            
         }
       });
@@ -197,12 +214,20 @@ $.widget( "ajtarragona.tgnSelectPicker", {
 
        var o=this;
 
-       //cuando se inicializa el select picker
+       // if(this.options.watch){
+       //    $(this.options.watch).on('tgnselect:change',function(e,data){
+
+       //    });
+
+       // }
+
        this.element.on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
-          $(this).trigger( "tgnselect:changed", {element: $(this), clickedIndex:clickedIndex, isSelected:isSelected, previousValue:previousValue });
+          $(this).trigger( "tgnselect:change", {element: $(this), clickedIndex:clickedIndex, isSelected:isSelected, previousValue:previousValue });
+          // $(this).trigger( "change" );
        });
 
 
+       //cuando se inicializa el select picker
        this.element.on('loaded.bs.select', function (e, clickedIndex, isSelected, previousValue) {
             
             o.container = $(this).closest('.bootstrap-select');
@@ -257,6 +282,8 @@ $.widget( "ajtarragona.tgnSelectPicker", {
             
             //al("INITIALIZED");
             $(this).trigger( "tgnselect:init", {element: $(this) });
+            $(this).trigger( "tgnselect:change", {element: $(this)});
+          
 
        });
 

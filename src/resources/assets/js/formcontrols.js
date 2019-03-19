@@ -361,6 +361,7 @@ $.fn.initAutomention = function (){
         });
 
         $element.on('tribute-replaced', function (e) {
+          $input.val($(this).text());
           //al($(this));
           //al($(this).text());
           //console.log('Original event that triggered text replacement:', e.detail.event);
@@ -426,6 +427,7 @@ $.fn.initConditional = function (){
 }
 
 
+
 $.fn.initAjaxContainer = function (){
    var defaults={
        autoload : true,
@@ -440,7 +442,7 @@ $.fn.initAjaxContainer = function (){
         
         
         o.settings = $.extend({}, defaults, o.$container.data()); 
-
+        // al(o.settings);
         o.$watched = $($(this).data('watch'));
         
 
@@ -462,7 +464,6 @@ $.fn.initAjaxContainer = function (){
                 dataType: 'html',
                 success: function(data){
                   var content=$(data);
-                  //al(content);
                   o.$container.stopLoading();
                   o.$container.html(content);
                   o.$container.tgnInitAll();
@@ -477,13 +478,15 @@ $.fn.initAjaxContainer = function (){
         }
 
         if(o.$watched.length>0){
-           o.$watched.on('change',function(){
+           o.$watched.on('tgnselect:change',function(){
+              //al("watched changed");
+              //al(this);
               o.loadContainer();
            });
         }
 
         if(o.settings.autoload){
-          //al("DELAY:"+o.settings.delay);
+          // al("DELAY:"+o.settings.delay);
           if(o.settings.delay){
             setTimeout(function(){
               o.loadContainer();
@@ -494,6 +497,7 @@ $.fn.initAjaxContainer = function (){
         }
    });
  }
+
 
 
 import * as autosize from 'autosize';

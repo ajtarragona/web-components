@@ -37,7 +37,7 @@ html{
           font-variant: normal;
           text-rendering: auto;
           line-height: 1;
-          animation: a 2s infinite linear;
+          animation: spin 2s infinite linear;
           z-index:1000;
 
       }
@@ -109,15 +109,15 @@ body .loading{
       bottom:0.5em;
       content: "\f110";
       font-size:.8em;
-          -moz-osx-font-smoothing: grayscale;
-        -webkit-font-smoothing: antialiased;
-        display: inline-block;
-        font-style: normal;
-        font-variant: normal;
-        text-rendering: auto;
-        line-height: 1;
-        animation: a 2s infinite linear;
-        z-index:1000;
+        -moz-osx-font-smoothing: grayscale;
+      -webkit-font-smoothing: antialiased;
+      display: inline-block;
+      font-style: normal;
+      font-variant: normal;
+      text-rendering: auto;
+      line-height: 1;
+      animation: spin 2s infinite linear;
+      z-index:1000;
 
     }
   }

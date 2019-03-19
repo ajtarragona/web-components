@@ -329,6 +329,16 @@ $sidelabel-size : 160px;
 	}
 
 
+	&.loading{
+		border-color:$info;
+		background-color:rgba($info,0.1);
+		
+		>label{
+			color: $info;
+		}
+	}
+	
+
 	&.with-feedback{
 		.input-icon{
 			bottom: 1.5em;

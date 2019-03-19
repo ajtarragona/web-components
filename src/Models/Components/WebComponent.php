@@ -102,7 +102,8 @@ class WebComponent
 			if(!in_array($k, $excluded)&& $v){
 				$ret.=" ".($prefix?($prefix."-"):"").$k."=";
 
-				if(is_array($v)){
+				if(is_array($v) || is_object($v)){
+
 					$ret.="'".json_encode($v)."' ";
 			    }else{
 			    	$ret.="\"".addslashes($v)."\" ";

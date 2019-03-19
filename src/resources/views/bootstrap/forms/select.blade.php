@@ -25,7 +25,7 @@
 	<select "
 		id="{{$id }}"
 	    name="{{ $name }}" 
-		class=" loading {{ $class }} " 
+		class="{{ $class }} " 
 		@istrue($required ,'required="required"')
 		@istrue($disabled ,'disabled="true"')
 		@istrue($readonly ,'readonly="true"')

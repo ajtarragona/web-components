@@ -17156,8 +17156,8 @@ html.loading body:after {
   font-variant: normal;
   text-rendering: auto;
   line-height: 1;
-  -webkit-animation: a 2s infinite linear;
-          animation: a 2s infinite linear;
+  -webkit-animation: spin 2s infinite linear;
+          animation: spin 2s infinite linear;
   z-index: 1000;
 }
 
@@ -17230,8 +17230,8 @@ body .loading:after {
   font-variant: normal;
   text-rendering: auto;
   line-height: 1;
-  -webkit-animation: a 2s infinite linear;
-          animation: a 2s infinite linear;
+  -webkit-animation: spin 2s infinite linear;
+          animation: spin 2s infinite linear;
   z-index: 1000;
 }
 
@@ -19238,6 +19238,15 @@ form.validating {
 .form-group.outlined.is-invalid > textarea,
 .form-group.outlined.is-invalid > select {
   border-color: transparent !important;
+}
+
+.form-group.outlined.loading {
+  border-color: #1F9BCF;
+  background-color: rgba(31, 155, 207, 0.1);
+}
+
+.form-group.outlined.loading > label {
+  color: #1F9BCF;
 }
 
 .form-group.outlined.with-feedback .input-icon {
