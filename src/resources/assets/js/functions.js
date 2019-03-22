@@ -121,6 +121,7 @@ executeCallback = function(func , params ){
 };
 
 
+
  $.fn.disableSelection = function() {
     return this
              .attr('unselectable', 'on')

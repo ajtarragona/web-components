@@ -22,7 +22,7 @@ $.fn.tgnInitAll = function( ){
   this.find('.conditional-container').initConditional();
   this.find('.ajax-container').initAjaxContainer();
   this.find('textarea.autoheight').initAutoheight();
-  this.find('input.autocomplete:not(.tt-input):not(.tt-hint)').tgnAutocomplete();
+  this.find('input.autocomplete:not(.tt-input):not(.tt-hint):not([type=hidden])').tgnAutocomplete();
   this.find('[data-toggleclass]').initToggleClass();
   this.find('a[data-confirm], button[data-confirm]').initConfirm();
   this.find('pre.prettyprint').initPrettyprint();

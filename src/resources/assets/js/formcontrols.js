@@ -3,8 +3,6 @@
 $.fn.initConfirm = function(options){
 
    return this.each(function(){
-     al("initConfirm()");
-
      var $element=$(this);
 
       var defaults={
@@ -20,10 +18,10 @@ $.fn.initConfirm = function(options){
       };  
           
       
-
       if($element.data()) defaults = $.extend(true, {}, defaults, $element.data()); 
       if($element.data('confirm')) defaults.title=$element.data('confirm');
       if(options) defaults = $.extend({}, defaults, options); 
+
       $element.confirmation(defaults);
 
    });

@@ -87084,7 +87084,8 @@ $.widget("ajtarragona.tgnAutocomplete", {
     var o = this;
     al("creating tgnAutocomplete()"); //al(this.element);
 
-    this.options = $.extend({}, this.options, this.element.data());
+    this.options = $.extend({}, this.options, this.element.data()); //al(this.options);
+
     this.options.inputname = this.element.attr('name').replaceAll('[', '_').replaceAll(']', '_');
     this.options.query = ''; //this.addParam('lala','12');
 
@@ -87135,15 +87136,15 @@ $.widget("ajtarragona.tgnAutocomplete", {
       freeInput: false,
       hint: true,
       highlight: true,
-      minLength: this.options.minLength,
       delimiter: '##',
-      typeaheadjs: {
+      typeaheadjs: [{
+        minLength: this.options.minLength
+      }, {
         limit: this.options.limit,
         name: this.options.inputname,
         displayKey: 'name',
-        source: this.datasource.ttAdapter(),
-        minLength: this.options.minLength
-      }
+        source: this.datasource.ttAdapter()
+      }]
     });
     this.input = this.element.tagsinput('input'); //al(this.input);
 
@@ -87179,17 +87180,26 @@ $.widget("ajtarragona.tgnAutocomplete", {
   _setDefaultValue: function _setDefaultValue() {
     //init default value
     //al('_setDefaultValue');
-    if (this.element.val()) {
-      var names = this.element.val().split("##"); //al(names);
+    if (this.options.valueview) {
+      //this._startLoading();
+      if (this.options.multiple) {
+        var names = this.options.valueview.split("##"); //al(names);
 
-      var vals = names; // al($input.data('value'));
+        var vals = names; // al($input.data('value'));
 
-      if (this.options.saved == 'value') vals = this.options.value;
-      if (!$.isArray(vals)) vals = [vals];
+        if (this.options.saved == 'value') vals = this.options.value;
+        if (!$.isArray(vals)) vals = [vals];
 
-      for (var index in names) {
-        this.addOption(vals[index], names[index]);
-      }
+        for (var index in names) {
+          this.addOption(vals[index], names[index]);
+        }
+      } else {
+        this.value({
+          value: this.options.value,
+          name: this.options.valueview
+        });
+      } // this._stopLoading();
+
     }
   },
   _initSingle: function _initSingle() {
@@ -87238,6 +87248,10 @@ $.widget("ajtarragona.tgnAutocomplete", {
 
     this._createDeselector();
 
+    this._setDefaultValue();
+
+    this._refreshDeselector();
+
     this.element.bind('typeahead:asyncrequest', function (ev, suggestion) {
       o._startLoading();
     });
@@ -87253,7 +87267,10 @@ $.widget("ajtarragona.tgnAutocomplete", {
       o.element.trigger("tgnautocomplete:select", {
         element: o.element,
         item: suggestion
-      }); //executeCallback( $input.data('on-select'), {target: ev.currentTarget, data:suggestion});
+      });
+
+      o._refreshDeselector(); //executeCallback( $input.data('on-select'), {target: ev.currentTarget, data:suggestion});
+
     });
   },
   disable: function disable() {
@@ -87267,6 +87284,8 @@ $.widget("ajtarragona.tgnAutocomplete", {
     }
 
     this.element.closest('.form-group').addClass('disabled');
+
+    this._refreshDeselector();
   },
   enable: function enable() {
     this.options.disabled = false;
@@ -87279,6 +87298,8 @@ $.widget("ajtarragona.tgnAutocomplete", {
     }
 
     this.input.closest('.form-group').removeClass('disabled');
+
+    this._refreshDeselector();
   },
   setUrl: function setUrl(url) {
     this.options.url = url;
@@ -87301,6 +87322,12 @@ $.widget("ajtarragona.tgnAutocomplete", {
   _startLoading: function _startLoading() {
     //this.element.startLoading();
     this.element.closest('.form-group').startLoading();
+  },
+  clear: function clear() {
+    this.value({
+      value: '',
+      name: ''
+    });
   },
   value: function value(argument) {
     if (argument === undefined) {
@@ -87326,12 +87353,19 @@ $.widget("ajtarragona.tgnAutocomplete", {
       }
 
       this.element.val(name);
+
+      this._refreshDeselector(); //al(this.element);
+
+
       this.element.trigger("typeahead:select", [argument]);
       this.element.trigger("tgnautocomplete:change", {
         element: this.element,
         item: argument
       });
     }
+  },
+  _refreshDeselector: function _refreshDeselector() {
+    if (this.value() && !this.options.disabled) this.deselector.attr('hidden', false);else this.deselector.attr('hidden', true);
   },
   _createDeselector: function _createDeselector(argument) {
     var o = this;
@@ -87345,7 +87379,7 @@ $.widget("ajtarragona.tgnAutocomplete", {
         if (!o.options.disabled) {
           e.preventDefault();
           e.stopPropagation();
-          o.value('');
+          o.clear('');
         }
       });
     }
@@ -87530,7 +87564,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var quill__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(quill__WEBPACK_IMPORTED_MODULE_2__);
 $.fn.initConfirm = function (options) {
   return this.each(function () {
-    al("initConfirm()");
     var $element = $(this);
     var defaults = {
       title: __("Segur?"),
@@ -88312,8 +88345,8 @@ function tgnFormClass(obj, options) {
               var tabpane = campo.closest('.tab-pane');
 
               if (!tabpane.is(".active")) {
-                var tab = $('.nav-link[href="#' + tabpane.attr('id') + '"]');
-                al(tab);
+                var tab = $('.nav-link[href="#' + tabpane.attr('id') + '"]'); //al(tab);
+
                 tab.addClass("anim bounce");
                 tab.on('click', function () {
                   $(this).removeClass('anim').removeClass('bounce');
@@ -88322,7 +88355,7 @@ function tgnFormClass(obj, options) {
             }
           });
           $.each($form.serializeArray(), function (i, field) {
-            if ($.inArray(field.name, campos_error) === -1) {
+            if (!field.name.startsWith('content_') && $.inArray(field.name, campos_error) === -1) {
               var campo = $form.find("[name='" + field.name + "']");
               var father = campo.closest('.form-group');
               campo.removeClass('is-invalid');
@@ -88693,7 +88726,7 @@ $.fn.tgnInitAll = function () {
   this.find('.conditional-container').initConditional();
   this.find('.ajax-container').initAjaxContainer();
   this.find('textarea.autoheight').initAutoheight();
-  this.find('input.autocomplete:not(.tt-input):not(.tt-hint)').tgnAutocomplete();
+  this.find('input.autocomplete:not(.tt-input):not(.tt-hint):not([type=hidden])').tgnAutocomplete();
   this.find('[data-toggleclass]').initToggleClass();
   this.find('a[data-confirm], button[data-confirm]').initConfirm();
   this.find('pre.prettyprint').initPrettyprint();
@@ -89923,6 +89956,8 @@ $.widget("ajtarragona.tgnSelectPicker", {
     o._startLoading();
 
     al("Loading Select from: " + o.getUrl());
+    o.tmpVal = o.value(); //o.value('');
+
     o.element.trigger("tgnselect:beforeload", {
       element: o.element
     });
@@ -89964,17 +89999,32 @@ $.widget("ajtarragona.tgnSelectPicker", {
   disable: function disable() {
     this.element.addClass('disabled').prop('disabled', true);
     this.element.closest('.form-group').addClass('disabled');
+    this.options.disabled = true;
+
+    this._refreshDeselector();
   },
   enable: function enable() {
     this.element.removeClass('disabled').prop('disabled', false);
     this.element.closest('.form-group').removeClass('disabled');
+    this.options.disabled = false;
+
+    this._refreshDeselector();
   },
   refresh: function refresh(argument) {
     this._startLoading();
 
     this.element.selectpicker('refresh');
 
+    this._refreshDeselector();
+
     this._stopLoading();
+  },
+  option: function option(name, value) {
+    if (value === undefined) {
+      return this.options[name];
+    } else {
+      this.options[name] = value;
+    }
   },
   value: function value(argument) {
     if (argument === undefined) {
@@ -89983,24 +90033,44 @@ $.widget("ajtarragona.tgnSelectPicker", {
     } else {
       //al("set value ");
       //al(argument);
+      this._refreshDeselector();
+
       this.element.selectpicker('val', argument);
     }
   },
+  _refreshDeselector: function _refreshDeselector() {
+    if (this.deselector) {
+      if (this.options.disabled) {
+        this.deselector.attr('hidden', true);
+      } else if ($.isArray(this.element.val()) && this.element.val().length == 0) {
+        this.deselector.attr('hidden', true);
+      } else if (!this.element.val()) {
+        this.deselector.attr('hidden', true);
+      } else {
+        this.deselector.attr('hidden', false);
+      }
+    }
+  },
+  clear: function clear() {
+    var o = this;
+
+    if (o.options.multiple) {
+      o.element.selectpicker('deselectAll');
+    } else {
+      o.element.selectpicker('val', false);
+    }
+
+    o._refreshDeselector();
+  },
   _createDeselector: function _createDeselector(argument) {
     var o = this;
-    o.deselector = $("<div class='deselect-btn'>&times;</div>");
+    o.deselector = $("<div class='deselect-btn' hidden>&times;</div>");
     o.deselector.on('click', function (e) {
-      if (!$(this).prop('disabled')) {
+      if (!o.element.prop('disabled')) {
         e.preventDefault();
         e.stopPropagation();
-
-        if (o.options.multiple) {
-          o.element.selectpicker('deselectAll');
-        } else {
-          o.element.selectpicker('val', false);
-        } //o.element.trigger( "tgnselect:change", {element: o.element });
+        o.clear(); //o.element.trigger( "tgnselect:change", {element: o.element });
         // o.element.trigger( "change" );
-
       }
     });
     o.button.append(o.deselector);
@@ -90013,12 +90083,16 @@ $.widget("ajtarragona.tgnSelectPicker", {
     // }
 
     this.element.on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+      //al("change");
       $(this).trigger("tgnselect:change", {
         element: $(this),
         clickedIndex: clickedIndex,
         isSelected: isSelected,
         previousValue: previousValue
-      }); // $(this).trigger( "change" );
+      });
+
+      o._refreshDeselector(); // $(this).trigger( "change" );
+
     }); //cuando se inicializa el select picker
 
     this.element.on('loaded.bs.select', function (e, clickedIndex, isSelected, previousValue) {

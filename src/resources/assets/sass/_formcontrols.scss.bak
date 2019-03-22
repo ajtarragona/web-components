@@ -25,5 +25,5 @@
 }
 
 .bootstrap-touchspin .input-group-btn-vertical{
-	z-index:1;
+	z-index:9;
 }

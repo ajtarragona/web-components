@@ -92,6 +92,7 @@ $.widget( "ajtarragona.tgnSelectPicker", {
         
         o.element.append($option);
         
+        
     },
 
     removeOption: function( value ) {
@@ -111,13 +112,14 @@ $.widget( "ajtarragona.tgnSelectPicker", {
     _startLoading: function( ) {
       //this.element.startLoading();
       this.element.closest('.form-group').startLoading();
-      
     },
 
     load: function(  ) {
        var o=this;
        o._startLoading();
        al("Loading Select from: "+o.getUrl());
+       o.tmpVal=o.value();
+       //o.value('');
        
        o.element.trigger("tgnselect:beforeload", { element: o.element }); 
 
@@ -154,17 +156,30 @@ $.widget( "ajtarragona.tgnSelectPicker", {
     disable: function( ) {
       this.element.addClass('disabled').prop('disabled',true);
       this.element.closest('.form-group').addClass('disabled');
+      this.options.disabled=true;
+      this._refreshDeselector();
     },
 
     enable: function( ) {
       this.element.removeClass('disabled').prop('disabled',false);
       this.element.closest('.form-group').removeClass('disabled');
+      this.options.disabled=false;
+      this._refreshDeselector();
     },
 
     refresh: function( argument ) {
         this._startLoading();
         this.element.selectpicker('refresh');
+        this._refreshDeselector();
         this._stopLoading();
+    },
+
+    option: function( name,value ) {
+        if (value === undefined) {
+          return this.options[name];
+        }else{
+          this.options[name]=value;
+        }
     },
 
     value : function( argument ){
@@ -175,29 +190,50 @@ $.widget( "ajtarragona.tgnSelectPicker", {
        }else{
          //al("set value ");
          //al(argument);
+         
+         this._refreshDeselector();
+
          this.element.selectpicker('val', argument);
        }
     },
 
+    _refreshDeselector : function(){
+        
+        if(this.deselector){
+    
+          if(this.options.disabled){
+            this.deselector.attr('hidden',true);
+          }else if($.isArray(this.element.val()) && this.element.val().length==0){
+            this.deselector.attr('hidden',true);
+          }else if(!this.element.val()) {
+            this.deselector.attr('hidden',true);
+          }else {
+            this.deselector.attr('hidden',false);
+          }
+        }
+    },
+
+    clear : function(){
+       var o=this;
+       if(o.options.multiple){
+            o.element.selectpicker('deselectAll');
+       }else{
+         o.element.selectpicker('val', false);
+       }
+       o._refreshDeselector();
+    },
 
     _createDeselector: function( argument ) {
       var o=this;
 
-      o.deselector=$("<div class='deselect-btn'>&times;</div>");
+      o.deselector=$("<div class='deselect-btn' hidden>&times;</div>");
 
       o.deselector.on('click',function(e){
-         if(!$(this).prop('disabled')){
+         if(!o.element.prop('disabled')){
            e.preventDefault();
            e.stopPropagation();
            
-           if(o.options.multiple){
-              o.element.selectpicker('deselectAll');
-
-           }else{
-              o.element.selectpicker('val', false);
-           }
-
-
+           o.clear();
            //o.element.trigger( "tgnselect:change", {element: o.element });
 
           // o.element.trigger( "change" );
@@ -222,7 +258,9 @@ $.widget( "ajtarragona.tgnSelectPicker", {
        // }
 
        this.element.on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+          //al("change");
           $(this).trigger( "tgnselect:change", {element: $(this), clickedIndex:clickedIndex, isSelected:isSelected, previousValue:previousValue });
+          o._refreshDeselector();
           // $(this).trigger( "change" );
        });
 
@@ -272,6 +310,7 @@ $.widget( "ajtarragona.tgnSelectPicker", {
             
             if(o.options.showDeselector){
                 o._createDeselector();
+
             }
             
             if(o.options.url && o.options.autoload){

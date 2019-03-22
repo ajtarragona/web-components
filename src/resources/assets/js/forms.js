@@ -268,7 +268,7 @@ function tgnFormClass(obj,options){
 
                         	if(!tabpane.is(".active")){
                         		var tab=$('.nav-link[href="#'+tabpane.attr('id')+'"]');
-                        		al(tab);
+                        		//al(tab);
 
                         		tab.addClass("anim bounce");
                         		tab.on('click',function(){
@@ -278,7 +278,7 @@ function tgnFormClass(obj,options){
                         }
                     });
                     $.each($form.serializeArray(), function(i, field) {
-                    	if ($.inArray(field.name, campos_error) === -1)
+                    	if (!field.name.startsWith('content_') && $.inArray(field.name, campos_error) === -1)
                         {
                             var campo = $form.find("[name='"+field.name+"']");
                             var father = campo.closest('.form-group');

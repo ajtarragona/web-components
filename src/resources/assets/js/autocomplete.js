@@ -10,38 +10,38 @@ $.widget( "ajtarragona.tgnAutocomplete", {
         showDeselector : true,
         multiple:false,
         hint: false,
-        highlight: true,
-        minLength: 1,
-        savevalue:false,
-        saved:'name',
-        showvalue:false,
-        limit:15,
-        disabled: false,
+  	    highlight: true,
+  	    minLength: 1,
+  	    savevalue:false,
+  	    saved:'name',
+  	    showvalue:false,
+  	    limit:15,
+  	    disabled: false,
     },
 
-    isInit: false,  
+    isInit: false,	
     hidden:false,
     datasource:false,
 
     _create: function() {
-      var o=this;
-      
-      al("creating tgnAutocomplete()");
+		  var o=this;
+     	
+     	al("creating tgnAutocomplete()");
       //al(this.element);
 
       this.options = $.extend({}, this.options, this.element.data()); 
-
-      this.options.inputname=this.element.attr('name').replaceAll('[','_').replaceAll(']','_');
+     //al(this.options);
+		  this.options.inputname=this.element.attr('name').replaceAll('[','_').replaceAll(']','_');
 
       this.options.query='';
         
       //this.addParam('lala','12');
       this.addParam('term','WILDCARD');
-    
-      if(this.options.savevalue) this.options.saved='value';
-      if(this.options.disabled) this.element.prop('disabled');
+		
+		  if(this.options.savevalue) this.options.saved='value';
+		  if(this.options.disabled) this.element.prop('disabled');
         //al(this.getUrl());
-      //al(this.options);
+		  //al(this.options);
 
       this.datasource = new Bloodhound({
         initialize: false,
@@ -56,9 +56,9 @@ $.widget( "ajtarragona.tgnAutocomplete", {
             var url=o.getUrl();
            // al(url);
             if(o.options.multiple)
-              return url.replace('WILDCARD',o.input.val());
+            	return url.replace('WILDCARD',o.input.val());
             else 
-              return url.replace('WILDCARD',o.element.val());
+            	return url.replace('WILDCARD',o.element.val());
         }
         }
       });
@@ -67,24 +67,25 @@ $.widget( "ajtarragona.tgnAutocomplete", {
 
       //al(this.options);
 
+
       if(this.options.multiple){
-        this._initMultiple();
+     		this._initMultiple();
       }else{
-        this._initSingle();
+     		this._initSingle();
       }
         
     },
 
 
     addOption : function(value,name){
-      if(this.options.multiple){
-        this.element.tagsinput('add', {value: value , name: name });
-      }
+    	if(this.options.multiple){
+    		this.element.tagsinput('add', {value: value , name: name });
+    	}
     },
 
     _initMultiple : function(){
-      var o=this;
-      this.element.addClass("autocompleteinit");
+     	var o=this;
+     	this.element.addClass("autocompleteinit");
       
       this.element.tagsinput({
           itemValue: this.options.saved,
@@ -92,67 +93,75 @@ $.widget( "ajtarragona.tgnAutocomplete", {
           freeInput: false,
           hint: true,
           highlight: true,
-          minLength: this.options.minLength,
           delimiter:'##',
-          typeaheadjs: {
-            limit: this.options.limit,
-            name: this.options.inputname,
-            displayKey: 'name',
-            source: this.datasource.ttAdapter(),
-            minLength: this.options.minLength
-          }
-      });
+          typeaheadjs: [
+            {
+              minLength: this.options.minLength
+            },
+            {
+              limit: this.options.limit,
+              name: this.options.inputname,
+              displayKey: 'name',
+              source: this.datasource.ttAdapter(),
+            }
+          ]
+    	});
 
-      this.input=this.element.tagsinput('input');
-      //al(this.input);
+    	this.input=this.element.tagsinput('input');
+    	//al(this.input);
 
-      this.input.bind('typeahead:asyncrequest', function(ev, suggestion) {
-          o._startLoading();
-      });
+    	this.input.bind('typeahead:asyncrequest', function(ev, suggestion) {
+	        o._startLoading();
+    	});
 
-      this.input.bind('typeahead:asyncreceive', function(ev, suggestion) {
-        o._stopLoading();
-      });
-      
-      this.element.on('itemAdded', function(event) {
-        o.element.trigger("tgnautocomplete:change", {element:o.element, item: event.item });
-          o.element.trigger("tgnautocomplete:select", {element:o.element, item: event.item});
+    	this.input.bind('typeahead:asyncreceive', function(ev, suggestion) {
+      	o._stopLoading();
+    	});
+    	
+    	this.element.on('itemAdded', function(event) {
+  		  o.element.trigger("tgnautocomplete:change", {element:o.element, item: event.item });
+  	      o.element.trigger("tgnautocomplete:select", {element:o.element, item: event.item});
 
-      });
+  		});
 
-      this.element.on('itemRemoved', function(event) {
-        o.element.trigger("tgnautocomplete:change", {element:o.element, item: event.item });
-          o.element.trigger("tgnautocomplete:select", {element:o.element, item: event.item});
-      });
+  		this.element.on('itemRemoved', function(event) {
+  		  o.element.trigger("tgnautocomplete:change", {element:o.element, item: event.item });
+  	      o.element.trigger("tgnautocomplete:select", {element:o.element, item: event.item});
+  		});
 
       this._setDefaultValue();
 
-        
+      	
     },
 
     _setDefaultValue : function(){
-      //init default value
+    	//init default value
         //al('_setDefaultValue');
-
-        if(this.element.val()){
-          
-          var names=this.element.val().split("##");
-          //al(names);
-          var vals=names;
-         // al($input.data('value'));
-          if(this.options.saved == 'value') vals=this.options.value;
-          if(!$.isArray(vals)) vals=[vals];
-
-          for(var index in names){
-             this.addOption(vals[index], names[index]);
+        if(this.options.valueview){
+          //this._startLoading();
+          if(this.options.multiple){
             
+            var names=this.options.valueview.split("##");
+            //al(names);
+            var vals=names;
+           // al($input.data('value'));
+            if(this.options.saved == 'value') vals=this.options.value;
+            if(!$.isArray(vals)) vals=[vals];
+
+            for(var index in names){
+               this.addOption(vals[index], names[index]);
+              
+            }
+          }else{
+             this.value({value:this.options.value,name:this.options.valueview});
           }
+         // this._stopLoading();
 
         }
     },
 
     _initSingle : function(){
-        var o=this;
+		    var o=this;
 
         this.input=this.element;
         this.element.wrap($('<div class="form-row"/>'));
@@ -198,18 +207,19 @@ $.widget( "ajtarragona.tgnAutocomplete", {
 
           
         this.element.typeahead(
-          this.options,
-          {
+       		this.options,
+       		{
               limit: this.options.limit, //10 no va
               name: this.options.inputname,
               displayKey: 'name',
               //display: 'name',
               source: this.datasource.ttAdapter()
-        }
+    		}
         );
 
         this._createDeselector();
-
+        this._setDefaultValue();
+        this._refreshDeselector();
           
         this.element.bind('typeahead:asyncrequest', function(ev, suggestion) {
             o._startLoading();
@@ -223,7 +233,8 @@ $.widget( "ajtarragona.tgnAutocomplete", {
         //callback
         this.element.bind('typeahead:select', function(ev, suggestion) {
           o.element.trigger("tgnautocomplete:change", {element:o.element, item: suggestion });
-          o.element.trigger("tgnautocomplete:select", {element:o.element, item:suggestion});
+	        o.element.trigger("tgnautocomplete:select", {element:o.element, item:suggestion});
+          o._refreshDeselector();
             //executeCallback( $input.data('on-select'), {target: ev.currentTarget, data:suggestion});
         });
         
@@ -242,6 +253,7 @@ $.widget( "ajtarragona.tgnAutocomplete", {
         
       
       this.element.closest('.form-group').addClass('disabled');
+      this._refreshDeselector();
       
     },
 
@@ -256,6 +268,7 @@ $.widget( "ajtarragona.tgnAutocomplete", {
       }
       
       this.input.closest('.form-group').removeClass('disabled');
+      this._refreshDeselector();
     },
 
     setUrl: function( url ) {
@@ -270,7 +283,7 @@ $.widget( "ajtarragona.tgnAutocomplete", {
     setParams( params){
       this.options.params=params;
       this.addParam('term','WILDCARD');
-    
+		
     },
     
     getUrl: function(  ) {
@@ -280,7 +293,7 @@ $.widget( "ajtarragona.tgnAutocomplete", {
 
 
 
-    _stopLoading: function( ) {
+   _stopLoading: function( ) {
       //this.element.stopLoading();
       this.element.closest('.form-group').stopLoading();
     },
@@ -291,22 +304,24 @@ $.widget( "ajtarragona.tgnAutocomplete", {
       
     },
 
-
+    clear : function(){
+       this.value({value:'',name:''})
+    },
    
     value : function( argument ){
     
 
        if (argument === undefined) {
-          //al("getValue");
-          if(this.options.multiple){
-            return this.element.val().split(',');
-          }else{
-            if(this.options.savevalue) return this.hidden.val();
-            else return this.element.val();
-          }
+       		//al("getValue");
+       		if(this.options.multiple){
+       			return this.element.val().split(',');
+       		}else{
+       			if(this.options.savevalue) return this.hidden.val();
+       			else return this.element.val();
+       		}
        }else{
-          //al("setValue");
-          //al(argument);
+	    	  //al("setValue");
+			    //al(argument);
           var value=argument;
           var name=argument;
           //al(argument.hasOwnProperty('value'));
@@ -317,17 +332,26 @@ $.widget( "ajtarragona.tgnAutocomplete", {
            
          
 
-          if(this.options.savevalue){
-            this.hidden.val(value);
-          }
-          this.element.val(name);
-
-          this.element.trigger( "typeahead:select", [argument]);  
-          this.element.trigger("tgnautocomplete:change", {element:this.element, item: argument});
+	    	  if(this.options.savevalue){
+	          this.hidden.val(value);
+	        }
+	        this.element.val(name);
+          this._refreshDeselector();
+          //al(this.element);
+	        this.element.trigger("typeahead:select", [argument]);	
+	        this.element.trigger("tgnautocomplete:change", {element:this.element, item: argument});
              
        }
     },
 
+    _refreshDeselector : function(){
+        
+
+        if(this.value() && !this.options.disabled) 
+          this.deselector.attr('hidden',false);
+        else 
+          this.deselector.attr('hidden',true);
+    },
 
     _createDeselector: function( argument ) {
         var o=this;
@@ -337,10 +361,10 @@ $.widget( "ajtarragona.tgnAutocomplete", {
           this.deselector.on('click',function(e){
              //al(o.input);
             //al(o.input.prop('disabled'));
-             if(!o.options.disabled){
+          	 if(!o.options.disabled){
                e.preventDefault();
                e.stopPropagation();
-               o.value('');
+               o.clear('');
               }
           });
         }
