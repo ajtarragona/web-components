@@ -18873,7 +18873,7 @@ form.validating {
 
 .custom-control-label:empty::before,
 .custom-control-label:empty::after {
-  top: 0rem;
+  top: -0.7rem;
 }
 
 .col-form-label {

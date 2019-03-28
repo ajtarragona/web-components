@@ -67,7 +67,16 @@ Publicar configuració Laroute
 php artisan vendor:publish --provider='Lord\Laroute\LarouteServiceProvider'
 ```
 
-Posar rutes absolutes a `app/config/laroute.php`
+Modificar les següents línies de la configuració `app/config/laroute.php`:
+```php
+...
+'path' => base_path('public/js'),
+...
+'absolute' => true,
+...
+'template' => base_path('vendor/lord/laroute/src/templates/laroute.js'),
+...
+```
 
 Configurar correctament la ruta de l'aplicació `APP_URL` a l'arxiu `.env`
 

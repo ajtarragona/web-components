@@ -48,7 +48,17 @@
 	php artisan vendor:publish --provider='Lord\Laroute\LarouteServiceProvider'
 	@endcode
 
-	<p>Posem el paràmetre <code>'absolute' => true</code> a l'arxiu <code>app/config/laroute.php</code>.</p>
+	<p>Modifiquem les següents línies de l'arxiu <code>app/config/laroute.php</code>:</p>
+@code(['lang'=>'php'])
+
+'path' => base_path('public/js'),
+...
+'absolute' => true,
+...
+'template' => base_path('vendor/lord/laroute/src/templates/laroute.js'),
+
+@endcode
+
 	<p>Configurar correctament la ruta de l'aplicació <code>APP_URL</code> a l'arxiu <code>.env</code>
 	<p>Publiquem els scripts Laroute:</p>
 	@code(['lang'=>'bsh'])
