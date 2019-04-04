@@ -1,0 +1,20 @@
+.custom-file-label{
+	overflow-y: hidden;
+	&::after{
+		height:auto;
+		background-color:$light;
+		border-left-width:1px;
+	}
+}
+
+.form-group.outlined{	
+	.custom-file-label{
+		border-width: 0px;
+	}
+
+	&:not(.sidelabel){
+		.col-form-label ~ .custom-file .custom-file-label::after{
+			border-top:1px solid $border-color;
+		}
+	}
+}

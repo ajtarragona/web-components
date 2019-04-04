@@ -17,5 +17,5 @@
    </div>
    
 @else
-    {{ $slot }}
+{{ $slot }}
 @endif

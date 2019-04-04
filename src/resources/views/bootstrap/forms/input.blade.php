@@ -19,6 +19,12 @@
 
 	@include('ajtarragona-web-components::bootstrap.forms.inputicon')
 	
+	@if($type=="file")
+	<div class="custom-file">
+	@endif
+	  
+	  
+
 	<input 
 		id="{{$id}}"
 	    type="{{ $type }}" 
@@ -31,13 +37,23 @@
 		@istrue($multiple ,'multiple="true"')
 		title="{{ $title }}" 
 		placeholder="{{ $placeholder }}" 
-		
+		lang="{{ app()->getLocale() }}"
+
 
 		{!! renderAttributes($attributes, $hiddenattributes) !!} 
 		{!! renderData($data) !!}
+		
 
 	/>
+	
+	@if($type=="file")
+	<label class="custom-file-label" for="{{$id}}">{{ $placeholder }}</label>
+	</div>
+	@endif
+
+	{{-- @dump($data) --}}
 	@include('ajtarragona-web-components::bootstrap.forms.helptext')
+
 
 
 @endformgroup

@@ -1,3 +1,32 @@
+<h1 class="display-4">Tablas</h1>
+<p class="lead">
+	Podem crear taules Bootstrap 
+</p>
+<p><a href="https://getbootstrap.com/docs/4.3/content/tables/" target="_blank">@icon('external-link-alt')  Documentació sobre taules Bootstrap</a></p>
+
+<hr class="big"/>
+
+<h2>Tablas ordenables</h2>
+<p><code><a href="https://github.com/Kyslik/column-sortable" target="_blanl">kyslik/column-sortable</a></code></p>
+
+
+<p>Para que se vean bien los iconos, hay que publicar configuración:</p>
+@code
+php artisan vendor:publish --provider="Kyslik\ColumnSortable\ColumnSortableServiceProvider" --tag="config"
+@endcode
+
+<p>y modificar los prefijos en el archivo <code>config/columnsortable.php</code>:</p>
+@code
+'asc_suffix'                    => '-down',
+'desc_suffix'                   => '-up',                 
+@endcode
+
+
+<hr class="big"/>
+
+
+<h2>Tablas ajax</h2>
+
 {{-- <section id="kitchen-tables" class="py-5">
 	<hr />
 	<h2>Tables</h2>

@@ -18,7 +18,7 @@ Route::group(['prefix' => 'ajtarragona/webcomponents','middleware' => ['web']], 
 	
 
 	//rutas de Demo
-	Route::group(['prefix' => 'demo'], function () {
+	Route::group(['prefix' => 'demo','middleware' => ['language']], function () {
 
 		Route::get('/', 'Ajtarragona\WebComponents\Controllers\DemoController@demo')->name('webcomponents.demo');
 		

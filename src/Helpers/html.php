@@ -27,6 +27,7 @@ if (! function_exists('renderAttributes')) {
 
 if (! function_exists('renderData')) {
 	function renderData($array=false,$excluded=[]) {
+		//dump($array);
 		return WebComponent::html_attributes($array,"data",$excluded);
 	}
 }
@@ -117,6 +118,18 @@ if (! function_exists('autocomplete')) {
 		$newdata=array_merge($newdata,$data);
 		
 		$ret = new Input($attributes,$newdata);
+		return $ret->render();
+	}
+}
+
+
+if (! function_exists('fileinput')) {
+	function fileinput($attributes=[],$data=[]){
+		if(!isset($attributes["class"])) $attributes["class"]="";
+		$attributes["class"].=" custom-file-input ";
+		$attributes["type"]="file";
+
+		$ret = new Input($attributes,$data);
 		return $ret->render();
 	}
 }

@@ -15,7 +15,7 @@ form.validating{
 	
 	&:empty::before,
 	&:empty::after{
-		top:-0.7rem;
+		top:-0rem;
 	}
 }
 
@@ -236,7 +236,7 @@ $sidelabel-size : 160px;
 		border-color:transparent;
 	}
 
-	>.file-input{
+	>.custom-file{
 		// margin-right:.5em;
 	}
 	
@@ -247,7 +247,6 @@ $sidelabel-size : 160px;
 
 	> input,
 	> textarea,
-	>.file-input .form-control,
 	>.mentions-container,
 	>.date-container .form-control,
 	{
@@ -283,20 +282,19 @@ $sidelabel-size : 160px;
 
 	> input:focus,
 	> textarea:focus,
-	>.file-input .form-control:focus,
 	>.date-container .form-control:focus,
 	>.mentions-container:focus,
+	>.custom-file .custom-file-input:focus,
+	>.custom-file .custom-file-input:focus ~ .custom-file-label,
 	>.form-row .form-control:focus
 	{
+		border-color:transparent;
 		outline:none;
 		box-shadow:none !important;
 	
 	}
 	
-	>.file-input .file-caption-name{
-		padding-left:0;
-	}
-
+	
 	.form-control:disabled, 
 	.form-control[readonly] {
 	    background-color: transparent;
@@ -424,7 +422,7 @@ $sidelabel-size : 160px;
 		> .mentions-container,
 		> .form-control-container,
 		> .bootstrap-tagsinput,
-		> .file-input{
+		> .custom-file{
 			width:calc(100% -  #{$sidelabel-size} ) ;
 			float:left;
 			>.bootstrap-select .filter-option{
@@ -495,7 +493,7 @@ $sidelabel-size : 160px;
 			+ .input-group,
 			+ .date-container,
 			+ .mentions-container,
-			+ .file-input .file-caption,
+			+ .custom-file .custom-file-label,
 			+ .form-row
 			{
 				padding-left:1.5em;
@@ -597,7 +595,7 @@ label + .input-icon{
 .input-icon + .selectpicker-wrapper .dropdown-toggle,
 .form-group .input-icon + .date-container .form-control.flatpickr-input,
 .input-icon + .mentions-container,
-.input-icon + .file-input,
+.input-icon.icon-left + .custom-file .custom-file-label,
 .form-group .input-icon + .bootstrap-touchspin > .form-control,
 .input-icon + .bootstrap-tagsinput > .twitter-typeahead > input{
 

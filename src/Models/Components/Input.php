@@ -32,6 +32,7 @@ class Input extends WebComponent
 	public function __construct($attributes=[], $data=[]){
 		parent::__construct($attributes,$data);
 
+
 		if($this->attributes['type']=="color"){
 			$this->attributes["type"]="text";
 			$this->attributes["class"].=" colorinput";
@@ -42,6 +43,7 @@ class Input extends WebComponent
 			$this->attributes["class"].=" number";
 		}
 		if(!$this->attributes['id']) $this->attributes['id']='input_'.$this->attributes['name'];
+		if($this->attributes["multiple"] && !ends_with($this->attributes['name'],"[]")) $this->attributes["name"].="[]";
 		// dump($this->attributes);
 	}
 	

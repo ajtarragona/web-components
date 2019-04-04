@@ -117,7 +117,7 @@ $btn-font-weight:             400 !default;
 // Forms
 
 $input-padding-y:                     0.4rem !default;
-$input-line-height:                     1.5rem !default;
+// $input-line-height:                     1.5rem !default;
 
 $input-bg:                              transparent !default; //$gray-200 !default;
 $input-disabled-bg:                     $gray-300 !default;
@@ -173,3 +173,12 @@ $sidebarwidth : 300px;
 
 //toolbar
 $toolbarwidth: 80% !default;
+
+
+
+//file
+$custom-file-text: (
+  en: "Browse",
+  es: "Elegir",
+  ca: "Triar",
+);

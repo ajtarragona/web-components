@@ -93,13 +93,18 @@ class WebComponent
     }
 
     public static function html_attributes($array=false, $prefix=false,$excluded=[]) {
+		
 		if(!$array) return;
 
 		$ret="";
 
+		
 		foreach ($array as $k => $v)
 		{	
-			if(!in_array($k, $excluded)&& $v){
+			
+			if(!in_array($k, $excluded) && (!$prefix && $v)){
+				
+
 				$ret.=" ".($prefix?($prefix."-"):"").$k."=";
 
 				if(is_array($v) || is_object($v)){

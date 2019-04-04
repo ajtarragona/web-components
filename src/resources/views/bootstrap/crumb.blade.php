@@ -2,10 +2,7 @@
 	<a 
 		id="{{ $id }}"
 		class="{{ $class  }} "
-		href="{{ $url }}" > 
-
-		@textAndIcon($name,$icon)
-	</a>
+		href="{{ $url }}" >@textAndIcon($name,$icon)</a>
 
 @else
 	<li 

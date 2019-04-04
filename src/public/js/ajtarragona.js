@@ -1992,7 +1992,7 @@ module.exports = '1.0.0';
 /*!
  * Bootstrap Colorpicker - Bootstrap Colorpicker is a modular color picker plugin for Bootstrap 4.
  * @package bootstrap-colorpicker
- * @version v3.0.3
+ * @version v3.1.1
  * @license MIT
  * @link https://farbelous.github.io/bootstrap-colorpicker/
  * @link https://github.com/farbelous/bootstrap-colorpicker.git
@@ -2433,8 +2433,6 @@ var ColorItem = function () {
     value: function replace(color) {
       var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
-      var fallback = null;
-
       format = ColorItem.sanitizeFormat(format);
 
       /**
@@ -2453,7 +2451,7 @@ var ColorItem = function () {
       this._color = ColorItem.parse(color);
 
       if (this._color === null) {
-        this._color = (0, _color2.default)(fallback);
+        this._color = (0, _color2.default)();
         this._original.valid = false;
         return;
       }
@@ -2955,6 +2953,10 @@ var ColorItem = function () {
         color = ColorItem.sanitizeString(color);
       }
 
+      if (color === null) {
+        return null;
+      }
+
       if (Array.isArray(color)) {
         format = 'hsv';
       }
@@ -3134,9 +3136,9 @@ exports.default = {
    * rgba excepting if the alpha channel is disabled (see useAlpha).
    *
    * @type {('rgb'|'hex'|'hsl'|'auto'|null)}
-   * @default null
+   * @default 'auto'
    */
-  format: null,
+  format: 'auto',
   /**
    * Horizontal mode layout.
    *
@@ -3545,7 +3547,10 @@ exports.default = Palette;
 
 /***/ }),
 /* 5 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 module.exports = {
 	"aliceblue": [240, 248, 255],
@@ -3697,6 +3702,7 @@ module.exports = {
 	"yellow": [255, 255, 0],
 	"yellowgreen": [154, 205, 50]
 };
+
 
 /***/ }),
 /* 6 */
@@ -5710,10 +5716,10 @@ var SliderHandler = function () {
 
       // Adjust the color
       if (slider.callLeft) {
-        color[slider.callLeft].call(color, left / slider.maxLeft);
+        color[slider.callLeft](left / slider.maxLeft);
       }
       if (slider.callTop) {
-        color[slider.callTop].call(color, top / slider.maxTop);
+        color[slider.callTop](top / slider.maxTop);
       }
 
       // Set the new color
@@ -6733,7 +6739,7 @@ function Color(obj, model) {
 	var i;
 	var channels;
 
-	if (!obj) {
+	if (typeof obj === 'undefined') {
 		this.model = 'rgb';
 		this.color = [0, 0, 0];
 		this.valpha = 1;
@@ -7191,7 +7197,8 @@ for (var name in colorNames) {
 }
 
 var cs = module.exports = {
-	to: {}
+	to: {},
+	get: {}
 };
 
 cs.get = function (string) {
@@ -7307,12 +7314,12 @@ cs.get.hsl = function (string) {
 		return null;
 	}
 
-	var hsl = /^hsla?\(\s*([+-]?\d*[\.]?\d+)(?:deg)?\s*,\s*([+-]?[\d\.]+)%\s*,\s*([+-]?[\d\.]+)%\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/;
+	var hsl = /^hsla?\(\s*([+-]?(?:\d*\.)?\d+)(?:deg)?\s*,\s*([+-]?[\d\.]+)%\s*,\s*([+-]?[\d\.]+)%\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/;
 	var match = string.match(hsl);
 
 	if (match) {
 		var alpha = parseFloat(match[4]);
-		var h = ((parseFloat(match[1]) % 360) + 360) % 360;
+		var h = (parseFloat(match[1]) + 360) % 360;
 		var s = clamp(parseFloat(match[2]), 0, 100);
 		var l = clamp(parseFloat(match[3]), 0, 100);
 		var a = clamp(isNaN(alpha) ? 1 : alpha, 0, 1);
@@ -7797,7 +7804,8 @@ var ColorHandler = function () {
       var color = new _ColorItem2.default(fallback, this.format);
 
       if (!color.isValid()) {
-        throw new Error('The fallback color is invalid.');
+        console.warn('The fallback color is invalid. Falling back to the previous color or black if any.');
+        return this.color ? this.color : new _ColorItem2.default('#000000', this.format);
       }
 
       return color;
@@ -8196,7 +8204,7 @@ exports.default = AddonHandler;
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
- * Bootstrap Confirmation (v4.0.2)
+ * Bootstrap Confirmation (v4.1.0)
  * @copyright 2013 Nimit Suwannagate <ethaizone@hotmail.com>
  * @copyright 2014-2018 Damien "Mistic" Sorel <contact@git.strangeplanet.fr>
  * @licence Apache License, Version 2.0
@@ -8204,7 +8212,7 @@ exports.default = AddonHandler;
 (function (global, factory) {
    true ? factory(__webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js"), __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.js")) :
   undefined;
-}(this, (function ($) { 'use strict';
+}(this, function ($) { 'use strict';
 
   $ = $ && $.hasOwnProperty('default') ? $['default'] : $;
 
@@ -8277,11 +8285,12 @@ exports.default = AddonHandler;
    */
 
   var NAME = 'confirmation';
-  var VERSION = '4.0.2';
+  var VERSION = '4.1.0';
   var DATA_KEY = "bs." + NAME;
   var EVENT_KEY = "." + DATA_KEY;
   var JQUERY_NO_CONFLICT = $.fn[NAME];
-  var BTN_CLASS_DEFAULT = 'btn btn-sm h-100 d-flex align-items-center';
+  var BTN_CLASS_BASE = 'h-100 d-flex align-items-center';
+  var BTN_CLASS_DEFAULT = 'btn btn-sm';
 
   var DefaultType = _objectSpread({}, Popover.DefaultType, {
     singleton: 'boolean',
@@ -8313,20 +8322,23 @@ exports.default = AddonHandler;
     copyAttributes: 'href target',
     onConfirm: $.noop,
     onCancel: $.noop,
-    btnOkClass: 'btn-primary',
+    btnOkClass: BTN_CLASS_DEFAULT + " btn-primary",
     btnOkLabel: 'Yes',
     btnOkIconClass: '',
     btnOkIconContent: '',
-    btnCancelClass: 'btn-secondary',
+    btnCancelClass: BTN_CLASS_DEFAULT + " btn-secondary",
     btnCancelLabel: 'No',
     btnCancelIconClass: '',
     btnCancelIconContent: '',
     buttons: [],
     // @formatter:off
-    // href="#" allows the buttons to be focused
-    template: "\n<div class=\"popover confirmation\">\n  <div class=\"arrow\"></div>\n  <h3 class=\"popover-header\"></h3>\n  <div class=\"popover-body\">\n    <p class=\"confirmation-content\"></p>\n    <div class=\"confirmation-buttons text-center\">\n      <div class=\"btn-group\">\n        <a href=\"#\" class=\"" + BTN_CLASS_DEFAULT + "\" data-apply=\"confirmation\"></a>\n        <a href=\"#\" class=\"" + BTN_CLASS_DEFAULT + "\" data-dismiss=\"confirmation\"></a>\n      </div>\n    </div>\n  </div>\n</div>" // @formatter:on
+    template: "\n<div class=\"popover confirmation\">\n  <div class=\"arrow\"></div>\n  <h3 class=\"popover-header\"></h3>\n  <div class=\"popover-body\">\n    <p class=\"confirmation-content\"></p>\n    <div class=\"confirmation-buttons text-center\">\n      <div class=\"btn-group\"></div>\n    </div>\n  </div>\n</div>" // @formatter:on
 
   });
+
+  if (Default.whiteList) {
+    Default.whiteList['*'].push('data-apply', 'data-dismiss');
+  }
 
   var ClassName = {
     FADE: 'fade',
@@ -8335,9 +8347,7 @@ exports.default = AddonHandler;
   var Selector = {
     TITLE: '.popover-header',
     CONTENT: '.confirmation-content',
-    BUTTONS: '.confirmation-buttons .btn-group',
-    BTN_APPLY: '[data-apply=confirmation]',
-    BTN_DISMISS: '[data-dismiss=confirmation]'
+    BUTTONS: '.confirmation-buttons .btn-group'
   };
   var Keymap = {
     13: 'Enter',
@@ -8475,7 +8485,7 @@ exports.default = AddonHandler;
       }
 
       if (this.config.buttons.length > 0) {
-        this._setCustomButtons($tip);
+        this._setButtons($tip, this.config.buttons);
       } else {
         this._setStandardButtons($tip);
       }
@@ -8486,6 +8496,9 @@ exports.default = AddonHandler;
     };
 
     _proto.dispose = function dispose() {
+      $('body').off(Event.CLICK + "." + this.uid);
+      this.eventBody = false;
+
       this._cleanKeyupEvent();
 
       _Popover.prototype.dispose.call(this);
@@ -8495,13 +8508,13 @@ exports.default = AddonHandler;
       this._cleanKeyupEvent();
 
       _Popover.prototype.hide.call(this, callback);
-    }; // Private
+    } // Private
 
     /**
      * Copy the value of `copyAttributes` on the config object
      * @private
      */
-
+    ;
 
     _proto._copyAttributes = function _copyAttributes() {
       var _this2 = this;
@@ -8519,12 +8532,12 @@ exports.default = AddonHandler;
       this.config.copyAttributes.forEach(function (attr) {
         _this2.config._attributes[attr] = $(_this2.element).attr(attr);
       });
-    };
+    }
     /**
      * Custom event listeners for popouts and singletons
      * @private
      */
-
+    ;
 
     _proto._setConfirmationListeners = function _setConfirmationListeners() {
       var self = this;
@@ -8565,7 +8578,7 @@ exports.default = AddonHandler;
         $(this.element).on(Event.SHOWN, function () {
           if (self.config.popout && !self.eventBody) {
             self.eventBody = $('body').on(Event.CLICK + "." + self.uid, function (e) {
-              if ($(self.config._selector).is(e.target)) {
+              if ($(self.config._selector).is(e.target) || $(self.config._selector).has(e.target).length > 0) {
                 return;
               } // close all popover already initialized
 
@@ -8579,57 +8592,44 @@ exports.default = AddonHandler;
           }
         });
       }
-    };
+    }
     /**
      * Init the standard ok/cancel buttons
      * @param $tip
      * @private
      */
-
+    ;
 
     _proto._setStandardButtons = function _setStandardButtons($tip) {
-      var self = this;
-      var btnApply = $tip.find(Selector.BTN_APPLY).addClass(this.config.btnOkClass).html(this.config.btnOkLabel).attr(this.config._attributes);
+      var buttons = [{
+        class: this.config.btnOkClass,
+        label: this.config.btnOkLabel,
+        iconClass: this.config.btnOkIconClass,
+        iconContent: this.config.btnOkIconContent,
+        attr: this.config._attributes
+      }, {
+        class: this.config.btnCancelClass,
+        label: this.config.btnCancelLabel,
+        iconClass: this.config.btnCancelIconClass,
+        iconContent: this.config.btnCancelIconContent,
+        cancel: true
+      }];
 
-      if (this.config.btnOkIconClass || this.config.btnOkIconContent) {
-        btnApply.prepend($('<i></i>').addClass(this.config.btnOkIconClass || '').text(this.config.btnOkIconContent || ''));
-      }
-
-      btnApply.off('click').one('click', function (e) {
-        if ($(this).attr('href') === '#') {
-          e.preventDefault();
-        }
-
-        self.config.onConfirm.call(self.element);
-        $(self.element).trigger(Event.CONFIRMED);
-        $(self.element).trigger(self.config.confirmationEvent, [true]);
-        self.hide();
-      });
-      var btnDismiss = $tip.find(Selector.BTN_DISMISS).addClass(this.config.btnCancelClass).html(this.config.btnCancelLabel);
-
-      if (this.config.btnCancelIconClass || this.config.btnCancelIconContent) {
-        btnDismiss.prepend($('<i></i>').addClass(this.config.btnCancelIconClass || '').text(this.config.btnCancelIconContent || ''));
-      }
-
-      btnDismiss.off('click').one('click', function (e) {
-        e.preventDefault();
-        self.config.onCancel.call(self.element);
-        $(self.element).trigger(Event.CANCELED);
-        self.hide();
-      });
-    };
+      this._setButtons($tip, buttons);
+    }
     /**
-     * Init the custom buttons
+     * Init the buttons
      * @param $tip
+     * @param buttons
      * @private
      */
+    ;
 
-
-    _proto._setCustomButtons = function _setCustomButtons($tip) {
+    _proto._setButtons = function _setButtons($tip, buttons) {
       var self = this;
       var $group = $tip.find(Selector.BUTTONS).empty();
-      this.config.buttons.forEach(function (button) {
-        var btn = $('<a href="#"></a>').addClass(BTN_CLASS_DEFAULT).addClass(button.class || 'btn btn-secondary').html(button.label || '').attr(button.attr || {});
+      buttons.forEach(function (button) {
+        var btn = $('<a href="#"></a>').addClass(BTN_CLASS_BASE).addClass(button.class || BTN_CLASS_DEFAULT + " btn-secondary").html(button.label || '').attr(button.attr || {});
 
         if (button.iconClass || button.iconContent) {
           btn.prepend($('<i></i>').addClass(button.iconClass || '').text(button.iconContent || ''));
@@ -8650,41 +8650,42 @@ exports.default = AddonHandler;
           } else {
             self.config.onConfirm.call(self.element, button.value);
             $(self.element).trigger(Event.CONFIRMED, [button.value]);
+            $(self.element).trigger(self.config.confirmationEvent, [true]);
           }
 
           self.hide();
         });
         $group.append(btn);
       });
-    };
+    }
     /**
      * Install the keyboatd event handler
      * @private
      */
-
+    ;
 
     _proto._setupKeyupEvent = function _setupKeyupEvent() {
       activeConfirmation = this;
       $(window).off(Event.KEYUP).on(Event.KEYUP, this._onKeyup.bind(this));
-    };
+    }
     /**
      * Remove the keyboard event handler
      * @private
      */
-
+    ;
 
     _proto._cleanKeyupEvent = function _cleanKeyupEvent() {
       if (activeConfirmation === this) {
         activeConfirmation = undefined;
         $(window).off(Event.KEYUP);
       }
-    };
+    }
     /**
      * Event handler for keyboard navigation
      * @param event
      * @private
      */
-
+    ;
 
     _proto._onKeyup = function _onKeyup(event) {
       if (!this.tip) {
@@ -8729,14 +8730,14 @@ exports.default = AddonHandler;
         default:
           break;
       }
-    }; // Static
+    } // Static
 
     /**
      * Generates an uui, copied from Bootrap's utils
      * @param {string} prefix
      * @returns {string}
      */
-
+    ;
 
     Confirmation.getUID = function getUID(prefix) {
       var uid = prefix;
@@ -8793,4595 +8794,8 @@ exports.default = AddonHandler;
     return Confirmation._jQueryInterface;
   };
 
-})));
-//# sourceMappingURL=bootstrap-confirmation.js.map
-
-
-/***/ }),
-
-/***/ "./node_modules/bootstrap-fileinput/js/fileinput.js":
-/*!**********************************************************!*\
-  !*** ./node_modules/bootstrap-fileinput/js/fileinput.js ***!
-  \**********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
- * bootstrap-fileinput v4.5.2
- * http://plugins.krajee.com/file-input
- *
- * Author: Kartik Visweswaran
- * Copyright: 2014 - 2018, Kartik Visweswaran, Krajee.com
- *
- * Licensed under the BSD 3-Clause
- * https://github.com/kartik-v/bootstrap-fileinput/blob/master/LICENSE.md
- */
-(function (factory) {
-    "use strict";
-    //noinspection JSUnresolvedVariable
-    if (true) { // jshint ignore:line
-        // AMD. Register as an anonymous module.
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js")], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)); // jshint ignore:line
-    } else {}
-}(function ($) {
-    "use strict";
-
-    $.fn.fileinputLocales = {};
-    $.fn.fileinputThemes = {};
-
-    String.prototype.setTokens = function (replacePairs) {
-        var str = this.toString(), key, re;
-        for (key in replacePairs) {
-            if (replacePairs.hasOwnProperty(key)) {
-                re = new RegExp("\{" + key + "\}", "g");
-                str = str.replace(re, replacePairs[key]);
-            }
-        }
-        return str;
-    };
-
-    var $h, FileInput;
-
-    // fileinput helper object for all global variables and internal helper methods
-    //noinspection JSUnresolvedVariable
-    $h = {
-        FRAMES: '.kv-preview-thumb',
-        SORT_CSS: 'file-sortable',
-        OBJECT_PARAMS: '<param name="controller" value="true" />\n' +
-        '<param name="allowFullScreen" value="true" />\n' +
-        '<param name="allowScriptAccess" value="always" />\n' +
-        '<param name="autoPlay" value="false" />\n' +
-        '<param name="autoStart" value="false" />\n' +
-        '<param name="quality" value="high" />\n',
-        DEFAULT_PREVIEW: '<div class="file-preview-other">\n' +
-        '<span class="{previewFileIconClass}">{previewFileIcon}</span>\n' +
-        '</div>',
-        MODAL_ID: 'kvFileinputModal',
-        MODAL_EVENTS: ['show', 'shown', 'hide', 'hidden', 'loaded'],
-        objUrl: window.URL || window.webkitURL,
-        createObjectURL: function (data) {
-            if ($h.objUrl && $h.objUrl.createObjectURL && data) {
-                return $h.objUrl.createObjectURL(data);
-            }
-            return '';
-        },
-        revokeObjectURL: function (data) {
-            if ($h.objUrl && $h.objUrl.revokeObjectURL && data) {
-                $h.objUrl.revokeObjectURL(data);
-            }
-        },
-        compare: function (input, str, exact) {
-            return input !== undefined && (exact ? input === str : input.match(str));
-        },
-        isIE: function (ver) {
-            var div, status;
-            // check for IE versions < 11
-            if (navigator.appName !== 'Microsoft Internet Explorer') {
-                return false;
-            }
-            if (ver === 10) {
-                return new RegExp('msie\\s' + ver, 'i').test(navigator.userAgent);
-            }
-            div = document.createElement("div");
-            div.innerHTML = "<!--[if IE " + ver + "]> <i></i> <![endif]-->";
-            status = div.getElementsByTagName("i").length;
-            document.body.appendChild(div);
-            div.parentNode.removeChild(div);
-            return status;
-        },
-        canAssignFilesToInput: function () {
-            var input = document.createElement('input');
-            try {
-                input.type = "file";
-                input.files = null;
-                return true;
-            } catch (err) {
-                return false;
-            }
-        },
-        getDragDropFolders: function (items) {
-            var i, item, len = items ? items.length : 0, folders = 0;
-            if (len > 0 && items[0].webkitGetAsEntry()) {
-                for (i = 0; i < len; i++) {
-                    item = items[i].webkitGetAsEntry();
-                    if (item && item.isDirectory) {
-                        folders++;
-                    }
-                }
-            }
-            return folders;
-        },
-        initModal: function ($modal) {
-            var $body = $('body');
-            if ($body.length) {
-                $modal.appendTo($body);
-            }
-        },
-        isEmpty: function (value, trim) {
-            return value === undefined || value === null || value.length === 0 || (trim && $.trim(value) === '');
-        },
-        isArray: function (a) {
-            return Array.isArray(a) || Object.prototype.toString.call(a) === '[object Array]';
-        },
-        ifSet: function (needle, haystack, def) {
-            def = def || '';
-            return (haystack && typeof haystack === 'object' && needle in haystack) ? haystack[needle] : def;
-        },
-        cleanArray: function (arr) {
-            if (!(arr instanceof Array)) {
-                arr = [];
-            }
-            return arr.filter(function (e) {
-                return (e !== undefined && e !== null);
-            });
-        },
-        spliceArray: function (arr, index, reverseOrder) {
-            var i, j = 0, out = [], newArr;
-            if (!(arr instanceof Array)) {
-                return [];
-            }
-            newArr = $.extend(true, [], arr);
-            if (reverseOrder) {
-                newArr.reverse();
-            }
-            for (i = 0; i < newArr.length; i++) {
-                if (i !== index) {
-                    out[j] = newArr[i];
-                    j++;
-                }
-            }
-            if (reverseOrder) {
-                out.reverse();
-            }
-            return out;
-        },
-        getNum: function (num, def) {
-            def = def || 0;
-            if (typeof num === "number") {
-                return num;
-            }
-            if (typeof num === "string") {
-                num = parseFloat(num);
-            }
-            return isNaN(num) ? def : num;
-        },
-        hasFileAPISupport: function () {
-            return !!(window.File && window.FileReader);
-        },
-        hasDragDropSupport: function () {
-            var div = document.createElement('div');
-            /** @namespace div.draggable */
-            /** @namespace div.ondragstart */
-            /** @namespace div.ondrop */
-            return !$h.isIE(9) &&
-                (div.draggable !== undefined || (div.ondragstart !== undefined && div.ondrop !== undefined));
-        },
-        hasFileUploadSupport: function () {
-            return $h.hasFileAPISupport() && window.FormData;
-        },
-        hasBlobSupport: function () {
-            try {
-                return !!window.Blob && Boolean(new Blob());
-            } catch (e) {
-                return false;
-            }
-        },
-        hasArrayBufferViewSupport: function () {
-            try {
-                return new Blob([new Uint8Array(100)]).size === 100;
-            } catch (e) {
-                return false;
-            }
-        },
-        dataURI2Blob: function (dataURI) {
-            //noinspection JSUnresolvedVariable
-            var BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder ||
-                window.MSBlobBuilder, canBlob = $h.hasBlobSupport(), byteStr, arrayBuffer, intArray, i, mimeStr, bb,
-                canProceed = (canBlob || BlobBuilder) && window.atob && window.ArrayBuffer && window.Uint8Array;
-            if (!canProceed) {
-                return null;
-            }
-            if (dataURI.split(',')[0].indexOf('base64') >= 0) {
-                byteStr = atob(dataURI.split(',')[1]);
-            } else {
-                byteStr = decodeURIComponent(dataURI.split(',')[1]);
-            }
-            arrayBuffer = new ArrayBuffer(byteStr.length);
-            intArray = new Uint8Array(arrayBuffer);
-            for (i = 0; i < byteStr.length; i += 1) {
-                intArray[i] = byteStr.charCodeAt(i);
-            }
-            mimeStr = dataURI.split(',')[0].split(':')[1].split(';')[0];
-            if (canBlob) {
-                return new Blob([$h.hasArrayBufferViewSupport() ? intArray : arrayBuffer], {type: mimeStr});
-            }
-            bb = new BlobBuilder();
-            bb.append(arrayBuffer);
-            return bb.getBlob(mimeStr);
-        },
-        arrayBuffer2String: function (buffer) {
-            //noinspection JSUnresolvedVariable
-            if (window.TextDecoder) {
-                // noinspection JSUnresolvedFunction
-                return new TextDecoder("utf-8").decode(buffer);
-            }
-            var array = Array.prototype.slice.apply(new Uint8Array(buffer)), out = '', i = 0, len, c, char2, char3;
-            len = array.length;
-            while (i < len) {
-                c = array[i++];
-                switch (c >> 4) { // jshint ignore:line
-                    case 0:
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
-                    case 6:
-                    case 7:
-                        // 0xxxxxxx
-                        out += String.fromCharCode(c);
-                        break;
-                    case 12:
-                    case 13:
-                        // 110x xxxx   10xx xxxx
-                        char2 = array[i++];
-                        out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F)); // jshint ignore:line
-                        break;
-                    case 14:
-                        // 1110 xxxx  10xx xxxx  10xx xxxx
-                        char2 = array[i++];
-                        char3 = array[i++];
-                        out += String.fromCharCode(((c & 0x0F) << 12) | // jshint ignore:line
-                            ((char2 & 0x3F) << 6) |  // jshint ignore:line
-                            ((char3 & 0x3F) << 0)); // jshint ignore:line
-                        break;
-                }
-            }
-            return out;
-        },
-        isHtml: function (str) {
-            var a = document.createElement('div');
-            a.innerHTML = str;
-            for (var c = a.childNodes, i = c.length; i--;) {
-                if (c[i].nodeType === 1) {
-                    return true;
-                }
-            }
-            return false;
-        },
-        isSvg: function (str) {
-            return str.match(/^\s*<\?xml/i) && (str.match(/<!DOCTYPE svg/i) || str.match(/<svg/i));
-        },
-        getMimeType: function (signature, contents, type) {
-            switch (signature) {
-                case "ffd8ffe0":
-                case "ffd8ffe1":
-                case "ffd8ffe2":
-                    return 'image/jpeg';
-                case '89504E47':
-                    return 'image/png';
-                case '47494638':
-                    return 'image/gif';
-                case '49492a00':
-                    return 'image/tiff';
-                case '52494646':
-                    return 'image/webp';
-                case '66747970':
-                    return 'video/3gp';
-                case '4f676753':
-                    return 'video/ogg';
-                case '1a45dfa3':
-                    return 'video/mkv';
-                case '000001ba':
-                case '000001b3':
-                    return 'video/mpeg';
-                case '3026b275':
-                    return 'video/wmv';
-                case '25504446':
-                    return 'application/pdf';
-                case '25215053':
-                    return 'application/ps';
-                case '504b0304':
-                case '504b0506':
-                case '504b0508':
-                    return 'application/zip';
-                case '377abcaf':
-                    return 'application/7z';
-                case '75737461':
-                    return 'application/tar';
-                case '7801730d':
-                    return 'application/dmg';
-                default:
-                    switch (signature.substring(0, 6)) {
-                        case '435753':
-                            return 'application/x-shockwave-flash';
-                        case '494433':
-                            return 'audio/mp3';
-                        case '425a68':
-                            return 'application/bzip';
-                        default:
-                            switch (signature.substring(0, 4)) {
-                                case '424d':
-                                    return 'image/bmp';
-                                case 'fffb':
-                                    return 'audio/mp3';
-                                case '4d5a':
-                                    return 'application/exe';
-                                case '1f9d':
-                                case '1fa0':
-                                    return 'application/zip';
-                                case '1f8b':
-                                    return 'application/gzip';
-                                default:
-                                    return contents && !contents.match(/[^\u0000-\u007f]/) ? 'application/text-plain' : type;
-                            }
-                    }
-            }
-        },
-        addCss: function ($el, css) {
-            $el.removeClass(css).addClass(css);
-        },
-        getElement: function (options, param, value) {
-            return ($h.isEmpty(options) || $h.isEmpty(options[param])) ? value : $(options[param]);
-        },
-        uniqId: function () {
-            return Math.round(new Date().getTime()) + '_' + Math.round(Math.random() * 100);
-        },
-        htmlEncode: function (str, undefVal) {
-            if (str === undefined) {
-                return undefVal || null;
-            }
-            return str.replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&apos;');
-        },
-        replaceTags: function (str, tags) {
-            var out = str;
-            if (!tags) {
-                return out;
-            }
-            $.each(tags, function (key, value) {
-                if (typeof value === "function") {
-                    value = value();
-                }
-                out = out.split(key).join(value);
-            });
-            return out;
-        },
-        cleanMemory: function ($thumb) {
-            var data = $thumb.is('img') ? $thumb.attr('src') : $thumb.find('source').attr('src');
-            $h.revokeObjectURL(data);
-        },
-        findFileName: function (filePath) {
-            var sepIndex = filePath.lastIndexOf('/');
-            if (sepIndex === -1) {
-                sepIndex = filePath.lastIndexOf('\\');
-            }
-            return filePath.split(filePath.substring(sepIndex, sepIndex + 1)).pop();
-        },
-        checkFullScreen: function () {
-            //noinspection JSUnresolvedVariable
-            return document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement ||
-                document.msFullscreenElement;
-        },
-        toggleFullScreen: function (maximize) {
-            var doc = document, de = doc.documentElement;
-            if (de && maximize && !$h.checkFullScreen()) {
-                /** @namespace document.requestFullscreen */
-                /** @namespace document.msRequestFullscreen */
-                /** @namespace document.mozRequestFullScreen */
-                /** @namespace document.webkitRequestFullscreen */
-                /** @namespace Element.ALLOW_KEYBOARD_INPUT */
-                if (de.requestFullscreen) {
-                    de.requestFullscreen();
-                } else if (de.msRequestFullscreen) {
-                    de.msRequestFullscreen();
-                } else if (de.mozRequestFullScreen) {
-                    de.mozRequestFullScreen();
-                } else if (de.webkitRequestFullscreen) {
-                    de.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-                }
-            } else {
-                /** @namespace document.exitFullscreen */
-                /** @namespace document.msExitFullscreen */
-                /** @namespace document.mozCancelFullScreen */
-                /** @namespace document.webkitExitFullscreen */
-                if (doc.exitFullscreen) {
-                    doc.exitFullscreen();
-                } else if (doc.msExitFullscreen) {
-                    doc.msExitFullscreen();
-                } else if (doc.mozCancelFullScreen) {
-                    doc.mozCancelFullScreen();
-                } else if (doc.webkitExitFullscreen) {
-                    doc.webkitExitFullscreen();
-                }
-            }
-        },
-        moveArray: function (arr, oldIndex, newIndex, reverseOrder) {
-            var newArr = $.extend(true, [], arr);
-            if (reverseOrder) {
-                newArr.reverse();
-            }
-            if (newIndex >= newArr.length) {
-                var k = newIndex - newArr.length;
-                while ((k--) + 1) {
-                    newArr.push(undefined);
-                }
-            }
-            newArr.splice(newIndex, 0, newArr.splice(oldIndex, 1)[0]);
-            if (reverseOrder) {
-                newArr.reverse();
-            }
-            return newArr;
-        },
-        cleanZoomCache: function ($el) {
-            var $cache = $el.closest('.kv-zoom-cache-theme');
-            if (!$cache.length) {
-                $cache = $el.closest('.kv-zoom-cache');
-            }
-            $cache.remove();
-        },
-        closeButton: function (css) {
-            css = css ? 'close ' + css : 'close';
-            return '<button type="button" class="' + css + '" aria-label="Close">\n' +
-                '  <span aria-hidden="true">&times;</span>\n' +
-                '</button>';
-        },
-        getRotation: function (value) {
-            switch (value) {
-                case 2:
-                    return 'rotateY(180deg)';
-                case 3:
-                    return 'rotate(180deg)';
-                case 4:
-                    return 'rotate(180deg) rotateY(180deg)';
-                case 5:
-                    return 'rotate(270deg) rotateY(180deg)';
-                case 6:
-                    return 'rotate(90deg)';
-                case 7:
-                    return 'rotate(90deg) rotateY(180deg)';
-                case 8:
-                    return 'rotate(270deg)';
-                default:
-                    return '';
-            }
-        },
-        setTransform: function (el, val) {
-            if (!el) {
-                return;
-            }
-            el.style.transform = val;
-            el.style.webkitTransform = val;
-            el.style['-moz-transform'] = val;
-            el.style['-ms-transform'] = val;
-            el.style['-o-transform'] = val;
-        },
-        setImageOrientation: function ($img, $zoomImg, value) {
-            if (!$img || !$img.length) {
-                return;
-            }
-            var ev = 'load.fileinputimageorient';
-            $img.off(ev).on(ev, function () {
-                var img = $img.get(0), zoomImg = $zoomImg && $zoomImg.length ? $zoomImg.get(0) : null,
-                    h = img.offsetHeight, w = img.offsetWidth, r = $h.getRotation(value);
-                $img.data('orientation', value);
-                if (zoomImg) {
-                    $zoomImg.data('orientation', value);
-                }
-                if (value < 5) {
-                    $h.setTransform(img, r);
-                    $h.setTransform(zoomImg, r);
-                    return;
-                }
-                var offsetAngle = Math.atan(w / h), origFactor = Math.sqrt(Math.pow(h, 2) + Math.pow(w, 2)),
-                    scale = !origFactor ? 1 : (h / Math.cos(Math.PI / 2 + offsetAngle)) / origFactor,
-                    s = ' scale(' + Math.abs(scale) + ')';
-                $h.setTransform(img, r + s);
-                $h.setTransform(zoomImg, r + s);
-            });
-        }
-    };
-    FileInput = function (element, options) {
-        var self = this;
-        self.$element = $(element);
-        self.$parent = self.$element.parent();
-        if (!self._validate()) {
-            return;
-        }
-        self.isPreviewable = $h.hasFileAPISupport();
-        self.isIE9 = $h.isIE(9);
-        self.isIE10 = $h.isIE(10);
-        if (self.isPreviewable || self.isIE9) {
-            self._init(options);
-            self._listen();
-        }
-        self.$element.removeClass('file-loading');
-    };
-    //noinspection JSUnusedGlobalSymbols
-    FileInput.prototype = {
-        constructor: FileInput,
-        _cleanup: function () {
-            var self = this;
-            self.reader = null;
-            self.formdata = {};
-            self.uploadCount = 0;
-            self.uploadStatus = {};
-            self.uploadLog = [];
-            self.uploadAsyncCount = 0;
-            self.loadedImages = [];
-            self.totalImagesCount = 0;
-            self.ajaxRequests = [];
-            self.clearStack();
-            self.fileBatchCompleted = true;
-            if (!self.isPreviewable) {
-                self.showPreview = false;
-            }
-            self.isError = false;
-            self.ajaxAborted = false;
-            self.cancelling = false;
-        },
-        _init: function (options, refreshMode) {
-            var self = this, f, $el = self.$element, $cont, t, tmp;
-            self.options = options;
-            $.each(options, function (key, value) {
-                switch (key) {
-                    case 'minFileCount':
-                    case 'maxFileCount':
-                    case 'minFileSize':
-                    case 'maxFileSize':
-                    case 'maxFilePreviewSize':
-                    case 'resizeImageQuality':
-                    case 'resizeIfSizeMoreThan':
-                    case 'progressUploadThreshold':
-                    case 'initialPreviewCount':
-                    case 'zoomModalHeight':
-                    case 'minImageHeight':
-                    case 'maxImageHeight':
-                    case 'minImageWidth':
-                    case 'maxImageWidth':
-                        self[key] = $h.getNum(value);
-                        break;
-                    default:
-                        self[key] = value;
-                        break;
-                }
-            });
-            if (self.rtl) { // swap buttons for rtl
-                tmp = self.previewZoomButtonIcons.prev;
-                self.previewZoomButtonIcons.prev = self.previewZoomButtonIcons.next;
-                self.previewZoomButtonIcons.next = tmp;
-            }
-            if (!refreshMode) {
-                self._cleanup();
-            }
-            self.$form = $el.closest('form');
-            self._initTemplateDefaults();
-            self.uploadFileAttr = !$h.isEmpty($el.attr('name')) ? $el.attr('name') : 'file_data';
-            t = self._getLayoutTemplate('progress');
-            self.progressTemplate = t.replace('{class}', self.progressClass);
-            self.progressCompleteTemplate = t.replace('{class}', self.progressCompleteClass);
-            self.progressErrorTemplate = t.replace('{class}', self.progressErrorClass);
-            self.isDisabled = $el.attr('disabled') || $el.attr('readonly');
-            if (self.isDisabled) {
-                $el.attr('disabled', true);
-            }
-            self.isClickable = self.browseOnZoneClick && self.showPreview &&
-                (self.dropZoneEnabled || !$h.isEmpty(self.defaultPreviewContent));
-            self.isAjaxUpload = $h.hasFileUploadSupport() && !$h.isEmpty(self.uploadUrl);
-            self.dropZoneEnabled = $h.hasDragDropSupport() && self.dropZoneEnabled;
-            if (!self.isAjaxUpload) {
-                self.dropZoneEnabled = self.dropZoneEnabled && $h.canAssignFilesToInput();
-            }
-            self.slug = typeof options.slugCallback === "function" ? options.slugCallback : self._slugDefault;
-            self.mainTemplate = self.showCaption ? self._getLayoutTemplate('main1') : self._getLayoutTemplate('main2');
-            self.captionTemplate = self._getLayoutTemplate('caption');
-            self.previewGenericTemplate = self._getPreviewTemplate('generic');
-            if (!self.imageCanvas && self.resizeImage && (self.maxImageWidth || self.maxImageHeight)) {
-                self.imageCanvas = document.createElement('canvas');
-                self.imageCanvasContext = self.imageCanvas.getContext('2d');
-            }
-            if ($h.isEmpty($el.attr('id'))) {
-                $el.attr('id', $h.uniqId());
-            }
-            self.namespace = '.fileinput_' + $el.attr('id').replace(/-/g, '_');
-            if (self.$container === undefined) {
-                self.$container = self._createContainer();
-            } else {
-                self._refreshContainer();
-            }
-            $cont = self.$container;
-            self.$dropZone = $cont.find('.file-drop-zone');
-            self.$progress = $cont.find('.kv-upload-progress');
-            self.$btnUpload = $cont.find('.fileinput-upload');
-            self.$captionContainer = $h.getElement(options, 'elCaptionContainer', $cont.find('.file-caption'));
-            self.$caption = $h.getElement(options, 'elCaptionText', $cont.find('.file-caption-name'));
-            if (!$h.isEmpty(self.msgPlaceholder)) {
-                f = $el.attr('multiple') ? self.filePlural : self.fileSingle;
-                self.$caption.attr('placeholder', self.msgPlaceholder.replace('{files}', f));
-            }
-            self.$captionIcon = self.$captionContainer.find('.file-caption-icon');
-            self.$previewContainer = $h.getElement(options, 'elPreviewContainer', $cont.find('.file-preview'));
-            self.$preview = $h.getElement(options, 'elPreviewImage', $cont.find('.file-preview-thumbnails'));
-            self.$previewStatus = $h.getElement(options, 'elPreviewStatus', $cont.find('.file-preview-status'));
-            self.$errorContainer = $h.getElement(options, 'elErrorContainer', self.$previewContainer.find('.kv-fileinput-error'));
-            self._validateDisabled();
-            if (!$h.isEmpty(self.msgErrorClass)) {
-                $h.addCss(self.$errorContainer, self.msgErrorClass);
-            }
-            if (!refreshMode) {
-                self.$errorContainer.hide();
-                self.previewInitId = "preview-" + $h.uniqId();
-                self._initPreviewCache();
-                self._initPreview(true);
-                self._initPreviewActions();
-                if (self.$parent.hasClass('file-loading')) {
-                    self.$container.insertBefore(self.$parent);
-                    self.$parent.remove();
-                }
-            } else {
-                if (!self._errorsExist()) {
-                    self.$errorContainer.hide();
-                }
-            }
-            self._setFileDropZoneTitle();
-            if ($el.attr('disabled')) {
-                self.disable();
-            }
-            self._initZoom();
-            if (self.hideThumbnailContent) {
-                $h.addCss(self.$preview, 'hide-content');
-            }
-        },
-        _initTemplateDefaults: function () {
-            var self = this, tMain1, tMain2, tPreview, tFileIcon, tClose, tCaption, tBtnDefault, tBtnLink, tBtnBrowse,
-                tModalMain, tModal, tProgress, tSize, tFooter, tActions, tActionDelete, tActionUpload, tActionDownload,
-                tActionZoom, tActionDrag, tIndicator, tTagBef, tTagBef1, tTagBef2, tTagAft, tGeneric, tHtml, tImage,
-                tText, tOffice, tGdocs, tVideo, tAudio, tFlash, tObject, tPdf, tOther, tStyle, tZoomCache, vDefaultDim;
-            tMain1 = '{preview}\n' +
-                '<div class="kv-upload-progress kv-hidden"></div><div class="clearfix"></div>\n' +
-                '<div class="input-group {class}">\n' +
-                '  {caption}\n' +
-                '<div class="input-group-btn input-group-append">\n' +
-                '      {remove}\n' +
-                '      {cancel}\n' +
-                '      {upload}\n' +
-                '      {browse}\n' +
-                '    </div>\n' +
-                '</div>';
-            tMain2 = '{preview}\n<div class="kv-upload-progress kv-hidden"></div>\n<div class="clearfix"></div>\n' +
-                '{remove}\n{cancel}\n{upload}\n{browse}\n';
-            tPreview = '<div class="file-preview {class}">\n' +
-                '    {close}' +
-                '    <div class="{dropClass}">\n' +
-                '    <div class="file-preview-thumbnails">\n' +
-                '    </div>\n' +
-                '    <div class="clearfix"></div>' +
-                '    <div class="file-preview-status text-center text-success"></div>\n' +
-                '    <div class="kv-fileinput-error"></div>\n' +
-                '    </div>\n' +
-                '</div>';
-            tClose = $h.closeButton('fileinput-remove');
-            tFileIcon = '<i class="glyphicon glyphicon-file"></i>';
-            // noinspection HtmlUnknownAttribute
-            tCaption = '<div class="file-caption form-control {class}" tabindex="500">\n' +
-                '  <span class="file-caption-icon"></span>\n' +
-                '  <input class="file-caption-name" onkeydown="return false;" onpaste="return false;">\n' +
-                '</div>';
-            //noinspection HtmlUnknownAttribute
-            tBtnDefault = '<button type="{type}" tabindex="500" title="{title}" class="{css}" ' +
-                '{status}>{icon} {label}</button>';
-            //noinspection HtmlUnknownAttribute
-            tBtnLink = '<a href="{href}" tabindex="500" title="{title}" class="{css}" {status}>{icon} {label}</a>';
-            //noinspection HtmlUnknownAttribute
-            tBtnBrowse = '<div tabindex="500" class="{css}" {status}>{icon} {label}</div>';
-            tModalMain = '<div id="' + $h.MODAL_ID + '" class="file-zoom-dialog modal fade" ' +
-                'tabindex="-1" aria-labelledby="' + $h.MODAL_ID + 'Label"></div>';
-            tModal = '<div class="modal-dialog modal-lg{rtl}" role="document">\n' +
-                '  <div class="modal-content">\n' +
-                '    <div class="modal-header">\n' +
-                '      <h5 class="modal-title">{heading}</h5>\n' +
-                '      <span class="kv-zoom-title"></span>\n' +
-                '      <div class="kv-zoom-actions">{toggleheader}{fullscreen}{borderless}{close}</div>\n' +
-                '    </div>\n' +
-                '    <div class="modal-body">\n' +
-                '      <div class="floating-buttons"></div>\n' +
-                '      <div class="kv-zoom-body file-zoom-content {zoomFrameClass}"></div>\n' + '{prev} {next}\n' +
-                '    </div>\n' +
-                '  </div>\n' +
-                '</div>\n';
-            tProgress = '<div class="progress">\n' +
-                '    <div class="{class}" role="progressbar"' +
-                ' aria-valuenow="{percent}" aria-valuemin="0" aria-valuemax="100" style="width:{percent}%;">\n' +
-                '        {status}\n' +
-                '     </div>\n' +
-                '</div>';
-            tSize = ' <samp>({sizeText})</samp>';
-            tFooter = '<div class="file-thumbnail-footer">\n' +
-                '    <div class="file-footer-caption" title="{caption}">\n' +
-                '        <div class="file-caption-info">{caption}</div>\n' +
-                '        <div class="file-size-info">{size}</div>\n' +
-                '    </div>\n' +
-                '    {progress}\n{indicator}\n{actions}\n' +
-                '</div>';
-            tActions = '<div class="file-actions">\n' +
-                '    <div class="file-footer-buttons">\n' +
-                '        {download} {upload} {delete} {zoom} {other}' +
-                '    </div>\n' +
-                '</div>\n' +
-                '{drag}\n' +
-                '<div class="clearfix"></div>';
-            //noinspection HtmlUnknownAttribute
-            tActionDelete = '<button type="button" class="kv-file-remove {removeClass}" ' +
-                'title="{removeTitle}" {dataUrl}{dataKey}>{removeIcon}</button>\n';
-            tActionUpload = '<button type="button" class="kv-file-upload {uploadClass}" title="{uploadTitle}">' +
-                '{uploadIcon}</button>';
-            tActionDownload = '<a class="kv-file-download {downloadClass}" title="{downloadTitle}" ' +
-                'href="{downloadUrl}" download="{caption}" target="_blank">{downloadIcon}</a>';
-            tActionZoom = '<button type="button" class="kv-file-zoom {zoomClass}" ' +
-                'title="{zoomTitle}">{zoomIcon}</button>';
-            tActionDrag = '<span class="file-drag-handle {dragClass}" title="{dragTitle}">{dragIcon}</span>';
-            tIndicator = '<div class="file-upload-indicator" title="{indicatorTitle}">{indicator}</div>';
-            tTagBef = '<div class="file-preview-frame {frameClass}" id="{previewId}" data-fileindex="{fileindex}"' +
-                ' data-template="{template}"';
-            tTagBef1 = tTagBef + '><div class="kv-file-content">\n';
-            tTagBef2 = tTagBef + ' title="{caption}"><div class="kv-file-content">\n';
-            tTagAft = '</div>{footer}\n</div>\n';
-            tGeneric = '{content}\n';
-            tStyle = ' {style}';
-            tHtml = '<div class="kv-preview-data file-preview-html" title="{caption}"' + tStyle + '>{data}</div>\n';
-            tImage = '<img src="{data}" class="file-preview-image kv-preview-data" title="{caption}" ' +
-                'alt="{caption}"' + tStyle + '>\n';
-            tText = '<textarea class="kv-preview-data file-preview-text" title="{caption}" readonly' + tStyle + '>' +
-                '{data}</textarea>\n';
-            tOffice = '<iframe class="kv-preview-data file-preview-office" ' +
-                'src="https://view.officeapps.live.com/op/embed.aspx?src={data}"' + tStyle + '></iframe>';
-            tGdocs = '<iframe class="kv-preview-data file-preview-gdocs" ' +
-                'src="https://docs.google.com/gview?url={data}&embedded=true"' + tStyle + '></iframe>';
-            tVideo = '<video class="kv-preview-data file-preview-video" controls' + tStyle + '>\n' +
-                '<source src="{data}" type="{type}">\n' + $h.DEFAULT_PREVIEW + '\n</video>\n';
-            tAudio = '<!--suppress ALL --><audio class="kv-preview-data file-preview-audio" controls' + tStyle + '>\n<source src="{data}" ' +
-                'type="{type}">\n' + $h.DEFAULT_PREVIEW + '\n</audio>\n';
-            tFlash = '<embed class="kv-preview-data file-preview-flash" src="{data}" type="application/x-shockwave-flash"' + tStyle + '>\n';
-            tPdf = '<embed class="kv-preview-data file-preview-pdf" src="{data}" type="application/pdf"' + tStyle + '>\n';
-            tObject = '<object class="kv-preview-data file-preview-object file-object {typeCss}" ' +
-                'data="{data}" type="{type}"' + tStyle + '>\n' + '<param name="movie" value="{caption}" />\n' +
-                $h.OBJECT_PARAMS + ' ' + $h.DEFAULT_PREVIEW + '\n</object>\n';
-            tOther = '<div class="kv-preview-data file-preview-other-frame"' + tStyle + '>\n' + $h.DEFAULT_PREVIEW + '\n</div>\n';
-            tZoomCache = '<div class="kv-zoom-cache" style="display:none">{zoomContent}</div>';
-            vDefaultDim = {width: "100%", height: "100%", 'min-height': "480px"};
-            if (self._isPdfRendered()) {
-                tPdf = self.pdfRendererTemplate.replace('{renderer}', self._encodeURI(self.pdfRendererUrl));
-            }
-            self.defaults = {
-                layoutTemplates: {
-                    main1: tMain1,
-                    main2: tMain2,
-                    preview: tPreview,
-                    close: tClose,
-                    fileIcon: tFileIcon,
-                    caption: tCaption,
-                    modalMain: tModalMain,
-                    modal: tModal,
-                    progress: tProgress,
-                    size: tSize,
-                    footer: tFooter,
-                    indicator: tIndicator,
-                    actions: tActions,
-                    actionDelete: tActionDelete,
-                    actionUpload: tActionUpload,
-                    actionDownload: tActionDownload,
-                    actionZoom: tActionZoom,
-                    actionDrag: tActionDrag,
-                    btnDefault: tBtnDefault,
-                    btnLink: tBtnLink,
-                    btnBrowse: tBtnBrowse,
-                    zoomCache: tZoomCache
-                },
-                previewMarkupTags: {
-                    tagBefore1: tTagBef1,
-                    tagBefore2: tTagBef2,
-                    tagAfter: tTagAft
-                },
-                previewContentTemplates: {
-                    generic: tGeneric,
-                    html: tHtml,
-                    image: tImage,
-                    text: tText,
-                    office: tOffice,
-                    gdocs: tGdocs,
-                    video: tVideo,
-                    audio: tAudio,
-                    flash: tFlash,
-                    object: tObject,
-                    pdf: tPdf,
-                    other: tOther
-                },
-                allowedPreviewTypes: ['image', 'html', 'text', 'video', 'audio', 'flash', 'pdf', 'object'],
-                previewTemplates: {},
-                previewSettings: {
-                    image: {width: "auto", height: "auto", 'max-width': "100%", 'max-height': "100%"},
-                    html: {width: "213px", height: "160px"},
-                    text: {width: "213px", height: "160px"},
-                    office: {width: "213px", height: "160px"},
-                    gdocs: {width: "213px", height: "160px"},
-                    video: {width: "213px", height: "160px"},
-                    audio: {width: "100%", height: "30px"},
-                    flash: {width: "213px", height: "160px"},
-                    object: {width: "213px", height: "160px"},
-                    pdf: {width: "100%", height: "160px"},
-                    other: {width: "213px", height: "160px"}
-                },
-                previewSettingsSmall: {
-                    image: {width: "auto", height: "auto", 'max-width': "100%", 'max-height': "100%"},
-                    html: {width: "100%", height: "160px"},
-                    text: {width: "100%", height: "160px"},
-                    office: {width: "100%", height: "160px"},
-                    gdocs: {width: "100%", height: "160px"},
-                    video: {width: "100%", height: "auto"},
-                    audio: {width: "100%", height: "30px"},
-                    flash: {width: "100%", height: "auto"},
-                    object: {width: "100%", height: "auto"},
-                    pdf: {width: "100%", height: "160px"},
-                    other: {width: "100%", height: "160px"}
-                },
-                previewZoomSettings: {
-                    image: {width: "auto", height: "auto", 'max-width': "100%", 'max-height': "100%"},
-                    html: vDefaultDim,
-                    text: vDefaultDim,
-                    office: {width: "100%", height: "100%", 'max-width': "100%", 'min-height': "480px"},
-                    gdocs: {width: "100%", height: "100%", 'max-width': "100%", 'min-height': "480px"},
-                    video: {width: "auto", height: "100%", 'max-width': "100%"},
-                    audio: {width: "100%", height: "30px"},
-                    flash: {width: "auto", height: "480px"},
-                    object: {width: "auto", height: "100%", 'max-width': "100%", 'min-height': "480px"},
-                    pdf: vDefaultDim,
-                    other: {width: "auto", height: "100%", 'min-height': "480px"}
-                },
-                mimeTypeAliases: {
-                    'video/quicktime': 'video/mp4'
-                },
-                fileTypeSettings: {
-                    image: function (vType, vName) {
-                        return ($h.compare(vType, 'image.*') && !$h.compare(vType, /(tiff?|wmf)$/i) ||
-                            $h.compare(vName, /\.(gif|png|jpe?g)$/i));
-                    },
-                    html: function (vType, vName) {
-                        return $h.compare(vType, 'text/html') || $h.compare(vName, /\.(htm|html)$/i);
-                    },
-                    office: function (vType, vName) {
-                        return $h.compare(vType, /(word|excel|powerpoint|office)$/i) ||
-                            $h.compare(vName, /\.(docx?|xlsx?|pptx?|pps|potx?)$/i);
-                    },
-                    gdocs: function (vType, vName) {
-                        return $h.compare(vType, /(word|excel|powerpoint|office|iwork-pages|tiff?)$/i) ||
-                            $h.compare(vName, /\.(docx?|xlsx?|pptx?|pps|potx?|rtf|ods|odt|pages|ai|dxf|ttf|tiff?|wmf|e?ps)$/i);
-                    },
-                    text: function (vType, vName) {
-                        return $h.compare(vType, 'text.*') || $h.compare(vName, /\.(xml|javascript)$/i) ||
-                            $h.compare(vName, /\.(txt|md|csv|nfo|ini|json|php|js|css)$/i);
-                    },
-                    video: function (vType, vName) {
-                        return $h.compare(vType, 'video.*') && ($h.compare(vType, /(ogg|mp4|mp?g|mov|webm|3gp)$/i) ||
-                            $h.compare(vName, /\.(og?|mp4|webm|mp?g|mov|3gp)$/i));
-                    },
-                    audio: function (vType, vName) {
-                        return $h.compare(vType, 'audio.*') && ($h.compare(vName, /(ogg|mp3|mp?g|wav)$/i) ||
-                            $h.compare(vName, /\.(og?|mp3|mp?g|wav)$/i));
-                    },
-                    flash: function (vType, vName) {
-                        return $h.compare(vType, 'application/x-shockwave-flash', true) || $h.compare(vName, /\.(swf)$/i);
-                    },
-                    pdf: function (vType, vName) {
-                        return $h.compare(vType, 'application/pdf', true) || $h.compare(vName, /\.(pdf)$/i);
-                    },
-                    object: function () {
-                        return true;
-                    },
-                    other: function () {
-                        return true;
-                    }
-                },
-                fileActionSettings: {
-                    showRemove: true,
-                    showUpload: true,
-                    showDownload: true,
-                    showZoom: true,
-                    showDrag: true,
-                    removeIcon: '<i class="glyphicon glyphicon-trash"></i>',
-                    removeClass: 'btn btn-sm btn-kv btn-default btn-outline-secondary',
-                    removeErrorClass: 'btn btn-sm btn-kv btn-danger',
-                    removeTitle: 'Remove file',
-                    uploadIcon: '<i class="glyphicon glyphicon-upload"></i>',
-                    uploadClass: 'btn btn-sm btn-kv btn-default btn-outline-secondary',
-                    uploadTitle: 'Upload file',
-                    uploadRetryIcon: '<i class="glyphicon glyphicon-repeat"></i>',
-                    uploadRetryTitle: 'Retry upload',
-                    downloadIcon: '<i class="glyphicon glyphicon-download"></i>',
-                    downloadClass: 'btn btn-sm btn-kv btn-default btn-outline-secondary',
-                    downloadTitle: 'Download file',
-                    zoomIcon: '<i class="glyphicon glyphicon-zoom-in"></i>',
-                    zoomClass: 'btn btn-sm btn-kv btn-default btn-outline-secondary',
-                    zoomTitle: 'View Details',
-                    dragIcon: '<i class="glyphicon glyphicon-move"></i>',
-                    dragClass: 'text-info',
-                    dragTitle: 'Move / Rearrange',
-                    dragSettings: {},
-                    indicatorNew: '<i class="glyphicon glyphicon-plus-sign text-warning"></i>',
-                    indicatorSuccess: '<i class="glyphicon glyphicon-ok-sign text-success"></i>',
-                    indicatorError: '<i class="glyphicon glyphicon-exclamation-sign text-danger"></i>',
-                    indicatorLoading: '<i class="glyphicon glyphicon-hourglass text-muted"></i>',
-                    indicatorNewTitle: 'Not uploaded yet',
-                    indicatorSuccessTitle: 'Uploaded',
-                    indicatorErrorTitle: 'Upload Error',
-                    indicatorLoadingTitle: 'Uploading ...'
-                }
-            };
-            $.each(self.defaults, function (key, setting) {
-                if (key === 'allowedPreviewTypes') {
-                    if (self.allowedPreviewTypes === undefined) {
-                        self.allowedPreviewTypes = setting;
-                    }
-                    return;
-                }
-                self[key] = $.extend(true, {}, setting, self[key]);
-            });
-            self._initPreviewTemplates();
-        },
-        _initPreviewTemplates: function () {
-            var self = this, tags = self.previewMarkupTags, tagBef, tagAft = tags.tagAfter;
-            $.each(self.previewContentTemplates, function (key, value) {
-                if ($h.isEmpty(self.previewTemplates[key])) {
-                    tagBef = tags.tagBefore2;
-                    if (key === 'generic' || key === 'image' || key === 'html' || key === 'text') {
-                        tagBef = tags.tagBefore1;
-                    }
-                    if (self._isPdfRendered() && key === 'pdf') {
-                        tagBef = tagBef.replace('kv-file-content', 'kv-file-content kv-pdf-rendered');
-                    }
-                    self.previewTemplates[key] = tagBef + value + tagAft;
-                }
-            });
-        },
-        _initPreviewCache: function () {
-            var self = this;
-            self.previewCache = {
-                data: {},
-                init: function () {
-                    var content = self.initialPreview;
-                    if (content.length > 0 && !$h.isArray(content)) {
-                        content = content.split(self.initialPreviewDelimiter);
-                    }
-                    self.previewCache.data = {
-                        content: content,
-                        config: self.initialPreviewConfig,
-                        tags: self.initialPreviewThumbTags
-                    };
-                },
-                count: function () {
-                    return !!self.previewCache.data && !!self.previewCache.data.content ?
-                        self.previewCache.data.content.length : 0;
-                },
-                get: function (i, isDisabled) {
-                    var ind = 'init_' + i, data = self.previewCache.data, config = data.config[i],
-                        content = data.content[i], previewId = self.previewInitId + '-' + ind, out, $tmp, cat, ftr,
-                        fname, ftype, frameClass, asData = $h.ifSet('previewAsData', config, self.initialPreviewAsData),
-                        parseTemplate = function (cat, dat, fn, ft, id, ftr, ind, fc, t) {
-                            fc = ' file-preview-initial ' + $h.SORT_CSS + (fc ? ' ' + fc : '');
-                            return self._generatePreviewTemplate(cat, dat, fn, ft, id, false, null, fc, ftr, ind, t);
-                        };
-                    if (!content) {
-                        return '';
-                    }
-                    isDisabled = isDisabled === undefined ? true : isDisabled;
-                    cat = $h.ifSet('type', config, self.initialPreviewFileType || 'generic');
-                    fname = $h.ifSet('filename', config, $h.ifSet('caption', config));
-                    ftype = $h.ifSet('filetype', config, cat);
-                    ftr = self.previewCache.footer(i, isDisabled, (config && config.size || null));
-                    frameClass = $h.ifSet('frameClass', config);
-                    if (asData) {
-                        out = parseTemplate(cat, content, fname, ftype, previewId, ftr, ind, frameClass);
-                    } else {
-                        out = parseTemplate('generic', content, fname, ftype, previewId, ftr, ind, frameClass, cat)
-                            .setTokens({'content': data.content[i]});
-                    }
-                    if (data.tags.length && data.tags[i]) {
-                        out = $h.replaceTags(out, data.tags[i]);
-                    }
-                    /** @namespace config.frameAttr */
-                    if (!$h.isEmpty(config) && !$h.isEmpty(config.frameAttr)) {
-                        $tmp = $(document.createElement('div')).html(out);
-                        $tmp.find('.file-preview-initial').attr(config.frameAttr);
-                        out = $tmp.html();
-                        $tmp.remove();
-                    }
-                    return out;
-                },
-                add: function (content, config, tags, append) {
-                    var data = self.previewCache.data, index;
-                    if (!$h.isArray(content)) {
-                        content = content.split(self.initialPreviewDelimiter);
-                    }
-                    if (append) {
-                        index = data.content.push(content) - 1;
-                        data.config[index] = config;
-                        data.tags[index] = tags;
-                    } else {
-                        index = content.length - 1;
-                        data.content = content;
-                        data.config = config;
-                        data.tags = tags;
-                    }
-                    self.previewCache.data = data;
-                    return index;
-                },
-                set: function (content, config, tags, append) {
-                    var data = self.previewCache.data, i, chk;
-                    if (!content || !content.length) {
-                        return;
-                    }
-                    if (!$h.isArray(content)) {
-                        content = content.split(self.initialPreviewDelimiter);
-                    }
-                    chk = content.filter(function (n) {
-                        return n !== null;
-                    });
-                    if (!chk.length) {
-                        return;
-                    }
-                    if (data.content === undefined) {
-                        data.content = [];
-                    }
-                    if (data.config === undefined) {
-                        data.config = [];
-                    }
-                    if (data.tags === undefined) {
-                        data.tags = [];
-                    }
-                    if (append) {
-                        for (i = 0; i < content.length; i++) {
-                            if (content[i]) {
-                                data.content.push(content[i]);
-                            }
-                        }
-                        for (i = 0; i < config.length; i++) {
-                            if (config[i]) {
-                                data.config.push(config[i]);
-                            }
-                        }
-                        for (i = 0; i < tags.length; i++) {
-                            if (tags[i]) {
-                                data.tags.push(tags[i]);
-                            }
-                        }
-                    } else {
-                        data.content = content;
-                        data.config = config;
-                        data.tags = tags;
-                    }
-                    self.previewCache.data = data;
-                },
-                unset: function (index) {
-                    var chk = self.previewCache.count(), rev = self.reversePreviewOrder;
-                    if (!chk) {
-                        return;
-                    }
-                    if (chk === 1) {
-                        self.previewCache.data.content = [];
-                        self.previewCache.data.config = [];
-                        self.previewCache.data.tags = [];
-                        self.initialPreview = [];
-                        self.initialPreviewConfig = [];
-                        self.initialPreviewThumbTags = [];
-                        return;
-                    }
-                    self.previewCache.data.content = $h.spliceArray(self.previewCache.data.content, index, rev);
-                    self.previewCache.data.config = $h.spliceArray(self.previewCache.data.config, index, rev);
-                    self.previewCache.data.tags = $h.spliceArray(self.previewCache.data.tags, index, rev);
-                },
-                out: function () {
-                    var html = '', caption, len = self.previewCache.count(), i, content;
-                    if (len === 0) {
-                        return {content: '', caption: ''};
-                    }
-                    for (i = 0; i < len; i++) {
-                        content = self.previewCache.get(i);
-                        html = self.reversePreviewOrder ? (content + html) : (html + content);
-                    }
-                    caption = self._getMsgSelected(len);
-                    return {content: html, caption: caption};
-                },
-                footer: function (i, isDisabled, size) {
-                    var data = self.previewCache.data || {};
-                    if ($h.isEmpty(data.content)) {
-                        return '';
-                    }
-                    if ($h.isEmpty(data.config) || $h.isEmpty(data.config[i])) {
-                        data.config[i] = {};
-                    }
-                    isDisabled = isDisabled === undefined ? true : isDisabled;
-                    var config = data.config[i], caption = $h.ifSet('caption', config), a,
-                        width = $h.ifSet('width', config, 'auto'), url = $h.ifSet('url', config, false),
-                        key = $h.ifSet('key', config, null), fs = self.fileActionSettings,
-                        initPreviewShowDel = self.initialPreviewShowDelete || false,
-                        dUrl = config.downloadUrl || self.initialPreviewDownloadUrl || '',
-                        dFil = config.filename || config.caption || '',
-                        initPreviewShowDwl = !!(dUrl),
-                        sDel = $h.ifSet('showRemove', config, $h.ifSet('showRemove', fs, initPreviewShowDel)),
-                        sDwl = $h.ifSet('showDownload', config, $h.ifSet('showDownload', fs, initPreviewShowDwl)),
-                        sZm = $h.ifSet('showZoom', config, $h.ifSet('showZoom', fs, true)),
-                        sDrg = $h.ifSet('showDrag', config, $h.ifSet('showDrag', fs, true)),
-                        dis = (url === false) && isDisabled;
-                    sDwl = sDwl && config.downloadUrl !== false && !!dUrl;
-                    a = self._renderFileActions(false, sDwl, sDel, sZm, sDrg, dis, url, key, true, dUrl, dFil);
-                    return self._getLayoutTemplate('footer').setTokens({
-                        'progress': self._renderThumbProgress(),
-                        'actions': a,
-                        'caption': caption,
-                        'size': self._getSize(size),
-                        'width': width,
-                        'indicator': ''
-                    });
-                }
-            };
-            self.previewCache.init();
-        },
-        _isPdfRendered: function () {
-            var self = this, useLib = self.usePdfRenderer,
-                flag = typeof useLib === "function" ? useLib() : !!useLib;
-            return flag && self.pdfRendererUrl;
-        },
-        _handler: function ($el, event, callback) {
-            var self = this, ns = self.namespace, ev = event.split(' ').join(ns + ' ') + ns;
-            if (!$el || !$el.length) {
-                return;
-            }
-            $el.off(ev).on(ev, callback);
-        },
-        _encodeURI: function (vUrl) {
-            var self = this;
-            return self.encodeUrl ? encodeURI(vUrl) : vUrl;
-        },
-        _log: function (msg) {
-            var self = this, id = self.$element.attr('id');
-            if (id) {
-                msg = '"' + id + '": ' + msg;
-            }
-            msg = 'bootstrap-fileinput: ' + msg;
-            if (typeof window.console.log !== "undefined") {
-                window.console.log(msg);
-            } else {
-                window.alert(msg);
-            }
-        },
-        _validate: function () {
-            var self = this, status = self.$element.attr('type') === 'file';
-            if (!status) {
-                self._log('The input "type" must be set to "file" for initializing the "bootstrap-fileinput" plugin.');
-            }
-            return status;
-        },
-        _errorsExist: function () {
-            var self = this, $err, $errList = self.$errorContainer.find('li');
-            if ($errList.length) {
-                return true;
-            }
-            $err = $(document.createElement('div')).html(self.$errorContainer.html());
-            $err.find('.kv-error-close').remove();
-            $err.find('ul').remove();
-            return !!$.trim($err.text()).length;
-        },
-        _errorHandler: function (evt, caption) {
-            var self = this, err = evt.target.error, showError = function (msg) {
-                self._showError(msg.replace('{name}', caption));
-            };
-            /** @namespace err.NOT_FOUND_ERR */
-            /** @namespace err.SECURITY_ERR */
-            /** @namespace err.NOT_READABLE_ERR */
-            if (err.code === err.NOT_FOUND_ERR) {
-                showError(self.msgFileNotFound);
-            } else if (err.code === err.SECURITY_ERR) {
-                showError(self.msgFileSecured);
-            } else if (err.code === err.NOT_READABLE_ERR) {
-                showError(self.msgFileNotReadable);
-            } else if (err.code === err.ABORT_ERR) {
-                showError(self.msgFilePreviewAborted);
-            } else {
-                showError(self.msgFilePreviewError);
-            }
-        },
-        _addError: function (msg) {
-            var self = this, $error = self.$errorContainer;
-            if (msg && $error.length) {
-                $error.html(self.errorCloseButton + msg);
-                self._handler($error.find('.kv-error-close'), 'click', function () {
-                    setTimeout(function () {
-                        if (self.showPreview && !self.getFrames().length) {
-                            self.clear();
-                        }
-                        $error.fadeOut('slow');
-                    }, 10);
-                });
-            }
-        },
-        _setValidationError: function (css) {
-            var self = this;
-            css = (css ? css + ' ' : '') + 'has-error';
-            self.$container.removeClass(css).addClass('has-error');
-            $h.addCss(self.$captionContainer, 'is-invalid');
-        },
-        _resetErrors: function (fade) {
-            var self = this, $error = self.$errorContainer;
-            self.isError = false;
-            self.$container.removeClass('has-error');
-            self.$captionContainer.removeClass('is-invalid');
-            $error.html('');
-            if (fade) {
-                $error.fadeOut('slow');
-            } else {
-                $error.hide();
-            }
-        },
-        _showFolderError: function (folders) {
-            var self = this, $error = self.$errorContainer, msg;
-            if (!folders) {
-                return;
-            }
-            if (!self.isAjaxUpload) {
-                self._clearFileInput();
-            }
-            msg = self.msgFoldersNotAllowed.replace('{n}', folders);
-            self._addError(msg);
-            self._setValidationError();
-            $error.fadeIn(800);
-            self._raise('filefoldererror', [folders, msg]);
-        },
-        _showUploadError: function (msg, params, event) {
-            var self = this, $error = self.$errorContainer, ev = event || 'fileuploaderror', e = params && params.id ?
-                '<li data-file-id="' + params.id + '">' + msg + '</li>' : '<li>' + msg + '</li>';
-            if ($error.find('ul').length === 0) {
-                self._addError('<ul>' + e + '</ul>');
-            } else {
-                $error.find('ul').append(e);
-            }
-            $error.fadeIn(800);
-            self._raise(ev, [params, msg]);
-            self._setValidationError('file-input-new');
-            return true;
-        },
-        _showError: function (msg, params, event) {
-            var self = this, $error = self.$errorContainer, ev = event || 'fileerror';
-            params = params || {};
-            params.reader = self.reader;
-            self._addError(msg);
-            $error.fadeIn(800);
-            self._raise(ev, [params, msg]);
-            if (!self.isAjaxUpload) {
-                self._clearFileInput();
-            }
-            self._setValidationError('file-input-new');
-            self.$btnUpload.attr('disabled', true);
-            return true;
-        },
-        _noFilesError: function (params) {
-            var self = this, label = self.minFileCount > 1 ? self.filePlural : self.fileSingle,
-                msg = self.msgFilesTooLess.replace('{n}', self.minFileCount).replace('{files}', label),
-                $error = self.$errorContainer;
-            self._addError(msg);
-            self.isError = true;
-            self._updateFileDetails(0);
-            $error.fadeIn(800);
-            self._raise('fileerror', [params, msg]);
-            self._clearFileInput();
-            self._setValidationError();
-        },
-        _parseError: function (operation, jqXHR, errorThrown, fileName) {
-            /** @namespace jqXHR.responseJSON */
-            var self = this, errMsg = $.trim(errorThrown + ''), textPre,
-                text = jqXHR.responseJSON !== undefined && jqXHR.responseJSON.error !== undefined ?
-                    jqXHR.responseJSON.error : jqXHR.responseText;
-            if (self.cancelling && self.msgUploadAborted) {
-                errMsg = self.msgUploadAborted;
-            }
-            if (self.showAjaxErrorDetails && text) {
-                text = $.trim(text.replace(/\n\s*\n/g, '\n'));
-                textPre = text.length ? '<pre>' + text + '</pre>' : '';
-                errMsg += errMsg ? textPre : text;
-            }
-            if (!errMsg) {
-                errMsg = self.msgAjaxError.replace('{operation}', operation);
-            }
-            self.cancelling = false;
-            return fileName ? '<b>' + fileName + ': </b>' + errMsg : errMsg;
-        },
-        _parseFileType: function (type, name) {
-            var self = this, isValid, vType, cat, i, types = self.allowedPreviewTypes || [];
-            if (type === 'application/text-plain') {
-                return 'text';
-            }
-            for (i = 0; i < types.length; i++) {
-                cat = types[i];
-                isValid = self.fileTypeSettings[cat];
-                vType = isValid(type, name) ? cat : '';
-                if (!$h.isEmpty(vType)) {
-                    return vType;
-                }
-            }
-            return 'other';
-        },
-        _getPreviewIcon: function (fname) {
-            var self = this, ext, out = null;
-            if (fname && fname.indexOf('.') > -1) {
-                ext = fname.split('.').pop();
-                if (self.previewFileIconSettings) {
-                    out = self.previewFileIconSettings[ext] || self.previewFileIconSettings[ext.toLowerCase()] || null;
-                }
-                if (self.previewFileExtSettings) {
-                    $.each(self.previewFileExtSettings, function (key, func) {
-                        if (self.previewFileIconSettings[key] && func(ext)) {
-                            out = self.previewFileIconSettings[key];
-                            //noinspection UnnecessaryReturnStatementJS
-                            return;
-                        }
-                    });
-                }
-            }
-            return out;
-        },
-        _parseFilePreviewIcon: function (content, fname) {
-            var self = this, icn = self._getPreviewIcon(fname) || self.previewFileIcon, out = content;
-            if (out.indexOf('{previewFileIcon}') > -1) {
-                out = out.setTokens({'previewFileIconClass': self.previewFileIconClass, 'previewFileIcon': icn});
-            }
-            return out;
-        },
-        _raise: function (event, params) {
-            var self = this, e = $.Event(event);
-            if (params !== undefined) {
-                self.$element.trigger(e, params);
-            } else {
-                self.$element.trigger(e);
-            }
-            if (e.isDefaultPrevented() || e.result === false) {
-                return false;
-            }
-            switch (event) {
-                // ignore these events
-                case 'filebatchuploadcomplete':
-                case 'filebatchuploadsuccess':
-                case 'fileuploaded':
-                case 'fileclear':
-                case 'filecleared':
-                case 'filereset':
-                case 'fileerror':
-                case 'filefoldererror':
-                case 'fileuploaderror':
-                case 'filebatchuploaderror':
-                case 'filedeleteerror':
-                case 'filecustomerror':
-                case 'filesuccessremove':
-                    break;
-                // receive data response via `filecustomerror` event`
-                default:
-                    if (!self.ajaxAborted) {
-                        self.ajaxAborted = e.result;
-                    }
-                    break;
-            }
-            return true;
-        },
-        _listenFullScreen: function (isFullScreen) {
-            var self = this, $modal = self.$modal, $btnFull, $btnBord;
-            if (!$modal || !$modal.length) {
-                return;
-            }
-            $btnFull = $modal && $modal.find('.btn-fullscreen');
-            $btnBord = $modal && $modal.find('.btn-borderless');
-            if (!$btnFull.length || !$btnBord.length) {
-                return;
-            }
-            $btnFull.removeClass('active').attr('aria-pressed', 'false');
-            $btnBord.removeClass('active').attr('aria-pressed', 'false');
-            if (isFullScreen) {
-                $btnFull.addClass('active').attr('aria-pressed', 'true');
-            } else {
-                $btnBord.addClass('active').attr('aria-pressed', 'true');
-            }
-            if ($modal.hasClass('file-zoom-fullscreen')) {
-                self._maximizeZoomDialog();
-            } else {
-                if (isFullScreen) {
-                    self._maximizeZoomDialog();
-                } else {
-                    $btnBord.removeClass('active').attr('aria-pressed', 'false');
-                }
-            }
-        },
-        _listen: function () {
-            var self = this, $el = self.$element, $form = self.$form, $cont = self.$container, fullScreenEvents;
-            self._handler($el, 'click', function (e) {
-                if ($el.hasClass('file-no-browse')) {
-                    if ($el.data('zoneClicked')) {
-                        $el.data('zoneClicked', false);
-                    } else {
-                        e.preventDefault();
-                    }
-                }
-            });
-            self._handler($el, 'change', $.proxy(self._change, self));
-            if (self.showBrowse) {
-                self._handler(self.$btnFile, 'click', $.proxy(self._browse, self));
-            }
-            self._handler($cont.find('.fileinput-remove:not([disabled])'), 'click', $.proxy(self.clear, self));
-            self._handler($cont.find('.fileinput-cancel'), 'click', $.proxy(self.cancel, self));
-            self._initDragDrop();
-            self._handler($form, 'reset', $.proxy(self.clear, self));
-            if (!self.isAjaxUpload) {
-                self._handler($form, 'submit', $.proxy(self._submitForm, self));
-            }
-            self._handler(self.$container.find('.fileinput-upload'), 'click', $.proxy(self._uploadClick, self));
-            self._handler($(window), 'resize', function () {
-                self._listenFullScreen(screen.width === window.innerWidth && screen.height === window.innerHeight);
-            });
-            fullScreenEvents = 'webkitfullscreenchange mozfullscreenchange fullscreenchange MSFullscreenChange';
-            self._handler($(document), fullScreenEvents, function () {
-                self._listenFullScreen($h.checkFullScreen());
-            });
-            self._autoFitContent();
-            self._initClickable();
-            self._refreshPreview();
-        },
-        _autoFitContent: function () {
-            var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
-                self = this, config = width < 400 ? (self.previewSettingsSmall || self.defaults.previewSettingsSmall) :
-                (self.previewSettings || self.defaults.previewSettings), sel;
-            $.each(config, function (cat, settings) {
-                sel = '.file-preview-frame .file-preview-' + cat;
-                self.$preview.find(sel + '.kv-preview-data,' + sel + ' .kv-preview-data').css(settings);
-            });
-        },
-        _scanDroppedItems: function (item, files, path) {
-            path = path || "";
-            var self = this, i, dirReader, readDir, errorHandler = function (e) {
-                self._log('Error scanning dropped files!');
-                self._log(e);
-            };
-            if (item.isFile) {
-                item.file(function (file) {
-                    files.push(file);
-                }, errorHandler);
-            } else {
-                if (item.isDirectory) {
-                    dirReader = item.createReader();
-                    readDir = function () {
-                        dirReader.readEntries(function (entries) {
-                            if (entries && entries.length > 0) {
-                                for (i = 0; i < entries.length; i++) {
-                                    self._scanDroppedItems(entries[i], files, path + item.name + "/");
-                                }
-                                // recursively call readDir() again, since browser can only handle first 100 entries.
-                                readDir();
-                            }
-                            return null;
-                        }, errorHandler);
-                    };
-                    readDir();
-                }
-            }
-
-        },
-        _initDragDrop: function () {
-            var self = this, $zone = self.$dropZone;
-            if (self.dropZoneEnabled && self.showPreview) {
-                self._handler($zone, 'dragenter dragover', $.proxy(self._zoneDragEnter, self));
-                self._handler($zone, 'dragleave', $.proxy(self._zoneDragLeave, self));
-                self._handler($zone, 'drop', $.proxy(self._zoneDrop, self));
-                self._handler($(document), 'dragenter dragover drop', self._zoneDragDropInit);
-            }
-        },
-        _zoneDragDropInit: function (e) {
-            e.stopPropagation();
-            e.preventDefault();
-        },
-        _zoneDragEnter: function (e) {
-            var self = this, dataTransfer = e.originalEvent.dataTransfer,
-                hasFiles = $.inArray('Files', dataTransfer.types) > -1;
-            self._zoneDragDropInit(e);
-            if (self.isDisabled || !hasFiles) {
-                e.originalEvent.dataTransfer.effectAllowed = 'none';
-                e.originalEvent.dataTransfer.dropEffect = 'none';
-                return;
-            }
-            if (self._raise('fileDragEnter', {'sourceEvent': e, 'files': dataTransfer.types.Files})) {
-                $h.addCss(self.$dropZone, 'file-highlighted');
-            }
-        },
-        _zoneDragLeave: function (e) {
-            var self = this;
-            self._zoneDragDropInit(e);
-            if (self.isDisabled) {
-                return;
-            }
-            if (self._raise('fileDragLeave', {'sourceEvent': e})) {
-                self.$dropZone.removeClass('file-highlighted');
-            }
-
-        },
-        _zoneDrop: function (e) {
-            /** @namespace e.originalEvent.dataTransfer */
-            var self = this, i, $el = self.$element, dataTransfer = e.originalEvent.dataTransfer,
-                files = dataTransfer.files, items = dataTransfer.items, folders = $h.getDragDropFolders(items),
-                processFiles = function () {
-                    if (!self.isAjaxUpload) {
-                        self.changeTriggered = true;
-                        $el.get(0).files = files;
-                        setTimeout(function () {
-                            self.changeTriggered = false;
-                            $el.trigger('change' + self.namespace);
-                        }, 10);
-                    } else {
-                        self._change(e, files);
-                    }
-                    self.$dropZone.removeClass('file-highlighted');
-                };
-            e.preventDefault();
-            if (self.isDisabled || $h.isEmpty(files)) {
-                return;
-            }
-            if (!self._raise('fileDragDrop', {'sourceEvent': e, 'files': files})) {
-                return;
-            }
-            if (folders > 0) {
-                if (!self.isAjaxUpload) {
-                    self._showFolderError(folders);
-                    return;
-                }
-                files = [];
-                for (i = 0; i < items.length; i++) {
-                    var item = items[i].webkitGetAsEntry();
-                    if (item) {
-                        self._scanDroppedItems(item, files);
-                    }
-                }
-                setTimeout(function () {
-                    processFiles();
-                }, 500);
-            } else {
-                processFiles();
-            }
-        },
-        _uploadClick: function (e) {
-            var self = this, $btn = self.$container.find('.fileinput-upload'), $form,
-                isEnabled = !$btn.hasClass('disabled') && $h.isEmpty($btn.attr('disabled'));
-            if (e && e.isDefaultPrevented()) {
-                return;
-            }
-            if (!self.isAjaxUpload) {
-                if (isEnabled && $btn.attr('type') !== 'submit') {
-                    $form = $btn.closest('form');
-                    // downgrade to normal form submit if possible
-                    if ($form.length) {
-                        $form.trigger('submit');
-                    }
-                    e.preventDefault();
-                }
-                return;
-            }
-            e.preventDefault();
-            if (isEnabled) {
-                self.upload();
-            }
-        },
-        _submitForm: function () {
-            var self = this;
-            return self._isFileSelectionValid() && !self._abort({});
-        },
-        _clearPreview: function () {
-            var self = this, $p = self.$preview,
-                $thumbs = self.showUploadedThumbs ? self.getFrames(':not(.file-preview-success)') : self.getFrames();
-            $thumbs.each(function () {
-                var $thumb = $(this);
-                $thumb.remove();
-                $h.cleanZoomCache($p.find('#zoom-' + $thumb.attr('id')));
-            });
-            if (!self.getFrames().length || !self.showPreview) {
-                self._resetUpload();
-            }
-            self._validateDefaultPreview();
-        },
-        _initSortable: function () {
-            var self = this, $el = self.$preview, settings, selector = '.' + $h.SORT_CSS,
-                rev = self.reversePreviewOrder;
-            if (!window.KvSortable || $el.find(selector).length === 0) {
-                return;
-            }
-            //noinspection JSUnusedGlobalSymbols
-            settings = {
-                handle: '.drag-handle-init',
-                dataIdAttr: 'data-preview-id',
-                scroll: false,
-                draggable: selector,
-                onSort: function (e) {
-                    var oldIndex = e.oldIndex, newIndex = e.newIndex, i = 0;
-                    self.initialPreview = $h.moveArray(self.initialPreview, oldIndex, newIndex, rev);
-                    self.initialPreviewConfig = $h.moveArray(self.initialPreviewConfig, oldIndex, newIndex, rev);
-                    self.previewCache.init();
-                    self.getFrames('.file-preview-initial').each(function () {
-                        $(this).attr('data-fileindex', 'init_' + i);
-                        i++;
-                    });
-                    self._raise('filesorted', {
-                        previewId: $(e.item).attr('id'),
-                        'oldIndex': oldIndex,
-                        'newIndex': newIndex,
-                        stack: self.initialPreviewConfig
-                    });
-                }
-            };
-            if ($el.data('kvsortable')) {
-                $el.kvsortable('destroy');
-            }
-            $.extend(true, settings, self.fileActionSettings.dragSettings);
-            $el.kvsortable(settings);
-        },
-        _setPreviewContent: function (content) {
-            var self = this;
-            self.$preview.html(content);
-            self._autoFitContent();
-        },
-        _initPreview: function (isInit) {
-            var self = this, cap = self.initialCaption || '', out;
-            if (!self.previewCache.count()) {
-                self._clearPreview();
-                if (isInit) {
-                    self._setCaption(cap);
-                } else {
-                    self._initCaption();
-                }
-                return;
-            }
-            out = self.previewCache.out();
-            cap = isInit && self.initialCaption ? self.initialCaption : out.caption;
-            self._setPreviewContent(out.content);
-            self._setInitThumbAttr();
-            self._setCaption(cap);
-            self._initSortable();
-            if (!$h.isEmpty(out.content)) {
-                self.$container.removeClass('file-input-new');
-            }
-        },
-        _getZoomButton: function (type) {
-            var self = this, label = self.previewZoomButtonIcons[type], css = self.previewZoomButtonClasses[type],
-                title = ' title="' + (self.previewZoomButtonTitles[type] || '') + '" ',
-                params = title + (type === 'close' ? ' data-dismiss="modal" aria-hidden="true"' : '');
-            if (type === 'fullscreen' || type === 'borderless' || type === 'toggleheader') {
-                params += ' data-toggle="button" aria-pressed="false" autocomplete="off"';
-            }
-            return '<button type="button" class="' + css + ' btn-' + type + '"' + params + '>' + label + '</button>';
-        },
-        _getModalContent: function () {
-            var self = this;
-            return self._getLayoutTemplate('modal').setTokens({
-                'rtl': self.rtl ? ' kv-rtl' : '',
-                'zoomFrameClass': self.frameClass,
-                'heading': self.msgZoomModalHeading,
-                'prev': self._getZoomButton('prev'),
-                'next': self._getZoomButton('next'),
-                'toggleheader': self._getZoomButton('toggleheader'),
-                'fullscreen': self._getZoomButton('fullscreen'),
-                'borderless': self._getZoomButton('borderless'),
-                'close': self._getZoomButton('close')
-            });
-        },
-        _listenModalEvent: function (event) {
-            var self = this, $modal = self.$modal, getParams = function (e) {
-                return {
-                    sourceEvent: e,
-                    previewId: $modal.data('previewId'),
-                    modal: $modal
-                };
-            };
-            $modal.on(event + '.bs.modal', function (e) {
-                var $btnFull = $modal.find('.btn-fullscreen'), $btnBord = $modal.find('.btn-borderless');
-                self._raise('filezoom' + event, getParams(e));
-                if (event === 'shown') {
-                    $btnBord.removeClass('active').attr('aria-pressed', 'false');
-                    $btnFull.removeClass('active').attr('aria-pressed', 'false');
-                    if ($modal.hasClass('file-zoom-fullscreen')) {
-                        self._maximizeZoomDialog();
-                        if ($h.checkFullScreen()) {
-                            $btnFull.addClass('active').attr('aria-pressed', 'true');
-                        } else {
-                            $btnBord.addClass('active').attr('aria-pressed', 'true');
-                        }
-                    }
-                }
-            });
-        },
-        _initZoom: function () {
-            var self = this, $dialog, modalMain = self._getLayoutTemplate('modalMain'), modalId = '#' + $h.MODAL_ID;
-            if (!self.showPreview) {
-                return;
-            }
-            self.$modal = $(modalId);
-            if (!self.$modal || !self.$modal.length) {
-                $dialog = $(document.createElement('div')).html(modalMain).insertAfter(self.$container);
-                self.$modal = $(modalId).insertBefore($dialog);
-                $dialog.remove();
-            }
-            $h.initModal(self.$modal);
-            self.$modal.html(self._getModalContent());
-            $.each($h.MODAL_EVENTS, function (key, event) {
-                self._listenModalEvent(event);
-            });
-        },
-        _initZoomButtons: function () {
-            var self = this, previewId = self.$modal.data('previewId') || '', $first, $last,
-                thumbs = self.getFrames().toArray(), len = thumbs.length, $prev = self.$modal.find('.btn-prev'),
-                $next = self.$modal.find('.btn-next');
-            if (thumbs.length < 2) {
-                $prev.hide();
-                $next.hide();
-                return;
-            } else {
-                $prev.show();
-                $next.show();
-            }
-            if (!len) {
-                return;
-            }
-            $first = $(thumbs[0]);
-            $last = $(thumbs[len - 1]);
-            $prev.removeAttr('disabled');
-            $next.removeAttr('disabled');
-            if ($first.length && $first.attr('id') === previewId) {
-                $prev.attr('disabled', true);
-            }
-            if ($last.length && $last.attr('id') === previewId) {
-                $next.attr('disabled', true);
-            }
-        },
-        _maximizeZoomDialog: function () {
-            var self = this, $modal = self.$modal, $head = $modal.find('.modal-header:visible'),
-                $foot = $modal.find('.modal-footer:visible'), $body = $modal.find('.modal-body'),
-                h = $(window).height(), diff = 0;
-            $modal.addClass('file-zoom-fullscreen');
-            if ($head && $head.length) {
-                h -= $head.outerHeight(true);
-            }
-            if ($foot && $foot.length) {
-                h -= $foot.outerHeight(true);
-            }
-            if ($body && $body.length) {
-                diff = $body.outerHeight(true) - $body.height();
-                h -= diff;
-            }
-            $modal.find('.kv-zoom-body').height(h);
-        },
-        _resizeZoomDialog: function (fullScreen) {
-            var self = this, $modal = self.$modal, $btnFull = $modal.find('.btn-fullscreen'),
-                $btnBord = $modal.find('.btn-borderless');
-            if ($modal.hasClass('file-zoom-fullscreen')) {
-                $h.toggleFullScreen(false);
-                if (!fullScreen) {
-                    if (!$btnFull.hasClass('active')) {
-                        $modal.removeClass('file-zoom-fullscreen');
-                        self.$modal.find('.kv-zoom-body').css('height', self.zoomModalHeight);
-                    } else {
-                        $btnFull.removeClass('active').attr('aria-pressed', 'false');
-                    }
-                } else {
-                    if (!$btnFull.hasClass('active')) {
-                        $modal.removeClass('file-zoom-fullscreen');
-                        self._resizeZoomDialog(true);
-                        if ($btnBord.hasClass('active')) {
-                            $btnBord.removeClass('active').attr('aria-pressed', 'false');
-                        }
-                    }
-                }
-            } else {
-                if (!fullScreen) {
-                    self._maximizeZoomDialog();
-                    return;
-                }
-                $h.toggleFullScreen(true);
-            }
-            $modal.focus();
-        },
-        _setZoomContent: function ($frame, animate) {
-            var self = this, $content, tmplt, body, title, $body, $dataEl, config, previewId = $frame.attr('id'),
-                $zoomPreview = self.$preview.find('#zoom-' + previewId), $modal = self.$modal, $tmp,
-                $btnFull = $modal.find('.btn-fullscreen'), $btnBord = $modal.find('.btn-borderless'), cap, size,
-                $btnTogh = $modal.find('.btn-toggleheader');
-            tmplt = $zoomPreview.attr('data-template') || 'generic';
-            $content = $zoomPreview.find('.kv-file-content');
-            body = $content.length ? $content.html() : '';
-            cap = $frame.data('caption') || '';
-            size = $frame.data('size') || '';
-            title = cap + ' ' + size;
-            $modal.find('.kv-zoom-title').attr('title', $('<div/>').html(title).text()).html(title);
-            $body = $modal.find('.kv-zoom-body');
-            $modal.removeClass('kv-single-content');
-            if (animate) {
-                $tmp = $body.addClass('file-thumb-loading').clone().insertAfter($body);
-                $body.html(body).hide();
-                $tmp.fadeOut('fast', function () {
-                    $body.fadeIn('fast', function () {
-                        $body.removeClass('file-thumb-loading');
-                    });
-                    $tmp.remove();
-                });
-            } else {
-                $body.html(body);
-            }
-            config = self.previewZoomSettings[tmplt];
-            if (config) {
-                $dataEl = $body.find('.kv-preview-data');
-                $h.addCss($dataEl, 'file-zoom-detail');
-                $.each(config, function (key, value) {
-                    $dataEl.css(key, value);
-                    if (($dataEl.attr('width') && key === 'width') || ($dataEl.attr('height') && key === 'height')) {
-                        $dataEl.removeAttr(key);
-                    }
-                });
-            }
-            $modal.data('previewId', previewId);
-            self._handler($modal.find('.btn-prev'), 'click', function () {
-                self._zoomSlideShow('prev', previewId);
-            });
-            self._handler($modal.find('.btn-next'), 'click', function () {
-                self._zoomSlideShow('next', previewId);
-            });
-            self._handler($btnFull, 'click', function () {
-                self._resizeZoomDialog(true);
-            });
-            self._handler($btnBord, 'click', function () {
-                self._resizeZoomDialog(false);
-            });
-            self._handler($btnTogh, 'click', function () {
-                var $header = $modal.find('.modal-header'), $floatBar = $modal.find('.modal-body .floating-buttons'),
-                    ht, $actions = $header.find('.kv-zoom-actions'), resize = function (height) {
-                        var $body = self.$modal.find('.kv-zoom-body'), h = self.zoomModalHeight;
-                        if ($modal.hasClass('file-zoom-fullscreen')) {
-                            h = $body.outerHeight(true);
-                            if (!height) {
-                                h = h - $header.outerHeight(true);
-                            }
-                        }
-                        $body.css('height', height ? h + height : h);
-                    };
-                if ($header.is(':visible')) {
-                    ht = $header.outerHeight(true);
-                    $header.slideUp('slow', function () {
-                        $actions.find('.btn').appendTo($floatBar);
-                        resize(ht);
-                    });
-                } else {
-                    $floatBar.find('.btn').appendTo($actions);
-                    $header.slideDown('slow', function () {
-                        resize();
-                    });
-                }
-                $modal.focus();
-            });
-            self._handler($modal, 'keydown', function (e) {
-                var key = e.which || e.keyCode, $prev = $(this).find('.btn-prev'), $next = $(this).find('.btn-next'),
-                    vId = $(this).data('previewId'), vPrevKey = self.rtl ? 39 : 37, vNextKey = self.rtl ? 37 : 39;
-                if (key === vPrevKey && $prev.length && !$prev.attr('disabled')) {
-                    self._zoomSlideShow('prev', vId);
-                }
-                if (key === vNextKey && $next.length && !$next.attr('disabled')) {
-                    self._zoomSlideShow('next', vId);
-                }
-            });
-        },
-        _zoomPreview: function ($btn) {
-            var self = this, $frame, $modal = self.$modal;
-            if (!$btn.length) {
-                throw 'Cannot zoom to detailed preview!';
-            }
-            $h.initModal($modal);
-            $modal.html(self._getModalContent());
-            $frame = $btn.closest($h.FRAMES);
-            self._setZoomContent($frame);
-            $modal.modal('show');
-            self._initZoomButtons();
-        },
-        _zoomSlideShow: function (dir, previewId) {
-            var self = this, $btn = self.$modal.find('.kv-zoom-actions .btn-' + dir), $targFrame, i,
-                thumbs = self.getFrames().toArray(), len = thumbs.length, out;
-            if ($btn.attr('disabled')) {
-                return;
-            }
-            for (i = 0; i < len; i++) {
-                if ($(thumbs[i]).attr('id') === previewId) {
-                    out = dir === 'prev' ? i - 1 : i + 1;
-                    break;
-                }
-            }
-            if (out < 0 || out >= len || !thumbs[out]) {
-                return;
-            }
-            $targFrame = $(thumbs[out]);
-            if ($targFrame.length) {
-                self._setZoomContent($targFrame, true);
-            }
-            self._initZoomButtons();
-            self._raise('filezoom' + dir, {'previewId': previewId, modal: self.$modal});
-        },
-        _initZoomButton: function () {
-            var self = this;
-            self.$preview.find('.kv-file-zoom').each(function () {
-                var $el = $(this);
-                self._handler($el, 'click', function () {
-                    self._zoomPreview($el);
-                });
-            });
-        },
-        _inputFileCount: function () {
-            return this.$element.get(0).files.length;
-        },
-        _refreshPreview: function () {
-            var self = this, files;
-            if (!self._inputFileCount() || !self.showPreview || !self.isPreviewable) {
-                return;
-            }
-            if (self.isAjaxUpload) {
-                files = self.getFileStack();
-                self.filestack = [];
-                if (files.length) {
-                    self._clearFileInput();
-                } else {
-                    files = self.$element.get(0).files;
-                }
-            } else {
-                files = self.$element.get(0).files;
-            }
-            if (files && files.length) {
-                self.readFiles(files);
-                self._setFileDropZoneTitle();
-            }
-        },
-        _clearObjects: function ($el) {
-            $el.find('video audio').each(function () {
-                this.pause();
-                $(this).remove();
-            });
-            $el.find('img object div').each(function () {
-                $(this).remove();
-            });
-        },
-        _clearFileInput: function () {
-            var self = this, $el = self.$element, $srcFrm, $tmpFrm, $tmpEl;
-            if (!self._inputFileCount()) {
-                return;
-            }
-            $srcFrm = $el.closest('form');
-            $tmpFrm = $(document.createElement('form'));
-            $tmpEl = $(document.createElement('div'));
-            $el.before($tmpEl);
-            if ($srcFrm.length) {
-                $srcFrm.after($tmpFrm);
-            } else {
-                $tmpEl.after($tmpFrm);
-            }
-            $tmpFrm.append($el).trigger('reset');
-            $tmpEl.before($el).remove();
-            $tmpFrm.remove();
-        },
-        _resetUpload: function () {
-            var self = this;
-            self.uploadCache = {content: [], config: [], tags: [], append: true};
-            self.uploadCount = 0;
-            self.uploadStatus = {};
-            self.uploadLog = [];
-            self.uploadAsyncCount = 0;
-            self.loadedImages = [];
-            self.totalImagesCount = 0;
-            self.$btnUpload.removeAttr('disabled');
-            self._setProgress(0);
-            self.$progress.hide();
-            self._resetErrors(false);
-            self.ajaxAborted = false;
-            self.ajaxRequests = [];
-            self._resetCanvas();
-            self.cacheInitialPreview = {};
-            if (self.overwriteInitial) {
-                self.initialPreview = [];
-                self.initialPreviewConfig = [];
-                self.initialPreviewThumbTags = [];
-                self.previewCache.data = {
-                    content: [],
-                    config: [],
-                    tags: []
-                };
-            }
-        },
-        _resetCanvas: function () {
-            var self = this;
-            if (self.canvas && self.imageCanvasContext) {
-                self.imageCanvasContext.clearRect(0, 0, self.canvas.width, self.canvas.height);
-            }
-        },
-        _hasInitialPreview: function () {
-            var self = this;
-            return !self.overwriteInitial && self.previewCache.count();
-        },
-        _resetPreview: function () {
-            var self = this, out, cap;
-            if (self.previewCache.count()) {
-                out = self.previewCache.out();
-                self._setPreviewContent(out.content);
-                self._setInitThumbAttr();
-                cap = self.initialCaption ? self.initialCaption : out.caption;
-                self._setCaption(cap);
-            } else {
-                self._clearPreview();
-                self._initCaption();
-            }
-            if (self.showPreview) {
-                self._initZoom();
-                self._initSortable();
-            }
-        },
-        _clearDefaultPreview: function () {
-            var self = this;
-            self.$preview.find('.file-default-preview').remove();
-        },
-        _validateDefaultPreview: function () {
-            var self = this;
-            if (!self.showPreview || $h.isEmpty(self.defaultPreviewContent)) {
-                return;
-            }
-            self._setPreviewContent('<div class="file-default-preview">' + self.defaultPreviewContent + '</div>');
-            self.$container.removeClass('file-input-new');
-            self._initClickable();
-        },
-        _resetPreviewThumbs: function (isAjax) {
-            var self = this, out;
-            if (isAjax) {
-                self._clearPreview();
-                self.clearStack();
-                return;
-            }
-            if (self._hasInitialPreview()) {
-                out = self.previewCache.out();
-                self._setPreviewContent(out.content);
-                self._setInitThumbAttr();
-                self._setCaption(out.caption);
-                self._initPreviewActions();
-            } else {
-                self._clearPreview();
-            }
-        },
-        _getLayoutTemplate: function (t) {
-            var self = this, template = self.layoutTemplates[t];
-            if ($h.isEmpty(self.customLayoutTags)) {
-                return template;
-            }
-            return $h.replaceTags(template, self.customLayoutTags);
-        },
-        _getPreviewTemplate: function (t) {
-            var self = this, template = self.previewTemplates[t];
-            if ($h.isEmpty(self.customPreviewTags)) {
-                return template;
-            }
-            return $h.replaceTags(template, self.customPreviewTags);
-        },
-        _getOutData: function (jqXHR, responseData, filesData) {
-            var self = this;
-            jqXHR = jqXHR || {};
-            responseData = responseData || {};
-            filesData = filesData || self.filestack.slice(0) || {};
-            return {
-                form: self.formdata,
-                files: filesData,
-                filenames: self.filenames,
-                filescount: self.getFilesCount(),
-                extra: self._getExtraData(),
-                response: responseData,
-                reader: self.reader,
-                jqXHR: jqXHR
-            };
-        },
-        _getMsgSelected: function (n) {
-            var self = this, strFiles = n === 1 ? self.fileSingle : self.filePlural;
-            return n > 0 ? self.msgSelected.replace('{n}', n).replace('{files}', strFiles) : self.msgNoFilesSelected;
-        },
-        _getFrame: function (id) {
-            var self = this, $frame = $('#' + id);
-            if (!$frame.length) {
-                self._log('Invalid thumb frame with id: "' + id + '".');
-                return null;
-            }
-            return $frame;
-        },
-        _getThumbs: function (css) {
-            css = css || '';
-            return this.getFrames(':not(.file-preview-initial)' + css);
-        },
-        _getExtraData: function (previewId, index) {
-            var self = this, data = self.uploadExtraData;
-            if (typeof self.uploadExtraData === "function") {
-                data = self.uploadExtraData(previewId, index);
-            }
-            return data;
-        },
-        _initXhr: function (xhrobj, previewId, fileCount) {
-            var self = this;
-            if (xhrobj.upload) {
-                xhrobj.upload.addEventListener('progress', function (event) {
-                    var pct = 0, total = event.total, position = event.loaded || event.position;
-                    /** @namespace event.lengthComputable */
-                    if (event.lengthComputable) {
-                        pct = Math.floor(position / total * 100);
-                    }
-                    if (previewId) {
-                        self._setAsyncUploadStatus(previewId, pct, fileCount);
-                    } else {
-                        self._setProgress(pct);
-                    }
-                }, false);
-            }
-            return xhrobj;
-        },
-        _initAjaxSettings: function () {
-            var self = this;
-            self._ajaxSettings = $.extend(true, {}, self.ajaxSettings);
-            self._ajaxDeleteSettings = $.extend(true, {}, self.ajaxDeleteSettings);
-        },
-        _mergeAjaxCallback: function (funcName, srcFunc, type) {
-            var self = this, settings = self._ajaxSettings, flag = self.mergeAjaxCallbacks, targFunc;
-            if (type === 'delete') {
-                settings = self._ajaxDeleteSettings;
-                flag = self.mergeAjaxDeleteCallbacks;
-            }
-            targFunc = settings[funcName];
-            if (flag && typeof targFunc === "function") {
-                if (flag === 'before') {
-                    settings[funcName] = function () {
-                        targFunc.apply(this, arguments);
-                        srcFunc.apply(this, arguments);
-                    };
-                } else {
-                    settings[funcName] = function () {
-                        srcFunc.apply(this, arguments);
-                        targFunc.apply(this, arguments);
-                    };
-                }
-            } else {
-                settings[funcName] = srcFunc;
-            }
-        },
-        _ajaxSubmit: function (fnBefore, fnSuccess, fnComplete, fnError, previewId, index) {
-            var self = this, settings, vUrl;
-            if (!self._raise('filepreajax', [previewId, index])) {
-                return;
-            }
-            self._uploadExtra(previewId, index);
-            self._initAjaxSettings();
-            self._mergeAjaxCallback('beforeSend', fnBefore);
-            self._mergeAjaxCallback('success', fnSuccess);
-            self._mergeAjaxCallback('complete', fnComplete);
-            self._mergeAjaxCallback('error', fnError);
-            vUrl = index && self.uploadUrlThumb ? self.uploadUrlThumb : self.uploadUrl;
-            settings = $.extend(true, {}, {
-                xhr: function () {
-                    var xhrobj = $.ajaxSettings.xhr();
-                    return self._initXhr(xhrobj, previewId, self.getFileStack().length);
-                },
-                url: self._encodeURI(vUrl),
-                type: 'POST',
-                dataType: 'json',
-                data: self.formdata,
-                cache: false,
-                processData: false,
-                contentType: false
-            }, self._ajaxSettings);
-            self.ajaxRequests.push($.ajax(settings));
-        },
-        _mergeArray: function (prop, content) {
-            var self = this, arr1 = $h.cleanArray(self[prop]), arr2 = $h.cleanArray(content);
-            self[prop] = arr1.concat(arr2);
-        },
-        _initUploadSuccess: function (out, $thumb, allFiles) {
-            var self = this, append, data, index, $div, $newCache, content, config, tags, i;
-            if (!self.showPreview || typeof out !== 'object' || $.isEmptyObject(out)) {
-                return;
-            }
-            if (out.initialPreview !== undefined && out.initialPreview.length > 0) {
-                self.hasInitData = true;
-                content = out.initialPreview || [];
-                config = out.initialPreviewConfig || [];
-                tags = out.initialPreviewThumbTags || [];
-                append = out.append === undefined || out.append;
-                if (content.length > 0 && !$h.isArray(content)) {
-                    content = content.split(self.initialPreviewDelimiter);
-                }
-                self._mergeArray('initialPreview', content);
-                self._mergeArray('initialPreviewConfig', config);
-                self._mergeArray('initialPreviewThumbTags', tags);
-                if ($thumb !== undefined) {
-                    if (!allFiles) {
-                        index = self.previewCache.add(content, config[0], tags[0], append);
-                        data = self.previewCache.get(index, false);
-                        $div = $(document.createElement('div')).html(data).hide().insertAfter($thumb);
-                        $newCache = $div.find('.kv-zoom-cache');
-                        if ($newCache && $newCache.length) {
-                            $newCache.insertAfter($thumb);
-                        }
-                        $thumb.fadeOut('slow', function () {
-                            var $newThumb = $div.find('.file-preview-frame');
-                            if ($newThumb && $newThumb.length) {
-                                $newThumb.insertBefore($thumb).fadeIn('slow').css('display:inline-block');
-                            }
-                            self._initPreviewActions();
-                            self._clearFileInput();
-                            $h.cleanZoomCache(self.$preview.find('#zoom-' + $thumb.attr('id')));
-                            $thumb.remove();
-                            $div.remove();
-                            self._initSortable();
-                        });
-                    } else {
-                        i = $thumb.attr('data-fileindex');
-                        self.uploadCache.content[i] = content[0];
-                        self.uploadCache.config[i] = config[0] || [];
-                        self.uploadCache.tags[i] = tags[0] || [];
-                        self.uploadCache.append = append;
-                    }
-                } else {
-                    self.previewCache.set(content, config, tags, append);
-                    self._initPreview();
-                    self._initPreviewActions();
-                }
-            }
-        },
-        _initSuccessThumbs: function () {
-            var self = this;
-            if (!self.showPreview) {
-                return;
-            }
-            self._getThumbs($h.FRAMES + '.file-preview-success').each(function () {
-                var $thumb = $(this), $preview = self.$preview, $remove = $thumb.find('.kv-file-remove');
-                $remove.removeAttr('disabled');
-                self._handler($remove, 'click', function () {
-                    var id = $thumb.attr('id'),
-                        out = self._raise('filesuccessremove', [id, $thumb.attr('data-fileindex')]);
-                    $h.cleanMemory($thumb);
-                    if (out === false) {
-                        return;
-                    }
-                    $thumb.fadeOut('slow', function () {
-                        $h.cleanZoomCache($preview.find('#zoom-' + id));
-                        $thumb.remove();
-                        if (!self.getFrames().length) {
-                            self.reset();
-                        }
-                    });
-                });
-            });
-        },
-        _checkAsyncComplete: function () {
-            var self = this, previewId, i;
-            for (i = 0; i < self.filestack.length; i++) {
-                if (self.filestack[i]) {
-                    previewId = self.previewInitId + "-" + i;
-                    if ($.inArray(previewId, self.uploadLog) === -1) {
-                        return false;
-                    }
-                }
-            }
-            return (self.uploadAsyncCount === self.uploadLog.length);
-        },
-        _uploadExtra: function (previewId, index) {
-            var self = this, data = self._getExtraData(previewId, index);
-            if (data.length === 0) {
-                return;
-            }
-            $.each(data, function (key, value) {
-                self.formdata.append(key, value);
-            });
-        },
-        _uploadSingle: function (i, isBatch) {
-            var self = this, total = self.getFileStack().length, formdata = new FormData(), outData,
-                previewId = self.previewInitId + "-" + i, $thumb, chkComplete, $btnUpload, $btnDelete,
-                hasPostData = self.filestack.length > 0 || !$.isEmptyObject(self.uploadExtraData), uploadFailed,
-                $prog = $('#' + previewId).find('.file-thumb-progress'), fnBefore, fnSuccess, fnComplete, fnError,
-                updateUploadLog, params = {id: previewId, index: i};
-            self.formdata = formdata;
-            if (self.showPreview) {
-                $thumb = $('#' + previewId + ':not(.file-preview-initial)');
-                $btnUpload = $thumb.find('.kv-file-upload');
-                $btnDelete = $thumb.find('.kv-file-remove');
-                $prog.show();
-            }
-            if (total === 0 || !hasPostData || ($btnUpload && $btnUpload.hasClass('disabled')) || self._abort(params)) {
-                return;
-            }
-            updateUploadLog = function (i, previewId) {
-                if (!uploadFailed) {
-                    self.updateStack(i, undefined);
-                }
-                self.uploadLog.push(previewId);
-                if (self._checkAsyncComplete()) {
-                    self.fileBatchCompleted = true;
-                }
-            };
-            chkComplete = function () {
-                var u = self.uploadCache, $initThumbs, i, j, len = 0, data = self.cacheInitialPreview;
-                if (!self.fileBatchCompleted) {
-                    return;
-                }
-                if (data && data.content) {
-                    len = data.content.length;
-                }
-                setTimeout(function () {
-                    var triggerReset = self.getFileStack(true).length === 0;
-                    if (self.showPreview) {
-                        self.previewCache.set(u.content, u.config, u.tags, u.append);
-                        if (len) {
-                            for (i = 0; i < u.content.length; i++) {
-                                j = i + len;
-                                data.content[j] = u.content[i];
-                                //noinspection JSUnresolvedVariable
-                                if (data.config.length) {
-                                    data.config[j] = u.config[i];
-                                }
-                                if (data.tags.length) {
-                                    data.tags[j] = u.tags[i];
-                                }
-                            }
-                            self.initialPreview = $h.cleanArray(data.content);
-                            self.initialPreviewConfig = $h.cleanArray(data.config);
-                            self.initialPreviewThumbTags = $h.cleanArray(data.tags);
-                        } else {
-                            self.initialPreview = u.content;
-                            self.initialPreviewConfig = u.config;
-                            self.initialPreviewThumbTags = u.tags;
-                        }
-                        self.cacheInitialPreview = {};
-                        if (self.hasInitData) {
-                            self._initPreview();
-                            self._initPreviewActions();
-                        }
-                    }
-                    self.unlock(triggerReset);
-                    if (triggerReset) {
-                        self._clearFileInput();
-                    }
-                    $initThumbs = self.$preview.find('.file-preview-initial');
-                    if (self.uploadAsync && $initThumbs.length) {
-                        $h.addCss($initThumbs, $h.SORT_CSS);
-                        self._initSortable();
-                    }
-                    self._raise('filebatchuploadcomplete', [self.filestack, self._getExtraData()]);
-                    self.uploadCount = 0;
-                    self.uploadStatus = {};
-                    self.uploadLog = [];
-                    self._setProgress(101);
-                    self.ajaxAborted = false;
-                }, 100);
-            };
-            fnBefore = function (jqXHR) {
-                outData = self._getOutData(jqXHR);
-                self.fileBatchCompleted = false;
-                if (!isBatch) {
-                    self.ajaxAborted = false;
-                }
-                if (self.showPreview) {
-                    if (!$thumb.hasClass('file-preview-success')) {
-                        self._setThumbStatus($thumb, 'Loading');
-                        $h.addCss($thumb, 'file-uploading');
-                    }
-                    $btnUpload.attr('disabled', true);
-                    $btnDelete.attr('disabled', true);
-                }
-                if (!isBatch) {
-                    self.lock();
-                }
-                self._raise('filepreupload', [outData, previewId, i]);
-                $.extend(true, params, outData);
-                if (self._abort(params)) {
-                    jqXHR.abort();
-                    if (!isBatch) {
-                        self._setThumbStatus($thumb, 'New');
-                        $thumb.removeClass('file-uploading');
-                        $btnUpload.removeAttr('disabled');
-                        $btnDelete.removeAttr('disabled');
-                        self.unlock();
-                    }
-                    self._setProgressCancelled();
-                }
-            };
-            fnSuccess = function (data, textStatus, jqXHR) {
-                var pid = self.showPreview && $thumb.attr('id') ? $thumb.attr('id') : previewId;
-                outData = self._getOutData(jqXHR, data);
-                $.extend(true, params, outData);
-                setTimeout(function () {
-                    if ($h.isEmpty(data) || $h.isEmpty(data.error)) {
-                        if (self.showPreview) {
-                            self._setThumbStatus($thumb, 'Success');
-                            $btnUpload.hide();
-                            self._initUploadSuccess(data, $thumb, isBatch);
-                            self._setProgress(101, $prog);
-                        }
-                        self._raise('fileuploaded', [outData, pid, i]);
-                        if (!isBatch) {
-                            self.updateStack(i, undefined);
-                        } else {
-                            updateUploadLog(i, pid);
-                        }
-                    } else {
-                        uploadFailed = true;
-                        self._showUploadError(data.error, params);
-                        self._setPreviewError($thumb, i, self.filestack[i], self.retryErrorUploads);
-                        if (!self.retryErrorUploads) {
-                            $btnUpload.hide();
-                        }
-                        if (isBatch) {
-                            updateUploadLog(i, pid);
-                        }
-                        self._setProgress(101, $('#' + pid).find('.file-thumb-progress'), self.msgUploadError);
-                    }
-                }, 100);
-            };
-            fnComplete = function () {
-                setTimeout(function () {
-                    if (self.showPreview) {
-                        $btnUpload.removeAttr('disabled');
-                        $btnDelete.removeAttr('disabled');
-                        $thumb.removeClass('file-uploading');
-                    }
-                    if (!isBatch) {
-                        self.unlock(false);
-                        self._clearFileInput();
-                    } else {
-                        chkComplete();
-                    }
-                    self._initSuccessThumbs();
-                }, 100);
-            };
-            fnError = function (jqXHR, textStatus, errorThrown) {
-                var op = self.ajaxOperations.uploadThumb,
-                    errMsg = self._parseError(op, jqXHR, errorThrown, (isBatch && self.filestack[i].name ? self.filestack[i].name : null));
-                uploadFailed = true;
-                setTimeout(function () {
-                    if (isBatch) {
-                        updateUploadLog(i, previewId);
-                    }
-                    self.uploadStatus[previewId] = 100;
-                    self._setPreviewError($thumb, i, self.filestack[i], self.retryErrorUploads);
-                    if (!self.retryErrorUploads) {
-                        $btnUpload.hide();
-                    }
-                    $.extend(true, params, self._getOutData(jqXHR));
-                    self._setProgress(101, $prog, self.msgAjaxProgressError.replace('{operation}', op));
-                    self._setProgress(101, $('#' + previewId).find('.file-thumb-progress'), self.msgUploadError);
-                    self._showUploadError(errMsg, params);
-                }, 100);
-            };
-            formdata.append(self.uploadFileAttr, self.filestack[i], self.filenames[i]);
-            formdata.append('file_id', i);
-            self._ajaxSubmit(fnBefore, fnSuccess, fnComplete, fnError, previewId, i);
-        },
-        _uploadBatch: function () {
-            var self = this, files = self.filestack, total = files.length, params = {}, fnBefore, fnSuccess, fnError,
-                fnComplete, hasPostData = self.filestack.length > 0 || !$.isEmptyObject(self.uploadExtraData),
-                setAllUploaded;
-            self.formdata = new FormData();
-            if (total === 0 || !hasPostData || self._abort(params)) {
-                return;
-            }
-            setAllUploaded = function () {
-                $.each(files, function (key) {
-                    self.updateStack(key, undefined);
-                });
-                self._clearFileInput();
-            };
-            fnBefore = function (jqXHR) {
-                self.lock();
-                var outData = self._getOutData(jqXHR);
-                self.ajaxAborted = false;
-                if (self.showPreview) {
-                    self._getThumbs().each(function () {
-                        var $thumb = $(this), $btnUpload = $thumb.find('.kv-file-upload'),
-                            $btnDelete = $thumb.find('.kv-file-remove');
-                        if (!$thumb.hasClass('file-preview-success')) {
-                            self._setThumbStatus($thumb, 'Loading');
-                            $h.addCss($thumb, 'file-uploading');
-                        }
-                        $btnUpload.attr('disabled', true);
-                        $btnDelete.attr('disabled', true);
-                    });
-                }
-                self._raise('filebatchpreupload', [outData]);
-                if (self._abort(outData)) {
-                    jqXHR.abort();
-                    self._getThumbs().each(function () {
-                        var $thumb = $(this), $btnUpload = $thumb.find('.kv-file-upload'),
-                            $btnDelete = $thumb.find('.kv-file-remove');
-                        if ($thumb.hasClass('file-preview-loading')) {
-                            self._setThumbStatus($thumb, 'New');
-                            $thumb.removeClass('file-uploading');
-                        }
-                        $btnUpload.removeAttr('disabled');
-                        $btnDelete.removeAttr('disabled');
-                    });
-                    self._setProgressCancelled();
-                }
-            };
-            fnSuccess = function (data, textStatus, jqXHR) {
-                /** @namespace data.errorkeys */
-                var outData = self._getOutData(jqXHR, data), key = 0,
-                    $thumbs = self._getThumbs(':not(.file-preview-success)'),
-                    keys = $h.isEmpty(data) || $h.isEmpty(data.errorkeys) ? [] : data.errorkeys;
-
-                if ($h.isEmpty(data) || $h.isEmpty(data.error)) {
-                    self._raise('filebatchuploadsuccess', [outData]);
-                    setAllUploaded();
-                    if (self.showPreview) {
-                        $thumbs.each(function () {
-                            var $thumb = $(this);
-                            self._setThumbStatus($thumb, 'Success');
-                            $thumb.removeClass('file-uploading');
-                            $thumb.find('.kv-file-upload').hide().removeAttr('disabled');
-                        });
-                        self._initUploadSuccess(data);
-                    } else {
-                        self.reset();
-                    }
-                    self._setProgress(101);
-                } else {
-                    if (self.showPreview) {
-                        $thumbs.each(function () {
-                            var $thumb = $(this), i = $thumb.attr('data-fileindex');
-                            $thumb.removeClass('file-uploading');
-                            $thumb.find('.kv-file-upload').removeAttr('disabled');
-                            $thumb.find('.kv-file-remove').removeAttr('disabled');
-                            if (keys.length === 0 || $.inArray(key, keys) !== -1) {
-                                self._setPreviewError($thumb, i, self.filestack[i], self.retryErrorUploads);
-                                if (!self.retryErrorUploads) {
-                                    $thumb.find('.kv-file-upload').hide();
-                                    self.updateStack(i, undefined);
-                                }
-                            } else {
-                                $thumb.find('.kv-file-upload').hide();
-                                self._setThumbStatus($thumb, 'Success');
-                                self.updateStack(i, undefined);
-                            }
-                            if (!$thumb.hasClass('file-preview-error') || self.retryErrorUploads) {
-                                key++;
-                            }
-                        });
-                        self._initUploadSuccess(data);
-                    }
-                    self._showUploadError(data.error, outData, 'filebatchuploaderror');
-                    self._setProgress(101, self.$progress, self.msgUploadError);
-                }
-            };
-            fnComplete = function () {
-                self.unlock();
-                self._initSuccessThumbs();
-                self._clearFileInput();
-                self._raise('filebatchuploadcomplete', [self.filestack, self._getExtraData()]);
-            };
-            fnError = function (jqXHR, textStatus, errorThrown) {
-                var outData = self._getOutData(jqXHR), op = self.ajaxOperations.uploadBatch,
-                    errMsg = self._parseError(op, jqXHR, errorThrown);
-                self._showUploadError(errMsg, outData, 'filebatchuploaderror');
-                self.uploadFileCount = total - 1;
-                if (!self.showPreview) {
-                    return;
-                }
-                self._getThumbs().each(function () {
-                    var $thumb = $(this), key = $thumb.attr('data-fileindex');
-                    $thumb.removeClass('file-uploading');
-                    if (self.filestack[key] !== undefined) {
-                        self._setPreviewError($thumb);
-                    }
-                });
-                self._getThumbs().removeClass('file-uploading');
-                self._getThumbs(' .kv-file-upload').removeAttr('disabled');
-                self._getThumbs(' .kv-file-delete').removeAttr('disabled');
-                self._setProgress(101, self.$progress, self.msgAjaxProgressError.replace('{operation}', op));
-            };
-            $.each(files, function (key, data) {
-                if (!$h.isEmpty(files[key])) {
-                    self.formdata.append(self.uploadFileAttr, data, self.filenames[key]);
-                }
-            });
-            self._ajaxSubmit(fnBefore, fnSuccess, fnComplete, fnError);
-        },
-        _uploadExtraOnly: function () {
-            var self = this, params = {}, fnBefore, fnSuccess, fnComplete, fnError;
-            self.formdata = new FormData();
-            if (self._abort(params)) {
-                return;
-            }
-            fnBefore = function (jqXHR) {
-                self.lock();
-                var outData = self._getOutData(jqXHR);
-                self._raise('filebatchpreupload', [outData]);
-                self._setProgress(50);
-                params.data = outData;
-                params.xhr = jqXHR;
-                if (self._abort(params)) {
-                    jqXHR.abort();
-                    self._setProgressCancelled();
-                }
-            };
-            fnSuccess = function (data, textStatus, jqXHR) {
-                var outData = self._getOutData(jqXHR, data);
-                if ($h.isEmpty(data) || $h.isEmpty(data.error)) {
-                    self._raise('filebatchuploadsuccess', [outData]);
-                    self._clearFileInput();
-                    self._initUploadSuccess(data);
-                    self._setProgress(101);
-                } else {
-                    self._showUploadError(data.error, outData, 'filebatchuploaderror');
-                }
-            };
-            fnComplete = function () {
-                self.unlock();
-                self._clearFileInput();
-                self._raise('filebatchuploadcomplete', [self.filestack, self._getExtraData()]);
-            };
-            fnError = function (jqXHR, textStatus, errorThrown) {
-                var outData = self._getOutData(jqXHR), op = self.ajaxOperations.uploadExtra,
-                    errMsg = self._parseError(op, jqXHR, errorThrown);
-                params.data = outData;
-                self._showUploadError(errMsg, outData, 'filebatchuploaderror');
-                self._setProgress(101, self.$progress, self.msgAjaxProgressError.replace('{operation}', op));
-            };
-            self._ajaxSubmit(fnBefore, fnSuccess, fnComplete, fnError);
-        },
-        _deleteFileIndex: function ($frame) {
-            var self = this, ind = $frame.attr('data-fileindex'), rev = self.reversePreviewOrder;
-            if (ind.substring(0, 5) === 'init_') {
-                ind = parseInt(ind.replace('init_', ''));
-                self.initialPreview = $h.spliceArray(self.initialPreview, ind, rev);
-                self.initialPreviewConfig = $h.spliceArray(self.initialPreviewConfig, ind, rev);
-                self.initialPreviewThumbTags = $h.spliceArray(self.initialPreviewThumbTags, ind, rev);
-                self.getFrames().each(function () {
-                    var $nFrame = $(this), nInd = $nFrame.attr('data-fileindex');
-                    if (nInd.substring(0, 5) === 'init_') {
-                        nInd = parseInt(nInd.replace('init_', ''));
-                        if (nInd > ind) {
-                            nInd--;
-                            $nFrame.attr('data-fileindex', 'init_' + nInd);
-                        }
-                    }
-                });
-                if (self.uploadAsync) {
-                    self.cacheInitialPreview = self.getPreview();
-                }
-            }
-        },
-        _initFileActions: function () {
-            var self = this, $preview = self.$preview;
-            if (!self.showPreview) {
-                return;
-            }
-            self._initZoomButton();
-            self.getFrames(' .kv-file-remove').each(function () {
-                var $el = $(this), $frame = $el.closest($h.FRAMES), hasError, id = $frame.attr('id'),
-                    ind = $frame.attr('data-fileindex'), n, cap, status;
-                self._handler($el, 'click', function () {
-                    status = self._raise('filepreremove', [id, ind]);
-                    if (status === false || !self._validateMinCount()) {
-                        return false;
-                    }
-                    hasError = $frame.hasClass('file-preview-error');
-                    $h.cleanMemory($frame);
-                    $frame.fadeOut('slow', function () {
-                        $h.cleanZoomCache($preview.find('#zoom-' + id));
-                        self.updateStack(ind, undefined);
-                        self._clearObjects($frame);
-                        $frame.remove();
-                        if (id && hasError) {
-                            self.$errorContainer.find('li[data-file-id="' + id + '"]').fadeOut('fast', function () {
-                                $(this).remove();
-                                if (!self._errorsExist()) {
-                                    self._resetErrors();
-                                }
-                            });
-                        }
-                        self._clearFileInput();
-                        var filestack = self.getFileStack(true), chk = self.previewCache.count(),
-                            len = filestack.length, hasThumb = self.showPreview && self.getFrames().length;
-                        if (len === 0 && chk === 0 && !hasThumb) {
-                            self.reset();
-                        } else {
-                            n = chk + len;
-                            cap = n > 1 ? self._getMsgSelected(n) : (filestack[0] ? self._getFileNames()[0] : '');
-                            self._setCaption(cap);
-                        }
-                        self._raise('fileremoved', [id, ind]);
-                    });
-                });
-            });
-            self.getFrames(' .kv-file-upload').each(function () {
-                var $el = $(this);
-                self._handler($el, 'click', function () {
-                    var $frame = $el.closest($h.FRAMES), ind = $frame.attr('data-fileindex');
-                    self.$progress.hide();
-                    if ($frame.hasClass('file-preview-error') && !self.retryErrorUploads) {
-                        return;
-                    }
-                    self._uploadSingle(ind, false);
-                });
-            });
-        },
-        _initPreviewActions: function () {
-            var self = this, $preview = self.$preview, deleteExtraData = self.deleteExtraData || {},
-                btnRemove = $h.FRAMES + ' .kv-file-remove', settings = self.fileActionSettings,
-                origClass = settings.removeClass, errClass = settings.removeErrorClass,
-                resetProgress = function () {
-                    var hasFiles = self.isAjaxUpload ? self.previewCache.count() : self._inputFileCount();
-                    if (!$preview.find($h.FRAMES).length && !hasFiles) {
-                        self._setCaption('');
-                        self.reset();
-                        self.initialCaption = '';
-                    }
-                };
-            self._initZoomButton();
-            $preview.find(btnRemove).each(function () {
-                var $el = $(this), vUrl = $el.data('url') || self.deleteUrl, vKey = $el.data('key'),
-                    fnBefore, fnSuccess, fnError;
-                if ($h.isEmpty(vUrl) || vKey === undefined) {
-                    return;
-                }
-                var $frame = $el.closest($h.FRAMES), cache = self.previewCache.data,
-                    settings, params, index = $frame.attr('data-fileindex'), config, extraData;
-                index = parseInt(index.replace('init_', ''));
-                config = $h.isEmpty(cache.config) && $h.isEmpty(cache.config[index]) ? null : cache.config[index];
-                extraData = $h.isEmpty(config) || $h.isEmpty(config.extra) ? deleteExtraData : config.extra;
-                if (typeof extraData === "function") {
-                    extraData = extraData();
-                }
-                params = {id: $el.attr('id'), key: vKey, extra: extraData};
-                fnBefore = function (jqXHR) {
-                    self.ajaxAborted = false;
-                    self._raise('filepredelete', [vKey, jqXHR, extraData]);
-                    if (self._abort()) {
-                        jqXHR.abort();
-                    } else {
-                        $el.removeClass(errClass);
-                        $h.addCss($frame, 'file-uploading');
-                        $h.addCss($el, 'disabled ' + origClass);
-                    }
-                };
-                fnSuccess = function (data, textStatus, jqXHR) {
-                    var n, cap;
-                    if (!$h.isEmpty(data) && !$h.isEmpty(data.error)) {
-                        params.jqXHR = jqXHR;
-                        params.response = data;
-                        self._showError(data.error, params, 'filedeleteerror');
-                        $frame.removeClass('file-uploading');
-                        $el.removeClass('disabled ' + origClass).addClass(errClass);
-                        resetProgress();
-                        return;
-                    }
-                    $frame.removeClass('file-uploading').addClass('file-deleted');
-                    $frame.fadeOut('slow', function () {
-                        index = parseInt(($frame.attr('data-fileindex')).replace('init_', ''));
-                        self.previewCache.unset(index);
-                        self._deleteFileIndex($frame);
-                        n = self.previewCache.count();
-                        cap = n > 0 ? self._getMsgSelected(n) : '';
-                        self._setCaption(cap);
-                        self._raise('filedeleted', [vKey, jqXHR, extraData]);
-                        $h.cleanZoomCache($preview.find('#zoom-' + $frame.attr('id')));
-                        self._clearObjects($frame);
-                        $frame.remove();
-                        resetProgress();
-                    });
-                };
-                fnError = function (jqXHR, textStatus, errorThrown) {
-                    var op = self.ajaxOperations.deleteThumb, errMsg = self._parseError(op, jqXHR, errorThrown);
-                    params.jqXHR = jqXHR;
-                    params.response = {};
-                    self._showError(errMsg, params, 'filedeleteerror');
-                    $frame.removeClass('file-uploading');
-                    $el.removeClass('disabled ' + origClass).addClass(errClass);
-                    resetProgress();
-                };
-                self._initAjaxSettings();
-                self._mergeAjaxCallback('beforeSend', fnBefore, 'delete');
-                self._mergeAjaxCallback('success', fnSuccess, 'delete');
-                self._mergeAjaxCallback('error', fnError, 'delete');
-                settings = $.extend(true, {}, {
-                    url: self._encodeURI(vUrl),
-                    type: 'POST',
-                    dataType: 'json',
-                    data: $.extend(true, {}, {key: vKey}, extraData)
-                }, self._ajaxDeleteSettings);
-                self._handler($el, 'click', function () {
-                    if (!self._validateMinCount()) {
-                        return false;
-                    }
-                    self.ajaxAborted = false;
-                    self._raise('filebeforedelete', [vKey, extraData]);
-                    //noinspection JSUnresolvedVariable,JSHint
-                    if (self.ajaxAborted instanceof Promise) {
-                        self.ajaxAborted.then(function (result) {
-                            if (!result) {
-                                $.ajax(settings);
-                            }
-                        });
-                    } else {
-                        if (!self.ajaxAborted) {
-                            $.ajax(settings);
-                        }
-                    }
-                });
-            });
-        },
-        _hideFileIcon: function () {
-            var self = this;
-            if (self.overwriteInitial) {
-                self.$captionContainer.removeClass('icon-visible');
-            }
-        },
-        _showFileIcon: function () {
-            var self = this;
-            $h.addCss(self.$captionContainer, 'icon-visible');
-        },
-        _getSize: function (bytes) {
-            var self = this, size = parseFloat(bytes), i, func = self.fileSizeGetter, sizes, out;
-            if (!$.isNumeric(bytes) || !$.isNumeric(size)) {
-                return '';
-            }
-            if (typeof func === 'function') {
-                out = func(size);
-            } else {
-                if (size === 0) {
-                    out = '0.00 B';
-                } else {
-                    i = Math.floor(Math.log(size) / Math.log(1024));
-                    sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-                    out = (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + sizes[i];
-                }
-            }
-            return self._getLayoutTemplate('size').replace('{sizeText}', out);
-        },
-        _getFileType: function (ftype) {
-            var self = this;
-            return self.mimeTypeAliases[ftype] || ftype;
-        },
-        _generatePreviewTemplate: function (cat, data, fname, ftype, previewId, isError, size, frameClass, foot, ind, templ) {
-            var self = this, caption = self.slug(fname), prevContent, zoomContent = '', styleAttribs = '',
-                screenW = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
-                config = screenW < 400 ? (self.previewSettingsSmall[cat] || self.defaults.previewSettingsSmall[cat]) :
-                    (self.previewSettings[cat] || self.defaults.previewSettings[cat]),
-                footer = foot || self._renderFileFooter(caption, size, 'auto', isError),
-                hasIconSetting = self._getPreviewIcon(fname), typeCss = 'type-default',
-                forcePrevIcon = hasIconSetting && self.preferIconicPreview,
-                forceZoomIcon = hasIconSetting && self.preferIconicZoomPreview, getContent;
-            if (config) {
-                $.each(config, function (key, val) {
-                    styleAttribs += key + ':' + val + ';';
-                });
-            }
-            getContent = function (c, d, zoom, frameCss) {
-                var id = zoom ? 'zoom-' + previewId : previewId, tmplt = self._getPreviewTemplate(c),
-                    css = (frameClass || '') + ' ' + frameCss;
-                if (self.frameClass) {
-                    css = self.frameClass + ' ' + css;
-                }
-                if (zoom) {
-                    css = css.replace(' ' + $h.SORT_CSS, '');
-                }
-                tmplt = self._parseFilePreviewIcon(tmplt, fname);
-                if (c === 'text') {
-                    d = $h.htmlEncode(d);
-                }
-                if (cat === 'object' && !ftype) {
-                    $.each(self.defaults.fileTypeSettings, function (key, func) {
-                        if (key === 'object' || key === 'other') {
-                            return;
-                        }
-                        if (func(fname, ftype)) {
-                            typeCss = 'type-' + key;
-                        }
-                    });
-                }
-                return tmplt.setTokens({
-                    'previewId': id,
-                    'caption': caption,
-                    'frameClass': css,
-                    'type': self._getFileType(ftype),
-                    'fileindex': ind,
-                    'typeCss': typeCss,
-                    'footer': footer,
-                    'data': d,
-                    'template': templ || cat,
-                    'style': styleAttribs ? 'style="' + styleAttribs + '"' : ''
-                });
-            };
-            ind = ind || previewId.slice(previewId.lastIndexOf('-') + 1);
-            if (self.fileActionSettings.showZoom) {
-                zoomContent = getContent((forceZoomIcon ? 'other' : cat), data, true, 'kv-zoom-thumb');
-            }
-            zoomContent = '\n' + self._getLayoutTemplate('zoomCache').replace('{zoomContent}', zoomContent);
-            prevContent = getContent((forcePrevIcon ? 'other' : cat), data, false, 'kv-preview-thumb');
-            return prevContent + zoomContent;
-        },
-        _addToPreview: function ($preview, content) {
-            var self = this;
-            return self.reversePreviewOrder ? $preview.prepend(content) : $preview.append(content);
-        },
-        _previewDefault: function (file, previewId, isDisabled) {
-            var self = this, $preview = self.$preview;
-            if (!self.showPreview) {
-                return;
-            }
-            var fname = file ? file.name : '', ftype = file ? file.type : '', content, size = file.size || 0,
-                caption = self.slug(fname), isError = isDisabled === true && !self.isAjaxUpload,
-                data = $h.createObjectURL(file);
-            self._clearDefaultPreview();
-            content = self._generatePreviewTemplate('other', data, fname, ftype, previewId, isError, size);
-            self._addToPreview($preview, content);
-            self._setThumbAttr(previewId, caption, size);
-            if (isDisabled === true && self.isAjaxUpload) {
-                self._setThumbStatus($('#' + previewId), 'Error');
-            }
-        },
-        _previewFile: function (i, file, theFile, previewId, data, fileInfo) {
-            if (!this.showPreview) {
-                return;
-            }
-            var self = this, fname = file ? file.name : '', ftype = fileInfo.type, caption = fileInfo.name,
-                cat = self._parseFileType(ftype, fname), types = self.allowedPreviewTypes, content,
-                mimes = self.allowedPreviewMimeTypes, $preview = self.$preview, fsize = file.size || 0,
-                chkTypes = types && types.indexOf(cat) >= 0, chkMimes = mimes && mimes.indexOf(ftype) !== -1,
-                iData = (cat === 'text' || cat === 'html' || cat === 'image') ? theFile.target.result : data;
-            /** @namespace window.DOMPurify */
-            if (cat === 'html' && self.purifyHtml && window.DOMPurify) {
-                iData = window.DOMPurify.sanitize(iData);
-            }
-            if (chkTypes || chkMimes) {
-                content = self._generatePreviewTemplate(cat, iData, fname, ftype, previewId, false, fsize);
-                self._clearDefaultPreview();
-                self._addToPreview($preview, content);
-                var $img = $preview.find('#' + previewId + ' img');
-                self._validateImageOrientation($img, file, previewId, caption, ftype, fsize, iData);
-            } else {
-                self._previewDefault(file, previewId);
-            }
-            self._setThumbAttr(previewId, caption, fsize);
-            self._initSortable();
-        },
-        _setThumbAttr: function (id, caption, size) {
-            var self = this, $frame = $('#' + id);
-            if ($frame.length) {
-                size = size && size > 0 ? self._getSize(size) : '';
-                $frame.data({'caption': caption, 'size': size});
-            }
-        },
-        _setInitThumbAttr: function () {
-            var self = this, data = self.previewCache.data, len = self.previewCache.count(), config,
-                caption, size, previewId;
-            if (len === 0) {
-                return;
-            }
-            for (var i = 0; i < len; i++) {
-                config = data.config[i];
-                previewId = self.previewInitId + '-' + 'init_' + i;
-                caption = $h.ifSet('caption', config, $h.ifSet('filename', config));
-                size = $h.ifSet('size', config);
-                self._setThumbAttr(previewId, caption, size);
-            }
-        },
-        _slugDefault: function (text) {
-            // noinspection RegExpRedundantEscape
-            return $h.isEmpty(text) ? '' : String(text).replace(/[\[\]\/\{}:;#%=\(\)\*\+\?\\\^\$\|<>&"']/g, '_');
-        },
-        _updateFileDetails: function (numFiles) {
-            var self = this, $el = self.$element, fileStack = self.getFileStack(),
-                name = ($h.isIE(9) && $h.findFileName($el.val())) ||
-                    ($el[0].files[0] && $el[0].files[0].name) || (fileStack.length && fileStack[0].name) || '',
-                label = self.slug(name), n = self.isAjaxUpload ? fileStack.length : numFiles,
-                nFiles = self.previewCache.count() + n, log = n === 1 ? label : self._getMsgSelected(nFiles);
-            if (self.isError) {
-                self.$previewContainer.removeClass('file-thumb-loading');
-                self.$previewStatus.html('');
-                self.$captionContainer.removeClass('icon-visible');
-            } else {
-                self._showFileIcon();
-            }
-            self._setCaption(log, self.isError);
-            self.$container.removeClass('file-input-new file-input-ajax-new');
-            if (arguments.length === 1) {
-                self._raise('fileselect', [numFiles, label]);
-            }
-            if (self.previewCache.count()) {
-                self._initPreviewActions();
-            }
-        },
-        _setThumbStatus: function ($thumb, status) {
-            var self = this;
-            if (!self.showPreview) {
-                return;
-            }
-            var icon = 'indicator' + status, msg = icon + 'Title',
-                css = 'file-preview-' + status.toLowerCase(),
-                $indicator = $thumb.find('.file-upload-indicator'),
-                config = self.fileActionSettings;
-            $thumb.removeClass('file-preview-success file-preview-error file-preview-loading');
-            if (status === 'Success') {
-                $thumb.find('.file-drag-handle').remove();
-            }
-            $indicator.html(config[icon]);
-            $indicator.attr('title', config[msg]);
-            $thumb.addClass(css);
-            if (status === 'Error' && !self.retryErrorUploads) {
-                $thumb.find('.kv-file-upload').attr('disabled', true);
-            }
-        },
-        _setProgressCancelled: function () {
-            var self = this;
-            self._setProgress(101, self.$progress, self.msgCancelled);
-        },
-        _setProgress: function (p, $el, error) {
-            var self = this, pct = Math.min(p, 100), out, pctLimit = self.progressUploadThreshold,
-                t = p <= 100 ? self.progressTemplate : self.progressCompleteTemplate,
-                template = pct < 100 ? self.progressTemplate : (error ? self.progressErrorTemplate : t);
-            $el = $el || self.$progress;
-            if (!$h.isEmpty(template)) {
-                if (pctLimit && pct > pctLimit && p <= 100) {
-                    out = template.setTokens({'percent': pctLimit, 'status': self.msgUploadThreshold});
-                } else {
-                    out = template.setTokens({'percent': pct, 'status': (p > 100 ? self.msgUploadEnd : pct + '%')});
-                }
-                $el.html(out);
-                if (error) {
-                    $el.find('[role="progressbar"]').html(error);
-                }
-            }
-        },
-        _setFileDropZoneTitle: function () {
-            var self = this, $zone = self.$container.find('.file-drop-zone'), title = self.dropZoneTitle, strFiles;
-            if (self.isClickable) {
-                strFiles = $h.isEmpty(self.$element.attr('multiple')) ? self.fileSingle : self.filePlural;
-                title += self.dropZoneClickTitle.replace('{files}', strFiles);
-            }
-            $zone.find('.' + self.dropZoneTitleClass).remove();
-            if (!self.showPreview || $zone.length === 0 || self.getFileStack().length > 0 || !self.dropZoneEnabled ||
-                (!self.isAjaxUpload && self.$element.files)) {
-                return;
-            }
-            if ($zone.find($h.FRAMES).length === 0 && $h.isEmpty(self.defaultPreviewContent)) {
-                $zone.prepend('<div class="' + self.dropZoneTitleClass + '">' + title + '</div>');
-            }
-            self.$container.removeClass('file-input-new');
-            $h.addCss(self.$container, 'file-input-ajax-new');
-        },
-        _setAsyncUploadStatus: function (previewId, pct, total) {
-            var self = this, sum = 0;
-            self._setProgress(pct, $('#' + previewId).find('.file-thumb-progress'));
-            self.uploadStatus[previewId] = pct;
-            $.each(self.uploadStatus, function (key, value) {
-                sum += value;
-            });
-            self._setProgress(Math.floor(sum / total));
-        },
-        _validateMinCount: function () {
-            var self = this, len = self.isAjaxUpload ? self.getFileStack().length : self._inputFileCount();
-            if (self.validateInitialCount && self.minFileCount > 0 && self._getFileCount(len - 1) < self.minFileCount) {
-                self._noFilesError({});
-                return false;
-            }
-            return true;
-        },
-        _getFileCount: function (fileCount) {
-            var self = this, addCount = 0;
-            if (self.validateInitialCount && !self.overwriteInitial) {
-                addCount = self.previewCache.count();
-                fileCount += addCount;
-            }
-            return fileCount;
-        },
-        _getFileId: function (file) {
-            var self = this, custom = self.generateFileId, relativePath;
-            if (typeof custom === 'function') {
-                return custom(file, event);
-            }
-            if (!file) {
-                return null;
-            }
-            /** @namespace file.webkitRelativePath */
-            /** @namespace file.fileName */
-            relativePath = String(file.webkitRelativePath || file.fileName || file.name || null);
-            if (!relativePath) {
-                return null;
-            }
-            return (file.size + '-' + relativePath.replace(/[^0-9a-zA-Z_-]/img, ''));
-        },
-        _getFileName: function (file) {
-            return file && file.name ? this.slug(file.name) : undefined;
-        },
-        _getFileIds: function (skipNull) {
-            var self = this;
-            return self.fileids.filter(function (n) {
-                return (skipNull ? n !== undefined : n !== undefined && n !== null);
-            });
-        },
-        _getFileNames: function (skipNull) {
-            var self = this;
-            return self.filenames.filter(function (n) {
-                return (skipNull ? n !== undefined : n !== undefined && n !== null);
-            });
-        },
-        _setPreviewError: function ($thumb, i, val, repeat) {
-            var self = this;
-            if (i !== undefined) {
-                self.updateStack(i, val);
-            }
-            if (!self.showPreview) {
-                return;
-            }
-            if (self.removeFromPreviewOnError && !repeat) {
-                $thumb.remove();
-                return;
-            } else {
-                self._setThumbStatus($thumb, 'Error');
-            }
-            self._refreshUploadButton($thumb, repeat);
-        },
-        _refreshUploadButton: function ($thumb, repeat) {
-            var self = this, $btn = $thumb.find('.kv-file-upload'), cfg = self.fileActionSettings,
-                icon = cfg.uploadIcon, title = cfg.uploadTitle;
-            if (!$btn.length) {
-                return;
-            }
-            if (repeat) {
-                icon = cfg.uploadRetryIcon;
-                title = cfg.uploadRetryTitle;
-            }
-            $btn.attr('title', title).html(icon);
-        },
-        _checkDimensions: function (i, chk, $img, $thumb, fname, type, params) {
-            var self = this, msg, dim, tag = chk === 'Small' ? 'min' : 'max', limit = self[tag + 'Image' + type],
-                $imgEl, isValid;
-            if ($h.isEmpty(limit) || !$img.length) {
-                return;
-            }
-            $imgEl = $img[0];
-            dim = (type === 'Width') ? $imgEl.naturalWidth || $imgEl.width : $imgEl.naturalHeight || $imgEl.height;
-            isValid = chk === 'Small' ? dim >= limit : dim <= limit;
-            if (isValid) {
-                return;
-            }
-            msg = self['msgImage' + type + chk].setTokens({'name': fname, 'size': limit});
-            self._showUploadError(msg, params);
-            self._setPreviewError($thumb, i, null);
-        },
-        _getExifObj: function (iData) {
-            var self = this, exifObj = null;
-            try {
-                exifObj = window.piexif ? window.piexif.load(iData) : null;
-            } catch (err) {
-                exifObj = null;
-            }
-            if (!exifObj) {
-                self._log('Error loading the piexif.js library.');
-            }
-            return exifObj;
-        },
-        _validateImageOrientation: function ($img, file, previewId, caption, ftype, fsize, iData) {
-            var self = this, exifObj, value;
-            exifObj = $img.length && self.autoOrientImage ? self._getExifObj(iData) : null;
-            value = exifObj ? exifObj["0th"][piexif.ImageIFD.Orientation] : null; // jshint ignore:line
-            if (!value) {
-                self._validateImage(previewId, caption, ftype, fsize, iData, exifObj);
-                return;
-            }
-            $h.setImageOrientation($img, self.$preview.find('#zoom-' + previewId + ' img'), value);
-            self._raise('fileimageoriented', {'$img': $img, 'file': file});
-            self._validateImage(previewId, caption, ftype, fsize, iData, exifObj);
-        },
-        _validateImage: function (previewId, fname, ftype, fsize, iData, exifObj) {
-            var self = this, $preview = self.$preview, params, w1, w2, $thumb = $preview.find("#" + previewId),
-                i = $thumb.attr('data-fileindex'), $img = $thumb.find('img');
-            fname = fname || 'Untitled';
-            $img.one('load', function () {
-                w1 = $thumb.width();
-                w2 = $preview.width();
-                if (w1 > w2) {
-                    $img.css('width', '100%');
-                }
-                params = {ind: i, id: previewId};
-                self._checkDimensions(i, 'Small', $img, $thumb, fname, 'Width', params);
-                self._checkDimensions(i, 'Small', $img, $thumb, fname, 'Height', params);
-                if (!self.resizeImage) {
-                    self._checkDimensions(i, 'Large', $img, $thumb, fname, 'Width', params);
-                    self._checkDimensions(i, 'Large', $img, $thumb, fname, 'Height', params);
-                }
-                self._raise('fileimageloaded', [previewId]);
-                self.loadedImages.push({
-                    ind: i,
-                    img: $img,
-                    thumb: $thumb,
-                    pid: previewId,
-                    typ: ftype,
-                    siz: fsize,
-                    validated: false,
-                    imgData: iData,
-                    exifObj: exifObj
-                });
-                $thumb.data('exif', exifObj);
-                self._validateAllImages();
-            }).one('error', function () {
-                self._raise('fileimageloaderror', [previewId]);
-            }).each(function () {
-                if (this.complete) {
-                    $(this).trigger('load');
-                } else {
-                    if (this.error) {
-                        $(this).trigger('error');
-                    }
-                }
-            });
-        },
-        _validateAllImages: function () {
-            var self = this, i, counter = {val: 0}, numImgs = self.loadedImages.length, config,
-                fsize, minSize = self.resizeIfSizeMoreThan;
-            if (numImgs !== self.totalImagesCount) {
-                return;
-            }
-            self._raise('fileimagesloaded');
-            if (!self.resizeImage) {
-                return;
-            }
-            for (i = 0; i < self.loadedImages.length; i++) {
-                config = self.loadedImages[i];
-                if (config.validated) {
-                    continue;
-                }
-                fsize = config.siz;
-                if (fsize && fsize > minSize * 1000) {
-                    self._getResizedImage(config, counter, numImgs);
-                }
-                self.loadedImages[i].validated = true;
-            }
-        },
-        _getResizedImage: function (config, counter, numImgs) {
-            var self = this, img = $(config.img)[0], width = img.naturalWidth, height = img.naturalHeight, blob,
-                ratio = 1, maxWidth = self.maxImageWidth || width, maxHeight = self.maxImageHeight || height,
-                isValidImage = !!(width && height), chkWidth, chkHeight, canvas = self.imageCanvas, dataURI,
-                context = self.imageCanvasContext, type = config.typ, pid = config.pid, ind = config.ind,
-                $thumb = config.thumb, throwError, msg, exifObj = config.exifObj, exifStr;
-            throwError = function (msg, params, ev) {
-                if (self.isAjaxUpload) {
-                    self._showUploadError(msg, params, ev);
-                } else {
-                    self._showError(msg, params, ev);
-                }
-                self._setPreviewError($thumb, ind);
-            };
-            if (!self.filestack[ind] || !isValidImage || (width <= maxWidth && height <= maxHeight)) {
-                if (isValidImage && self.filestack[ind]) {
-                    self._raise('fileimageresized', [pid, ind]);
-                }
-                counter.val++;
-                if (counter.val === numImgs) {
-                    self._raise('fileimagesresized');
-                }
-                if (!isValidImage) {
-                    throwError(self.msgImageResizeError, {id: pid, 'index': ind}, 'fileimageresizeerror');
-                    return;
-                }
-            }
-            type = type || self.resizeDefaultImageType;
-            chkWidth = width > maxWidth;
-            chkHeight = height > maxHeight;
-            if (self.resizePreference === 'width') {
-                ratio = chkWidth ? maxWidth / width : (chkHeight ? maxHeight / height : 1);
-            } else {
-                ratio = chkHeight ? maxHeight / height : (chkWidth ? maxWidth / width : 1);
-            }
-            self._resetCanvas();
-            width *= ratio;
-            height *= ratio;
-            canvas.width = width;
-            canvas.height = height;
-            try {
-                context.drawImage(img, 0, 0, width, height);
-                dataURI = canvas.toDataURL(type, self.resizeQuality);
-                if (exifObj) {
-                    exifStr = window.piexif.dump(exifObj);
-                    dataURI = window.piexif.insert(exifStr, dataURI);
-                }
-                blob = $h.dataURI2Blob(dataURI);
-                self.filestack[ind] = blob;
-                self._raise('fileimageresized', [pid, ind]);
-                counter.val++;
-                if (counter.val === numImgs) {
-                    self._raise('fileimagesresized', [undefined, undefined]);
-                }
-                if (!(blob instanceof Blob)) {
-                    throwError(self.msgImageResizeError, {id: pid, 'index': ind}, 'fileimageresizeerror');
-                }
-            }
-            catch (err) {
-                counter.val++;
-                if (counter.val === numImgs) {
-                    self._raise('fileimagesresized', [undefined, undefined]);
-                }
-                msg = self.msgImageResizeException.replace('{errors}', err.message);
-                throwError(msg, {id: pid, 'index': ind}, 'fileimageresizeexception');
-            }
-        },
-        _initBrowse: function ($container) {
-            var self = this, $el = self.$element;
-            if (self.showBrowse) {
-                self.$btnFile = $container.find('.btn-file').append($el);
-            } else {
-                $el.appendTo($container).attr('tabindex', -1);
-                $h.addCss($el, 'file-no-browse');
-            }
-        },
-        _initClickable: function () {
-            var self = this, $zone, $tmpZone;
-            if (!self.isClickable) {
-                return;
-            }
-            $zone = self.$dropZone;
-            if (!self.isAjaxUpload) {
-                $tmpZone = self.$preview.find('.file-default-preview');
-                if ($tmpZone.length) {
-                    $zone = $tmpZone;
-                }
-            }
-
-            $h.addCss($zone, 'clickable');
-            $zone.attr('tabindex', -1);
-            self._handler($zone, 'click', function (e) {
-                var $tar = $(e.target);
-                if (!$(self.elErrorContainer + ':visible').length &&
-                    (!$tar.parents('.file-preview-thumbnails').length || $tar.parents('.file-default-preview').length)) {
-                    self.$element.data('zoneClicked', true).trigger('click');
-                    $zone.blur();
-                }
-            });
-        },
-        _initCaption: function () {
-            var self = this, cap = self.initialCaption || '';
-            if (self.overwriteInitial || $h.isEmpty(cap)) {
-                self.$caption.val('');
-                return false;
-            }
-            self._setCaption(cap);
-            return true;
-        },
-        _setCaption: function (content, isError) {
-            var self = this, title, out, icon, n, cap, stack = self.getFileStack();
-            if (!self.$caption.length) {
-                return;
-            }
-            self.$captionContainer.removeClass('icon-visible');
-            if (isError) {
-                title = $('<div>' + self.msgValidationError + '</div>').text();
-                n = stack.length;
-                if (n) {
-                    cap = n === 1 && stack[0] ? self._getFileNames()[0] : self._getMsgSelected(n);
-                } else {
-                    cap = self._getMsgSelected(self.msgNo);
-                }
-                out = $h.isEmpty(content) ? cap : content;
-                icon = '<span class="' + self.msgValidationErrorClass + '">' + self.msgValidationErrorIcon + '</span>';
-            } else {
-                if ($h.isEmpty(content)) {
-                    return;
-                }
-                title = $('<div>' + content + '</div>').text();
-                out = title;
-                icon = self._getLayoutTemplate('fileIcon');
-            }
-            self.$captionContainer.addClass('icon-visible');
-            self.$caption.attr('title', title).val(out);
-            self.$captionIcon.html(icon);
-        },
-        _createContainer: function () {
-            var self = this, attribs = {"class": 'file-input file-input-new' + (self.rtl ? ' kv-rtl' : '')},
-                $container = $(document.createElement("div")).attr(attribs).html(self._renderMain());
-            $container.insertBefore(self.$element);
-            self._initBrowse($container);
-            if (self.theme) {
-                $container.addClass('theme-' + self.theme);
-            }
-            return $container;
-        },
-        _refreshContainer: function () {
-            var self = this, $container = self.$container, $el = self.$element;
-            $el.insertAfter($container);
-            $container.html(self._renderMain());
-            self._initBrowse($container);
-            self._validateDisabled();
-        },
-        _validateDisabled: function () {
-            var self = this;
-            self.$caption.attr({readonly: self.isDisabled});
-        },
-        _renderMain: function () {
-            var self = this,
-                dropCss = self.dropZoneEnabled ? ' file-drop-zone' : 'file-drop-disabled',
-                close = !self.showClose ? '' : self._getLayoutTemplate('close'),
-                preview = !self.showPreview ? '' : self._getLayoutTemplate('preview')
-                    .setTokens({'class': self.previewClass, 'dropClass': dropCss}),
-                css = self.isDisabled ? self.captionClass + ' file-caption-disabled' : self.captionClass,
-                caption = self.captionTemplate.setTokens({'class': css + ' kv-fileinput-caption'});
-            return self.mainTemplate.setTokens({
-                'class': self.mainClass + (!self.showBrowse && self.showCaption ? ' no-browse' : ''),
-                'preview': preview,
-                'close': close,
-                'caption': caption,
-                'upload': self._renderButton('upload'),
-                'remove': self._renderButton('remove'),
-                'cancel': self._renderButton('cancel'),
-                'browse': self._renderButton('browse')
-            });
-
-        },
-        _renderButton: function (type) {
-            var self = this, tmplt = self._getLayoutTemplate('btnDefault'), css = self[type + 'Class'],
-                title = self[type + 'Title'], icon = self[type + 'Icon'], label = self[type + 'Label'],
-                status = self.isDisabled ? ' disabled' : '', btnType = 'button';
-            switch (type) {
-                case 'remove':
-                    if (!self.showRemove) {
-                        return '';
-                    }
-                    break;
-                case 'cancel':
-                    if (!self.showCancel) {
-                        return '';
-                    }
-                    css += ' kv-hidden';
-                    break;
-                case 'upload':
-                    if (!self.showUpload) {
-                        return '';
-                    }
-                    if (self.isAjaxUpload && !self.isDisabled) {
-                        tmplt = self._getLayoutTemplate('btnLink').replace('{href}', self.uploadUrl);
-                    } else {
-                        btnType = 'submit';
-                    }
-                    break;
-                case 'browse':
-                    if (!self.showBrowse) {
-                        return '';
-                    }
-                    tmplt = self._getLayoutTemplate('btnBrowse');
-                    break;
-                default:
-                    return '';
-            }
-
-            css += type === 'browse' ? ' btn-file' : ' fileinput-' + type + ' fileinput-' + type + '-button';
-            if (!$h.isEmpty(label)) {
-                label = ' <span class="' + self.buttonLabelClass + '">' + label + '</span>';
-            }
-            return tmplt.setTokens({
-                'type': btnType, 'css': css, 'title': title, 'status': status, 'icon': icon, 'label': label
-            });
-        },
-        _renderThumbProgress: function () {
-            var self = this;
-            return '<div class="file-thumb-progress kv-hidden">' +
-                self.progressTemplate.setTokens({'percent': '0', 'status': self.msgUploadBegin}) +
-                '</div>';
-        },
-        _renderFileFooter: function (caption, size, width, isError) {
-            var self = this, config = self.fileActionSettings, rem = config.showRemove, drg = config.showDrag,
-                upl = config.showUpload, zoom = config.showZoom, out,
-                template = self._getLayoutTemplate('footer'), tInd = self._getLayoutTemplate('indicator'),
-                ind = isError ? config.indicatorError : config.indicatorNew,
-                title = isError ? config.indicatorErrorTitle : config.indicatorNewTitle,
-                indicator = tInd.setTokens({'indicator': ind, 'indicatorTitle': title});
-            size = self._getSize(size);
-            if (self.isAjaxUpload) {
-                out = template.setTokens({
-                    'actions': self._renderFileActions(upl, false, rem, zoom, drg, false, false, false),
-                    'caption': caption,
-                    'size': size,
-                    'width': width,
-                    'progress': self._renderThumbProgress(),
-                    'indicator': indicator
-                });
-            } else {
-                out = template.setTokens({
-                    'actions': self._renderFileActions(false, false, false, zoom, drg, false, false, false),
-                    'caption': caption,
-                    'size': size,
-                    'width': width,
-                    'progress': '',
-                    'indicator': indicator
-                });
-            }
-            out = $h.replaceTags(out, self.previewThumbTags);
-            return out;
-        },
-        _renderFileActions: function (showUpl, showDwn, showDel, showZoom, showDrag, disabled, url, key, isInit, dUrl, dFile) {
-            if (!showUpl && !showDwn && !showDel && !showZoom && !showDrag) {
-                return '';
-            }
-            var self = this, vUrl = url === false ? '' : ' data-url="' + url + '"',
-                vKey = key === false ? '' : ' data-key="' + key + '"', btnDelete = '', btnUpload = '', btnDownload = '',
-                btnZoom = '', btnDrag = '', css, template = self._getLayoutTemplate('actions'),
-                config = self.fileActionSettings,
-                otherButtons = self.otherActionButtons.setTokens({'dataKey': vKey, 'key': key}),
-                removeClass = disabled ? config.removeClass + ' disabled' : config.removeClass;
-            if (showDel) {
-                btnDelete = self._getLayoutTemplate('actionDelete').setTokens({
-                    'removeClass': removeClass,
-                    'removeIcon': config.removeIcon,
-                    'removeTitle': config.removeTitle,
-                    'dataUrl': vUrl,
-                    'dataKey': vKey,
-                    'key': key
-                });
-            }
-            if (showUpl) {
-                btnUpload = self._getLayoutTemplate('actionUpload').setTokens({
-                    'uploadClass': config.uploadClass,
-                    'uploadIcon': config.uploadIcon,
-                    'uploadTitle': config.uploadTitle
-                });
-            }
-            if (showDwn) {
-                btnDownload = self._getLayoutTemplate('actionDownload').setTokens({
-                    'downloadClass': config.downloadClass,
-                    'downloadIcon': config.downloadIcon,
-                    'downloadTitle': config.downloadTitle,
-                    'downloadUrl': dUrl || self.initialPreviewDownloadUrl
-                });
-                btnDownload = btnDownload.setTokens({'filename': dFile, 'key': key});
-            }
-            if (showZoom) {
-                btnZoom = self._getLayoutTemplate('actionZoom').setTokens({
-                    'zoomClass': config.zoomClass,
-                    'zoomIcon': config.zoomIcon,
-                    'zoomTitle': config.zoomTitle
-                });
-            }
-            if (showDrag && isInit) {
-                css = 'drag-handle-init ' + config.dragClass;
-                btnDrag = self._getLayoutTemplate('actionDrag').setTokens({
-                    'dragClass': css,
-                    'dragTitle': config.dragTitle,
-                    'dragIcon': config.dragIcon
-                });
-            }
-            return template.setTokens({
-                'delete': btnDelete,
-                'upload': btnUpload,
-                'download': btnDownload,
-                'zoom': btnZoom,
-                'drag': btnDrag,
-                'other': otherButtons
-            });
-        },
-        _browse: function (e) {
-            var self = this;
-            if (e && e.isDefaultPrevented() || !self._raise('filebrowse')) {
-                return;
-            }
-            if (self.isError && !self.isAjaxUpload) {
-                self.clear();
-            }
-            self.$captionContainer.focus();
-        },
-        _filterDuplicate: function (file, files, fileIds) {
-            var self = this, fileId = self._getFileId(file);
-
-            if (fileId && fileIds && fileIds.indexOf(fileId) > -1) {
-                return;
-            }
-            if (!fileIds) {
-                fileIds = [];
-            }
-            files.push(file);
-            fileIds.push(fileId);
-        },
-        _change: function (e) {
-            var self = this;
-            if (self.changeTriggered) {
-                return;
-            }
-            var $el = self.$element, isDragDrop = arguments.length > 1, isAjaxUpload = self.isAjaxUpload,
-                tfiles = [], files = isDragDrop ? arguments[1] : $el.get(0).files, total,
-                maxCount = !isAjaxUpload && $h.isEmpty($el.attr('multiple')) ? 1 : self.maxFileCount,
-                len, ctr = self.filestack.length, isSingleUpload = $h.isEmpty($el.attr('multiple')),
-                flagSingle = (isSingleUpload && ctr > 0), fileIds = self._getFileIds(),
-                throwError = function (mesg, file, previewId, index) {
-                    var p1 = $.extend(true, {}, self._getOutData({}, {}, files), {id: previewId, index: index}),
-                        p2 = {id: previewId, index: index, file: file, files: files};
-                    return isAjaxUpload ? self._showUploadError(mesg, p1) : self._showError(mesg, p2);
-                },
-                maxCountCheck = function (n, m) {
-                    var msg = self.msgFilesTooMany.replace('{m}', m).replace('{n}', n);
-                    self.isError = throwError(msg, null, null, null);
-                    self.$captionContainer.removeClass('icon-visible');
-                    self._setCaption('', true);
-                    self.$container.removeClass('file-input-new file-input-ajax-new');
-                };
-            self.reader = null;
-            self._resetUpload();
-            self._hideFileIcon();
-            if (self.dropZoneEnabled) {
-                self.$container.find('.file-drop-zone .' + self.dropZoneTitleClass).remove();
-            }
-            if (isAjaxUpload) {
-                $.each(files, function (vKey, vFile) {
-                    self._filterDuplicate(vFile, tfiles, fileIds);
-                });
-            } else {
-                if (e.target && e.target.files === undefined) {
-                    files = e.target.value ? [{name: e.target.value.replace(/^.+\\/, '')}] : [];
-                } else {
-                    files = e.target.files || {};
-                }
-                tfiles = files;
-            }
-            if ($h.isEmpty(tfiles) || tfiles.length === 0) {
-                if (!isAjaxUpload) {
-                    self.clear();
-                }
-                self._raise('fileselectnone');
-                return;
-            }
-            self._resetErrors();
-            len = tfiles.length;
-            total = self._getFileCount(isAjaxUpload ? (self.getFileStack().length + len) : len);
-            if (maxCount > 0 && total > maxCount) {
-                if (!self.autoReplace || len > maxCount) {
-                    maxCountCheck((self.autoReplace && len > maxCount ? len : total), maxCount);
-                    return;
-                }
-                if (total > maxCount) {
-                    self._resetPreviewThumbs(isAjaxUpload);
-                }
-            } else {
-                if (!isAjaxUpload || flagSingle) {
-                    self._resetPreviewThumbs(false);
-                    if (flagSingle) {
-                        self.clearStack();
-                    }
-                } else {
-                    if (isAjaxUpload && ctr === 0 && (!self.previewCache.count() || self.overwriteInitial)) {
-                        self._resetPreviewThumbs(true);
-                    }
-                }
-            }
-            if (self.isPreviewable) {
-                self.readFiles(tfiles);
-            } else {
-                self._updateFileDetails(1);
-            }
-        },
-        _abort: function (params) {
-            var self = this, data;
-            if (self.ajaxAborted && typeof self.ajaxAborted === "object" && self.ajaxAborted.message !== undefined) {
-                data = $.extend(true, {}, self._getOutData(), params);
-                data.abortData = self.ajaxAborted.data || {};
-                data.abortMessage = self.ajaxAborted.message;
-                self._setProgress(101, self.$progress, self.msgCancelled);
-                self._showUploadError(self.ajaxAborted.message, data, 'filecustomerror');
-                self.cancel();
-                return true;
-            }
-            return !!self.ajaxAborted;
-        },
-        _resetFileStack: function () {
-            var self = this, i = 0, newstack = [], newnames = [], newids = [];
-            self._getThumbs().each(function () {
-                var $thumb = $(this), ind = $thumb.attr('data-fileindex'), file = self.filestack[ind],
-                    pid = $thumb.attr('id');
-                if (ind === '-1' || ind === -1) {
-                    return;
-                }
-                if (file !== undefined) {
-                    newstack[i] = file;
-                    newnames[i] = self._getFileName(file);
-                    newids[i] = self._getFileId(file);
-                    $thumb.attr({'id': self.previewInitId + '-' + i, 'data-fileindex': i});
-                    i++;
-                } else {
-                    $thumb.attr({'id': 'uploaded-' + $h.uniqId(), 'data-fileindex': '-1'});
-                }
-                self.$preview.find('#zoom-' + pid).attr({
-                    'id': 'zoom-' + $thumb.attr('id'),
-                    'data-fileindex': $thumb.attr('data-fileindex')
-                });
-            });
-            self.filestack = newstack;
-            self.filenames = newnames;
-            self.fileids = newids;
-        },
-        _isFileSelectionValid: function (cnt) {
-            var self = this;
-            cnt = cnt || 0;
-            if (self.required && !self.getFilesCount()) {
-                self.$errorContainer.html('');
-                self._showUploadError(self.msgFileRequired);
-                return false;
-            }
-            if (self.minFileCount > 0 && self._getFileCount(cnt) < self.minFileCount) {
-                self._noFilesError({});
-                return false;
-            }
-            return true;
-        },
-        clearStack: function () {
-            var self = this;
-            self.filestack = [];
-            self.filenames = [];
-            self.fileids = [];
-            return self.$element;
-        },
-        updateStack: function (i, file) {
-            var self = this;
-            self.filestack[i] = file;
-            self.filenames[i] = self._getFileName(file);
-            self.fileids[i] = file && self._getFileId(file) || null;
-            return self.$element;
-        },
-        addToStack: function (file) {
-            var self = this;
-            self.filestack.push(file);
-            self.filenames.push(self._getFileName(file));
-            self.fileids.push(self._getFileId(file));
-            return self.$element;
-        },
-        getFileStack: function (skipNull) {
-            var self = this;
-            return self.filestack.filter(function (n) {
-                return (skipNull ? n !== undefined : n !== undefined && n !== null);
-            });
-        },
-        getFilesCount: function () {
-            var self = this, len = self.isAjaxUpload ? self.getFileStack().length : self._inputFileCount();
-            return self._getFileCount(len);
-        },
-        readFiles: function (files) {
-            this.reader = new FileReader();
-            var self = this, $el = self.$element, $preview = self.$preview, reader = self.reader,
-                $container = self.$previewContainer, $status = self.$previewStatus, msgLoading = self.msgLoading,
-                msgProgress = self.msgProgress, previewInitId = self.previewInitId, numFiles = files.length,
-                settings = self.fileTypeSettings, ctr = self.filestack.length, readFile,
-                fileTypes = self.allowedFileTypes, typLen = fileTypes ? fileTypes.length : 0,
-                fileExt = self.allowedFileExtensions, strExt = $h.isEmpty(fileExt) ? '' : fileExt.join(', '),
-                maxPreviewSize = self.maxFilePreviewSize && parseFloat(self.maxFilePreviewSize),
-                canPreview = $preview.length && (!maxPreviewSize || isNaN(maxPreviewSize)),
-                throwError = function (msg, file, previewId, index) {
-                    var p1 = $.extend(true, {}, self._getOutData({}, {}, files), {id: previewId, index: index}),
-                        p2 = {id: previewId, index: index, file: file, files: files}, $thumb;
-                    self._previewDefault(file, previewId, true);
-                    if (self.isAjaxUpload) {
-                        self.addToStack(undefined);
-                        setTimeout(function () {
-                            readFile(index + 1);
-                        }, 100);
-                    } else {
-                        numFiles = 0;
-                    }
-                    self._initFileActions();
-                    $thumb = $('#' + previewId);
-                    $thumb.find('.kv-file-upload').hide();
-                    if (self.removeFromPreviewOnError) {
-                        $thumb.remove();
-                    }
-                    self.isError = self.isAjaxUpload ? self._showUploadError(msg, p1) : self._showError(msg, p2);
-                    self._updateFileDetails(numFiles);
-                };
-
-            self.loadedImages = [];
-            self.totalImagesCount = 0;
-
-            $.each(files, function (key, file) {
-                var func = self.fileTypeSettings.image;
-                if (func && func(file.type)) {
-                    self.totalImagesCount++;
-                }
-            });
-            readFile = function (i) {
-                if ($h.isEmpty($el.attr('multiple'))) {
-                    numFiles = 1;
-                }
-                if (i >= numFiles) {
-                    if (self.isAjaxUpload && self.filestack.length > 0) {
-                        self._raise('filebatchselected', [self.getFileStack()]);
-                    } else {
-                        self._raise('filebatchselected', [files]);
-                    }
-                    $container.removeClass('file-thumb-loading');
-                    $status.html('');
-                    return;
-                }
-                var node = ctr + i, previewId = previewInitId + "-" + node, file = files[i], fSizeKB, j, msg,
-                    fnText = settings.text, fnImage = settings.image, fnHtml = settings.html, typ, chk, typ1, typ2,
-                    caption = file && file.name ? self.slug(file.name) : '', fileSize = (file && file.size || 0) / 1000,
-                    fileExtExpr = '', previewData = $h.createObjectURL(file), fileCount = 0,
-                    strTypes = '',
-                    func, knownTypes = 0, isText, isHtml, isImage, txtFlag, processFileLoaded = function () {
-                        var msg = msgProgress.setTokens({
-                            'index': i + 1,
-                            'files': numFiles,
-                            'percent': 50,
-                            'name': caption
-                        });
-                        setTimeout(function () {
-                            $status.html(msg);
-                            self._updateFileDetails(numFiles);
-                            readFile(i + 1);
-                        }, 100);
-                        self._raise('fileloaded', [file, previewId, i, reader]);
-                    };
-                if (!file) {
-                    return;
-                }
-                if (typLen > 0) {
-                    for (j = 0; j < typLen; j++) {
-                        typ1 = fileTypes[j];
-                        typ2 = self.msgFileTypes[typ1] || typ1;
-                        strTypes += j === 0 ? typ2 : ', ' + typ2;
-                    }
-                }
-                if (caption === false) {
-                    readFile(i + 1);
-                    return;
-                }
-                if (caption.length === 0) {
-                    msg = self.msgInvalidFileName.replace('{name}', $h.htmlEncode(file.name, '[unknown]'));
-                    throwError(msg, file, previewId, i);
-                    return;
-                }
-                if (!$h.isEmpty(fileExt)) {
-                    fileExtExpr = new RegExp('\\.(' + fileExt.join('|') + ')$', 'i');
-                }
-                fSizeKB = fileSize.toFixed(2);
-                if (self.maxFileSize > 0 && fileSize > self.maxFileSize) {
-                    msg = self.msgSizeTooLarge.setTokens({
-                        'name': caption,
-                        'size': fSizeKB,
-                        'maxSize': self.maxFileSize
-                    });
-                    throwError(msg, file, previewId, i);
-                    return;
-                }
-                if (self.minFileSize !== null && fileSize <= $h.getNum(self.minFileSize)) {
-                    msg = self.msgSizeTooSmall.setTokens({
-                        'name': caption,
-                        'size': fSizeKB,
-                        'minSize': self.minFileSize
-                    });
-                    throwError(msg, file, previewId, i);
-                    return;
-                }
-                if (!$h.isEmpty(fileTypes) && $h.isArray(fileTypes)) {
-                    for (j = 0; j < fileTypes.length; j += 1) {
-                        typ = fileTypes[j];
-                        func = settings[typ];
-                        fileCount += !func || (typeof func !== 'function') ? 0 : (func(file.type, file.name) ? 1 : 0);
-                    }
-                    if (fileCount === 0) {
-                        msg = self.msgInvalidFileType.setTokens({'name': caption, 'types': strTypes});
-                        throwError(msg, file, previewId, i);
-                        return;
-                    }
-                }
-                if (fileCount === 0 && !$h.isEmpty(fileExt) && $h.isArray(fileExt) && !$h.isEmpty(fileExtExpr)) {
-                    chk = $h.compare(caption, fileExtExpr);
-                    fileCount += $h.isEmpty(chk) ? 0 : chk.length;
-                    if (fileCount === 0) {
-                        msg = self.msgInvalidFileExtension.setTokens({'name': caption, 'extensions': strExt});
-                        throwError(msg, file, previewId, i);
-                        return;
-                    }
-                }
-                if (!self.showPreview) {
-                    if (self.isAjaxUpload) {
-                        self.addToStack(file);
-                    }
-                    setTimeout(function () {
-                        readFile(i + 1);
-                        self._updateFileDetails(numFiles);
-                    }, 100);
-                    self._raise('fileloaded', [file, previewId, i, reader]);
-                    return;
-                }
-                if (!canPreview && fileSize > maxPreviewSize) {
-                    self.addToStack(file);
-                    $container.addClass('file-thumb-loading');
-                    self._previewDefault(file, previewId);
-                    self._initFileActions();
-                    self._updateFileDetails(numFiles);
-                    readFile(i + 1);
-                    return;
-                }
-                if ($preview.length && FileReader !== undefined) {
-                    isText = fnText(file.type, caption);
-                    isHtml = fnHtml(file.type, caption);
-                    isImage = fnImage(file.type, caption);
-                    $status.html(msgLoading.replace('{index}', i + 1).replace('{files}', numFiles));
-                    $container.addClass('file-thumb-loading');
-                    reader.onerror = function (evt) {
-                        self._errorHandler(evt, caption);
-                    };
-                    reader.onload = function (theFile) {
-                        var hex, fileInfo, uint, byte, bytes = [], contents, mime, readTextImage = function (textFlag) {
-                            var newReader = new FileReader();
-                            newReader.onerror = function (theFileNew) {
-                                self._errorHandler(theFileNew, caption);
-                            };
-                            newReader.onload = function (theFileNew) {
-                                self._previewFile(i, file, theFileNew, previewId, previewData, fileInfo);
-                                self._initFileActions();
-                                processFileLoaded();
-                            };
-                            if (textFlag) {
-                                newReader.readAsText(file, self.textEncoding);
-                            } else {
-                                newReader.readAsDataURL(file);
-                            }
-                        };
-                        fileInfo = {'name': caption, 'type': file.type};
-                        $.each(settings, function (k, f) {
-                            if (k !== 'object' && k !== 'other' && typeof f === 'function' && f(file.type, caption)) {
-                                knownTypes++;
-                            }
-                        });
-                        if (knownTypes === 0) {// auto detect mime types from content if no known file types detected
-                            uint = new Uint8Array(theFile.target.result);
-                            for (j = 0; j < uint.length; j++) {
-                                byte = uint[j].toString(16);
-                                bytes.push(byte);
-                            }
-                            hex = bytes.join('').toLowerCase().substring(0, 8);
-                            mime = $h.getMimeType(hex, '', '');
-                            if ($h.isEmpty(mime)) { // look for ascii text content
-                                contents = $h.arrayBuffer2String(reader.result);
-                                mime = $h.isSvg(contents) ? 'image/svg+xml' : $h.getMimeType(hex, contents, file.type);
-                            }
-                            fileInfo = {'name': caption, 'type': mime};
-                            isText = fnText(mime, '');
-                            isHtml = fnHtml(mime, '');
-                            isImage = fnImage(mime, '');
-                            txtFlag = isText || isHtml;
-                            if (txtFlag || isImage) {
-                                readTextImage(txtFlag);
-                                return;
-                            }
-                        }
-                        self._previewFile(i, file, theFile, previewId, previewData, fileInfo);
-                        self._initFileActions();
-                        processFileLoaded();
-                    };
-                    reader.onprogress = function (data) {
-                        if (data.lengthComputable) {
-                            var fact = (data.loaded / data.total) * 100, progress = Math.ceil(fact);
-                            msg = msgProgress.setTokens({
-                                'index': i + 1,
-                                'files': numFiles,
-                                'percent': progress,
-                                'name': caption
-                            });
-                            setTimeout(function () {
-                                $status.html(msg);
-                            }, 100);
-                        }
-                    };
-
-                    if (isText || isHtml) {
-                        reader.readAsText(file, self.textEncoding);
-                    } else {
-                        if (isImage) {
-                            reader.readAsDataURL(file);
-                        } else {
-                            reader.readAsArrayBuffer(file);
-                        }
-                    }
-                } else {
-                    self._previewDefault(file, previewId);
-                    setTimeout(function () {
-                        readFile(i + 1);
-                        self._updateFileDetails(numFiles);
-                    }, 100);
-                    self._raise('fileloaded', [file, previewId, i, reader]);
-                }
-                self.addToStack(file);
-            };
-
-            readFile(0);
-            self._updateFileDetails(numFiles, false);
-        },
-        lock: function () {
-            var self = this;
-            self._resetErrors();
-            self.disable();
-            if (self.showRemove) {
-                self.$container.find('.fileinput-remove').hide();
-            }
-            if (self.showCancel) {
-                self.$container.find('.fileinput-cancel').show();
-            }
-            self._raise('filelock', [self.filestack, self._getExtraData()]);
-            return self.$element;
-        },
-        unlock: function (reset) {
-            var self = this;
-            if (reset === undefined) {
-                reset = true;
-            }
-            self.enable();
-            if (self.showCancel) {
-                self.$container.find('.fileinput-cancel').hide();
-            }
-            if (self.showRemove) {
-                self.$container.find('.fileinput-remove').show();
-            }
-            if (reset) {
-                self._resetFileStack();
-            }
-            self._raise('fileunlock', [self.filestack, self._getExtraData()]);
-            return self.$element;
-        },
-        cancel: function () {
-            var self = this, xhr = self.ajaxRequests, len = xhr.length, i;
-            if (len > 0) {
-                for (i = 0; i < len; i += 1) {
-                    self.cancelling = true;
-                    xhr[i].abort();
-                }
-            }
-            self._setProgressCancelled();
-            self._getThumbs().each(function () {
-                var $thumb = $(this), ind = $thumb.attr('data-fileindex');
-                $thumb.removeClass('file-uploading');
-                if (self.filestack[ind] !== undefined) {
-                    $thumb.find('.kv-file-upload').removeClass('disabled').removeAttr('disabled');
-                    $thumb.find('.kv-file-remove').removeClass('disabled').removeAttr('disabled');
-                }
-                self.unlock();
-            });
-            return self.$element;
-        },
-        clear: function () {
-            var self = this, cap;
-            if (!self._raise('fileclear')) {
-                return;
-            }
-            self.$btnUpload.removeAttr('disabled');
-            self._getThumbs().find('video,audio,img').each(function () {
-                $h.cleanMemory($(this));
-            });
-            self._clearFileInput();
-            self._resetUpload();
-            self.clearStack();
-            self._resetErrors(true);
-            if (self._hasInitialPreview()) {
-                self._showFileIcon();
-                self._resetPreview();
-                self._initPreviewActions();
-                self.$container.removeClass('file-input-new');
-            } else {
-                self._getThumbs().each(function () {
-                    self._clearObjects($(this));
-                });
-                if (self.isAjaxUpload) {
-                    self.previewCache.data = {};
-                }
-                self.$preview.html('');
-                cap = (!self.overwriteInitial && self.initialCaption.length > 0) ? self.initialCaption : '';
-                self.$caption.attr('title', '').val(cap);
-                $h.addCss(self.$container, 'file-input-new');
-                self._validateDefaultPreview();
-            }
-            if (self.$container.find($h.FRAMES).length === 0) {
-                if (!self._initCaption()) {
-                    self.$captionContainer.removeClass('icon-visible');
-                }
-            }
-            self._hideFileIcon();
-            self._raise('filecleared');
-            self.$captionContainer.focus();
-            self._setFileDropZoneTitle();
-            return self.$element;
-        },
-        reset: function () {
-            var self = this;
-            if (!self._raise('filereset')) {
-                return;
-            }
-            self._resetPreview();
-            self.$container.find('.fileinput-filename').text('');
-            $h.addCss(self.$container, 'file-input-new');
-            if (self.getFrames().length || self.dropZoneEnabled) {
-                self.$container.removeClass('file-input-new');
-            }
-            self.clearStack();
-            self.formdata = {};
-            self._setFileDropZoneTitle();
-            return self.$element;
-        },
-        disable: function () {
-            var self = this;
-            self.isDisabled = true;
-            self._raise('filedisabled');
-            self.$element.attr('disabled', 'disabled');
-            self.$container.find(".kv-fileinput-caption").addClass("file-caption-disabled");
-            self.$container.find(".fileinput-remove, .fileinput-upload, .file-preview-frame button")
-                .attr("disabled", true);
-            $h.addCss(self.$container.find('.btn-file'), 'disabled');
-            self._initDragDrop();
-            return self.$element;
-        },
-        enable: function () {
-            var self = this;
-            self.isDisabled = false;
-            self._raise('fileenabled');
-            self.$element.removeAttr('disabled');
-            self.$container.find(".kv-fileinput-caption").removeClass("file-caption-disabled");
-            self.$container.find(".fileinput-remove, .fileinput-upload, .file-preview-frame button")
-                .removeAttr("disabled");
-            self.$container.find('.btn-file').removeClass('disabled');
-            self._initDragDrop();
-            return self.$element;
-        },
-        upload: function () {
-            var self = this, totLen = self.getFileStack().length, i, outData, len,
-                hasExtraData = !$.isEmptyObject(self._getExtraData());
-            if (!self.isAjaxUpload || self.isDisabled || !self._isFileSelectionValid(totLen)) {
-                return;
-            }
-            self._resetUpload();
-            if (totLen === 0 && !hasExtraData) {
-                self._showUploadError(self.msgUploadEmpty);
-                return;
-            }
-            self.$progress.show();
-            self.uploadCount = 0;
-            self.uploadStatus = {};
-            self.uploadLog = [];
-            self.lock();
-            self._setProgress(2);
-            if (totLen === 0 && hasExtraData) {
-                self._uploadExtraOnly();
-                return;
-            }
-            len = self.filestack.length;
-            self.hasInitData = false;
-            if (self.uploadAsync) {
-                outData = self._getOutData();
-                self._raise('filebatchpreupload', [outData]);
-                self.fileBatchCompleted = false;
-                self.uploadCache = {content: [], config: [], tags: [], append: true};
-                self.uploadAsyncCount = self.getFileStack().length;
-                for (i = 0; i < len; i++) {
-                    self.uploadCache.content[i] = null;
-                    self.uploadCache.config[i] = null;
-                    self.uploadCache.tags[i] = null;
-                }
-                self.$preview.find('.file-preview-initial').removeClass($h.SORT_CSS);
-                self._initSortable();
-                self.cacheInitialPreview = self.getPreview();
-
-                for (i = 0; i < len; i++) {
-                    if (self.filestack[i]) {
-                        self._uploadSingle(i, true);
-                    }
-                }
-                return;
-            }
-            self._uploadBatch();
-            return self.$element;
-        },
-        destroy: function () {
-            var self = this, $form = self.$form, $cont = self.$container, $el = self.$element, ns = self.namespace;
-            $(document).off(ns);
-            $(window).off(ns);
-            if ($form && $form.length) {
-                $form.off(ns);
-            }
-            if (self.isAjaxUpload) {
-                self._clearFileInput();
-            }
-            self._cleanup();
-            self._initPreviewCache();
-            $el.insertBefore($cont).off(ns).removeData();
-            $cont.off().remove();
-            return $el;
-        },
-        refresh: function (options) {
-            var self = this, $el = self.$element;
-            if (typeof options !== 'object' || $h.isEmpty(options)) {
-                options = self.options;
-            } else {
-                options = $.extend(true, {}, self.options, options);
-            }
-            self._init(options, true);
-            self._listen();
-            return $el;
-        },
-        zoom: function (frameId) {
-            var self = this, $frame = self._getFrame(frameId), $modal = self.$modal;
-            if (!$frame) {
-                return;
-            }
-            $h.initModal($modal);
-            $modal.html(self._getModalContent());
-            self._setZoomContent($frame);
-            $modal.modal('show');
-            self._initZoomButtons();
-        },
-        getExif: function (frameId) {
-            var self = this, $frame = self._getFrame(frameId);
-            return $frame && $frame.data('exif') || null;
-        },
-        getFrames: function (cssFilter) {
-            var self = this, $frames;
-            cssFilter = cssFilter || '';
-            $frames = self.$preview.find($h.FRAMES + cssFilter);
-            if (self.reversePreviewOrder) {
-                $frames = $($frames.get().reverse());
-            }
-            return $frames;
-        },
-        getPreview: function () {
-            var self = this;
-            return {
-                content: self.initialPreview,
-                config: self.initialPreviewConfig,
-                tags: self.initialPreviewThumbTags
-            };
-        }
-    };
-
-    $.fn.fileinput = function (option) {
-        if (!$h.hasFileAPISupport() && !$h.isIE(9)) {
-            return;
-        }
-        var args = Array.apply(null, arguments), retvals = [];
-        args.shift();
-        this.each(function () {
-            var self = $(this), data = self.data('fileinput'), options = typeof option === 'object' && option,
-                theme = options.theme || self.data('theme'), l = {}, t = {},
-                lang = options.language || self.data('language') || $.fn.fileinput.defaults.language || 'en', opt;
-            if (!data) {
-                if (theme) {
-                    t = $.fn.fileinputThemes[theme] || {};
-                }
-                if (lang !== 'en' && !$h.isEmpty($.fn.fileinputLocales[lang])) {
-                    l = $.fn.fileinputLocales[lang] || {};
-                }
-                opt = $.extend(true, {}, $.fn.fileinput.defaults, t, $.fn.fileinputLocales.en, l, options, self.data());
-                data = new FileInput(this, opt);
-                self.data('fileinput', data);
-            }
-
-            if (typeof option === 'string') {
-                retvals.push(data[option].apply(data, args));
-            }
-        });
-        switch (retvals.length) {
-            case 0:
-                return this;
-            case 1:
-                return retvals[0];
-            default:
-                return retvals;
-        }
-    };
-
-    $.fn.fileinput.defaults = {
-        language: 'en',
-        showCaption: true,
-        showBrowse: true,
-        showPreview: true,
-        showRemove: true,
-        showUpload: true,
-        showCancel: true,
-        showClose: true,
-        showUploadedThumbs: true,
-        browseOnZoneClick: false,
-        autoReplace: false,
-        autoOrientImage: false, // if `true` applicable for JPEG images only
-        required: false,
-        rtl: false,
-        hideThumbnailContent: false,
-        encodeUrl: true,
-        generateFileId: null,
-        previewClass: '',
-        captionClass: '',
-        frameClass: 'krajee-default',
-        mainClass: 'file-caption-main',
-        mainTemplate: null,
-        purifyHtml: true,
-        fileSizeGetter: null,
-        initialCaption: '',
-        initialPreview: [],
-        initialPreviewDelimiter: '*$$*',
-        initialPreviewAsData: false,
-        initialPreviewFileType: 'image',
-        initialPreviewConfig: [],
-        initialPreviewThumbTags: [],
-        previewThumbTags: {},
-        initialPreviewShowDelete: true,
-        initialPreviewDownloadUrl: '',
-        removeFromPreviewOnError: false,
-        deleteUrl: '',
-        deleteExtraData: {},
-        overwriteInitial: true,
-        previewZoomButtonIcons: {
-            prev: '<i class="glyphicon glyphicon-triangle-left"></i>',
-            next: '<i class="glyphicon glyphicon-triangle-right"></i>',
-            toggleheader: '<i class="glyphicon glyphicon-resize-vertical"></i>',
-            fullscreen: '<i class="glyphicon glyphicon-fullscreen"></i>',
-            borderless: '<i class="glyphicon glyphicon-resize-full"></i>',
-            close: '<i class="glyphicon glyphicon-remove"></i>'
-        },
-        previewZoomButtonClasses: {
-            prev: 'btn btn-navigate',
-            next: 'btn btn-navigate',
-            toggleheader: 'btn btn-sm btn-kv btn-default btn-outline-secondary',
-            fullscreen: 'btn btn-sm btn-kv btn-default btn-outline-secondary',
-            borderless: 'btn btn-sm btn-kv btn-default btn-outline-secondary',
-            close: 'btn btn-sm btn-kv btn-default btn-outline-secondary'
-        },
-        previewTemplates: {},
-        previewContentTemplates: {},
-        preferIconicPreview: false,
-        preferIconicZoomPreview: false,
-        allowedPreviewTypes: undefined,
-        allowedPreviewMimeTypes: null,
-        allowedFileTypes: null,
-        allowedFileExtensions: null,
-        defaultPreviewContent: null,
-        customLayoutTags: {},
-        customPreviewTags: {},
-        previewFileIcon: '<i class="glyphicon glyphicon-file"></i>',
-        previewFileIconClass: 'file-other-icon',
-        previewFileIconSettings: {},
-        previewFileExtSettings: {},
-        buttonLabelClass: 'hidden-xs',
-        browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>&nbsp;',
-        browseClass: 'btn btn-primary',
-        removeIcon: '<i class="glyphicon glyphicon-trash"></i>',
-        removeClass: 'btn btn-default btn-secondary',
-        cancelIcon: '<i class="glyphicon glyphicon-ban-circle"></i>',
-        cancelClass: 'btn btn-default btn-secondary',
-        uploadIcon: '<i class="glyphicon glyphicon-upload"></i>',
-        uploadClass: 'btn btn-default btn-secondary',
-        uploadUrl: null,
-        uploadUrlThumb: null,
-        uploadAsync: true,
-        uploadExtraData: {},
-        zoomModalHeight: 480,
-        minImageWidth: null,
-        minImageHeight: null,
-        maxImageWidth: null,
-        maxImageHeight: null,
-        resizeImage: false,
-        resizePreference: 'width',
-        resizeQuality: 0.92,
-        resizeDefaultImageType: 'image/jpeg',
-        resizeIfSizeMoreThan: 0, // in KB
-        minFileSize: 0,
-        maxFileSize: 0,
-        maxFilePreviewSize: 25600, // 25 MB
-        minFileCount: 0,
-        maxFileCount: 0,
-        validateInitialCount: false,
-        msgValidationErrorClass: 'text-danger',
-        msgValidationErrorIcon: '<i class="glyphicon glyphicon-exclamation-sign"></i> ',
-        msgErrorClass: 'file-error-message',
-        progressThumbClass: "progress-bar bg-success progress-bar-success progress-bar-striped active",
-        progressClass: "progress-bar bg-success progress-bar-success progress-bar-striped active",
-        progressCompleteClass: "progress-bar bg-success progress-bar-success",
-        progressErrorClass: "progress-bar bg-danger progress-bar-danger",
-        progressUploadThreshold: 99,
-        previewFileType: 'image',
-        elCaptionContainer: null,
-        elCaptionText: null,
-        elPreviewContainer: null,
-        elPreviewImage: null,
-        elPreviewStatus: null,
-        elErrorContainer: null,
-        errorCloseButton: $h.closeButton('kv-error-close'),
-        slugCallback: null,
-        dropZoneEnabled: true,
-        dropZoneTitleClass: 'file-drop-zone-title',
-        fileActionSettings: {},
-        otherActionButtons: '',
-        textEncoding: 'UTF-8',
-        ajaxSettings: {},
-        ajaxDeleteSettings: {},
-        showAjaxErrorDetails: true,
-        mergeAjaxCallbacks: false,
-        mergeAjaxDeleteCallbacks: false,
-        retryErrorUploads: true,
-        reversePreviewOrder: false
-    };
-
-    // noinspection HtmlUnknownAttribute
-    $.fn.fileinputLocales.en = {
-        fileSingle: 'file',
-        filePlural: 'files',
-        browseLabel: 'Browse &hellip;',
-        removeLabel: 'Remove',
-        removeTitle: 'Clear selected files',
-        cancelLabel: 'Cancel',
-        cancelTitle: 'Abort ongoing upload',
-        uploadLabel: 'Upload',
-        uploadTitle: 'Upload selected files',
-        msgNo: 'No',
-        msgNoFilesSelected: 'No files selected',
-        msgCancelled: 'Cancelled',
-        msgPlaceholder: 'Select {files}...',
-        msgZoomModalHeading: 'Detailed Preview',
-        msgFileRequired: 'You must select a file to upload.',
-        msgSizeTooSmall: 'File "{name}" (<b>{size} KB</b>) is too small and must be larger than <b>{minSize} KB</b>.',
-        msgSizeTooLarge: 'File "{name}" (<b>{size} KB</b>) exceeds maximum allowed upload size of <b>{maxSize} KB</b>.',
-        msgFilesTooLess: 'You must select at least <b>{n}</b> {files} to upload.',
-        msgFilesTooMany: 'Number of files selected for upload <b>({n})</b> exceeds maximum allowed limit of <b>{m}</b>.',
-        msgFileNotFound: 'File "{name}" not found!',
-        msgFileSecured: 'Security restrictions prevent reading the file "{name}".',
-        msgFileNotReadable: 'File "{name}" is not readable.',
-        msgFilePreviewAborted: 'File preview aborted for "{name}".',
-        msgFilePreviewError: 'An error occurred while reading the file "{name}".',
-        msgInvalidFileName: 'Invalid or unsupported characters in file name "{name}".',
-        msgInvalidFileType: 'Invalid type for file "{name}". Only "{types}" files are supported.',
-        msgInvalidFileExtension: 'Invalid extension for file "{name}". Only "{extensions}" files are supported.',
-        msgFileTypes: {
-            'image': 'image',
-            'html': 'HTML',
-            'text': 'text',
-            'video': 'video',
-            'audio': 'audio',
-            'flash': 'flash',
-            'pdf': 'PDF',
-            'object': 'object'
-        },
-        msgUploadAborted: 'The file upload was aborted',
-        msgUploadThreshold: 'Processing...',
-        msgUploadBegin: 'Initializing...',
-        msgUploadEnd: 'Done',
-        msgUploadEmpty: 'No valid data available for upload.',
-        msgUploadError: 'Error',
-        msgValidationError: 'Validation Error',
-        msgLoading: 'Loading file {index} of {files} &hellip;',
-        msgProgress: 'Loading file {index} of {files} - {name} - {percent}% completed.',
-        msgSelected: '{n} {files} selected',
-        msgFoldersNotAllowed: 'Drag & drop files only! {n} folder(s) dropped were skipped.',
-        msgImageWidthSmall: 'Width of image file "{name}" must be at least {size} px.',
-        msgImageHeightSmall: 'Height of image file "{name}" must be at least {size} px.',
-        msgImageWidthLarge: 'Width of image file "{name}" cannot exceed {size} px.',
-        msgImageHeightLarge: 'Height of image file "{name}" cannot exceed {size} px.',
-        msgImageResizeError: 'Could not get the image dimensions to resize.',
-        msgImageResizeException: 'Error while resizing the image.<pre>{errors}</pre>',
-        msgAjaxError: 'Something went wrong with the {operation} operation. Please try again later!',
-        msgAjaxProgressError: '{operation} failed',
-        ajaxOperations: {
-            deleteThumb: 'file delete',
-            uploadThumb: 'file upload',
-            uploadBatch: 'batch file upload',
-            uploadExtra: 'form data upload'
-        },
-        dropZoneTitle: 'Drag & drop files here &hellip;',
-        dropZoneClickTitle: '<br>(or click to select {files})',
-        previewZoomButtonTitles: {
-            prev: 'View previous file',
-            next: 'View next file',
-            toggleheader: 'Toggle header',
-            fullscreen: 'Toggle full screen',
-            borderless: 'Toggle borderless mode',
-            close: 'Close detailed preview'
-        },
-        usePdfRenderer: function () {
-            var isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
-            return !!navigator.userAgent.match(/(iPod|iPhone|iPad|Android)/i) || isIE11;
-        },
-        pdfRendererUrl: '',
-        pdfRendererTemplate: '<iframe class="kv-preview-data file-preview-pdf" src="{renderer}?file={data}" {style}></iframe>'
-    };
-
-    $.fn.fileinput.Constructor = FileInput;
-
-    /**
-     * Convert automatically file inputs with class 'file' into a bootstrap fileinput control.
-     */
-    $(document).ready(function () {
-        var $input = $('input.file[type=file]');
-        if ($input.length) {
-            $input.fileinput();
-        }
-    });
 }));
-
-/***/ }),
-
-/***/ "./node_modules/bootstrap-fileinput/themes/fa/theme.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/bootstrap-fileinput/themes/fa/theme.js ***!
-  \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/*!
- * bootstrap-fileinput v4.5.2
- * http://plugins.krajee.com/file-input
- *
- * Font Awesome icon theme configuration for bootstrap-fileinput. Requires font awesome assets to be loaded.
- *
- * Author: Kartik Visweswaran
- * Copyright: 2014 - 2018, Kartik Visweswaran, Krajee.com
- *
- * Licensed under the BSD 3-Clause
- * https://github.com/kartik-v/bootstrap-fileinput/blob/master/LICENSE.md
- */
-(function ($) {
-    "use strict";
-
-    $.fn.fileinputThemes.fa = {
-        fileActionSettings: {
-            removeIcon: '<i class="fa fa-trash"></i>',
-            uploadIcon: '<i class="fa fa-upload"></i>',
-            uploadRetryIcon: '<i class="fa fa-repeat"></i>',
-            downloadIcon: '<i class="fa fa-download"></i>',
-            zoomIcon: '<i class="fa fa-search-plus"></i>',
-            dragIcon: '<i class="fa fa-arrows"></i>',
-            indicatorNew: '<i class="fa fa-plus-circle text-warning"></i>',
-            indicatorSuccess: '<i class="fa fa-check-circle text-success"></i>',
-            indicatorError: '<i class="fa fa-exclamation-circle text-danger"></i>',
-            indicatorLoading: '<i class="fa fa-hourglass text-muted"></i>'
-        },
-        layoutTemplates: {
-            fileIcon: '<i class="fa fa-file kv-caption-icon"></i> '
-        },
-        previewZoomButtonIcons: {
-            prev: '<i class="fa fa-caret-left fa-lg"></i>',
-            next: '<i class="fa fa-caret-right fa-lg"></i>',
-            toggleheader: '<i class="fa fa-fw fa-arrows-v"></i>',
-            fullscreen: '<i class="fa fa-fw fa-arrows-alt"></i>',
-            borderless: '<i class="fa fa-fw fa-external-link"></i>',
-            close: '<i class="fa fa-fw fa-remove"></i>'
-        },
-        previewFileIcon: '<i class="fa fa-file"></i>',
-        browseIcon: '<i class="fa fa-folder-open"></i>',
-        removeIcon: '<i class="fa fa-trash"></i>',
-        cancelIcon: '<i class="fa fa-ban"></i>',
-        uploadIcon: '<i class="fa fa-upload"></i>',
-        msgValidationErrorIcon: '<i class="fa fa-exclamation-circle"></i> '
-    };
-})(window.jQuery);
+//# sourceMappingURL=bootstrap-confirmation.js.map
 
 
 /***/ }),
@@ -13394,9 +8808,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
- * Bootstrap-select v1.13.5 (https://developer.snapappointments.com/bootstrap-select)
+ * Bootstrap-select v1.13.9 (https://developer.snapappointments.com/bootstrap-select)
  *
- * Copyright 2012-2018 SnapAppointments, LLC
+ * Copyright 2012-2019 SnapAppointments, LLC
  * Licensed under MIT (https://github.com/snapappointments/bootstrap-select/blob/master/LICENSE)
  */
 
@@ -13414,6 +8828,128 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 (function ($) {
   'use strict';
 
+  var DISALLOWED_ATTRIBUTES = ['sanitize', 'whiteList', 'sanitizeFn'];
+
+  var uriAttrs = [
+    'background',
+    'cite',
+    'href',
+    'itemtype',
+    'longdesc',
+    'poster',
+    'src',
+    'xlink:href'
+  ];
+
+  var ARIA_ATTRIBUTE_PATTERN = /^aria-[\w-]*$/i;
+
+  var DefaultWhitelist = {
+    // Global attributes allowed on any supplied element below.
+    '*': ['class', 'dir', 'id', 'lang', 'role', 'tabindex', 'style', ARIA_ATTRIBUTE_PATTERN],
+    a: ['target', 'href', 'title', 'rel'],
+    area: [],
+    b: [],
+    br: [],
+    col: [],
+    code: [],
+    div: [],
+    em: [],
+    hr: [],
+    h1: [],
+    h2: [],
+    h3: [],
+    h4: [],
+    h5: [],
+    h6: [],
+    i: [],
+    img: ['src', 'alt', 'title', 'width', 'height'],
+    li: [],
+    ol: [],
+    p: [],
+    pre: [],
+    s: [],
+    small: [],
+    span: [],
+    sub: [],
+    sup: [],
+    strong: [],
+    u: [],
+    ul: []
+  }
+
+  /**
+   * A pattern that recognizes a commonly useful subset of URLs that are safe.
+   *
+   * Shoutout to Angular 7 https://github.com/angular/angular/blob/7.2.4/packages/core/src/sanitization/url_sanitizer.ts
+   */
+  var SAFE_URL_PATTERN = /^(?:(?:https?|mailto|ftp|tel|file):|[^&:/?#]*(?:[/?#]|$))/gi;
+
+  /**
+   * A pattern that matches safe data URLs. Only matches image, video and audio types.
+   *
+   * Shoutout to Angular 7 https://github.com/angular/angular/blob/7.2.4/packages/core/src/sanitization/url_sanitizer.ts
+   */
+  var DATA_URL_PATTERN = /^data:(?:image\/(?:bmp|gif|jpeg|jpg|png|tiff|webp)|video\/(?:mpeg|mp4|ogg|webm)|audio\/(?:mp3|oga|ogg|opus));base64,[a-z0-9+/]+=*$/i;
+
+  function allowedAttribute (attr, allowedAttributeList) {
+    var attrName = attr.nodeName.toLowerCase()
+
+    if ($.inArray(attrName, allowedAttributeList) !== -1) {
+      if ($.inArray(attrName, uriAttrs) !== -1) {
+        return Boolean(attr.nodeValue.match(SAFE_URL_PATTERN) || attr.nodeValue.match(DATA_URL_PATTERN))
+      }
+
+      return true
+    }
+
+    var regExp = $(allowedAttributeList).filter(function (index, value) {
+      return value instanceof RegExp
+    })
+
+    // Check if a regular expression validates the attribute.
+    for (var i = 0, l = regExp.length; i < l; i++) {
+      if (attrName.match(regExp[i])) {
+        return true
+      }
+    }
+
+    return false
+  }
+
+  function sanitizeHtml (unsafeElements, whiteList, sanitizeFn) {
+    if (sanitizeFn && typeof sanitizeFn === 'function') {
+      return sanitizeFn(unsafeElements);
+    }
+
+    var whitelistKeys = Object.keys(whiteList);
+
+    for (var i = 0, len = unsafeElements.length; i < len; i++) {
+      var elements = unsafeElements[i].querySelectorAll('*');
+
+      for (var j = 0, len2 = elements.length; j < len2; j++) {
+        var el = elements[j];
+        var elName = el.nodeName.toLowerCase();
+
+        if (whitelistKeys.indexOf(elName) === -1) {
+          el.parentNode.removeChild(el);
+
+          continue;
+        }
+
+        var attributeList = [].slice.call(el.attributes);
+        var whitelistedAttributes = [].concat(whiteList['*'] || [], whiteList[elName] || []);
+
+        for (var k = 0, len3 = attributeList.length; k < len3; k++) {
+          var attr = attributeList[k];
+
+          if (!allowedAttribute(attr, whitelistedAttributes)) {
+            el.removeAttribute(attr.nodeName);
+          }
+        }
+      }
+    }
+  }
+
   // Polyfill for browsers with no classList support
   // Remove in v2
   if (!('classList' in document.createElement('_'))) {
@@ -13429,9 +8965,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
             return {
               add: function (classes) {
+                classes = Array.prototype.slice.call(arguments).join(' ');
                 return $elem.addClass(classes);
               },
               remove: function (classes) {
+                classes = Array.prototype.slice.call(arguments).join(' ');
                 return $elem.removeClass(classes);
               },
               toggle: function (classes, force) {
@@ -13466,6 +9004,21 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
   }
 
   var testElement = document.createElement('_');
+
+  testElement.classList.add('c1', 'c2');
+
+  if (!testElement.classList.contains('c2')) {
+    var _add = DOMTokenList.prototype.add,
+        _remove = DOMTokenList.prototype.remove;
+
+    DOMTokenList.prototype.add = function () {
+      Array.prototype.forEach.call(arguments, _add.bind(this));
+    }
+
+    DOMTokenList.prototype.remove = function () {
+      Array.prototype.forEach.call(arguments, _remove.bind(this));
+    }
+  }
 
   testElement.classList.toggle('c3', false);
 
@@ -13567,19 +9120,25 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
     };
   }
 
+  if (HTMLSelectElement && !HTMLSelectElement.prototype.hasOwnProperty('selectedOptions')) {
+    Object.defineProperty(HTMLSelectElement.prototype, 'selectedOptions', {
+      get: function () {
+        return this.querySelectorAll(':checked');
+      }
+    });
+  }
+
   // much faster than $.val()
   function getSelectValues (select) {
     var result = [];
-    var options = select && select.options;
+    var options = select.selectedOptions;
     var opt;
 
     if (select.multiple) {
       for (var i = 0, len = options.length; i < len; i++) {
         opt = options[i];
 
-        if (opt.selected) {
-          result.push(opt.value || opt.text);
-        }
+        result.push(opt.value || opt.text);
       }
     } else {
       result = select.value;
@@ -13643,7 +9202,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
   function stringSearch (li, searchString, method, normalize) {
     var stringTypes = [
-          'content',
+          'display',
           'subtext',
           'tokens'
         ],
@@ -13657,7 +9216,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
         string = string.toString();
 
         // Strip HTML tags. This isn't perfect, but it's much faster than any other method
-        if (stringType === 'content') {
+        if (stringType === 'display') {
           string = string.replace(/<[^>]+>/g, '');
         }
 
@@ -13779,15 +9338,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
     '`': '&#x60;'
   };
 
-  var unescapeMap = {
-    '&amp;': '&',
-    '&lt;': '<',
-    '&gt;': '>',
-    '&quot;': '"',
-    '&#x27;': "'",
-    '&#x60;': '`'
-  };
-
   // Functions for escaping and unescaping strings to/from HTML interpolation.
   var createEscaper = function (map) {
     var escaper = function (match) {
@@ -13804,7 +9354,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
   };
 
   var htmlEscape = createEscaper(escapeMap);
-  var htmlUnescape = createEscaper(unescapeMap);
 
   /**
    * ------------------------------------------------------------------------
@@ -13882,12 +9431,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
     version.major = version.full[0];
     version.success = true;
   } catch (err) {
-    console.warn(
-      'There was an issue retrieving Bootstrap\'s version. ' +
-      'Ensure Bootstrap is being loaded before bootstrap-select and there is no namespace collision. ' +
-      'If loading Bootstrap asynchronously, the version may need to be manually specified via $.fn.selectpicker.Constructor.BootstrapVersion.',
-      err
-    );
+    // do nothing
   }
 
   var selectId = 0;
@@ -13904,22 +9448,140 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
     MENULEFT: 'dropdown-menu-left',
     // to-do: replace with more advanced template/customization options
     BUTTONCLASS: 'btn-default',
-    POPOVERHEADER: 'popover-title'
+    POPOVERHEADER: 'popover-title',
+    ICONBASE: 'glyphicon',
+    TICKICON: 'glyphicon-ok'
   }
 
   var Selector = {
     MENU: '.' + classNames.MENU
   }
 
-  if (version.major === '4') {
-    classNames.DIVIDER = 'dropdown-divider';
-    classNames.SHOW = 'show';
-    classNames.BUTTONCLASS = 'btn-light';
-    classNames.POPOVERHEADER = 'popover-header';
+  var elementTemplates = {
+    span: document.createElement('span'),
+    i: document.createElement('i'),
+    subtext: document.createElement('small'),
+    a: document.createElement('a'),
+    li: document.createElement('li'),
+    whitespace: document.createTextNode('\u00A0'),
+    fragment: document.createDocumentFragment()
   }
+
+  elementTemplates.a.setAttribute('role', 'option');
+  elementTemplates.subtext.className = 'text-muted';
+
+  elementTemplates.text = elementTemplates.span.cloneNode(false);
+  elementTemplates.text.className = 'text';
+
+  elementTemplates.checkMark = elementTemplates.span.cloneNode(false);
 
   var REGEXP_ARROW = new RegExp(keyCodes.ARROW_UP + '|' + keyCodes.ARROW_DOWN);
   var REGEXP_TAB_OR_ESCAPE = new RegExp('^' + keyCodes.TAB + '$|' + keyCodes.ESCAPE);
+
+  var generateOption = {
+    li: function (content, classes, optgroup) {
+      var li = elementTemplates.li.cloneNode(false);
+
+      if (content) {
+        if (content.nodeType === 1 || content.nodeType === 11) {
+          li.appendChild(content);
+        } else {
+          li.innerHTML = content;
+        }
+      }
+
+      if (typeof classes !== 'undefined' && classes !== '') li.className = classes;
+      if (typeof optgroup !== 'undefined' && optgroup !== null) li.classList.add('optgroup-' + optgroup);
+
+      return li;
+    },
+
+    a: function (text, classes, inline) {
+      var a = elementTemplates.a.cloneNode(true);
+
+      if (text) {
+        if (text.nodeType === 11) {
+          a.appendChild(text);
+        } else {
+          a.insertAdjacentHTML('beforeend', text);
+        }
+      }
+
+      if (typeof classes !== 'undefined' && classes !== '') a.className = classes;
+      if (version.major === '4') a.classList.add('dropdown-item');
+      if (inline) a.setAttribute('style', inline);
+
+      return a;
+    },
+
+    text: function (options, useFragment) {
+      var textElement = elementTemplates.text.cloneNode(false),
+          subtextElement,
+          iconElement;
+
+      if (options.content) {
+        textElement.innerHTML = options.content;
+      } else {
+        textElement.textContent = options.text;
+
+        if (options.icon) {
+          var whitespace = elementTemplates.whitespace.cloneNode(false);
+
+          // need to use <i> for icons in the button to prevent a breaking change
+          // note: switch to span in next major release
+          iconElement = (useFragment === true ? elementTemplates.i : elementTemplates.span).cloneNode(false);
+          iconElement.className = options.iconBase + ' ' + options.icon;
+
+          elementTemplates.fragment.appendChild(iconElement);
+          elementTemplates.fragment.appendChild(whitespace);
+        }
+
+        if (options.subtext) {
+          subtextElement = elementTemplates.subtext.cloneNode(false);
+          subtextElement.textContent = options.subtext;
+          textElement.appendChild(subtextElement);
+        }
+      }
+
+      if (useFragment === true) {
+        while (textElement.childNodes.length > 0) {
+          elementTemplates.fragment.appendChild(textElement.childNodes[0]);
+        }
+      } else {
+        elementTemplates.fragment.appendChild(textElement);
+      }
+
+      return elementTemplates.fragment;
+    },
+
+    label: function (options) {
+      var textElement = elementTemplates.text.cloneNode(false),
+          subtextElement,
+          iconElement;
+
+      textElement.innerHTML = options.label;
+
+      if (options.icon) {
+        var whitespace = elementTemplates.whitespace.cloneNode(false);
+
+        iconElement = elementTemplates.span.cloneNode(false);
+        iconElement.className = options.iconBase + ' ' + options.icon;
+
+        elementTemplates.fragment.appendChild(iconElement);
+        elementTemplates.fragment.appendChild(whitespace);
+      }
+
+      if (options.subtext) {
+        subtextElement = elementTemplates.subtext.cloneNode(false);
+        subtextElement.textContent = options.subtext;
+        textElement.appendChild(subtextElement);
+      }
+
+      elementTemplates.fragment.appendChild(textElement);
+
+      return elementTemplates.fragment;
+    }
+  }
 
   var Selectpicker = function (element, options) {
     var that = this;
@@ -13936,20 +9598,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
     this.$menu = null;
     this.options = options;
     this.selectpicker = {
-      main: {
-        // store originalIndex (key) and newIndex (value) in this.selectpicker.main.map.newIndex for fast accessibility
-        // allows us to do this.main.elements[this.selectpicker.main.map.newIndex[index]] to select an element based on the originalIndex
-        map: {
-          newIndex: {},
-          originalIndex: {}
-        }
-      },
-      current: {
-        map: {}
-      }, // current changes if a search is in progress
-      search: {
-        map: {}
-      },
+      main: {},
+      current: {}, // current changes if a search is in progress
+      search: {},
       view: {},
       keydown: {
         keyHistory: '',
@@ -13989,9 +9640,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
     this.init();
   };
 
-  Selectpicker.VERSION = '1.13.5';
-
-  Selectpicker.BootstrapVersion = version.major;
+  Selectpicker.VERSION = '1.13.9';
 
   // part of this is duplicated in i18n/defaults-en_US.js. Make sure to update both.
   Selectpicker.DEFAULTS = {
@@ -14029,8 +9678,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
     liveSearchNormalize: false,
     liveSearchStyle: 'contains',
     actionsBox: false,
-    iconBase: 'glyphicon',
-    tickIcon: 'glyphicon-ok',
+    iconBase: classNames.ICONBASE,
+    tickIcon: classNames.TICKICON,
     showTick: false,
     template: {
       caret: '<span class="caret"></span>'
@@ -14041,14 +9690,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
     dropdownAlignRight: false,
     windowPadding: 0,
     virtualScroll: 600,
-    display: false
+    display: false,
+    sanitize: true,
+    sanitizeFn: null,
+    whiteList: DefaultWhitelist
   };
-
-  if (version.major === '4') {
-    Selectpicker.DEFAULTS.style = 'btn-light';
-    Selectpicker.DEFAULTS.iconBase = '';
-    Selectpicker.DEFAULTS.tickIcon = 'bs-ok-default';
-  }
 
   Selectpicker.prototype = {
 
@@ -14060,23 +9706,25 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
       this.selectId = selectId++;
 
-      this.$element.addClass('bs-select-hidden');
+      this.$element[0].classList.add('bs-select-hidden');
 
       this.multiple = this.$element.prop('multiple');
       this.autofocus = this.$element.prop('autofocus');
+      this.options.showTick = this.$element[0].classList.contains('show-tick');
+
       this.$newElement = this.createDropdown();
-      this.createLi();
       this.$element
         .after(this.$newElement)
         .prependTo(this.$newElement);
+
       this.$button = this.$newElement.children('button');
       this.$menu = this.$newElement.children(Selector.MENU);
       this.$menuInner = this.$menu.children('.inner');
       this.$searchbox = this.$menu.find('input');
 
-      this.$element.removeClass('bs-select-hidden');
+      this.$element[0].classList.remove('bs-select-hidden');
 
-      if (this.options.dropdownAlignRight === true) this.$menu.addClass(classNames.MENURIGHT);
+      if (this.options.dropdownAlignRight === true) this.$menu[0].classList.add(classNames.MENURIGHT);
 
       if (typeof id !== 'undefined') {
         this.$button.attr('data-id', id);
@@ -14085,8 +9733,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
       this.checkDisabled();
       this.clickListener();
       if (this.options.liveSearch) this.liveSearchListener();
-      this.render();
       this.setStyle();
+      this.render();
       this.setWidth();
       if (this.options.container) {
         this.selectPosition();
@@ -14125,8 +9773,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
       });
 
       if (that.$element[0].hasAttribute('required')) {
-        this.$element.on('invalid', function () {
-          that.$button.addClass('bs-invalid');
+        this.$element.on('invalid' + EVENT_KEY, function () {
+          that.$button[0].classList.add('bs-invalid');
 
           that.$element
             .on('shown' + EVENT_KEY + '.invalid', function () {
@@ -14136,18 +9784,19 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
             })
             .on('rendered' + EVENT_KEY, function () {
               // if select is no longer invalid, remove the bs-invalid class
-              if (this.validity.valid) that.$button.removeClass('bs-invalid');
+              if (this.validity.valid) that.$button[0].classList.remove('bs-invalid');
               that.$element.off('rendered' + EVENT_KEY);
             });
 
           that.$button.on('blur' + EVENT_KEY, function () {
-            that.$element.focus().blur();
+            that.$element.trigger('focus').trigger('blur');
             that.$button.off('blur' + EVENT_KEY);
           });
         });
       }
 
       setTimeout(function () {
+        that.createLi();
         that.$element.trigger('loaded' + EVENT_KEY);
       });
     },
@@ -14156,7 +9805,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
       // Options
       // If we are multiple or showTick option is set, then add the show-tick class
       var showTick = (this.multiple || this.options.showTick) ? ' show-tick' : '',
+          inputGroup = '',
           autofocus = this.autofocus ? ' autofocus' : '';
+
+      if (version.major < 4 && this.$element.parent().hasClass('input-group')) {
+        inputGroup = ' input-group-btn';
+      }
 
       // Elements
       var drop,
@@ -14212,7 +9866,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
       }
 
       drop =
-        '<div class="dropdown bootstrap-select' + showTick + '">' +
+        '<div class="dropdown bootstrap-select' + showTick + inputGroup + '">' +
           '<button type="button" class="' + this.options.styleBase + ' dropdown-toggle" ' + (this.options.display === 'static' ? 'data-display="static"' : '') + 'data-toggle="dropdown"' + autofocus + ' role="button">' +
             '<div class="filter-option">' +
               '<div class="filter-option-inner">' +
@@ -14346,18 +10000,18 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
         firstChunk = Math.max(0, currentChunk - 1);
         lastChunk = Math.min(chunkCount - 1, currentChunk + 1);
 
-        that.selectpicker.view.position0 = Math.max(0, chunks[firstChunk][0]) || 0;
-        that.selectpicker.view.position1 = Math.min(size, chunks[lastChunk][1]) || 0;
+        that.selectpicker.view.position0 = isVirtual === false ? 0 : (Math.max(0, chunks[firstChunk][0]) || 0);
+        that.selectpicker.view.position1 = isVirtual === false ? size : (Math.min(size, chunks[lastChunk][1]) || 0);
 
         positionIsDifferent = prevPositions[0] !== that.selectpicker.view.position0 || prevPositions[1] !== that.selectpicker.view.position1;
 
         if (that.activeIndex !== undefined) {
-          prevActive = that.selectpicker.current.elements[that.selectpicker.current.map.newIndex[that.prevActiveIndex]];
-          active = that.selectpicker.current.elements[that.selectpicker.current.map.newIndex[that.activeIndex]];
-          selected = that.selectpicker.current.elements[that.selectpicker.current.map.newIndex[that.selectedIndex]];
+          prevActive = that.selectpicker.main.elements[that.prevActiveIndex];
+          active = that.selectpicker.main.elements[that.activeIndex];
+          selected = that.selectpicker.main.elements[that.selectedIndex];
 
           if (init) {
-            if (that.activeIndex !== that.selectedIndex) {
+            if (that.activeIndex !== that.selectedIndex && active && active.length) {
               active.classList.remove('active');
               if (active.firstChild) active.firstChild.classList.remove('active');
             }
@@ -14378,7 +10032,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
         if (init || positionIsDifferent) {
           previousElements = that.selectpicker.view.visibleElements ? that.selectpicker.view.visibleElements.slice() : [];
 
-          that.selectpicker.view.visibleElements = that.selectpicker.current.elements.slice(that.selectpicker.view.position0, that.selectpicker.view.position1);
+          if (isVirtual === false) {
+            that.selectpicker.view.visibleElements = that.selectpicker.current.elements;
+          } else {
+            that.selectpicker.view.visibleElements = that.selectpicker.current.elements.slice(that.selectpicker.view.position0, that.selectpicker.view.position1);
+          }
 
           that.setOptionStatus();
 
@@ -14394,13 +10052,35 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
                 emptyMenu = menuInner.firstChild.cloneNode(false),
                 marginTop,
                 marginBottom,
-                elements = isVirtual === true ? that.selectpicker.view.visibleElements : that.selectpicker.current.elements;
+                elements = that.selectpicker.view.visibleElements,
+                toSanitize = [];
 
             // replace the existing UL with an empty one - this is faster than $.empty()
             menuInner.replaceChild(emptyMenu, menuInner.firstChild);
 
             for (var i = 0, visibleElementsLen = elements.length; i < visibleElementsLen; i++) {
-              menuFragment.appendChild(elements[i]);
+              var element = elements[i],
+                  elText,
+                  elementData;
+
+              if (that.options.sanitize) {
+                elText = element.lastChild;
+
+                if (elText) {
+                  elementData = that.selectpicker.current.data[i + that.selectpicker.view.position0];
+
+                  if (elementData && elementData.content && !elementData.sanitized) {
+                    toSanitize.push(elText);
+                    elementData.sanitized = true;
+                  }
+                }
+              }
+
+              menuFragment.appendChild(element);
+            }
+
+            if (that.options.sanitize && toSanitize.length) {
+              sanitizeHtml(toSanitize, that.options.whiteList, that.options.sanitizeFn);
             }
 
             if (isVirtual === true) {
@@ -14418,7 +10098,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
         that.prevActiveIndex = that.activeIndex;
 
         if (!that.options.liveSearch) {
-          that.$menuInner.focus();
+          that.$menuInner.trigger('focus');
         } else if (isSearching && init) {
           var index = 0,
               newActive;
@@ -14439,7 +10119,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
             if (newActive.firstChild) newActive.firstChild.classList.add('active');
           }
 
-          that.activeIndex = that.selectpicker.current.map.originalIndex[index];
+          that.activeIndex = (that.selectpicker.current.data[index] || {}).index;
         }
       }
 
@@ -14452,155 +10132,15 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
         });
     },
 
-    createLi: function () {
-      var that = this,
-          mainElements = [],
-          hiddenOptions = {},
-          widestOption,
-          availableOptionsCount = 0,
-          widestOptionLength = 0,
-          mainData = [],
-          optID = 0,
-          headerIndex = 0,
-          liIndex = -1; // increment liIndex whenever a new <li> element is created to ensure newIndex is correct
-
-      if (!this.selectpicker.view.titleOption) this.selectpicker.view.titleOption = document.createElement('option');
-
-      var elementTemplates = {
-            span: document.createElement('span'),
-            subtext: document.createElement('small'),
-            a: document.createElement('a'),
-            li: document.createElement('li'),
-            whitespace: document.createTextNode('\u00A0')
-          },
-          checkMark,
-          fragment = document.createDocumentFragment();
-
-      if (that.options.showTick || that.multiple) {
-        checkMark = elementTemplates.span.cloneNode(false);
-        checkMark.className = that.options.iconBase + ' ' + that.options.tickIcon + ' check-mark';
-        elementTemplates.a.appendChild(checkMark);
-      }
-
-      elementTemplates.a.setAttribute('role', 'option');
-
-      elementTemplates.subtext.className = 'text-muted';
-
-      elementTemplates.text = elementTemplates.span.cloneNode(false);
-      elementTemplates.text.className = 'text';
-
-      // Helper functions
-      /**
-       * @param content
-       * @param [classes]
-       * @param [optgroup]
-       * @returns {HTMLElement}
-       */
-      var generateLI = function (content, classes, optgroup) {
-        var li = elementTemplates.li.cloneNode(false);
-
-        if (content) {
-          if (content.nodeType === 1 || content.nodeType === 11) {
-            li.appendChild(content);
-          } else {
-            li.innerHTML = content;
-          }
-        }
-
-        if (typeof classes !== 'undefined' && classes !== '') li.className = classes;
-        if (typeof optgroup !== 'undefined' && optgroup !== null) li.classList.add('optgroup-' + optgroup);
-
-        return li;
-      };
-
-      /**
-       * @param text
-       * @param [classes]
-       * @param [inline]
-       * @returns {string}
-       */
-      var generateA = function (text, classes, inline) {
-        var a = elementTemplates.a.cloneNode(true);
-
-        if (text) {
-          if (text.nodeType === 11) {
-            a.appendChild(text);
-          } else {
-            a.insertAdjacentHTML('beforeend', text);
-          }
-        }
-
-        if (typeof classes !== 'undefined' && classes !== '') a.className = classes;
-        if (version.major === '4') a.classList.add('dropdown-item');
-        if (inline) a.setAttribute('style', inline);
-
-        return a;
-      };
-
-      var generateText = function (options) {
-        var textElement = elementTemplates.text.cloneNode(false),
-            optionSubtextElement,
-            optionIconElement;
-
-        if (options.optionContent) {
-          textElement.innerHTML = options.optionContent;
-        } else {
-          textElement.textContent = options.text;
-
-          if (options.optionIcon) {
-            var whitespace = elementTemplates.whitespace.cloneNode(false);
-
-            optionIconElement = elementTemplates.span.cloneNode(false);
-            optionIconElement.className = that.options.iconBase + ' ' + options.optionIcon;
-
-            fragment.appendChild(optionIconElement);
-            fragment.appendChild(whitespace);
-          }
-
-          if (options.optionSubtext) {
-            optionSubtextElement = elementTemplates.subtext.cloneNode(false);
-            optionSubtextElement.innerHTML = options.optionSubtext;
-            textElement.appendChild(optionSubtextElement);
-          }
-        }
-
-        fragment.appendChild(textElement);
-
-        return fragment;
-      };
-
-      var generateLabel = function (options) {
-        var labelTextElement = elementTemplates.text.cloneNode(false),
-            labelSubtextElement,
-            labelIconElement;
-
-        labelTextElement.innerHTML = options.labelEscaped;
-
-        if (options.labelIcon) {
-          var whitespace = elementTemplates.whitespace.cloneNode(false);
-
-          labelIconElement = elementTemplates.span.cloneNode(false);
-          labelIconElement.className = that.options.iconBase + ' ' + options.labelIcon;
-
-          fragment.appendChild(labelIconElement);
-          fragment.appendChild(whitespace);
-        }
-
-        if (options.labelSubtext) {
-          labelSubtextElement = elementTemplates.subtext.cloneNode(false);
-          labelSubtextElement.textContent = options.labelSubtext;
-          labelTextElement.appendChild(labelSubtextElement);
-        }
-
-        fragment.appendChild(labelTextElement);
-
-        return fragment;
-      }
+    setPlaceholder: function () {
+      var updateIndex = false;
 
       if (this.options.title && !this.multiple) {
-        // this option doesn't create a new <li> element, but does add a new option, so liIndex is decreased
-        // since newIndex is recalculated on every refresh, liIndex needs to be decreased even if the titleOption is already appended
-        liIndex--;
+        if (!this.selectpicker.view.titleOption) this.selectpicker.view.titleOption = document.createElement('option');
+
+        // this option doesn't create a new <li> element, but does add a new option at the start,
+        // so startIndex should increase to prevent having to check every option for the bs-title-option class
+        updateIndex = true;
 
         var element = this.$element[0],
             isSelected = false,
@@ -14628,258 +10168,195 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
         if (isSelected) element.selectedIndex = 0;
       }
 
-      var $selectOptions = this.$element.find('option');
+      return updateIndex;
+    },
 
-      $selectOptions.each(function (index) {
-        var $this = $(this);
+    createLi: function () {
+      var that = this,
+          iconBase = this.options.iconBase,
+          optionSelector = ':not([hidden]):not([data-hidden="true"])',
+          mainElements = [],
+          mainData = [],
+          widestOptionLength = 0,
+          optID = 0,
+          startIndex = this.setPlaceholder() ? 1 : 0; // append the titleOption if necessary and skip the first option in the loop
 
-        liIndex++;
+      if (this.options.hideDisabled) optionSelector += ':not(:disabled)';
 
-        if ($this.hasClass('bs-title-option')) return;
+      if ((that.options.showTick || that.multiple) && !elementTemplates.checkMark.parentNode) {
+        elementTemplates.checkMark.className = iconBase + ' ' + that.options.tickIcon + ' check-mark';
+        elementTemplates.a.appendChild(elementTemplates.checkMark);
+      }
 
-        var thisData = $this.data();
+      var selectOptions = this.$element[0].querySelectorAll('select > *' + optionSelector);
 
-        // Get the class and text for the option
-        var optionClass = this.className || '',
-            inline = htmlEscape(this.style.cssText),
-            optionContent = thisData.content,
-            text = this.textContent,
-            tokens = thisData.tokens,
-            subtext = thisData.subtext,
-            icon = thisData.icon,
-            $parent = $this.parent(),
-            parent = $parent[0],
-            isOptgroup = parent.tagName === 'OPTGROUP',
-            isOptgroupDisabled = isOptgroup && parent.disabled,
-            isDisabled = this.disabled || isOptgroupDisabled,
-            prevHiddenIndex,
-            showDivider = this.previousElementSibling && this.previousElementSibling.tagName === 'OPTGROUP',
-            textElement,
-            labelElement,
-            prevHidden;
+      function addDivider (config) {
+        var previousData = mainData[mainData.length - 1];
 
-        var parentData = $parent.data();
-
-        if ((thisData.hidden === true || this.hidden) || (that.options.hideDisabled && (isDisabled || isOptgroupDisabled))) {
-          // set prevHiddenIndex - the index of the first hidden option in a group of hidden options
-          // used to determine whether or not a divider should be placed after an optgroup if there are
-          // hidden options between the optgroup and the first visible option
-          prevHiddenIndex = thisData.prevHiddenIndex;
-          $this.next().data('prevHiddenIndex', (prevHiddenIndex !== undefined ? prevHiddenIndex : index));
-
-          liIndex--;
-
-          hiddenOptions[index] = {
-            type: 'hidden',
-            data: thisData
-          }
-
-          // if previous element is not an optgroup
-          if (!showDivider) {
-            if (prevHiddenIndex !== undefined) {
-              // select the element **before** the first hidden element in the group
-              prevHidden = $selectOptions[prevHiddenIndex].previousElementSibling;
-
-              if (prevHidden && prevHidden.tagName === 'OPTGROUP' && !prevHidden.disabled) {
-                showDivider = true;
-              }
-            }
-          }
-
-          if (showDivider && mainData[mainData.length - 1].type !== 'divider') {
-            liIndex++;
-            mainElements.push(
-              generateLI(
-                false,
-                classNames.DIVIDER,
-                optID + 'div'
-              )
-            );
-            mainData.push({
-              type: 'divider',
-              optID: optID
-            });
-          }
-
+        // ensure optgroup doesn't create back-to-back dividers
+        if (
+          previousData &&
+          previousData.type === 'divider' &&
+          (previousData.optID || config.optID)
+        ) {
           return;
         }
 
-        if (isOptgroup && thisData.divider !== true) {
-          if (that.options.hideDisabled && isDisabled) {
-            if (parentData.allOptionsDisabled === undefined) {
-              var $options = $parent.children();
-              $parent.data('allOptionsDisabled', $options.filter(':disabled').length === $options.length);
-            }
+        config = config || {};
+        config.type = 'divider';
 
-            if ($parent.data('allOptionsDisabled')) {
-              liIndex--;
-              return;
-            }
-          }
+        mainElements.push(
+          generateOption.li(
+            false,
+            classNames.DIVIDER,
+            (config.optID ? config.optID + 'div' : undefined)
+          )
+        );
 
-          var optGroupClass = ' ' + parent.className || false,
-              previousOption = this.previousElementSibling;
+        mainData.push(config);
+      }
 
-          prevHiddenIndex = thisData.prevHiddenIndex;
+      function addOption (option, config) {
+        config = config || {};
 
-          if (prevHiddenIndex !== undefined) {
-            previousOption = $selectOptions[prevHiddenIndex].previousElementSibling;
-          }
+        config.divider = option.getAttribute('data-divider') === 'true';
 
-          if (!previousOption) { // Is it the first option of the optgroup?
-            optID += 1;
-
-            // Get the opt group label
-            var label = parent.label,
-                labelEscaped = htmlEscape(label),
-                labelSubtext = parentData.subtext,
-                labelIcon = parentData.icon;
-
-            if (index !== 0 && mainElements.length > 0) { // Is it NOT the first option of the select && are there elements in the dropdown?
-              liIndex++;
-              mainElements.push(
-                generateLI(
-                  false,
-                  classNames.DIVIDER,
-                  optID + 'div'
-                )
-              );
-              mainData.push({
-                type: 'divider',
-                optID: optID
-              });
-            }
-            liIndex++;
-
-            labelElement = generateLabel({
-              labelEscaped: labelEscaped,
-              labelSubtext: labelSubtext,
-              labelIcon: labelIcon
-            });
-
-            mainElements.push(generateLI(labelElement, 'dropdown-header' + optGroupClass, optID));
-            mainData.push({
-              content: labelEscaped,
-              subtext: labelSubtext,
-              type: 'optgroup-label',
-              optID: optID
-            });
-
-            headerIndex = liIndex - 1;
-          }
-
-          textElement = generateText({
-            text: text,
-            optionContent: optionContent,
-            optionSubtext: subtext,
-            optionIcon: icon
-          });
-
-          mainElements.push(generateLI(generateA(textElement, 'opt ' + optionClass + optGroupClass, inline), '', optID));
-          mainData.push({
-            content: optionContent || text,
-            subtext: subtext,
-            tokens: tokens,
-            type: 'option',
-            optID: optID,
-            headerIndex: headerIndex,
-            lastIndex: headerIndex + parent.childElementCount,
-            originalIndex: index,
-            data: thisData
-          });
-
-          availableOptionsCount++;
-        } else if (thisData.divider === true) {
-          mainElements.push(generateLI(false, classNames.DIVIDER));
-          mainData.push({
-            type: 'divider',
-            originalIndex: index,
-            data: thisData
+        if (config.divider) {
+          addDivider({
+            optID: config.optID
           });
         } else {
-          // if previous element is not an optgroup and hideDisabled is true
-          if (!showDivider && that.options.hideDisabled) {
-            prevHiddenIndex = thisData.prevHiddenIndex;
+          var liIndex = mainData.length,
+              cssText = option.style.cssText,
+              inlineStyle = cssText ? htmlEscape(cssText) : '',
+              optionClass = (option.className || '') + (config.optgroupClass || '');
 
-            if (prevHiddenIndex !== undefined) {
-              // select the element **before** the first hidden element in the group
-              prevHidden = $selectOptions[prevHiddenIndex].previousElementSibling;
+          if (config.optID) optionClass = 'opt ' + optionClass;
 
-              if (prevHidden && prevHidden.tagName === 'OPTGROUP' && !prevHidden.disabled) {
-                showDivider = true;
-              }
-            }
+          config.text = option.textContent;
+
+          config.content = option.getAttribute('data-content');
+          config.tokens = option.getAttribute('data-tokens');
+          config.subtext = option.getAttribute('data-subtext');
+          config.icon = option.getAttribute('data-icon');
+          config.iconBase = iconBase;
+
+          var textElement = generateOption.text(config);
+
+          mainElements.push(
+            generateOption.li(
+              generateOption.a(
+                textElement,
+                optionClass,
+                inlineStyle
+              ),
+              '',
+              config.optID
+            )
+          );
+
+          option.liIndex = liIndex;
+
+          config.display = config.content || config.text;
+          config.type = 'option';
+          config.index = liIndex;
+          config.option = option;
+          config.disabled = config.disabled || option.disabled;
+
+          mainData.push(config);
+
+          var combinedLength = 0;
+
+          // count the number of characters in the option - not perfect, but should work in most cases
+          if (config.display) combinedLength += config.display.length;
+          if (config.subtext) combinedLength += config.subtext.length;
+          // if there is an icon, ensure this option's width is checked
+          if (config.icon) combinedLength += 1;
+
+          if (combinedLength > widestOptionLength) {
+            widestOptionLength = combinedLength;
+
+            // guess which option is the widest
+            // use this when calculating menu width
+            // not perfect, but it's fast, and the width will be updating accordingly when scrolling
+            that.selectpicker.view.widestOption = mainElements[mainElements.length - 1];
           }
+        }
+      }
 
-          if (showDivider && mainData[mainData.length - 1].type !== 'divider') {
-            liIndex++;
-            mainElements.push(
-              generateLI(
-                false,
-                classNames.DIVIDER,
-                optID + 'div'
-              )
-            );
-            mainData.push({
-              type: 'divider',
-              optID: optID
-            });
-          }
+      function addOptgroup (index, selectOptions) {
+        var optgroup = selectOptions[index],
+            previous = selectOptions[index - 1],
+            next = selectOptions[index + 1],
+            options = optgroup.querySelectorAll('option' + optionSelector);
 
-          textElement = generateText({
-            text: text,
-            optionContent: optionContent,
-            optionSubtext: subtext,
-            optionIcon: icon
-          });
+        if (!options.length) return;
 
-          mainElements.push(generateLI(generateA(textElement, optionClass, inline)));
-          mainData.push({
-            content: optionContent || text,
-            subtext: subtext,
-            tokens: tokens,
-            type: 'option',
-            originalIndex: index,
-            data: thisData
-          });
+        var config = {
+              label: htmlEscape(optgroup.label),
+              subtext: optgroup.getAttribute('data-subtext'),
+              icon: optgroup.getAttribute('data-icon'),
+              iconBase: iconBase
+            },
+            optgroupClass = ' ' + (optgroup.className || ''),
+            headerIndex,
+            lastIndex;
 
-          availableOptionsCount++;
+        optID++;
+
+        if (previous) {
+          addDivider({ optID: optID });
         }
 
-        that.selectpicker.main.map.newIndex[index] = liIndex;
-        that.selectpicker.main.map.originalIndex[liIndex] = index;
+        var labelElement = generateOption.label(config);
 
-        // get the most recent option info added to mainData
-        var _mainDataLast = mainData[mainData.length - 1];
+        mainElements.push(
+          generateOption.li(labelElement, 'dropdown-header' + optgroupClass, optID)
+        );
 
-        _mainDataLast.disabled = isDisabled;
+        mainData.push({
+          display: config.label,
+          subtext: config.subtext,
+          type: 'optgroup-label',
+          optID: optID
+        });
 
-        var combinedLength = 0;
+        for (var j = 0, len = options.length; j < len; j++) {
+          var option = options[j];
 
-        // count the number of characters in the option - not perfect, but should work in most cases
-        if (_mainDataLast.content) combinedLength += _mainDataLast.content.length;
-        if (_mainDataLast.subtext) combinedLength += _mainDataLast.subtext.length;
-        // if there is an icon, ensure this option's width is checked
-        if (icon) combinedLength += 1;
+          if (j === 0) {
+            headerIndex = mainData.length - 1;
+            lastIndex = headerIndex + len;
+          }
 
-        if (combinedLength > widestOptionLength) {
-          widestOptionLength = combinedLength;
-
-          // guess which option is the widest
-          // use this when calculating menu width
-          // not perfect, but it's fast, and the width will be updating accordingly when scrolling
-          widestOption = mainElements[mainElements.length - 1];
+          addOption(option, {
+            headerIndex: headerIndex,
+            lastIndex: lastIndex,
+            optID: optID,
+            optgroupClass: optgroupClass,
+            disabled: optgroup.disabled
+          });
         }
-      });
+
+        if (next) {
+          addDivider({ optID: optID });
+        }
+      }
+
+      for (var len = selectOptions.length; startIndex < len; startIndex++) {
+        var item = selectOptions[startIndex];
+
+        if (item.tagName !== 'OPTGROUP') {
+          addOption(item, {});
+        } else {
+          addOptgroup(startIndex, selectOptions);
+        }
+      }
 
       this.selectpicker.main.elements = mainElements;
       this.selectpicker.main.data = mainData;
-      this.selectpicker.main.hidden = hiddenOptions;
 
       this.selectpicker.current = this.selectpicker.main;
-
-      this.selectpicker.view.widestOption = widestOption;
-      this.selectpicker.view.availableOptionsCount = availableOptionsCount; // faster way to get # of available options without filter
     },
 
     findLis: function () {
@@ -14887,64 +10364,86 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
     },
 
     render: function () {
+      // ensure titleOption is appended and selected (if necessary) before getting selectedOptions
+      this.setPlaceholder();
+
       var that = this,
-          $selectOptions = this.$element.find('option'),
-          selectedItems = [],
-          selectedItemsInTitle = [];
+          selectedOptions = this.$element[0].selectedOptions,
+          selectedCount = selectedOptions.length,
+          button = this.$button[0],
+          buttonInner = button.querySelector('.filter-option-inner-inner'),
+          multipleSeparator = document.createTextNode(this.options.multipleSeparator),
+          titleFragment = elementTemplates.fragment.cloneNode(false),
+          showCount,
+          countMax,
+          hasContent = false;
 
       this.togglePlaceholder();
 
       this.tabIndex();
 
-      for (var index = 0, len = $selectOptions.length; index < len; index++) {
-        var i = that.selectpicker.main.map.newIndex[index],
-            option = $selectOptions[index],
-            optionData = that.selectpicker.main.data[i] || that.selectpicker.main.hidden[index];
+      if (this.options.selectedTextFormat === 'static') {
+        titleFragment = generateOption.text({ text: this.options.title }, true);
+      } else {
+        showCount = this.multiple && this.options.selectedTextFormat.indexOf('count') !== -1 && selectedCount > 1;
 
-        if (option && option.selected && optionData) {
-          selectedItems.push(option);
-
-          if ((selectedItemsInTitle.length < 100 && that.options.selectedTextFormat !== 'count') || selectedItems.length === 1) {
-            var thisData = optionData.data,
-                icon = thisData.icon && that.options.showIcon ? '<i class="' + that.options.iconBase + ' ' + thisData.icon + '"></i> ' : '',
-                subtext,
-                titleItem;
-
-            if (that.options.showSubtext && thisData.subtext && !that.multiple) {
-              subtext = ' <small class="text-muted">' + thisData.subtext + '</small>';
-            } else {
-              subtext = '';
-            }
-
-            if (option.title) {
-              titleItem = option.title;
-            } else if (thisData.content && that.options.showContent) {
-              titleItem = thisData.content.toString();
-            } else {
-              titleItem = icon + option.innerHTML.trim() + subtext;
-            }
-
-            selectedItemsInTitle.push(titleItem);
-          }
+        // determine if the number of selected options will be shown (showCount === true)
+        if (showCount) {
+          countMax = this.options.selectedTextFormat.split('>');
+          showCount = (countMax.length > 1 && selectedCount > countMax[1]) || (countMax.length === 1 && selectedCount >= 2);
         }
-      }
 
-      // Fixes issue in IE10 occurring when no default option is selected and at least one option is disabled
-      // Convert all the values into a comma delimited string
-      var title = !this.multiple ? selectedItemsInTitle[0] : selectedItemsInTitle.join(this.options.multipleSeparator);
+        // only loop through all selected options if the count won't be shown
+        if (showCount === false) {
+          for (var selectedIndex = 0; selectedIndex < selectedCount; selectedIndex++) {
+            if (selectedIndex < 50) {
+              var option = selectedOptions[selectedIndex],
+                  titleOptions = {},
+                  thisData = {
+                    content: option.getAttribute('data-content'),
+                    subtext: option.getAttribute('data-subtext'),
+                    icon: option.getAttribute('data-icon')
+                  };
 
-      // add ellipsis
-      if (selectedItems.length > 50) title += '...';
+              if (this.multiple && selectedIndex > 0) {
+                titleFragment.appendChild(multipleSeparator.cloneNode(false));
+              }
 
-      // If this is a multiselect, and selectedTextFormat is count, then show 1 of 2 selected etc..
-      if (this.multiple && this.options.selectedTextFormat.indexOf('count') !== -1) {
-        var max = this.options.selectedTextFormat.split('>');
+              if (option.title) {
+                titleOptions.text = option.title;
+              } else if (thisData.content && that.options.showContent) {
+                titleOptions.content = thisData.content.toString();
+                hasContent = true;
+              } else {
+                if (that.options.showIcon) {
+                  titleOptions.icon = thisData.icon;
+                  titleOptions.iconBase = this.options.iconBase;
+                }
+                if (that.options.showSubtext && !that.multiple && thisData.subtext) titleOptions.subtext = ' ' + thisData.subtext;
+                titleOptions.text = option.textContent.trim();
+              }
 
-        if ((max.length > 1 && selectedItems.length > max[1]) || (max.length === 1 && selectedItems.length >= 2)) {
-          var totalCount = this.selectpicker.view.availableOptionsCount,
-              tr8nText = (typeof this.options.countSelectedText === 'function') ? this.options.countSelectedText(selectedItems.length, totalCount) : this.options.countSelectedText;
+              titleFragment.appendChild(generateOption.text(titleOptions, true));
+            } else {
+              break;
+            }
+          }
 
-          title = tr8nText.replace('{0}', selectedItems.length.toString()).replace('{1}', totalCount.toString());
+          // add ellipsis
+          if (selectedCount > 49) {
+            titleFragment.appendChild(document.createTextNode('...'));
+          }
+        } else {
+          var optionSelector = ':not([hidden]):not([data-hidden="true"]):not([data-divider="true"])';
+          if (this.options.hideDisabled) optionSelector += ':not(:disabled)';
+
+          // If this is a multiselect, and selectedTextFormat is count, then show 1 of 2 selected, etc.
+          var totalCount = this.$element[0].querySelectorAll('select > option' + optionSelector + ', optgroup' + optionSelector + ' option' + optionSelector).length,
+              tr8nText = (typeof this.options.countSelectedText === 'function') ? this.options.countSelectedText(selectedCount, totalCount) : this.options.countSelectedText;
+
+          titleFragment = generateOption.text({
+            text: tr8nText.replace('{0}', selectedCount.toString()).replace('{1}', totalCount.toString())
+          }, true);
         }
       }
 
@@ -14953,18 +10452,35 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
         this.options.title = this.$element.attr('title');
       }
 
-      if (this.options.selectedTextFormat == 'static') {
-        title = this.options.title;
-      }
-
       // If the select doesn't have a title, then use the default, or if nothing is set at all, use noneSelectedText
-      if (!title) {
-        title = typeof this.options.title !== 'undefined' ? this.options.title : this.options.noneSelectedText;
+      if (!titleFragment.childNodes.length) {
+        titleFragment = generateOption.text({
+          text: typeof this.options.title !== 'undefined' ? this.options.title : this.options.noneSelectedText
+        }, true);
       }
 
       // strip all HTML tags and trim the result, then unescape any escaped tags
-      this.$button[0].title = htmlUnescape(title.replace(/<[^>]*>?/g, '').trim());
-      this.$button.find('.filter-option-inner-inner')[0].innerHTML = title;
+      button.title = titleFragment.textContent.replace(/<[^>]*>?/g, '').trim();
+
+      if (this.options.sanitize && hasContent) {
+        sanitizeHtml([titleFragment], that.options.whiteList, that.options.sanitizeFn);
+      }
+
+      buttonInner.innerHTML = '';
+      buttonInner.appendChild(titleFragment);
+
+      if (version.major < 4 && this.$newElement[0].classList.contains('bs3-has-addon')) {
+        var filterExpand = button.querySelector('.filter-expand'),
+            clone = buttonInner.cloneNode(true);
+
+        clone.className = 'filter-expand';
+
+        if (filterExpand) {
+          button.replaceChild(clone, filterExpand);
+        } else {
+          button.appendChild(clone);
+        }
+      }
 
       this.$element.trigger('rendered' + EVENT_KEY);
     },
@@ -14973,20 +10489,40 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
      * @param [style]
      * @param [status]
      */
-    setStyle: function (style, status) {
+    setStyle: function (newStyle, status) {
+      var button = this.$button[0],
+          newElement = this.$newElement[0],
+          style = this.options.style.trim(),
+          buttonClass;
+
       if (this.$element.attr('class')) {
         this.$newElement.addClass(this.$element.attr('class').replace(/selectpicker|mobile-device|bs-select-hidden|validate\[.*\]/gi, ''));
       }
 
-      var buttonClass = style || this.options.style;
+      if (version.major < 4) {
+        newElement.classList.add('bs3');
+
+        if (newElement.parentNode.classList.contains('input-group') &&
+            (newElement.previousElementSibling || newElement.nextElementSibling) &&
+            (newElement.previousElementSibling || newElement.nextElementSibling).classList.contains('input-group-addon')
+        ) {
+          newElement.classList.add('bs3-has-addon');
+        }
+      }
+
+      if (newStyle) {
+        buttonClass = newStyle.trim();
+      } else {
+        buttonClass = style;
+      }
 
       if (status == 'add') {
-        this.$button.addClass(buttonClass);
+        if (buttonClass) button.classList.add.apply(button.classList, buttonClass.split(' '));
       } else if (status == 'remove') {
-        this.$button.removeClass(buttonClass);
+        if (buttonClass) button.classList.remove.apply(button.classList, buttonClass.split(' '));
       } else {
-        this.$button.removeClass(this.options.style);
-        this.$button.addClass(buttonClass);
+        if (style) button.classList.remove.apply(button.classList, style.split(' '));
+        if (buttonClass) button.classList.add.apply(button.classList, buttonClass.split(' '));
       }
     },
 
@@ -15051,7 +10587,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
       document.body.appendChild(newElement);
 
-      var liHeight = a.offsetHeight,
+      var liHeight = li.offsetHeight,
           dropdownHeaderHeight = dropdownHeader ? dropdownHeader.offsetHeight : 0,
           headerHeight = header ? header.offsetHeight : 0,
           searchHeight = search ? search.offsetHeight : 0,
@@ -15112,7 +10648,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
           $container = $(that.options.container),
           containerPos;
 
-      if (that.options.container && !$container.is('body')) {
+      if (that.options.container && $container.length && !$container.is('body')) {
         containerPos = $container.offset();
         containerPos.top += parseInt($container.css('borderTopWidth'));
         containerPos.left += parseInt($container.css('borderLeftWidth'));
@@ -15198,7 +10734,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
         'min-height': menuInnerMinHeight + 'px'
       });
 
-      this.sizeInfo.menuInnerHeight = menuInnerHeight;
+      // ensure menuInnerHeight is always a positive number to prevent issues calculating chunkSize in createView
+      this.sizeInfo.menuInnerHeight = Math.max(menuInnerHeight, 1);
 
       if (this.selectpicker.current.data.length && this.selectpicker.current.data[this.selectpicker.current.data.length - 1].position > this.sizeInfo.menuInnerHeight) {
         this.sizeInfo.hasScrollBar = true;
@@ -15223,27 +10760,29 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
       this.setMenuSize();
 
-      if (this.options.size === 'auto') {
+      if (this.options.liveSearch) {
         this.$searchbox
           .off('input.setMenuSize propertychange.setMenuSize')
           .on('input.setMenuSize propertychange.setMenuSize', function () {
             return that.setMenuSize();
           });
+      }
 
+      if (this.options.size === 'auto') {
         $window
           .off('resize' + EVENT_KEY + '.' + this.selectId + '.setMenuSize' + ' scroll' + EVENT_KEY + '.' + this.selectId + '.setMenuSize')
           .on('resize' + EVENT_KEY + '.' + this.selectId + '.setMenuSize' + ' scroll' + EVENT_KEY + '.' + this.selectId + '.setMenuSize', function () {
             return that.setMenuSize();
           });
       } else if (this.options.size && this.options.size != 'auto' && this.selectpicker.current.elements.length > this.options.size) {
-        this.$searchbox.off('input.setMenuSize propertychange.setMenuSize');
         $window.off('resize' + EVENT_KEY + '.' + this.selectId + '.setMenuSize' + ' scroll' + EVENT_KEY + '.' + this.selectId + '.setMenuSize');
       }
 
       if (refresh) {
         offset = this.$menuInner[0].scrollTop;
       } else if (!that.multiple) {
-        selectedIndex = that.selectpicker.main.map.newIndex[that.$element[0].selectedIndex];
+        var element = that.$element[0];
+        selectedIndex = (element.options[element.selectedIndex] || {}).liIndex;
 
         if (typeof selectedIndex === 'number' && that.options.size !== false) {
           offset = that.sizeInfo.liHeight * selectedIndex;
@@ -15260,18 +10799,21 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
       if (this.options.width === 'auto') {
         requestAnimationFrame(function () {
           that.$menu.css('min-width', '0');
-          that.liHeight();
-          that.setMenuSize();
 
-          // Get correct width if element is hidden
-          var $selectClone = that.$newElement.clone().appendTo('body'),
-              btnWidth = $selectClone.css('width', 'auto').children('button').outerWidth();
+          that.$element.on('loaded' + EVENT_KEY, function () {
+            that.liHeight();
+            that.setMenuSize();
 
-          $selectClone.remove();
+            // Get correct width if element is hidden
+            var $selectClone = that.$newElement.clone().appendTo('body'),
+                btnWidth = $selectClone.css('width', 'auto').children('button').outerWidth();
 
-          // Set width to whatever's larger, button title or longest option
-          that.sizeInfo.selectWidth = Math.max(that.sizeInfo.totalMenuWidth, btnWidth);
-          that.$newElement.css('width', that.sizeInfo.selectWidth + 'px');
+            $selectClone.remove();
+
+            // Set width to whatever's larger, button title or longest option
+            that.sizeInfo.selectWidth = Math.max(that.sizeInfo.totalMenuWidth, btnWidth);
+            that.$newElement.css('width', that.sizeInfo.selectWidth + 'px');
+          });
         });
       } else if (this.options.width === 'fit') {
         // Remove inline min-width so width can be changed from 'auto'
@@ -15288,7 +10830,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
       }
       // Remove fit-width class if width is changed programmatically
       if (this.$newElement.hasClass('fit-width') && this.options.width !== 'fit') {
-        this.$newElement.removeClass('fit-width');
+        this.$newElement[0].classList.remove('fit-width');
       }
     },
 
@@ -15361,32 +10903,24 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
     },
 
     setOptionStatus: function () {
-      var that = this,
-          $selectOptions = this.$element.find('option');
+      var that = this;
 
       that.noScroll = false;
 
       if (that.selectpicker.view.visibleElements && that.selectpicker.view.visibleElements.length) {
         for (var i = 0; i < that.selectpicker.view.visibleElements.length; i++) {
-          var index = that.selectpicker.current.map.originalIndex[i + that.selectpicker.view.position0], // faster than $(li).data('originalIndex')
-              option = $selectOptions[index];
+          var liData = that.selectpicker.current.data[i + that.selectpicker.view.position0],
+              option = liData.option;
 
           if (option) {
-            var liIndex = this.selectpicker.main.map.newIndex[index],
-                li = this.selectpicker.main.elements[liIndex];
-
             that.setDisabled(
-              index,
-              option.disabled || (option.parentNode.tagName === 'OPTGROUP' && option.parentNode.disabled),
-              liIndex,
-              li
+              liData.index,
+              liData.disabled
             );
 
             that.setSelected(
-              index,
-              option.selected,
-              liIndex,
-              li
+              liData.index,
+              option.selected
             );
           }
         }
@@ -15397,10 +10931,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
      * @param {number} index - the index of the option that is being changed
      * @param {boolean} selected - true if the option is being selected, false if being deselected
      */
-    setSelected: function (index, selected, liIndex, li) {
-      var activeIndexIsSet = this.activeIndex !== undefined,
+    setSelected: function (index, selected) {
+      var li = this.selectpicker.main.elements[index],
+          liData = this.selectpicker.main.data[index],
+          activeIndexIsSet = this.activeIndex !== undefined,
           thisIsActive = this.activeIndex === index,
-          prevActiveIndex,
           prevActive,
           a,
           // if current option is already active
@@ -15412,8 +10947,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
           //  - when retainActive is false when selecting a new option (i.e. index of the newly selected option is not the same as the current activeIndex)
           keepActive = thisIsActive || (selected && !this.multiple && !activeIndexIsSet);
 
-      if (!liIndex) liIndex = this.selectpicker.main.map.newIndex[index];
-      if (!li) li = this.selectpicker.main.elements[liIndex];
+      liData.selected = selected;
 
       a = li.firstChild;
 
@@ -15437,8 +10971,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
       if (!keepActive) {
         if (!activeIndexIsSet && selected && this.prevActiveIndex !== undefined) {
-          prevActiveIndex = this.selectpicker.main.map.newIndex[this.prevActiveIndex];
-          prevActive = this.selectpicker.main.elements[prevActiveIndex];
+          prevActive = this.selectpicker.main.elements[this.prevActiveIndex];
 
           prevActive.classList.remove('active');
           if (prevActive.firstChild) {
@@ -15452,11 +10985,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
      * @param {number} index - the index of the option that is being disabled
      * @param {boolean} disabled - true if the option is being disabled, false if being enabled
      */
-    setDisabled: function (index, disabled, liIndex, li) {
-      var a;
+    setDisabled: function (index, disabled) {
+      var li = this.selectpicker.main.elements[index],
+          a;
 
-      if (!liIndex) liIndex = this.selectpicker.main.map.newIndex[index];
-      if (!li) li = this.selectpicker.main.elements[liIndex];
+      this.selectpicker.main.data[index].disabled = disabled;
 
       a = li.firstChild;
 
@@ -15483,11 +11016,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
       var that = this;
 
       if (this.isDisabled()) {
-        this.$newElement.addClass(classNames.DISABLED);
+        this.$newElement[0].classList.add(classNames.DISABLED);
         this.$button.addClass(classNames.DISABLED).attr('tabindex', -1).attr('aria-disabled', true);
       } else {
-        if (this.$button.hasClass(classNames.DISABLED)) {
-          this.$newElement.removeClass(classNames.DISABLED);
+        if (this.$button[0].classList.contains(classNames.DISABLED)) {
+          this.$newElement[0].classList.remove(classNames.DISABLED);
           this.$button.removeClass(classNames.DISABLED).attr('aria-disabled', false);
         }
 
@@ -15496,7 +11029,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
         }
       }
 
-      this.$button.click(function () {
+      this.$button.on('click', function () {
         return !that.isDisabled();
       });
     },
@@ -15550,9 +11083,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
       function setFocus () {
         if (that.options.liveSearch) {
-          that.$searchbox.focus();
+          that.$searchbox.trigger('focus');
         } else {
-          that.$menuInner.focus();
+          that.$menuInner.trigger('focus');
         }
       }
 
@@ -15579,7 +11112,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
       this.$menuInner.on('click', 'li a', function (e, retainActive) {
         var $this = $(this),
             position0 = that.isVirtual() ? that.selectpicker.view.position0 : 0,
-            clickedIndex = that.selectpicker.current.map.originalIndex[$this.parent().index() + position0],
+            clickedData = that.selectpicker.current.data[$this.parent().index() + position0],
+            clickedIndex = clickedData.index,
             prevValue = getSelectValues(that.$element[0]),
             prevIndex = that.$element.prop('selectedIndex'),
             triggerChange = true;
@@ -15594,8 +11128,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
         // Don't run if the select is disabled
         if (!that.isDisabled() && !$this.parent().hasClass(classNames.DISABLED)) {
           var $options = that.$element.find('option'),
-              $option = $options.eq(clickedIndex),
-              state = $option.prop('selected'),
+              option = clickedData.option,
+              $option = $(option),
+              state = option.selected,
               $optgroup = $option.parent('optgroup'),
               $optgroupOptions = $optgroup.find('option'),
               maxOptions = that.options.maxOptions,
@@ -15610,13 +11145,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
           if (!that.multiple) { // Deselect all others if not multi select box
             $options.prop('selected', false);
-            $option.prop('selected', true);
+            option.selected = true;
             that.setSelected(clickedIndex, true);
           } else { // Toggle the one we have chosen if we are multi select.
-            $option.prop('selected', !state);
+            option.selected = !state;
 
             that.setSelected(clickedIndex, !state);
-            $this.blur();
+            $this.trigger('blur');
 
             if (maxOptions !== false || maxOptionsGrp !== false) {
               var maxReached = maxOptions < $options.filter(':selected').length,
@@ -15684,16 +11219,16 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
           }
 
           if (!that.multiple || (that.multiple && that.options.maxOptions === 1)) {
-            that.$button.focus();
+            that.$button.trigger('focus');
           } else if (that.options.liveSearch) {
-            that.$searchbox.focus();
+            that.$searchbox.trigger('focus');
           }
 
           // Trigger select 'change'
           if (triggerChange) {
             if ((prevValue != getSelectValues(that.$element[0]) && that.multiple) || (prevIndex != that.$element.prop('selectedIndex') && !that.multiple)) {
               // $option.prop('selected') is current option state (selected/unselected). prevValue is the value of the select prior to being changed.
-              changedArguments = [clickedIndex, $option.prop('selected'), prevValue];
+              changedArguments = [option.index, $option.prop('selected'), prevValue];
               that.$element
                 .triggerNative('change');
             }
@@ -15706,9 +11241,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
           e.preventDefault();
           e.stopPropagation();
           if (that.options.liveSearch && !$(e.target).hasClass('close')) {
-            that.$searchbox.focus();
+            that.$searchbox.trigger('focus');
           } else {
-            that.$button.focus();
+            that.$button.trigger('focus');
           }
         }
       });
@@ -15717,14 +11252,14 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
         e.preventDefault();
         e.stopPropagation();
         if (that.options.liveSearch) {
-          that.$searchbox.focus();
+          that.$searchbox.trigger('focus');
         } else {
-          that.$button.focus();
+          that.$button.trigger('focus');
         }
       });
 
       this.$menu.on('click', '.' + classNames.POPOVERHEADER + ' .close', function () {
-        that.$button.click();
+        that.$button.trigger('click');
       });
 
       this.$searchbox.on('click', function (e) {
@@ -15733,9 +11268,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
       this.$menu.on('click', '.actions-btn', function (e) {
         if (that.options.liveSearch) {
-          that.$searchbox.focus();
+          that.$searchbox.trigger('focus');
         } else {
-          that.$button.focus();
+          that.$button.trigger('focus');
         }
 
         e.preventDefault();
@@ -15748,16 +11283,15 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
         }
       });
 
-      this.$element.on({
-        'change': function () {
+      this.$element
+        .on('change' + EVENT_KEY, function () {
           that.render();
           that.$element.trigger('changed' + EVENT_KEY, changedArguments);
           changedArguments = null;
-        },
-        'focus': function () {
-          if (!that.options.mobile) that.$button.focus();
-        }
-      });
+        })
+        .on('focus' + EVENT_KEY, function () {
+          if (!that.options.mobile) that.$button.trigger('focus');
+        });
     },
 
     liveSearchListener: function () {
@@ -15777,8 +11311,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
       this.$searchbox.on('input propertychange', function () {
         var searchValue = that.$searchbox.val();
 
-        that.selectpicker.search.map.newIndex = {};
-        that.selectpicker.search.map.originalIndex = {};
         that.selectpicker.search.elements = [];
         that.selectpicker.search.data = [];
 
@@ -15826,11 +11358,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
             if (li.type !== 'divider' || (li.type === 'divider' && liPrev && liPrev.type !== 'divider' && cacheLen - 1 !== i)) {
               that.selectpicker.search.data.push(li);
               searchMatch.push(that.selectpicker.main.elements[index]);
-
-              if (li.hasOwnProperty('originalIndex')) {
-                that.selectpicker.search.map.newIndex[li.originalIndex] = searchMatch.length - 1;
-                that.selectpicker.search.map.originalIndex[searchMatch.length - 1] = li.originalIndex;
-              }
             }
           }
 
@@ -15858,9 +11385,17 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
     val: function (value) {
       if (typeof value !== 'undefined') {
+        var prevValue = getSelectValues(this.$element[0]);
+
+        changedArguments = [null, null, prevValue];
+
         this.$element
           .val(value)
-          .triggerNative('change');
+          .trigger('changed' + EVENT_KEY, changedArguments);
+
+        this.render();
+
+        changedArguments = null;
 
         return this.$element;
       } else {
@@ -15872,26 +11407,25 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
       if (!this.multiple) return;
       if (typeof status === 'undefined') status = true;
 
-      var $selectOptions = this.$element.find('option'),
+      var element = this.$element[0],
           previousSelected = 0,
           currentSelected = 0,
-          prevValue = getSelectValues(this.$element[0]);
+          prevValue = getSelectValues(element);
 
-      this.$element.addClass('bs-select-hidden');
+      element.classList.add('bs-select-hidden');
 
-      for (var i = 0; i < this.selectpicker.current.elements.length; i++) {
+      for (var i = 0, len = this.selectpicker.current.elements.length; i < len; i++) {
         var liData = this.selectpicker.current.data[i],
-            index = this.selectpicker.current.map.originalIndex[i], // faster than $(li).data('originalIndex')
-            option = $selectOptions[index];
+            option = liData.option;
 
-        if (option && !option.disabled && liData.type !== 'divider') {
-          if (option.selected) previousSelected++;
+        if (option && !liData.disabled && liData.type !== 'divider') {
+          if (liData.selected) previousSelected++;
           option.selected = status;
-          if (option.selected) currentSelected++;
+          if (status) currentSelected++;
         }
       }
 
-      this.$element.removeClass('bs-select-hidden');
+      element.classList.remove('bs-select-hidden');
 
       if (previousSelected === currentSelected) return;
 
@@ -15951,18 +11485,23 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
         )
       ) {
         that.$button.trigger('click.bs.dropdown.data-api');
+
+        if (that.options.liveSearch) {
+          that.$searchbox.trigger('focus');
+          return;
+        }
       }
 
       if (e.which === keyCodes.ESCAPE && isActive) {
         e.preventDefault();
-        that.$button.trigger('click.bs.dropdown.data-api').focus();
+        that.$button.trigger('click.bs.dropdown.data-api').trigger('focus');
       }
 
       if (isArrowKey) { // if up or down
         if (!$items.length) return;
 
         // $items.index/.filter is too slow with a large list and no virtual scroll
-        index = isVirtual === true ? $items.index($items.filter('.active')) : that.selectpicker.current.map.newIndex[that.activeIndex];
+        index = isVirtual === true ? $items.index($items.filter('.active')) : that.activeIndex;
 
         if (index === undefined) index = -1;
 
@@ -16026,16 +11565,16 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
           if (liActive.firstChild) liActive.firstChild.classList.add('active');
         }
 
-        that.activeIndex = that.selectpicker.current.map.originalIndex[liActiveIndex];
+        that.activeIndex = that.selectpicker.current.data[liActiveIndex].index;
 
         that.selectpicker.view.currentActive = liActive;
 
         if (updateScroll) that.$menuInner[0].scrollTop = offset;
 
         if (that.options.liveSearch) {
-          that.$searchbox.focus();
+          that.$searchbox.trigger('focus');
         } else {
-          $this.focus();
+          $this.trigger('focus');
         }
       } else if (
         (!$this.is('input') && !REGEXP_TAB_OR_ESCAPE.test(e.which)) ||
@@ -16067,8 +11606,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
           hasMatch = stringSearch(li, keyHistory, 'startsWith', true);
 
           if (hasMatch && that.selectpicker.view.canHighlight[i]) {
-            li.index = i;
-            matches.push(li.originalIndex);
+            matches.push(li.index);
           }
         }
 
@@ -16088,9 +11626,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
             }
           }
 
-          searchMatch = that.selectpicker.current.map.newIndex[matches[matchIndex]];
+          searchMatch = matches[matchIndex];
 
-          activeLi = that.selectpicker.current.data[searchMatch];
+          activeLi = that.selectpicker.main.data[searchMatch];
 
           if (scrollTop - activeLi.position > 0) {
             offset = activeLi.position - activeLi.height;
@@ -16101,7 +11639,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
             updateScroll = activeLi.position > scrollTop + that.sizeInfo.menuInnerHeight;
           }
 
-          liActive = that.selectpicker.current.elements[searchMatch];
+          liActive = that.selectpicker.main.elements[searchMatch];
           liActive.classList.add('active');
           if (liActive.firstChild) liActive.firstChild.classList.add('active');
           that.activeIndex = matches[matchIndex];
@@ -16110,7 +11648,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
           if (updateScroll) that.$menuInner[0].scrollTop = offset;
 
-          $this.focus();
+          $this.trigger('focus');
         }
       }
 
@@ -16127,7 +11665,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
         if (!that.options.liveSearch || e.which !== keyCodes.SPACE) {
           that.$menuInner.find('.active a').trigger('click', true); // retain active class
-          $this.focus();
+          $this.trigger('focus');
 
           if (!that.options.liveSearch) {
             // Prevent screen from scrolling if the user hits the spacebar
@@ -16140,7 +11678,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
     },
 
     mobile: function () {
-      this.$element.addClass('mobile-device');
+      this.$element[0].classList.add('mobile-device');
     },
 
     refresh: function () {
@@ -16148,12 +11686,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
       var config = $.extend({}, this.options, this.$element.data());
       this.options = config;
 
-      this.selectpicker.main.map.newIndex = {};
-      this.selectpicker.main.map.originalIndex = {};
-      this.createLi();
       this.checkDisabled();
-      this.render();
       this.setStyle();
+      this.render();
+      this.createLi();
       this.setWidth();
 
       this.setSize(true);
@@ -16209,19 +11745,44 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
       try {
         version.full = ($.fn.dropdown.Constructor.VERSION || '').split(' ')[0].split('.');
       } catch (err) {
-        // fall back to use BootstrapVersion
-        version.full = Selectpicker.BootstrapVersion.split(' ')[0].split('.');
+        // fall back to use BootstrapVersion if set
+        if (Selectpicker.BootstrapVersion) {
+          version.full = Selectpicker.BootstrapVersion.split(' ')[0].split('.');
+        } else {
+          version.full = [version.major, '0', '0'];
+
+          console.warn(
+            'There was an issue retrieving Bootstrap\'s version. ' +
+            'Ensure Bootstrap is being loaded before bootstrap-select and there is no namespace collision. ' +
+            'If loading Bootstrap asynchronously, the version may need to be manually specified via $.fn.selectpicker.Constructor.BootstrapVersion.',
+            err
+          );
+        }
       }
 
       version.major = version.full[0];
       version.success = true;
+    }
 
-      if (version.major === '4') {
-        classNames.DIVIDER = 'dropdown-divider';
-        classNames.SHOW = 'show';
-        classNames.BUTTONCLASS = 'btn-light';
-        Selectpicker.DEFAULTS.style = classNames.BUTTONCLASS = 'btn-light';
-        classNames.POPOVERHEADER = 'popover-header';
+    if (version.major === '4') {
+      // some defaults need to be changed if using Bootstrap 4
+      // check to see if they have already been manually changed before forcing them to update
+      var toUpdate = [];
+
+      if (Selectpicker.DEFAULTS.style === classNames.BUTTONCLASS) toUpdate.push({ name: 'style', className: 'BUTTONCLASS' });
+      if (Selectpicker.DEFAULTS.iconBase === classNames.ICONBASE) toUpdate.push({ name: 'iconBase', className: 'ICONBASE' });
+      if (Selectpicker.DEFAULTS.tickIcon === classNames.TICKICON) toUpdate.push({ name: 'tickIcon', className: 'TICKICON' });
+
+      classNames.DIVIDER = 'dropdown-divider';
+      classNames.SHOW = 'show';
+      classNames.BUTTONCLASS = 'btn-light';
+      classNames.POPOVERHEADER = 'popover-header';
+      classNames.ICONBASE = '';
+      classNames.TICKICON = 'bs-ok-default';
+
+      for (var i = 0; i < toUpdate.length; i++) {
+        var option = toUpdate[i];
+        Selectpicker.DEFAULTS[option.name] = classNames[option.className];
       }
     }
 
@@ -16233,8 +11794,16 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
             options = typeof _option == 'object' && _option;
 
         if (!data) {
-          var config = $.extend({}, Selectpicker.DEFAULTS, $.fn.selectpicker.defaults || {}, $this.data(), options);
-          config.template = $.extend({}, Selectpicker.DEFAULTS.template, ($.fn.selectpicker.defaults ? $.fn.selectpicker.defaults.template : {}), $this.data().template, options.template);
+          var dataAttributes = $this.data();
+
+          for (var dataAttr in dataAttributes) {
+            if (dataAttributes.hasOwnProperty(dataAttr) && $.inArray(dataAttr, DISALLOWED_ATTRIBUTES) !== -1) {
+              delete dataAttributes[dataAttr];
+            }
+          }
+
+          var config = $.extend({}, Selectpicker.DEFAULTS, $.fn.selectpicker.defaults || {}, dataAttributes, options);
+          config.template = $.extend({}, Selectpicker.DEFAULTS.template, ($.fn.selectpicker.defaults ? $.fn.selectpicker.defaults.template : {}), dataAttributes.template, options.template);
           $this.data('selectpicker', (data = new Selectpicker(this, config)));
         } else if (options) {
           for (var i in options) {
@@ -16292,7 +11861,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 }));
-
+//# sourceMappingURL=bootstrap-select.js.map
 
 /***/ }),
 
@@ -16304,9 +11873,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
- * Bootstrap-select v1.13.5 (https://developer.snapappointments.com/bootstrap-select)
+ * Bootstrap-select v1.13.9 (https://developer.snapappointments.com/bootstrap-select)
  *
- * Copyright 2012-2018 SnapAppointments, LLC
+ * Copyright 2012-2019 SnapAppointments, LLC
  * Licensed under MIT (https://github.com/snapappointments/bootstrap-select/blob/master/LICENSE)
  */
 
@@ -16335,7 +11904,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 }));
-
+//# sourceMappingURL=defaults-es_ES.js.map
 
 /***/ }),
 
@@ -17755,17 +13324,17 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
-  * Bootstrap v4.2.1 (https://getbootstrap.com/)
-  * Copyright 2011-2018 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
+  * Bootstrap v4.3.1 (https://getbootstrap.com/)
+  * Copyright 2011-2019 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
   */
 (function (global, factory) {
-   true ? factory(exports, __webpack_require__(/*! popper.js */ "./node_modules/popper.js/dist/esm/popper.js"), __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js")) :
+   true ? factory(exports, __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js"), __webpack_require__(/*! popper.js */ "./node_modules/popper.js/dist/esm/popper.js")) :
   undefined;
-}(this, (function (exports,Popper,$) { 'use strict';
+}(this, function (exports, $, Popper) { 'use strict';
 
-  Popper = Popper && Popper.hasOwnProperty('default') ? Popper['default'] : Popper;
   $ = $ && $.hasOwnProperty('default') ? $['default'] : $;
+  Popper = Popper && Popper.hasOwnProperty('default') ? Popper['default'] : Popper;
 
   function _defineProperties(target, props) {
     for (var i = 0; i < props.length; i++) {
@@ -17825,7 +13394,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.2.1): util.js
+   * Bootstrap (v4.3.1): util.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -17901,7 +13470,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         selector = hrefAttr && hrefAttr !== '#' ? hrefAttr.trim() : '';
       }
 
-      return selector && document.querySelector(selector) ? selector : null;
+      try {
+        return document.querySelector(selector) ? selector : null;
+      } catch (err) {
+        return null;
+      }
     },
     getTransitionDurationFromElement: function getTransitionDurationFromElement(element) {
       if (!element) {
@@ -17981,7 +13554,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
    */
 
   var NAME = 'alert';
-  var VERSION = '4.2.1';
+  var VERSION = '4.3.1';
   var DATA_KEY = 'bs.alert';
   var EVENT_KEY = "." + DATA_KEY;
   var DATA_API_KEY = '.data-api';
@@ -18036,8 +13609,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     _proto.dispose = function dispose() {
       $.removeData(this._element, DATA_KEY);
       this._element = null;
-    }; // Private
-
+    } // Private
+    ;
 
     _proto._getRootElement = function _getRootElement(element) {
       var selector = Util.getSelectorFromElement(element);
@@ -18079,8 +13652,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
     _proto._destroyElement = function _destroyElement(element) {
       $(element).detach().trigger(Event.CLOSED).remove();
-    }; // Static
-
+    } // Static
+    ;
 
     Alert._jQueryInterface = function _jQueryInterface(config) {
       return this.each(function () {
@@ -18146,7 +13719,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
    */
 
   var NAME$1 = 'button';
-  var VERSION$1 = '4.2.1';
+  var VERSION$1 = '4.3.1';
   var DATA_KEY$1 = 'bs.button';
   var EVENT_KEY$1 = "." + DATA_KEY$1;
   var DATA_API_KEY$1 = '.data-api';
@@ -18232,8 +13805,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     _proto.dispose = function dispose() {
       $.removeData(this._element, DATA_KEY$1);
       this._element = null;
-    }; // Static
-
+    } // Static
+    ;
 
     Button._jQueryInterface = function _jQueryInterface(config) {
       return this.each(function () {
@@ -18300,7 +13873,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
    */
 
   var NAME$2 = 'carousel';
-  var VERSION$2 = '4.2.1';
+  var VERSION$2 = '4.3.1';
   var DATA_KEY$2 = 'bs.carousel';
   var EVENT_KEY$2 = "." + DATA_KEY$2;
   var DATA_API_KEY$2 = '.data-api';
@@ -18495,8 +14068,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       this._isSliding = null;
       this._activeElement = null;
       this._indicatorsElement = null;
-    }; // Private
-
+    } // Private
+    ;
 
     _proto._getConfig = function _getConfig(config) {
       config = _objectSpread({}, Default, config);
@@ -18540,7 +14113,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         });
       }
 
-      this._addTouchEventListeners();
+      if (this._config.touch) {
+        this._addTouchEventListeners();
+      }
     };
 
     _proto._addTouchEventListeners = function _addTouchEventListeners() {
@@ -18781,8 +14356,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       if (isCycling) {
         this.cycle();
       }
-    }; // Static
-
+    } // Static
+    ;
 
     Carousel._jQueryInterface = function _jQueryInterface(config) {
       return this.each(function () {
@@ -18809,7 +14384,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           }
 
           data[action]();
-        } else if (_config.interval) {
+        } else if (_config.interval && _config.ride) {
           data.pause();
           data.cycle();
         }
@@ -18898,7 +14473,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
    */
 
   var NAME$3 = 'collapse';
-  var VERSION$3 = '4.2.1';
+  var VERSION$3 = '4.3.1';
   var DATA_KEY$3 = 'bs.collapse';
   var EVENT_KEY$3 = "." + DATA_KEY$3;
   var DATA_API_KEY$3 = '.data-api';
@@ -19120,8 +14695,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       this._element = null;
       this._triggerArray = null;
       this._isTransitioning = null;
-    }; // Private
-
+    } // Private
+    ;
 
     _proto._getConfig = function _getConfig(config) {
       config = _objectSpread({}, Default$1, config);
@@ -19165,8 +14740,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       if (triggerArray.length) {
         $(triggerArray).toggleClass(ClassName$3.COLLAPSED, !isOpen).attr('aria-expanded', isOpen);
       }
-    }; // Static
-
+    } // Static
+    ;
 
     Collapse._getTargetFromElement = function _getTargetFromElement(element) {
       var selector = Util.getSelectorFromElement(element);
@@ -19258,7 +14833,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
    */
 
   var NAME$4 = 'dropdown';
-  var VERSION$4 = '4.2.1';
+  var VERSION$4 = '4.3.1';
   var DATA_KEY$4 = 'bs.dropdown';
   var EVENT_KEY$4 = "." + DATA_KEY$4;
   var DATA_API_KEY$4 = '.data-api';
@@ -19487,8 +15062,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       if (this._popper !== null) {
         this._popper.scheduleUpdate();
       }
-    }; // Private
-
+    } // Private
+    ;
 
     _proto._addEventListeners = function _addEventListeners() {
       var _this = this;
@@ -19544,24 +15119,28 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       return $(this._element).closest('.navbar').length > 0;
     };
 
-    _proto._getPopperConfig = function _getPopperConfig() {
+    _proto._getOffset = function _getOffset() {
       var _this2 = this;
 
-      var offsetConf = {};
+      var offset = {};
 
       if (typeof this._config.offset === 'function') {
-        offsetConf.fn = function (data) {
-          data.offsets = _objectSpread({}, data.offsets, _this2._config.offset(data.offsets) || {});
+        offset.fn = function (data) {
+          data.offsets = _objectSpread({}, data.offsets, _this2._config.offset(data.offsets, _this2._element) || {});
           return data;
         };
       } else {
-        offsetConf.offset = this._config.offset;
+        offset.offset = this._config.offset;
       }
 
+      return offset;
+    };
+
+    _proto._getPopperConfig = function _getPopperConfig() {
       var popperConfig = {
         placement: this._getPlacement(),
         modifiers: {
-          offset: offsetConf,
+          offset: this._getOffset(),
           flip: {
             enabled: this._config.flip
           },
@@ -19579,8 +15158,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       }
 
       return popperConfig;
-    }; // Static
-
+    } // Static
+    ;
 
     Dropdown._jQueryInterface = function _jQueryInterface(config) {
       return this.each(function () {
@@ -19664,8 +15243,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       }
 
       return parent || element.parentNode;
-    }; // eslint-disable-next-line complexity
-
+    } // eslint-disable-next-line complexity
+    ;
 
     Dropdown._dataApiKeydownHandler = function _dataApiKeydownHandler(event) {
       // If not input/textarea:
@@ -19780,7 +15359,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
    */
 
   var NAME$5 = 'modal';
-  var VERSION$5 = '4.2.1';
+  var VERSION$5 = '4.3.1';
   var DATA_KEY$5 = 'bs.modal';
   var EVENT_KEY$5 = "." + DATA_KEY$5;
   var DATA_API_KEY$5 = '.data-api';
@@ -19813,6 +15392,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     CLICK_DATA_API: "click" + EVENT_KEY$5 + DATA_API_KEY$5
   };
   var ClassName$5 = {
+    SCROLLABLE: 'modal-dialog-scrollable',
     SCROLLBAR_MEASURER: 'modal-scrollbar-measure',
     BACKDROP: 'modal-backdrop',
     OPEN: 'modal-open',
@@ -19821,6 +15401,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   };
   var Selector$5 = {
     DIALOG: '.modal-dialog',
+    MODAL_BODY: '.modal-body',
     DATA_TOGGLE: '[data-toggle="modal"]',
     DATA_DISMISS: '[data-dismiss="modal"]',
     FIXED_CONTENT: '.fixed-top, .fixed-bottom, .is-fixed, .sticky-top',
@@ -19973,8 +15554,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
     _proto.handleUpdate = function handleUpdate() {
       this._adjustDialog();
-    }; // Private
-
+    } // Private
+    ;
 
     _proto._getConfig = function _getConfig(config) {
       config = _objectSpread({}, Default$3, config);
@@ -19998,7 +15579,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
       this._element.setAttribute('aria-modal', true);
 
-      this._element.scrollTop = 0;
+      if ($(this._dialog).hasClass(ClassName$5.SCROLLABLE)) {
+        this._dialog.querySelector(Selector$5.MODAL_BODY).scrollTop = 0;
+      } else {
+        this._element.scrollTop = 0;
+      }
 
       if (transition) {
         Util.reflow(this._element);
@@ -20168,11 +15753,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       } else if (callback) {
         callback();
       }
-    }; // ----------------------------------------------------------------------
+    } // ----------------------------------------------------------------------
     // the following methods are used to handle overflowing modals
     // todo (fat): these should probably be refactored out of modal.js
     // ----------------------------------------------------------------------
-
+    ;
 
     _proto._adjustDialog = function _adjustDialog() {
       var isModalOverflowing = this._element.scrollHeight > document.documentElement.clientHeight;
@@ -20257,8 +15842,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       var scrollbarWidth = scrollDiv.getBoundingClientRect().width - scrollDiv.clientWidth;
       document.body.removeChild(scrollDiv);
       return scrollbarWidth;
-    }; // Static
-
+    } // Static
+    ;
 
     Modal._jQueryInterface = function _jQueryInterface(config, relatedTarget) {
       return this.each(function () {
@@ -20350,18 +15935,140 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   };
 
   /**
+   * --------------------------------------------------------------------------
+   * Bootstrap (v4.3.1): tools/sanitizer.js
+   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+   * --------------------------------------------------------------------------
+   */
+  var uriAttrs = ['background', 'cite', 'href', 'itemtype', 'longdesc', 'poster', 'src', 'xlink:href'];
+  var ARIA_ATTRIBUTE_PATTERN = /^aria-[\w-]*$/i;
+  var DefaultWhitelist = {
+    // Global attributes allowed on any supplied element below.
+    '*': ['class', 'dir', 'id', 'lang', 'role', ARIA_ATTRIBUTE_PATTERN],
+    a: ['target', 'href', 'title', 'rel'],
+    area: [],
+    b: [],
+    br: [],
+    col: [],
+    code: [],
+    div: [],
+    em: [],
+    hr: [],
+    h1: [],
+    h2: [],
+    h3: [],
+    h4: [],
+    h5: [],
+    h6: [],
+    i: [],
+    img: ['src', 'alt', 'title', 'width', 'height'],
+    li: [],
+    ol: [],
+    p: [],
+    pre: [],
+    s: [],
+    small: [],
+    span: [],
+    sub: [],
+    sup: [],
+    strong: [],
+    u: [],
+    ul: []
+    /**
+     * A pattern that recognizes a commonly useful subset of URLs that are safe.
+     *
+     * Shoutout to Angular 7 https://github.com/angular/angular/blob/7.2.4/packages/core/src/sanitization/url_sanitizer.ts
+     */
+
+  };
+  var SAFE_URL_PATTERN = /^(?:(?:https?|mailto|ftp|tel|file):|[^&:/?#]*(?:[/?#]|$))/gi;
+  /**
+   * A pattern that matches safe data URLs. Only matches image, video and audio types.
+   *
+   * Shoutout to Angular 7 https://github.com/angular/angular/blob/7.2.4/packages/core/src/sanitization/url_sanitizer.ts
+   */
+
+  var DATA_URL_PATTERN = /^data:(?:image\/(?:bmp|gif|jpeg|jpg|png|tiff|webp)|video\/(?:mpeg|mp4|ogg|webm)|audio\/(?:mp3|oga|ogg|opus));base64,[a-z0-9+/]+=*$/i;
+
+  function allowedAttribute(attr, allowedAttributeList) {
+    var attrName = attr.nodeName.toLowerCase();
+
+    if (allowedAttributeList.indexOf(attrName) !== -1) {
+      if (uriAttrs.indexOf(attrName) !== -1) {
+        return Boolean(attr.nodeValue.match(SAFE_URL_PATTERN) || attr.nodeValue.match(DATA_URL_PATTERN));
+      }
+
+      return true;
+    }
+
+    var regExp = allowedAttributeList.filter(function (attrRegex) {
+      return attrRegex instanceof RegExp;
+    }); // Check if a regular expression validates the attribute.
+
+    for (var i = 0, l = regExp.length; i < l; i++) {
+      if (attrName.match(regExp[i])) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  function sanitizeHtml(unsafeHtml, whiteList, sanitizeFn) {
+    if (unsafeHtml.length === 0) {
+      return unsafeHtml;
+    }
+
+    if (sanitizeFn && typeof sanitizeFn === 'function') {
+      return sanitizeFn(unsafeHtml);
+    }
+
+    var domParser = new window.DOMParser();
+    var createdDocument = domParser.parseFromString(unsafeHtml, 'text/html');
+    var whitelistKeys = Object.keys(whiteList);
+    var elements = [].slice.call(createdDocument.body.querySelectorAll('*'));
+
+    var _loop = function _loop(i, len) {
+      var el = elements[i];
+      var elName = el.nodeName.toLowerCase();
+
+      if (whitelistKeys.indexOf(el.nodeName.toLowerCase()) === -1) {
+        el.parentNode.removeChild(el);
+        return "continue";
+      }
+
+      var attributeList = [].slice.call(el.attributes);
+      var whitelistedAttributes = [].concat(whiteList['*'] || [], whiteList[elName] || []);
+      attributeList.forEach(function (attr) {
+        if (!allowedAttribute(attr, whitelistedAttributes)) {
+          el.removeAttribute(attr.nodeName);
+        }
+      });
+    };
+
+    for (var i = 0, len = elements.length; i < len; i++) {
+      var _ret = _loop(i, len);
+
+      if (_ret === "continue") continue;
+    }
+
+    return createdDocument.body.innerHTML;
+  }
+
+  /**
    * ------------------------------------------------------------------------
    * Constants
    * ------------------------------------------------------------------------
    */
 
   var NAME$6 = 'tooltip';
-  var VERSION$6 = '4.2.1';
+  var VERSION$6 = '4.3.1';
   var DATA_KEY$6 = 'bs.tooltip';
   var EVENT_KEY$6 = "." + DATA_KEY$6;
   var JQUERY_NO_CONFLICT$6 = $.fn[NAME$6];
   var CLASS_PREFIX = 'bs-tooltip';
   var BSCLS_PREFIX_REGEX = new RegExp("(^|\\s)" + CLASS_PREFIX + "\\S+", 'g');
+  var DISALLOWED_ATTRIBUTES = ['sanitize', 'whiteList', 'sanitizeFn'];
   var DefaultType$4 = {
     animation: 'boolean',
     template: 'string',
@@ -20371,10 +16078,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     html: 'boolean',
     selector: '(string|boolean)',
     placement: '(string|function)',
-    offset: '(number|string)',
+    offset: '(number|string|function)',
     container: '(string|element|boolean)',
     fallbackPlacement: '(string|array)',
-    boundary: '(string|element)'
+    boundary: '(string|element)',
+    sanitize: 'boolean',
+    sanitizeFn: '(null|function)',
+    whiteList: 'object'
   };
   var AttachmentMap$1 = {
     AUTO: 'auto',
@@ -20395,7 +16105,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     offset: 0,
     container: false,
     fallbackPlacement: 'flip',
-    boundary: 'scrollParent'
+    boundary: 'scrollParent',
+    sanitize: true,
+    sanitizeFn: null,
+    whiteList: DefaultWhitelist
   };
   var HoverState = {
     SHOW: 'show',
@@ -20580,9 +16293,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         this._popper = new Popper(this.element, tip, {
           placement: attachment,
           modifiers: {
-            offset: {
-              offset: this.config.offset
-            },
+            offset: this._getOffset(),
             flip: {
               behavior: this.config.fallbackPlacement
             },
@@ -20691,8 +16402,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       if (this._popper !== null) {
         this._popper.scheduleUpdate();
       }
-    }; // Protected
-
+    } // Protected
+    ;
 
     _proto.isWithContent = function isWithContent() {
       return Boolean(this.getTitle());
@@ -20714,19 +16425,27 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     };
 
     _proto.setElementContent = function setElementContent($element, content) {
-      var html = this.config.html;
-
       if (typeof content === 'object' && (content.nodeType || content.jquery)) {
         // Content is a DOM node or a jQuery
-        if (html) {
+        if (this.config.html) {
           if (!$(content).parent().is($element)) {
             $element.empty().append(content);
           }
         } else {
           $element.text($(content).text());
         }
+
+        return;
+      }
+
+      if (this.config.html) {
+        if (this.config.sanitize) {
+          content = sanitizeHtml(content, this.config.whiteList, this.config.sanitizeFn);
+        }
+
+        $element.html(content);
       } else {
-        $element[html ? 'html' : 'text'](content);
+        $element.text(content);
       }
     };
 
@@ -20738,8 +16457,25 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       }
 
       return title;
-    }; // Private
+    } // Private
+    ;
 
+    _proto._getOffset = function _getOffset() {
+      var _this3 = this;
+
+      var offset = {};
+
+      if (typeof this.config.offset === 'function') {
+        offset.fn = function (data) {
+          data.offsets = _objectSpread({}, data.offsets, _this3.config.offset(data.offsets, _this3.element) || {});
+          return data;
+        };
+      } else {
+        offset.offset = this.config.offset;
+      }
+
+      return offset;
+    };
 
     _proto._getContainer = function _getContainer() {
       if (this.config.container === false) {
@@ -20758,27 +16494,27 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     };
 
     _proto._setListeners = function _setListeners() {
-      var _this3 = this;
+      var _this4 = this;
 
       var triggers = this.config.trigger.split(' ');
       triggers.forEach(function (trigger) {
         if (trigger === 'click') {
-          $(_this3.element).on(_this3.constructor.Event.CLICK, _this3.config.selector, function (event) {
-            return _this3.toggle(event);
+          $(_this4.element).on(_this4.constructor.Event.CLICK, _this4.config.selector, function (event) {
+            return _this4.toggle(event);
           });
         } else if (trigger !== Trigger.MANUAL) {
-          var eventIn = trigger === Trigger.HOVER ? _this3.constructor.Event.MOUSEENTER : _this3.constructor.Event.FOCUSIN;
-          var eventOut = trigger === Trigger.HOVER ? _this3.constructor.Event.MOUSELEAVE : _this3.constructor.Event.FOCUSOUT;
-          $(_this3.element).on(eventIn, _this3.config.selector, function (event) {
-            return _this3._enter(event);
-          }).on(eventOut, _this3.config.selector, function (event) {
-            return _this3._leave(event);
+          var eventIn = trigger === Trigger.HOVER ? _this4.constructor.Event.MOUSEENTER : _this4.constructor.Event.FOCUSIN;
+          var eventOut = trigger === Trigger.HOVER ? _this4.constructor.Event.MOUSELEAVE : _this4.constructor.Event.FOCUSOUT;
+          $(_this4.element).on(eventIn, _this4.config.selector, function (event) {
+            return _this4._enter(event);
+          }).on(eventOut, _this4.config.selector, function (event) {
+            return _this4._leave(event);
           });
         }
       });
       $(this.element).closest('.modal').on('hide.bs.modal', function () {
-        if (_this3.element) {
-          _this3.hide();
+        if (_this4.element) {
+          _this4.hide();
         }
       });
 
@@ -20877,7 +16613,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     };
 
     _proto._getConfig = function _getConfig(config) {
-      config = _objectSpread({}, this.constructor.Default, $(this.element).data(), typeof config === 'object' && config ? config : {});
+      var dataAttributes = $(this.element).data();
+      Object.keys(dataAttributes).forEach(function (dataAttr) {
+        if (DISALLOWED_ATTRIBUTES.indexOf(dataAttr) !== -1) {
+          delete dataAttributes[dataAttr];
+        }
+      });
+      config = _objectSpread({}, this.constructor.Default, dataAttributes, typeof config === 'object' && config ? config : {});
 
       if (typeof config.delay === 'number') {
         config.delay = {
@@ -20895,6 +16637,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       }
 
       Util.typeCheckConfig(NAME$6, config, this.constructor.DefaultType);
+
+      if (config.sanitize) {
+        config.template = sanitizeHtml(config.template, config.whiteList, config.sanitizeFn);
+      }
+
       return config;
     };
 
@@ -20943,8 +16690,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       this.hide();
       this.show();
       this.config.animation = initConfigAnimation;
-    }; // Static
-
+    } // Static
+    ;
 
     Tooltip._jQueryInterface = function _jQueryInterface(config) {
       return this.each(function () {
@@ -21032,7 +16779,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
    */
 
   var NAME$7 = 'popover';
-  var VERSION$7 = '4.2.1';
+  var VERSION$7 = '4.3.1';
   var DATA_KEY$7 = 'bs.popover';
   var EVENT_KEY$7 = "." + DATA_KEY$7;
   var JQUERY_NO_CONFLICT$7 = $.fn[NAME$7];
@@ -21115,8 +16862,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
       this.setElementContent($tip.find(Selector$7.CONTENT), content);
       $tip.removeClass(ClassName$7.FADE + " " + ClassName$7.SHOW);
-    }; // Private
-
+    } // Private
+    ;
 
     _proto._getContent = function _getContent() {
       return this.element.getAttribute('data-content') || this.config.content;
@@ -21129,8 +16876,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       if (tabClass !== null && tabClass.length > 0) {
         $tip.removeClass(tabClass.join(''));
       }
-    }; // Static
-
+    } // Static
+    ;
 
     Popover._jQueryInterface = function _jQueryInterface(config) {
       return this.each(function () {
@@ -21219,7 +16966,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
    */
 
   var NAME$8 = 'scrollspy';
-  var VERSION$8 = '4.2.1';
+  var VERSION$8 = '4.3.1';
   var DATA_KEY$8 = 'bs.scrollspy';
   var EVENT_KEY$8 = "." + DATA_KEY$8;
   var DATA_API_KEY$6 = '.data-api';
@@ -21342,8 +17089,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       this._targets = null;
       this._activeTarget = null;
       this._scrollHeight = null;
-    }; // Private
-
+    } // Private
+    ;
 
     _proto._getConfig = function _getConfig(config) {
       config = _objectSpread({}, Default$6, typeof config === 'object' && config ? config : {});
@@ -21450,8 +17197,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       }).forEach(function (node) {
         return node.classList.remove(ClassName$8.ACTIVE);
       });
-    }; // Static
-
+    } // Static
+    ;
 
     ScrollSpy._jQueryInterface = function _jQueryInterface(config) {
       return this.each(function () {
@@ -21526,7 +17273,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
    */
 
   var NAME$9 = 'tab';
-  var VERSION$9 = '4.2.1';
+  var VERSION$9 = '4.3.1';
   var DATA_KEY$9 = 'bs.tab';
   var EVENT_KEY$9 = "." + DATA_KEY$9;
   var DATA_API_KEY$7 = '.data-api';
@@ -21634,8 +17381,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     _proto.dispose = function dispose() {
       $.removeData(this._element, DATA_KEY$9);
       this._element = null;
-    }; // Private
-
+    } // Private
+    ;
 
     _proto._activate = function _activate(element, container, callback) {
       var _this2 = this;
@@ -21677,7 +17424,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       }
 
       Util.reflow(element);
-      $(element).addClass(ClassName$9.SHOW);
+
+      if (element.classList.contains(ClassName$9.FADE)) {
+        element.classList.add(ClassName$9.SHOW);
+      }
 
       if (element.parentNode && $(element.parentNode).hasClass(ClassName$9.DROPDOWN_MENU)) {
         var dropdownElement = $(element).closest(Selector$9.DROPDOWN)[0];
@@ -21693,8 +17443,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       if (callback) {
         callback();
       }
-    }; // Static
-
+    } // Static
+    ;
 
     Tab._jQueryInterface = function _jQueryInterface(config) {
       return this.each(function () {
@@ -21758,7 +17508,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
    */
 
   var NAME$a = 'toast';
-  var VERSION$a = '4.2.1';
+  var VERSION$a = '4.3.1';
   var DATA_KEY$a = 'bs.toast';
   var EVENT_KEY$a = "." + DATA_KEY$a;
   var JQUERY_NO_CONFLICT$a = $.fn[NAME$a];
@@ -21873,8 +17623,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       $.removeData(this._element, DATA_KEY$a);
       this._element = null;
       this._config = null;
-    }; // Private
-
+    } // Private
+    ;
 
     _proto._getConfig = function _getConfig(config) {
       config = _objectSpread({}, Default$7, $(this._element).data(), typeof config === 'object' && config ? config : {});
@@ -21907,8 +17657,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       } else {
         complete();
       }
-    }; // Static
-
+    } // Static
+    ;
 
     Toast._jQueryInterface = function _jQueryInterface(config) {
       return this.each(function () {
@@ -21942,6 +17692,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       get: function get() {
         return DefaultType$7;
       }
+    }, {
+      key: "Default",
+      get: function get() {
+        return Default$7;
+      }
     }]);
 
     return Toast;
@@ -21963,7 +17718,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.2.1): index.js
+   * Bootstrap (v4.3.1): index.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -22000,8 +17755,185 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+}));
 //# sourceMappingURL=bootstrap.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/bs-custom-file-input/dist/bs-custom-file-input.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/bs-custom-file-input/dist/bs-custom-file-input.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*!
+ * bsCustomFileInput v1.3.2 (https://github.com/Johann-S/bs-custom-file-input)
+ * Copyright 2018 - 2019 Johann-S <johann.servoire@gmail.com>
+ * Licensed under MIT (https://github.com/Johann-S/bs-custom-file-input/blob/master/LICENSE)
+ */
+(function (global, factory) {
+   true ? module.exports = factory() :
+  undefined;
+}(this, function () { 'use strict';
+
+  var Selector = {
+    CUSTOMFILE: '.custom-file input[type="file"]',
+    CUSTOMFILELABEL: '.custom-file-label',
+    FORM: 'form',
+    INPUT: 'input'
+  };
+
+  var textNodeType = 3;
+
+  var getDefaultText = function getDefaultText(input) {
+    var defaultText = '';
+    var label = input.parentNode.querySelector(Selector.CUSTOMFILELABEL);
+
+    if (label) {
+      defaultText = label.innerHTML;
+    }
+
+    return defaultText;
+  };
+
+  var findFirstChildNode = function findFirstChildNode(element) {
+    if (element.childNodes.length > 0) {
+      var childNodes = [].slice.call(element.childNodes);
+
+      for (var i = 0; i < childNodes.length; i++) {
+        var node = childNodes[i];
+
+        if (node.nodeType !== textNodeType) {
+          return node;
+        }
+      }
+    }
+
+    return element;
+  };
+
+  var restoreDefaultText = function restoreDefaultText(input) {
+    var defaultText = input.bsCustomFileInput.defaultText;
+    var label = input.parentNode.querySelector(Selector.CUSTOMFILELABEL);
+
+    if (label) {
+      var element = findFirstChildNode(label);
+      element.innerHTML = defaultText;
+    }
+  };
+
+  var fileApi = !!window.File;
+  var FAKE_PATH = 'fakepath';
+  var FAKE_PATH_SEPARATOR = '\\';
+
+  var getSelectedFiles = function getSelectedFiles(input) {
+    if (input.hasAttribute('multiple') && fileApi) {
+      return [].slice.call(input.files).map(function (file) {
+        return file.name;
+      }).join(', ');
+    }
+
+    if (input.value.indexOf(FAKE_PATH) !== -1) {
+      var splittedValue = input.value.split(FAKE_PATH_SEPARATOR);
+      return splittedValue[splittedValue.length - 1];
+    }
+
+    return input.value;
+  };
+
+  function handleInputChange() {
+    var label = this.parentNode.querySelector(Selector.CUSTOMFILELABEL);
+
+    if (label) {
+      var element = findFirstChildNode(label);
+      var inputValue = getSelectedFiles(this);
+
+      if (inputValue.length) {
+        element.innerHTML = inputValue;
+      } else {
+        restoreDefaultText(this);
+      }
+    }
+  }
+
+  function handleFormReset() {
+    var customFileList = [].slice.call(this.querySelectorAll(Selector.INPUT)).filter(function (input) {
+      return !!input.bsCustomFileInput;
+    });
+
+    for (var i = 0, len = customFileList.length; i < len; i++) {
+      restoreDefaultText(customFileList[i]);
+    }
+  }
+
+  var customProperty = 'bsCustomFileInput';
+  var Event = {
+    FORMRESET: 'reset',
+    INPUTCHANGE: 'change'
+  };
+  var bsCustomFileInput = {
+    init: function init(inputSelector, formSelector) {
+      if (inputSelector === void 0) {
+        inputSelector = Selector.CUSTOMFILE;
+      }
+
+      if (formSelector === void 0) {
+        formSelector = Selector.FORM;
+      }
+
+      var customFileInputList = [].slice.call(document.querySelectorAll(inputSelector));
+      var formList = [].slice.call(document.querySelectorAll(formSelector));
+
+      for (var i = 0, len = customFileInputList.length; i < len; i++) {
+        var input = customFileInputList[i];
+        Object.defineProperty(input, customProperty, {
+          value: {
+            defaultText: getDefaultText(input)
+          },
+          writable: true
+        });
+        handleInputChange.call(input);
+        input.addEventListener(Event.INPUTCHANGE, handleInputChange);
+      }
+
+      for (var _i = 0, _len = formList.length; _i < _len; _i++) {
+        formList[_i].addEventListener(Event.FORMRESET, handleFormReset);
+
+        Object.defineProperty(formList[_i], customProperty, {
+          value: true,
+          writable: true
+        });
+      }
+    },
+    destroy: function destroy() {
+      var formList = [].slice.call(document.querySelectorAll(Selector.FORM)).filter(function (form) {
+        return !!form.bsCustomFileInput;
+      });
+      var customFileInputList = [].slice.call(document.querySelectorAll(Selector.INPUT)).filter(function (input) {
+        return !!input.bsCustomFileInput;
+      });
+
+      for (var i = 0, len = customFileInputList.length; i < len; i++) {
+        var input = customFileInputList[i];
+        restoreDefaultText(input);
+        input[customProperty] = undefined;
+        input.removeEventListener(Event.INPUTCHANGE, handleInputChange);
+      }
+
+      for (var _i2 = 0, _len2 = formList.length; _i2 < _len2; _i2++) {
+        formList[_i2].removeEventListener(Event.FORMRESET, handleFormReset);
+
+        formList[_i2][customProperty] = undefined;
+      }
+    }
+  };
+
+  return bsCustomFileInput;
+
+}));
+//# sourceMappingURL=bs-custom-file-input.js.map
 
 
 /***/ }),
@@ -27395,2179 +23327,2504 @@ return Promise;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* flatpickr v4.5.2, @license MIT */
+/* flatpickr v4.5.7, @license MIT */
 (function (global, factory) {
      true ? module.exports = factory() :
     undefined;
-}(this, (function () { 'use strict';
+}(this, function () { 'use strict';
 
-    var pad = function pad(number) {
-      return ("0" + number).slice(-2);
-    };
-    var int = function int(bool) {
-      return bool === true ? 1 : 0;
-    };
-    function debounce(func, wait, immediate) {
-      if (immediate === void 0) {
-        immediate = false;
-      }
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+    this file except in compliance with the License. You may obtain a copy of the
+    License at http://www.apache.org/licenses/LICENSE-2.0
 
-      var timeout;
-      return function () {
-        var context = this,
-            args = arguments;
-        timeout !== null && clearTimeout(timeout);
-        timeout = window.setTimeout(function () {
-          timeout = null;
-          if (!immediate) func.apply(context, args);
-        }, wait);
-        if (immediate && !timeout) func.apply(context, args);
-      };
-    }
-    var arrayify = function arrayify(obj) {
-      return obj instanceof Array ? obj : [obj];
-    };
+    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+    MERCHANTABLITY OR NON-INFRINGEMENT.
 
-    var do_nothing = function do_nothing() {
-      return undefined;
+    See the Apache Version 2.0 License for specific language governing permissions
+    and limitations under the License.
+    ***************************************************************************** */
+
+    var __assign = function() {
+        __assign = Object.assign || function __assign(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+            }
+            return t;
+        };
+        return __assign.apply(this, arguments);
     };
 
-    var monthToStr = function monthToStr(monthNumber, shorthand, locale) {
-      return locale.months[shorthand ? "shorthand" : "longhand"][monthNumber];
-    };
-    var revFormat = {
-      D: do_nothing,
-      F: function F(dateObj, monthName, locale) {
-        dateObj.setMonth(locale.months.longhand.indexOf(monthName));
-      },
-      G: function G(dateObj, hour) {
-        dateObj.setHours(parseFloat(hour));
-      },
-      H: function H(dateObj, hour) {
-        dateObj.setHours(parseFloat(hour));
-      },
-      J: function J(dateObj, day) {
-        dateObj.setDate(parseFloat(day));
-      },
-      K: function K(dateObj, amPM, locale) {
-        dateObj.setHours(dateObj.getHours() % 12 + 12 * int(new RegExp(locale.amPM[1], "i").test(amPM)));
-      },
-      M: function M(dateObj, shortMonth, locale) {
-        dateObj.setMonth(locale.months.shorthand.indexOf(shortMonth));
-      },
-      S: function S(dateObj, seconds) {
-        dateObj.setSeconds(parseFloat(seconds));
-      },
-      U: function U(_, unixSeconds) {
-        return new Date(parseFloat(unixSeconds) * 1000);
-      },
-      W: function W(dateObj, weekNum) {
-        var weekNumber = parseInt(weekNum);
-        return new Date(dateObj.getFullYear(), 0, 2 + (weekNumber - 1) * 7, 0, 0, 0, 0);
-      },
-      Y: function Y(dateObj, year) {
-        dateObj.setFullYear(parseFloat(year));
-      },
-      Z: function Z(_, ISODate) {
-        return new Date(ISODate);
-      },
-      d: function d(dateObj, day) {
-        dateObj.setDate(parseFloat(day));
-      },
-      h: function h(dateObj, hour) {
-        dateObj.setHours(parseFloat(hour));
-      },
-      i: function i(dateObj, minutes) {
-        dateObj.setMinutes(parseFloat(minutes));
-      },
-      j: function j(dateObj, day) {
-        dateObj.setDate(parseFloat(day));
-      },
-      l: do_nothing,
-      m: function m(dateObj, month) {
-        dateObj.setMonth(parseFloat(month) - 1);
-      },
-      n: function n(dateObj, month) {
-        dateObj.setMonth(parseFloat(month) - 1);
-      },
-      s: function s(dateObj, seconds) {
-        dateObj.setSeconds(parseFloat(seconds));
-      },
-      w: do_nothing,
-      y: function y(dateObj, year) {
-        dateObj.setFullYear(2000 + parseFloat(year));
-      }
-    };
-    var tokenRegex = {
-      D: "(\\w+)",
-      F: "(\\w+)",
-      G: "(\\d\\d|\\d)",
-      H: "(\\d\\d|\\d)",
-      J: "(\\d\\d|\\d)\\w+",
-      K: "",
-      M: "(\\w+)",
-      S: "(\\d\\d|\\d)",
-      U: "(.+)",
-      W: "(\\d\\d|\\d)",
-      Y: "(\\d{4})",
-      Z: "(.+)",
-      d: "(\\d\\d|\\d)",
-      h: "(\\d\\d|\\d)",
-      i: "(\\d\\d|\\d)",
-      j: "(\\d\\d|\\d)",
-      l: "(\\w+)",
-      m: "(\\d\\d|\\d)",
-      n: "(\\d\\d|\\d)",
-      s: "(\\d\\d|\\d)",
-      w: "(\\d\\d|\\d)",
-      y: "(\\d{2})"
-    };
-    var formats = {
-      Z: function Z(date) {
-        return date.toISOString();
-      },
-      D: function D(date, locale, options) {
-        return locale.weekdays.shorthand[formats.w(date, locale, options)];
-      },
-      F: function F(date, locale, options) {
-        return monthToStr(formats.n(date, locale, options) - 1, false, locale);
-      },
-      G: function G(date, locale, options) {
-        return pad(formats.h(date, locale, options));
-      },
-      H: function H(date) {
-        return pad(date.getHours());
-      },
-      J: function J(date, locale) {
-        return locale.ordinal !== undefined ? date.getDate() + locale.ordinal(date.getDate()) : date.getDate();
-      },
-      K: function K(date, locale) {
-        return locale.amPM[int(date.getHours() > 11)];
-      },
-      M: function M(date, locale) {
-        return monthToStr(date.getMonth(), true, locale);
-      },
-      S: function S(date) {
-        return pad(date.getSeconds());
-      },
-      U: function U(date) {
-        return date.getTime() / 1000;
-      },
-      W: function W(date, _, options) {
-        return options.getWeek(date);
-      },
-      Y: function Y(date) {
-        return date.getFullYear();
-      },
-      d: function d(date) {
-        return pad(date.getDate());
-      },
-      h: function h(date) {
-        return date.getHours() % 12 ? date.getHours() % 12 : 12;
-      },
-      i: function i(date) {
-        return pad(date.getMinutes());
-      },
-      j: function j(date) {
-        return date.getDate();
-      },
-      l: function l(date, locale) {
-        return locale.weekdays.longhand[date.getDay()];
-      },
-      m: function m(date) {
-        return pad(date.getMonth() + 1);
-      },
-      n: function n(date) {
-        return date.getMonth() + 1;
-      },
-      s: function s(date) {
-        return date.getSeconds();
-      },
-      w: function w(date) {
-        return date.getDay();
-      },
-      y: function y(date) {
-        return String(date.getFullYear()).substring(2);
-      }
+    var HOOKS = [
+        "onChange",
+        "onClose",
+        "onDayCreate",
+        "onDestroy",
+        "onKeyDown",
+        "onMonthChange",
+        "onOpen",
+        "onParseConfig",
+        "onReady",
+        "onValueUpdate",
+        "onYearChange",
+        "onPreCalendarPosition",
+    ];
+    var defaults = {
+        _disable: [],
+        _enable: [],
+        allowInput: false,
+        altFormat: "F j, Y",
+        altInput: false,
+        altInputClass: "form-control input",
+        animate: typeof window === "object" &&
+            window.navigator.userAgent.indexOf("MSIE") === -1,
+        ariaDateFormat: "F j, Y",
+        clickOpens: true,
+        closeOnSelect: true,
+        conjunction: ", ",
+        dateFormat: "Y-m-d",
+        defaultHour: 12,
+        defaultMinute: 0,
+        defaultSeconds: 0,
+        disable: [],
+        disableMobile: false,
+        enable: [],
+        enableSeconds: false,
+        enableTime: false,
+        errorHandler: function (err) {
+            return typeof console !== "undefined" && console.warn(err);
+        },
+        getWeek: function (givenDate) {
+            var date = new Date(givenDate.getTime());
+            date.setHours(0, 0, 0, 0);
+            // Thursday in current week decides the year.
+            date.setDate(date.getDate() + 3 - ((date.getDay() + 6) % 7));
+            // January 4 is always in week 1.
+            var week1 = new Date(date.getFullYear(), 0, 4);
+            // Adjust to Thursday in week 1 and count number of weeks from date to week1.
+            return (1 +
+                Math.round(((date.getTime() - week1.getTime()) / 86400000 -
+                    3 +
+                    ((week1.getDay() + 6) % 7)) /
+                    7));
+        },
+        hourIncrement: 1,
+        ignoredFocusElements: [],
+        inline: false,
+        locale: "default",
+        minuteIncrement: 5,
+        mode: "single",
+        nextArrow: "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 17 17'><g></g><path d='M13.207 8.472l-7.854 7.854-0.707-0.707 7.146-7.146-7.146-7.148 0.707-0.707 7.854 7.854z' /></svg>",
+        noCalendar: false,
+        now: new Date(),
+        onChange: [],
+        onClose: [],
+        onDayCreate: [],
+        onDestroy: [],
+        onKeyDown: [],
+        onMonthChange: [],
+        onOpen: [],
+        onParseConfig: [],
+        onReady: [],
+        onValueUpdate: [],
+        onYearChange: [],
+        onPreCalendarPosition: [],
+        plugins: [],
+        position: "auto",
+        positionElement: undefined,
+        prevArrow: "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 17 17'><g></g><path d='M5.207 8.471l7.146 7.147-0.707 0.707-7.853-7.854 7.854-7.853 0.707 0.707-7.147 7.146z' /></svg>",
+        shorthandCurrentMonth: false,
+        showMonths: 1,
+        static: false,
+        time_24hr: false,
+        weekNumbers: false,
+        wrap: false
     };
 
     var english = {
-      weekdays: {
-        shorthand: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-        longhand: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-      },
-      months: {
-        shorthand: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        longhand: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-      },
-      daysInMonth: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
-      firstDayOfWeek: 0,
-      ordinal: function ordinal(nth) {
-        var s = nth % 100;
-        if (s > 3 && s < 21) return "th";
-
-        switch (s % 10) {
-          case 1:
-            return "st";
-
-          case 2:
-            return "nd";
-
-          case 3:
-            return "rd";
-
-          default:
-            return "th";
-        }
-      },
-      rangeSeparator: " to ",
-      weekAbbreviation: "Wk",
-      scrollTitle: "Scroll to increment",
-      toggleTitle: "Click to toggle",
-      amPM: ["AM", "PM"],
-      yearAriaLabel: "Year"
-    };
-
-    var createDateFormatter = function createDateFormatter(_ref) {
-      var _ref$config = _ref.config,
-          config = _ref$config === void 0 ? defaults : _ref$config,
-          _ref$l10n = _ref.l10n,
-          l10n = _ref$l10n === void 0 ? english : _ref$l10n;
-      return function (dateObj, frmt, overrideLocale) {
-        var locale = overrideLocale || l10n;
-
-        if (config.formatDate !== undefined) {
-          return config.formatDate(dateObj, frmt, locale);
-        }
-
-        return frmt.split("").map(function (c, i, arr) {
-          return formats[c] && arr[i - 1] !== "\\" ? formats[c](dateObj, locale, config) : c !== "\\" ? c : "";
-        }).join("");
-      };
-    };
-    var createDateParser = function createDateParser(_ref2) {
-      var _ref2$config = _ref2.config,
-          config = _ref2$config === void 0 ? defaults : _ref2$config,
-          _ref2$l10n = _ref2.l10n,
-          l10n = _ref2$l10n === void 0 ? english : _ref2$l10n;
-      return function (date, givenFormat, timeless, customLocale) {
-        if (date !== 0 && !date) return undefined;
-        var locale = customLocale || l10n;
-        var parsedDate;
-        var date_orig = date;
-        if (date instanceof Date) parsedDate = new Date(date.getTime());else if (typeof date !== "string" && date.toFixed !== undefined) parsedDate = new Date(date);else if (typeof date === "string") {
-          var format = givenFormat || (config || defaults).dateFormat;
-          var datestr = String(date).trim();
-
-          if (datestr === "today") {
-            parsedDate = new Date();
-            timeless = true;
-          } else if (/Z$/.test(datestr) || /GMT$/.test(datestr)) parsedDate = new Date(date);else if (config && config.parseDate) parsedDate = config.parseDate(date, format);else {
-            parsedDate = !config || !config.noCalendar ? new Date(new Date().getFullYear(), 0, 1, 0, 0, 0, 0) : new Date(new Date().setHours(0, 0, 0, 0));
-            var matched,
-                ops = [];
-
-            for (var i = 0, matchIndex = 0, regexStr = ""; i < format.length; i++) {
-              var token = format[i];
-              var isBackSlash = token === "\\";
-              var escaped = format[i - 1] === "\\" || isBackSlash;
-
-              if (tokenRegex[token] && !escaped) {
-                regexStr += tokenRegex[token];
-                var match = new RegExp(regexStr).exec(date);
-
-                if (match && (matched = true)) {
-                  ops[token !== "Y" ? "push" : "unshift"]({
-                    fn: revFormat[token],
-                    val: match[++matchIndex]
-                  });
-                }
-              } else if (!isBackSlash) regexStr += ".";
-
-              ops.forEach(function (_ref3) {
-                var fn = _ref3.fn,
-                    val = _ref3.val;
-                return parsedDate = fn(parsedDate, val, locale) || parsedDate;
-              });
+        weekdays: {
+            shorthand: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+            longhand: [
+                "Sunday",
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+            ]
+        },
+        months: {
+            shorthand: [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec",
+            ],
+            longhand: [
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December",
+            ]
+        },
+        daysInMonth: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+        firstDayOfWeek: 0,
+        ordinal: function (nth) {
+            var s = nth % 100;
+            if (s > 3 && s < 21)
+                return "th";
+            switch (s % 10) {
+                case 1:
+                    return "st";
+                case 2:
+                    return "nd";
+                case 3:
+                    return "rd";
+                default:
+                    return "th";
             }
-
-            parsedDate = matched ? parsedDate : undefined;
-          }
-        }
-
-        if (!(parsedDate instanceof Date && !isNaN(parsedDate.getTime()))) {
-          config.errorHandler(new Error("Invalid date provided: " + date_orig));
-          return undefined;
-        }
-
-        if (timeless === true) parsedDate.setHours(0, 0, 0, 0);
-        return parsedDate;
-      };
+        },
+        rangeSeparator: " to ",
+        weekAbbreviation: "Wk",
+        scrollTitle: "Scroll to increment",
+        toggleTitle: "Click to toggle",
+        amPM: ["AM", "PM"],
+        yearAriaLabel: "Year"
     };
-    function compareDates(date1, date2, timeless) {
-      if (timeless === void 0) {
-        timeless = true;
-      }
 
-      if (timeless !== false) {
-        return new Date(date1.getTime()).setHours(0, 0, 0, 0) - new Date(date2.getTime()).setHours(0, 0, 0, 0);
-      }
-
-      return date1.getTime() - date2.getTime();
+    var pad = function (number) { return ("0" + number).slice(-2); };
+    var int = function (bool) { return (bool === true ? 1 : 0); };
+    /* istanbul ignore next */
+    function debounce(func, wait, immediate) {
+        if (immediate === void 0) { immediate = false; }
+        var timeout;
+        return function () {
+            var context = this, args = arguments;
+            timeout !== null && clearTimeout(timeout);
+            timeout = window.setTimeout(function () {
+                timeout = null;
+                if (!immediate)
+                    func.apply(context, args);
+            }, wait);
+            if (immediate && !timeout)
+                func.apply(context, args);
+        };
     }
-    var getWeek = function getWeek(givenDate) {
-      var date = new Date(givenDate.getTime());
-      date.setHours(0, 0, 0, 0);
-      date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
-      var week1 = new Date(date.getFullYear(), 0, 4);
-      return 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
-    };
-    var isBetween = function isBetween(ts, ts1, ts2) {
-      return ts > Math.min(ts1, ts2) && ts < Math.max(ts1, ts2);
-    };
-    var duration = {
-      DAY: 86400000
-    };
-
-    var HOOKS = ["onChange", "onClose", "onDayCreate", "onDestroy", "onKeyDown", "onMonthChange", "onOpen", "onParseConfig", "onReady", "onValueUpdate", "onYearChange", "onPreCalendarPosition"];
-    var defaults = {
-      _disable: [],
-      _enable: [],
-      allowInput: false,
-      altFormat: "F j, Y",
-      altInput: false,
-      altInputClass: "form-control input",
-      animate: typeof window === "object" && window.navigator.userAgent.indexOf("MSIE") === -1,
-      ariaDateFormat: "F j, Y",
-      clickOpens: true,
-      closeOnSelect: true,
-      conjunction: ", ",
-      dateFormat: "Y-m-d",
-      defaultHour: 12,
-      defaultMinute: 0,
-      defaultSeconds: 0,
-      disable: [],
-      disableMobile: false,
-      enable: [],
-      enableSeconds: false,
-      enableTime: false,
-      errorHandler: function errorHandler(err) {
-        return typeof console !== "undefined" && console.warn(err);
-      },
-      getWeek: getWeek,
-      hourIncrement: 1,
-      ignoredFocusElements: [],
-      inline: false,
-      locale: "default",
-      minuteIncrement: 5,
-      mode: "single",
-      nextArrow: "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 17 17'><g></g><path d='M13.207 8.472l-7.854 7.854-0.707-0.707 7.146-7.146-7.146-7.148 0.707-0.707 7.854 7.854z' /></svg>",
-      noCalendar: false,
-      now: new Date(),
-      onChange: [],
-      onClose: [],
-      onDayCreate: [],
-      onDestroy: [],
-      onKeyDown: [],
-      onMonthChange: [],
-      onOpen: [],
-      onParseConfig: [],
-      onReady: [],
-      onValueUpdate: [],
-      onYearChange: [],
-      onPreCalendarPosition: [],
-      plugins: [],
-      position: "auto",
-      positionElement: undefined,
-      prevArrow: "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 17 17'><g></g><path d='M5.207 8.471l7.146 7.147-0.707 0.707-7.853-7.854 7.854-7.853 0.707 0.707-7.147 7.146z' /></svg>",
-      shorthandCurrentMonth: false,
-      showMonths: 1,
-      static: false,
-      time_24hr: false,
-      weekNumbers: false,
-      wrap: false
+    var arrayify = function (obj) {
+        return obj instanceof Array ? obj : [obj];
     };
 
     function toggleClass(elem, className, bool) {
-      if (bool === true) return elem.classList.add(className);
-      elem.classList.remove(className);
+        if (bool === true)
+            return elem.classList.add(className);
+        elem.classList.remove(className);
     }
     function createElement(tag, className, content) {
-      var e = window.document.createElement(tag);
-      className = className || "";
-      content = content || "";
-      e.className = className;
-      if (content !== undefined) e.textContent = content;
-      return e;
+        var e = window.document.createElement(tag);
+        className = className || "";
+        content = content || "";
+        e.className = className;
+        if (content !== undefined)
+            e.textContent = content;
+        return e;
     }
     function clearNode(node) {
-      while (node.firstChild) {
-        node.removeChild(node.firstChild);
-      }
+        while (node.firstChild)
+            node.removeChild(node.firstChild);
     }
     function findParent(node, condition) {
-      if (condition(node)) return node;else if (node.parentNode) return findParent(node.parentNode, condition);
-      return undefined;
+        if (condition(node))
+            return node;
+        else if (node.parentNode)
+            return findParent(node.parentNode, condition);
+        return undefined; // nothing found
     }
     function createNumberInput(inputClassName, opts) {
-      var wrapper = createElement("div", "numInputWrapper"),
-          numInput = createElement("input", "numInput " + inputClassName),
-          arrowUp = createElement("span", "arrowUp"),
-          arrowDown = createElement("span", "arrowDown");
-      numInput.type = "text";
-      numInput.pattern = "\\d*";
-      if (opts !== undefined) for (var key in opts) {
-        numInput.setAttribute(key, opts[key]);
-      }
-      wrapper.appendChild(numInput);
-      wrapper.appendChild(arrowUp);
-      wrapper.appendChild(arrowDown);
-      return wrapper;
+        var wrapper = createElement("div", "numInputWrapper"), numInput = createElement("input", "numInput " + inputClassName), arrowUp = createElement("span", "arrowUp"), arrowDown = createElement("span", "arrowDown");
+        if (navigator.userAgent.indexOf("MSIE 9.0") === -1) {
+            numInput.type = "number";
+        }
+        else {
+            numInput.type = "text";
+            numInput.pattern = "\\d*";
+        }
+        if (opts !== undefined)
+            for (var key in opts)
+                numInput.setAttribute(key, opts[key]);
+        wrapper.appendChild(numInput);
+        wrapper.appendChild(arrowUp);
+        wrapper.appendChild(arrowDown);
+        return wrapper;
+    }
+    function getEventTarget(event) {
+        if (typeof event.composedPath === "function") {
+            var path = event.composedPath();
+            return path[0];
+        }
+        return event.target;
     }
 
-    if (typeof Object.assign !== "function") {
-      Object.assign = function (target) {
-        if (!target) {
-          throw TypeError("Cannot convert undefined or null to object");
+    var do_nothing = function () { return undefined; };
+    var monthToStr = function (monthNumber, shorthand, locale) { return locale.months[shorthand ? "shorthand" : "longhand"][monthNumber]; };
+    var revFormat = {
+        D: do_nothing,
+        F: function (dateObj, monthName, locale) {
+            dateObj.setMonth(locale.months.longhand.indexOf(monthName));
+        },
+        G: function (dateObj, hour) {
+            dateObj.setHours(parseFloat(hour));
+        },
+        H: function (dateObj, hour) {
+            dateObj.setHours(parseFloat(hour));
+        },
+        J: function (dateObj, day) {
+            dateObj.setDate(parseFloat(day));
+        },
+        K: function (dateObj, amPM, locale) {
+            dateObj.setHours((dateObj.getHours() % 12) +
+                12 * int(new RegExp(locale.amPM[1], "i").test(amPM)));
+        },
+        M: function (dateObj, shortMonth, locale) {
+            dateObj.setMonth(locale.months.shorthand.indexOf(shortMonth));
+        },
+        S: function (dateObj, seconds) {
+            dateObj.setSeconds(parseFloat(seconds));
+        },
+        U: function (_, unixSeconds) { return new Date(parseFloat(unixSeconds) * 1000); },
+        W: function (dateObj, weekNum) {
+            var weekNumber = parseInt(weekNum);
+            return new Date(dateObj.getFullYear(), 0, 2 + (weekNumber - 1) * 7, 0, 0, 0, 0);
+        },
+        Y: function (dateObj, year) {
+            dateObj.setFullYear(parseFloat(year));
+        },
+        Z: function (_, ISODate) { return new Date(ISODate); },
+        d: function (dateObj, day) {
+            dateObj.setDate(parseFloat(day));
+        },
+        h: function (dateObj, hour) {
+            dateObj.setHours(parseFloat(hour));
+        },
+        i: function (dateObj, minutes) {
+            dateObj.setMinutes(parseFloat(minutes));
+        },
+        j: function (dateObj, day) {
+            dateObj.setDate(parseFloat(day));
+        },
+        l: do_nothing,
+        m: function (dateObj, month) {
+            dateObj.setMonth(parseFloat(month) - 1);
+        },
+        n: function (dateObj, month) {
+            dateObj.setMonth(parseFloat(month) - 1);
+        },
+        s: function (dateObj, seconds) {
+            dateObj.setSeconds(parseFloat(seconds));
+        },
+        u: function (_, unixMillSeconds) {
+            return new Date(parseFloat(unixMillSeconds));
+        },
+        w: do_nothing,
+        y: function (dateObj, year) {
+            dateObj.setFullYear(2000 + parseFloat(year));
         }
+    };
+    var tokenRegex = {
+        D: "(\\w+)",
+        F: "(\\w+)",
+        G: "(\\d\\d|\\d)",
+        H: "(\\d\\d|\\d)",
+        J: "(\\d\\d|\\d)\\w+",
+        K: "",
+        M: "(\\w+)",
+        S: "(\\d\\d|\\d)",
+        U: "(.+)",
+        W: "(\\d\\d|\\d)",
+        Y: "(\\d{4})",
+        Z: "(.+)",
+        d: "(\\d\\d|\\d)",
+        h: "(\\d\\d|\\d)",
+        i: "(\\d\\d|\\d)",
+        j: "(\\d\\d|\\d)",
+        l: "(\\w+)",
+        m: "(\\d\\d|\\d)",
+        n: "(\\d\\d|\\d)",
+        s: "(\\d\\d|\\d)",
+        u: "(.+)",
+        w: "(\\d\\d|\\d)",
+        y: "(\\d{2})"
+    };
+    var formats = {
+        // get the date in UTC
+        Z: function (date) { return date.toISOString(); },
+        // weekday name, short, e.g. Thu
+        D: function (date, locale, options) {
+            return locale.weekdays.shorthand[formats.w(date, locale, options)];
+        },
+        // full month name e.g. January
+        F: function (date, locale, options) {
+            return monthToStr(formats.n(date, locale, options) - 1, false, locale);
+        },
+        // padded hour 1-12
+        G: function (date, locale, options) {
+            return pad(formats.h(date, locale, options));
+        },
+        // hours with leading zero e.g. 03
+        H: function (date) { return pad(date.getHours()); },
+        // day (1-30) with ordinal suffix e.g. 1st, 2nd
+        J: function (date, locale) {
+            return locale.ordinal !== undefined
+                ? date.getDate() + locale.ordinal(date.getDate())
+                : date.getDate();
+        },
+        // AM/PM
+        K: function (date, locale) { return locale.amPM[int(date.getHours() > 11)]; },
+        // shorthand month e.g. Jan, Sep, Oct, etc
+        M: function (date, locale) {
+            return monthToStr(date.getMonth(), true, locale);
+        },
+        // seconds 00-59
+        S: function (date) { return pad(date.getSeconds()); },
+        // unix timestamp
+        U: function (date) { return date.getTime() / 1000; },
+        W: function (date, _, options) {
+            return options.getWeek(date);
+        },
+        // full year e.g. 2016
+        Y: function (date) { return date.getFullYear(); },
+        // day in month, padded (01-30)
+        d: function (date) { return pad(date.getDate()); },
+        // hour from 1-12 (am/pm)
+        h: function (date) { return (date.getHours() % 12 ? date.getHours() % 12 : 12); },
+        // minutes, padded with leading zero e.g. 09
+        i: function (date) { return pad(date.getMinutes()); },
+        // day in month (1-30)
+        j: function (date) { return date.getDate(); },
+        // weekday name, full, e.g. Thursday
+        l: function (date, locale) {
+            return locale.weekdays.longhand[date.getDay()];
+        },
+        // padded month number (01-12)
+        m: function (date) { return pad(date.getMonth() + 1); },
+        // the month number (1-12)
+        n: function (date) { return date.getMonth() + 1; },
+        // seconds 0-59
+        s: function (date) { return date.getSeconds(); },
+        // Unix Milliseconds
+        u: function (date) { return date.getTime(); },
+        // number of the day of the week
+        w: function (date) { return date.getDay(); },
+        // last two digits of year e.g. 16 for 2016
+        y: function (date) { return String(date.getFullYear()).substring(2); }
+    };
 
-        for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-          args[_key - 1] = arguments[_key];
-        }
-
-        var _loop = function _loop() {
-          var source = args[_i];
-
-          if (source) {
-            Object.keys(source).forEach(function (key) {
-              return target[key] = source[key];
-            });
-          }
+    var createDateFormatter = function (_a) {
+        var _b = _a.config, config = _b === void 0 ? defaults : _b, _c = _a.l10n, l10n = _c === void 0 ? english : _c;
+        return function (dateObj, frmt, overrideLocale) {
+            var locale = overrideLocale || l10n;
+            if (config.formatDate !== undefined) {
+                return config.formatDate(dateObj, frmt, locale);
+            }
+            return frmt
+                .split("")
+                .map(function (c, i, arr) {
+                return formats[c] && arr[i - 1] !== "\\"
+                    ? formats[c](dateObj, locale, config)
+                    : c !== "\\"
+                        ? c
+                        : "";
+            })
+                .join("");
         };
-
-        for (var _i = 0; _i < args.length; _i++) {
-          _loop();
+    };
+    var createDateParser = function (_a) {
+        var _b = _a.config, config = _b === void 0 ? defaults : _b, _c = _a.l10n, l10n = _c === void 0 ? english : _c;
+        return function (date, givenFormat, timeless, customLocale) {
+            if (date !== 0 && !date)
+                return undefined;
+            var locale = customLocale || l10n;
+            var parsedDate;
+            var date_orig = date;
+            if (date instanceof Date)
+                parsedDate = new Date(date.getTime());
+            else if (typeof date !== "string" &&
+                date.toFixed !== undefined // timestamp
+            )
+                // create a copy
+                parsedDate = new Date(date);
+            else if (typeof date === "string") {
+                // date string
+                var format = givenFormat || (config || defaults).dateFormat;
+                var datestr = String(date).trim();
+                if (datestr === "today") {
+                    parsedDate = new Date();
+                    timeless = true;
+                }
+                else if (/Z$/.test(datestr) ||
+                    /GMT$/.test(datestr) // datestrings w/ timezone
+                )
+                    parsedDate = new Date(date);
+                else if (config && config.parseDate)
+                    parsedDate = config.parseDate(date, format);
+                else {
+                    parsedDate =
+                        !config || !config.noCalendar
+                            ? new Date(new Date().getFullYear(), 0, 1, 0, 0, 0, 0)
+                            : new Date(new Date().setHours(0, 0, 0, 0));
+                    var matched = void 0, ops = [];
+                    for (var i = 0, matchIndex = 0, regexStr = ""; i < format.length; i++) {
+                        var token_1 = format[i];
+                        var isBackSlash = token_1 === "\\";
+                        var escaped = format[i - 1] === "\\" || isBackSlash;
+                        if (tokenRegex[token_1] && !escaped) {
+                            regexStr += tokenRegex[token_1];
+                            var match = new RegExp(regexStr).exec(date);
+                            if (match && (matched = true)) {
+                                ops[token_1 !== "Y" ? "push" : "unshift"]({
+                                    fn: revFormat[token_1],
+                                    val: match[++matchIndex]
+                                });
+                            }
+                        }
+                        else if (!isBackSlash)
+                            regexStr += "."; // don't really care
+                        ops.forEach(function (_a) {
+                            var fn = _a.fn, val = _a.val;
+                            return (parsedDate = fn(parsedDate, val, locale) || parsedDate);
+                        });
+                    }
+                    parsedDate = matched ? parsedDate : undefined;
+                }
+            }
+            /* istanbul ignore next */
+            if (!(parsedDate instanceof Date && !isNaN(parsedDate.getTime()))) {
+                config.errorHandler(new Error("Invalid date provided: " + date_orig));
+                return undefined;
+            }
+            if (timeless === true)
+                parsedDate.setHours(0, 0, 0, 0);
+            return parsedDate;
+        };
+    };
+    /**
+     * Compute the difference in dates, measured in ms
+     */
+    function compareDates(date1, date2, timeless) {
+        if (timeless === void 0) { timeless = true; }
+        if (timeless !== false) {
+            return (new Date(date1.getTime()).setHours(0, 0, 0, 0) -
+                new Date(date2.getTime()).setHours(0, 0, 0, 0));
         }
+        return date1.getTime() - date2.getTime();
+    }
+    var isBetween = function (ts, ts1, ts2) {
+        return ts > Math.min(ts1, ts2) && ts < Math.max(ts1, ts2);
+    };
+    var duration = {
+        DAY: 86400000
+    };
 
-        return target;
-      };
+    if (typeof Object.assign !== "function") {
+        Object.assign = function (target) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            if (!target) {
+                throw TypeError("Cannot convert undefined or null to object");
+            }
+            var _loop_1 = function (source) {
+                if (source) {
+                    Object.keys(source).forEach(function (key) { return (target[key] = source[key]); });
+                }
+            };
+            for (var _a = 0, args_1 = args; _a < args_1.length; _a++) {
+                var source = args_1[_a];
+                _loop_1(source);
+            }
+            return target;
+        };
     }
 
     var DEBOUNCED_CHANGE_MS = 300;
-
     function FlatpickrInstance(element, instanceConfig) {
-      var self = {
-        config: Object.assign({}, flatpickr.defaultConfig),
-        l10n: english
-      };
-      self.parseDate = createDateParser({
-        config: self.config,
-        l10n: self.l10n
-      });
-      self._handlers = [];
-      self._bind = bind;
-      self._setHoursFromDate = setHoursFromDate;
-      self._positionCalendar = positionCalendar;
-      self.changeMonth = changeMonth;
-      self.changeYear = changeYear;
-      self.clear = clear;
-      self.close = close;
-      self._createElement = createElement;
-      self.destroy = destroy;
-      self.isEnabled = isEnabled;
-      self.jumpToDate = jumpToDate;
-      self.open = open;
-      self.redraw = redraw;
-      self.set = set;
-      self.setDate = setDate;
-      self.toggle = toggle;
-
-      function setupHelperFunctions() {
-        self.utils = {
-          getDaysInMonth: function getDaysInMonth(month, yr) {
-            if (month === void 0) {
-              month = self.currentMonth;
-            }
-
-            if (yr === void 0) {
-              yr = self.currentYear;
-            }
-
-            if (month === 1 && (yr % 4 === 0 && yr % 100 !== 0 || yr % 400 === 0)) return 29;
-            return self.l10n.daysInMonth[month];
-          }
+        var self = {
+            config: __assign({}, flatpickr.defaultConfig),
+            l10n: english
         };
-      }
-
-      function init() {
-        self.element = self.input = element;
-        self.isOpen = false;
-        parseConfig();
-        setupLocale();
-        setupInputs();
-        setupDates();
-        setupHelperFunctions();
-        if (!self.isMobile) build();
-        bindEvents();
-
-        if (self.selectedDates.length || self.config.noCalendar) {
-          if (self.config.enableTime) {
-            setHoursFromDate(self.config.noCalendar ? self.latestSelectedDateObj || self.config.minDate : undefined);
-          }
-
-          updateValue(false);
-        }
-
-        setCalendarWidth();
-        self.showTimeInput = self.selectedDates.length > 0 || self.config.noCalendar;
-        var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-
-        if (!self.isMobile && isSafari) {
-          positionCalendar();
-        }
-
-        triggerEvent("onReady");
-      }
-
-      function bindToInstance(fn) {
-        return fn.bind(self);
-      }
-
-      function setCalendarWidth() {
-        var config = self.config;
-        if (config.weekNumbers === false && config.showMonths === 1) return;else if (config.noCalendar !== true) {
-          window.requestAnimationFrame(function () {
-            self.calendarContainer.style.visibility = "hidden";
-            self.calendarContainer.style.display = "block";
-
-            if (self.daysContainer !== undefined) {
-              var daysWidth = (self.days.offsetWidth + 1) * config.showMonths;
-              self.daysContainer.style.width = daysWidth + "px";
-              self.calendarContainer.style.width = daysWidth + (self.weekWrapper !== undefined ? self.weekWrapper.offsetWidth : 0) + "px";
-              self.calendarContainer.style.removeProperty("visibility");
-              self.calendarContainer.style.removeProperty("display");
-            }
-          });
-        }
-      }
-
-      function updateTime(e) {
-        if (self.selectedDates.length === 0) return;
-
-        if (e !== undefined && e.type !== "blur") {
-          timeWrapper(e);
-        }
-
-        var prevValue = self._input.value;
-        setHoursFromInputs();
-        updateValue();
-
-        if (self._input.value !== prevValue) {
-          self._debouncedChange();
-        }
-      }
-
-      function ampm2military(hour, amPM) {
-        return hour % 12 + 12 * int(amPM === self.l10n.amPM[1]);
-      }
-
-      function military2ampm(hour) {
-        switch (hour % 24) {
-          case 0:
-          case 12:
-            return 12;
-
-          default:
-            return hour % 12;
-        }
-      }
-
-      function setHoursFromInputs() {
-        if (self.hourElement === undefined || self.minuteElement === undefined) return;
-        var hours = (parseInt(self.hourElement.value.slice(-2), 10) || 0) % 24,
-            minutes = (parseInt(self.minuteElement.value, 10) || 0) % 60,
-            seconds = self.secondElement !== undefined ? (parseInt(self.secondElement.value, 10) || 0) % 60 : 0;
-
-        if (self.amPM !== undefined) {
-          hours = ampm2military(hours, self.amPM.textContent);
-        }
-
-        var limitMinHours = self.config.minTime !== undefined || self.config.minDate && self.minDateHasTime && self.latestSelectedDateObj && compareDates(self.latestSelectedDateObj, self.config.minDate, true) === 0;
-        var limitMaxHours = self.config.maxTime !== undefined || self.config.maxDate && self.maxDateHasTime && self.latestSelectedDateObj && compareDates(self.latestSelectedDateObj, self.config.maxDate, true) === 0;
-
-        if (limitMaxHours) {
-          var maxTime = self.config.maxTime !== undefined ? self.config.maxTime : self.config.maxDate;
-          hours = Math.min(hours, maxTime.getHours());
-          if (hours === maxTime.getHours()) minutes = Math.min(minutes, maxTime.getMinutes());
-          if (minutes === maxTime.getMinutes()) seconds = Math.min(seconds, maxTime.getSeconds());
-        }
-
-        if (limitMinHours) {
-          var minTime = self.config.minTime !== undefined ? self.config.minTime : self.config.minDate;
-          hours = Math.max(hours, minTime.getHours());
-          if (hours === minTime.getHours()) minutes = Math.max(minutes, minTime.getMinutes());
-          if (minutes === minTime.getMinutes()) seconds = Math.max(seconds, minTime.getSeconds());
-        }
-
-        setHours(hours, minutes, seconds);
-      }
-
-      function setHoursFromDate(dateObj) {
-        var date = dateObj || self.latestSelectedDateObj;
-        if (date) setHours(date.getHours(), date.getMinutes(), date.getSeconds());
-      }
-
-      function setDefaultHours() {
-        var hours = self.config.defaultHour;
-        var minutes = self.config.defaultMinute;
-        var seconds = self.config.defaultSeconds;
-
-        if (self.config.minDate !== undefined) {
-          var min_hr = self.config.minDate.getHours();
-          var min_minutes = self.config.minDate.getMinutes();
-          hours = Math.max(hours, min_hr);
-          if (hours === min_hr) minutes = Math.max(min_minutes, minutes);
-          if (hours === min_hr && minutes === min_minutes) seconds = self.config.minDate.getSeconds();
-        }
-
-        if (self.config.maxDate !== undefined) {
-          var max_hr = self.config.maxDate.getHours();
-          var max_minutes = self.config.maxDate.getMinutes();
-          hours = Math.min(hours, max_hr);
-          if (hours === max_hr) minutes = Math.min(max_minutes, minutes);
-          if (hours === max_hr && minutes === max_minutes) seconds = self.config.maxDate.getSeconds();
-        }
-
-        setHours(hours, minutes, seconds);
-      }
-
-      function setHours(hours, minutes, seconds) {
-        if (self.latestSelectedDateObj !== undefined) {
-          self.latestSelectedDateObj.setHours(hours % 24, minutes, seconds || 0, 0);
-        }
-
-        if (!self.hourElement || !self.minuteElement || self.isMobile) return;
-        self.hourElement.value = pad(!self.config.time_24hr ? (12 + hours) % 12 + 12 * int(hours % 12 === 0) : hours);
-        self.minuteElement.value = pad(minutes);
-        if (self.amPM !== undefined) self.amPM.textContent = self.l10n.amPM[int(hours >= 12)];
-        if (self.secondElement !== undefined) self.secondElement.value = pad(seconds);
-      }
-
-      function onYearInput(event) {
-        var year = parseInt(event.target.value) + (event.delta || 0);
-
-        if (year / 1000 > 1 || event.key === "Enter" && !/[^\d]/.test(year.toString())) {
-          changeYear(year);
-        }
-      }
-
-      function bind(element, event, handler, options) {
-        if (event instanceof Array) return event.forEach(function (ev) {
-          return bind(element, ev, handler, options);
-        });
-        if (element instanceof Array) return element.forEach(function (el) {
-          return bind(el, event, handler, options);
-        });
-        element.addEventListener(event, handler, options);
-
-        self._handlers.push({
-          element: element,
-          event: event,
-          handler: handler,
-          options: options
-        });
-      }
-
-      function onClick(handler) {
-        return function (evt) {
-          evt.which === 1 && handler(evt);
-        };
-      }
-
-      function triggerChange() {
-        triggerEvent("onChange");
-      }
-
-      function bindEvents() {
-        if (self.config.wrap) {
-          ["open", "close", "toggle", "clear"].forEach(function (evt) {
-            Array.prototype.forEach.call(self.element.querySelectorAll("[data-" + evt + "]"), function (el) {
-              return bind(el, "click", self[evt]);
-            });
-          });
-        }
-
-        if (self.isMobile) {
-          setupMobile();
-          return;
-        }
-
-        var debouncedResize = debounce(onResize, 50);
-        self._debouncedChange = debounce(triggerChange, DEBOUNCED_CHANGE_MS);
-        if (self.daysContainer && !/iPhone|iPad|iPod/i.test(navigator.userAgent)) bind(self.daysContainer, "mouseover", function (e) {
-          if (self.config.mode === "range") onMouseOver(e.target);
-        });
-        bind(window.document.body, "keydown", onKeyDown);
-        if (!self.config.static) bind(self._input, "keydown", onKeyDown);
-        if (!self.config.inline && !self.config.static) bind(window, "resize", debouncedResize);
-        if (window.ontouchstart !== undefined) bind(window.document, "click", documentClick);else bind(window.document, "mousedown", onClick(documentClick));
-        bind(window.document, "focus", documentClick, {
-          capture: true
-        });
-
-        if (self.config.clickOpens === true) {
-          bind(self._input, "focus", self.open);
-          bind(self._input, "mousedown", onClick(self.open));
-        }
-
-        if (self.daysContainer !== undefined) {
-          bind(self.monthNav, "mousedown", onClick(onMonthNavClick));
-          bind(self.monthNav, ["keyup", "increment"], onYearInput);
-          bind(self.daysContainer, "mousedown", onClick(selectDate));
-        }
-
-        if (self.timeContainer !== undefined && self.minuteElement !== undefined && self.hourElement !== undefined) {
-          var selText = function selText(e) {
-            return e.target.select();
-          };
-
-          bind(self.timeContainer, ["increment"], updateTime);
-          bind(self.timeContainer, "blur", updateTime, {
-            capture: true
-          });
-          bind(self.timeContainer, "mousedown", onClick(timeIncrement));
-          bind([self.hourElement, self.minuteElement], ["focus", "click"], selText);
-          if (self.secondElement !== undefined) bind(self.secondElement, "focus", function () {
-            return self.secondElement && self.secondElement.select();
-          });
-
-          if (self.amPM !== undefined) {
-            bind(self.amPM, "mousedown", onClick(function (e) {
-              updateTime(e);
-              triggerChange();
-            }));
-          }
-        }
-      }
-
-      function jumpToDate(jumpDate) {
-        var jumpTo = jumpDate !== undefined ? self.parseDate(jumpDate) : self.latestSelectedDateObj || (self.config.minDate && self.config.minDate > self.now ? self.config.minDate : self.config.maxDate && self.config.maxDate < self.now ? self.config.maxDate : self.now);
-
-        try {
-          if (jumpTo !== undefined) {
-            self.currentYear = jumpTo.getFullYear();
-            self.currentMonth = jumpTo.getMonth();
-          }
-        } catch (e) {
-          e.message = "Invalid date supplied: " + jumpTo;
-          self.config.errorHandler(e);
-        }
-
-        self.redraw();
-      }
-
-      function timeIncrement(e) {
-        if (~e.target.className.indexOf("arrow")) incrementNumInput(e, e.target.classList.contains("arrowUp") ? 1 : -1);
-      }
-
-      function incrementNumInput(e, delta, inputElem) {
-        var target = e && e.target;
-        var input = inputElem || target && target.parentNode && target.parentNode.firstChild;
-        var event = createEvent("increment");
-        event.delta = delta;
-        input && input.dispatchEvent(event);
-      }
-
-      function build() {
-        var fragment = window.document.createDocumentFragment();
-        self.calendarContainer = createElement("div", "flatpickr-calendar");
-        self.calendarContainer.tabIndex = -1;
-
-        if (!self.config.noCalendar) {
-          fragment.appendChild(buildMonthNav());
-          self.innerContainer = createElement("div", "flatpickr-innerContainer");
-
-          if (self.config.weekNumbers) {
-            var _buildWeeks = buildWeeks(),
-                weekWrapper = _buildWeeks.weekWrapper,
-                weekNumbers = _buildWeeks.weekNumbers;
-
-            self.innerContainer.appendChild(weekWrapper);
-            self.weekNumbers = weekNumbers;
-            self.weekWrapper = weekWrapper;
-          }
-
-          self.rContainer = createElement("div", "flatpickr-rContainer");
-          self.rContainer.appendChild(buildWeekdays());
-
-          if (!self.daysContainer) {
-            self.daysContainer = createElement("div", "flatpickr-days");
-            self.daysContainer.tabIndex = -1;
-          }
-
-          buildDays();
-          self.rContainer.appendChild(self.daysContainer);
-          self.innerContainer.appendChild(self.rContainer);
-          fragment.appendChild(self.innerContainer);
-        }
-
-        if (self.config.enableTime) {
-          fragment.appendChild(buildTime());
-        }
-
-        toggleClass(self.calendarContainer, "rangeMode", self.config.mode === "range");
-        toggleClass(self.calendarContainer, "animate", self.config.animate === true);
-        toggleClass(self.calendarContainer, "multiMonth", self.config.showMonths > 1);
-        self.calendarContainer.appendChild(fragment);
-        var customAppend = self.config.appendTo !== undefined && self.config.appendTo.nodeType !== undefined;
-
-        if (self.config.inline || self.config.static) {
-          self.calendarContainer.classList.add(self.config.inline ? "inline" : "static");
-
-          if (self.config.inline) {
-            if (!customAppend && self.element.parentNode) self.element.parentNode.insertBefore(self.calendarContainer, self._input.nextSibling);else if (self.config.appendTo !== undefined) self.config.appendTo.appendChild(self.calendarContainer);
-          }
-
-          if (self.config.static) {
-            var wrapper = createElement("div", "flatpickr-wrapper");
-            if (self.element.parentNode) self.element.parentNode.insertBefore(wrapper, self.element);
-            wrapper.appendChild(self.element);
-            if (self.altInput) wrapper.appendChild(self.altInput);
-            wrapper.appendChild(self.calendarContainer);
-          }
-        }
-
-        if (!self.config.static && !self.config.inline) (self.config.appendTo !== undefined ? self.config.appendTo : window.document.body).appendChild(self.calendarContainer);
-      }
-
-      function createDay(className, date, dayNumber, i) {
-        var dateIsEnabled = isEnabled(date, true),
-            dayElement = createElement("span", "flatpickr-day " + className, date.getDate().toString());
-        dayElement.dateObj = date;
-        dayElement.$i = i;
-        dayElement.setAttribute("aria-label", self.formatDate(date, self.config.ariaDateFormat));
-
-        if (className.indexOf("hidden") === -1 && compareDates(date, self.now) === 0) {
-          self.todayDateElem = dayElement;
-          dayElement.classList.add("today");
-          dayElement.setAttribute("aria-current", "date");
-        }
-
-        if (dateIsEnabled) {
-          dayElement.tabIndex = -1;
-
-          if (isDateSelected(date)) {
-            dayElement.classList.add("selected");
-            self.selectedDateElem = dayElement;
-
-            if (self.config.mode === "range") {
-              toggleClass(dayElement, "startRange", self.selectedDates[0] && compareDates(date, self.selectedDates[0], true) === 0);
-              toggleClass(dayElement, "endRange", self.selectedDates[1] && compareDates(date, self.selectedDates[1], true) === 0);
-              if (className === "nextMonthDay") dayElement.classList.add("inRange");
-            }
-          }
-        } else {
-          dayElement.classList.add("disabled");
-        }
-
-        if (self.config.mode === "range") {
-          if (isDateInRange(date) && !isDateSelected(date)) dayElement.classList.add("inRange");
-        }
-
-        if (self.weekNumbers && self.config.showMonths === 1 && className !== "prevMonthDay" && dayNumber % 7 === 1) {
-          self.weekNumbers.insertAdjacentHTML("beforeend", "<span class='flatpickr-day'>" + self.config.getWeek(date) + "</span>");
-        }
-
-        triggerEvent("onDayCreate", dayElement);
-        return dayElement;
-      }
-
-      function focusOnDayElem(targetNode) {
-        targetNode.focus();
-        if (self.config.mode === "range") onMouseOver(targetNode);
-      }
-
-      function getFirstAvailableDay(delta) {
-        var startMonth = delta > 0 ? 0 : self.config.showMonths - 1;
-        var endMonth = delta > 0 ? self.config.showMonths : -1;
-
-        for (var m = startMonth; m != endMonth; m += delta) {
-          var month = self.daysContainer.children[m];
-          var startIndex = delta > 0 ? 0 : month.children.length - 1;
-          var endIndex = delta > 0 ? month.children.length : -1;
-
-          for (var i = startIndex; i != endIndex; i += delta) {
-            var c = month.children[i];
-            if (c.className.indexOf("hidden") === -1 && isEnabled(c.dateObj)) return c;
-          }
-        }
-
-        return undefined;
-      }
-
-      function getNextAvailableDay(current, delta) {
-        var givenMonth = current.className.indexOf("Month") === -1 ? current.dateObj.getMonth() : self.currentMonth;
-        var endMonth = delta > 0 ? self.config.showMonths : -1;
-        var loopDelta = delta > 0 ? 1 : -1;
-
-        for (var m = givenMonth - self.currentMonth; m != endMonth; m += loopDelta) {
-          var month = self.daysContainer.children[m];
-          var startIndex = givenMonth - self.currentMonth === m ? current.$i + delta : delta < 0 ? month.children.length - 1 : 0;
-          var numMonthDays = month.children.length;
-
-          for (var i = startIndex; i >= 0 && i < numMonthDays && i != (delta > 0 ? numMonthDays : -1); i += loopDelta) {
-            var c = month.children[i];
-            if (c.className.indexOf("hidden") === -1 && isEnabled(c.dateObj) && Math.abs(current.$i - i) >= Math.abs(delta)) return focusOnDayElem(c);
-          }
-        }
-
-        self.changeMonth(loopDelta);
-        focusOnDay(getFirstAvailableDay(loopDelta), 0);
-        return undefined;
-      }
-
-      function focusOnDay(current, offset) {
-        var dayFocused = isInView(document.activeElement || document.body);
-        var startElem = current !== undefined ? current : dayFocused ? document.activeElement : self.selectedDateElem !== undefined && isInView(self.selectedDateElem) ? self.selectedDateElem : self.todayDateElem !== undefined && isInView(self.todayDateElem) ? self.todayDateElem : getFirstAvailableDay(offset > 0 ? 1 : -1);
-        if (startElem === undefined) return self._input.focus();
-        if (!dayFocused) return focusOnDayElem(startElem);
-        getNextAvailableDay(startElem, offset);
-      }
-
-      function buildMonthDays(year, month) {
-        var firstOfMonth = (new Date(year, month, 1).getDay() - self.l10n.firstDayOfWeek + 7) % 7;
-        var prevMonthDays = self.utils.getDaysInMonth((month - 1 + 12) % 12);
-        var daysInMonth = self.utils.getDaysInMonth(month),
-            days = window.document.createDocumentFragment(),
-            isMultiMonth = self.config.showMonths > 1,
-            prevMonthDayClass = isMultiMonth ? "prevMonthDay hidden" : "prevMonthDay",
-            nextMonthDayClass = isMultiMonth ? "nextMonthDay hidden" : "nextMonthDay";
-        var dayNumber = prevMonthDays + 1 - firstOfMonth,
-            dayIndex = 0;
-
-        for (; dayNumber <= prevMonthDays; dayNumber++, dayIndex++) {
-          days.appendChild(createDay(prevMonthDayClass, new Date(year, month - 1, dayNumber), dayNumber, dayIndex));
-        }
-
-        for (dayNumber = 1; dayNumber <= daysInMonth; dayNumber++, dayIndex++) {
-          days.appendChild(createDay("", new Date(year, month, dayNumber), dayNumber, dayIndex));
-        }
-
-        for (var dayNum = daysInMonth + 1; dayNum <= 42 - firstOfMonth && (self.config.showMonths === 1 || dayIndex % 7 !== 0); dayNum++, dayIndex++) {
-          days.appendChild(createDay(nextMonthDayClass, new Date(year, month + 1, dayNum % daysInMonth), dayNum, dayIndex));
-        }
-
-        var dayContainer = createElement("div", "dayContainer");
-        dayContainer.appendChild(days);
-        return dayContainer;
-      }
-
-      function buildDays() {
-        if (self.daysContainer === undefined) {
-          return;
-        }
-
-        clearNode(self.daysContainer);
-        if (self.weekNumbers) clearNode(self.weekNumbers);
-        var frag = document.createDocumentFragment();
-
-        for (var i = 0; i < self.config.showMonths; i++) {
-          var d = new Date(self.currentYear, self.currentMonth, 1);
-          d.setMonth(self.currentMonth + i);
-          frag.appendChild(buildMonthDays(d.getFullYear(), d.getMonth()));
-        }
-
-        self.daysContainer.appendChild(frag);
-        self.days = self.daysContainer.firstChild;
-
-        if (self.config.mode === "range" && self.selectedDates.length === 1) {
-          onMouseOver();
-        }
-      }
-
-      function buildMonth() {
-        var container = createElement("div", "flatpickr-month");
-        var monthNavFragment = window.document.createDocumentFragment();
-        var monthElement = createElement("span", "cur-month");
-        var yearInput = createNumberInput("cur-year", {
-          tabindex: "-1"
-        });
-        var yearElement = yearInput.getElementsByTagName("input")[0];
-        yearElement.setAttribute("aria-label", self.l10n.yearAriaLabel);
-        if (self.config.minDate) yearElement.setAttribute("data-min", self.config.minDate.getFullYear().toString());
-
-        if (self.config.maxDate) {
-          yearElement.setAttribute("data-max", self.config.maxDate.getFullYear().toString());
-          yearElement.disabled = !!self.config.minDate && self.config.minDate.getFullYear() === self.config.maxDate.getFullYear();
-        }
-
-        var currentMonth = createElement("div", "flatpickr-current-month");
-        currentMonth.appendChild(monthElement);
-        currentMonth.appendChild(yearInput);
-        monthNavFragment.appendChild(currentMonth);
-        container.appendChild(monthNavFragment);
-        return {
-          container: container,
-          yearElement: yearElement,
-          monthElement: monthElement
-        };
-      }
-
-      function buildMonths() {
-        clearNode(self.monthNav);
-        self.monthNav.appendChild(self.prevMonthNav);
-
-        for (var m = self.config.showMonths; m--;) {
-          var month = buildMonth();
-          self.yearElements.push(month.yearElement);
-          self.monthElements.push(month.monthElement);
-          self.monthNav.appendChild(month.container);
-        }
-
-        self.monthNav.appendChild(self.nextMonthNav);
-      }
-
-      function buildMonthNav() {
-        self.monthNav = createElement("div", "flatpickr-months");
-        self.yearElements = [];
-        self.monthElements = [];
-        self.prevMonthNav = createElement("span", "flatpickr-prev-month");
-        self.prevMonthNav.innerHTML = self.config.prevArrow;
-        self.nextMonthNav = createElement("span", "flatpickr-next-month");
-        self.nextMonthNav.innerHTML = self.config.nextArrow;
-        buildMonths();
-        Object.defineProperty(self, "_hidePrevMonthArrow", {
-          get: function get() {
-            return self.__hidePrevMonthArrow;
-          },
-          set: function set(bool) {
-            if (self.__hidePrevMonthArrow !== bool) {
-              toggleClass(self.prevMonthNav, "disabled", bool);
-              self.__hidePrevMonthArrow = bool;
-            }
-          }
-        });
-        Object.defineProperty(self, "_hideNextMonthArrow", {
-          get: function get() {
-            return self.__hideNextMonthArrow;
-          },
-          set: function set(bool) {
-            if (self.__hideNextMonthArrow !== bool) {
-              toggleClass(self.nextMonthNav, "disabled", bool);
-              self.__hideNextMonthArrow = bool;
-            }
-          }
-        });
-        self.currentYearElement = self.yearElements[0];
-        updateNavigationCurrentMonth();
-        return self.monthNav;
-      }
-
-      function buildTime() {
-        self.calendarContainer.classList.add("hasTime");
-        if (self.config.noCalendar) self.calendarContainer.classList.add("noCalendar");
-        self.timeContainer = createElement("div", "flatpickr-time");
-        self.timeContainer.tabIndex = -1;
-        var separator = createElement("span", "flatpickr-time-separator", ":");
-        var hourInput = createNumberInput("flatpickr-hour");
-        self.hourElement = hourInput.getElementsByTagName("input")[0];
-        var minuteInput = createNumberInput("flatpickr-minute");
-        self.minuteElement = minuteInput.getElementsByTagName("input")[0];
-        self.hourElement.tabIndex = self.minuteElement.tabIndex = -1;
-        self.hourElement.value = pad(self.latestSelectedDateObj ? self.latestSelectedDateObj.getHours() : self.config.time_24hr ? self.config.defaultHour : military2ampm(self.config.defaultHour));
-        self.minuteElement.value = pad(self.latestSelectedDateObj ? self.latestSelectedDateObj.getMinutes() : self.config.defaultMinute);
-        self.hourElement.setAttribute("data-step", self.config.hourIncrement.toString());
-        self.minuteElement.setAttribute("data-step", self.config.minuteIncrement.toString());
-        self.hourElement.setAttribute("data-min", self.config.time_24hr ? "0" : "1");
-        self.hourElement.setAttribute("data-max", self.config.time_24hr ? "23" : "12");
-        self.minuteElement.setAttribute("data-min", "0");
-        self.minuteElement.setAttribute("data-max", "59");
-        self.timeContainer.appendChild(hourInput);
-        self.timeContainer.appendChild(separator);
-        self.timeContainer.appendChild(minuteInput);
-        if (self.config.time_24hr) self.timeContainer.classList.add("time24hr");
-
-        if (self.config.enableSeconds) {
-          self.timeContainer.classList.add("hasSeconds");
-          var secondInput = createNumberInput("flatpickr-second");
-          self.secondElement = secondInput.getElementsByTagName("input")[0];
-          self.secondElement.value = pad(self.latestSelectedDateObj ? self.latestSelectedDateObj.getSeconds() : self.config.defaultSeconds);
-          self.secondElement.setAttribute("data-step", self.minuteElement.getAttribute("data-step"));
-          self.secondElement.setAttribute("data-min", self.minuteElement.getAttribute("data-min"));
-          self.secondElement.setAttribute("data-max", self.minuteElement.getAttribute("data-max"));
-          self.timeContainer.appendChild(createElement("span", "flatpickr-time-separator", ":"));
-          self.timeContainer.appendChild(secondInput);
-        }
-
-        if (!self.config.time_24hr) {
-          self.amPM = createElement("span", "flatpickr-am-pm", self.l10n.amPM[int((self.latestSelectedDateObj ? self.hourElement.value : self.config.defaultHour) > 11)]);
-          self.amPM.title = self.l10n.toggleTitle;
-          self.amPM.tabIndex = -1;
-          self.timeContainer.appendChild(self.amPM);
-        }
-
-        return self.timeContainer;
-      }
-
-      function buildWeekdays() {
-        if (!self.weekdayContainer) self.weekdayContainer = createElement("div", "flatpickr-weekdays");else clearNode(self.weekdayContainer);
-
-        for (var i = self.config.showMonths; i--;) {
-          var container = createElement("div", "flatpickr-weekdaycontainer");
-          self.weekdayContainer.appendChild(container);
-        }
-
-        updateWeekdays();
-        return self.weekdayContainer;
-      }
-
-      function updateWeekdays() {
-        var firstDayOfWeek = self.l10n.firstDayOfWeek;
-        var weekdays = self.l10n.weekdays.shorthand.concat();
-
-        if (firstDayOfWeek > 0 && firstDayOfWeek < weekdays.length) {
-          weekdays = weekdays.splice(firstDayOfWeek, weekdays.length).concat(weekdays.splice(0, firstDayOfWeek));
-        }
-
-        for (var i = self.config.showMonths; i--;) {
-          self.weekdayContainer.children[i].innerHTML = "\n      <span class=flatpickr-weekday>\n        " + weekdays.join("</span><span class=flatpickr-weekday>") + "\n      </span>\n      ";
-        }
-      }
-
-      function buildWeeks() {
-        self.calendarContainer.classList.add("hasWeeks");
-        var weekWrapper = createElement("div", "flatpickr-weekwrapper");
-        weekWrapper.appendChild(createElement("span", "flatpickr-weekday", self.l10n.weekAbbreviation));
-        var weekNumbers = createElement("div", "flatpickr-weeks");
-        weekWrapper.appendChild(weekNumbers);
-        return {
-          weekWrapper: weekWrapper,
-          weekNumbers: weekNumbers
-        };
-      }
-
-      function changeMonth(value, is_offset) {
-        if (is_offset === void 0) {
-          is_offset = true;
-        }
-
-        var delta = is_offset ? value : value - self.currentMonth;
-        if (delta < 0 && self._hidePrevMonthArrow === true || delta > 0 && self._hideNextMonthArrow === true) return;
-        self.currentMonth += delta;
-
-        if (self.currentMonth < 0 || self.currentMonth > 11) {
-          self.currentYear += self.currentMonth > 11 ? 1 : -1;
-          self.currentMonth = (self.currentMonth + 12) % 12;
-          triggerEvent("onYearChange");
-        }
-
-        buildDays();
-        triggerEvent("onMonthChange");
-        updateNavigationCurrentMonth();
-      }
-
-      function clear(triggerChangeEvent) {
-        if (triggerChangeEvent === void 0) {
-          triggerChangeEvent = true;
-        }
-
-        self.input.value = "";
-        if (self.altInput !== undefined) self.altInput.value = "";
-        if (self.mobileInput !== undefined) self.mobileInput.value = "";
-        self.selectedDates = [];
-        self.latestSelectedDateObj = undefined;
-        self.showTimeInput = false;
-
-        if (self.config.enableTime === true) {
-          setDefaultHours();
-        }
-
-        self.redraw();
-        if (triggerChangeEvent) triggerEvent("onChange");
-      }
-
-      function close() {
-        self.isOpen = false;
-
-        if (!self.isMobile) {
-          self.calendarContainer.classList.remove("open");
-
-          self._input.classList.remove("active");
-        }
-
-        triggerEvent("onClose");
-      }
-
-      function destroy() {
-        if (self.config !== undefined) triggerEvent("onDestroy");
-
-        for (var i = self._handlers.length; i--;) {
-          var h = self._handlers[i];
-          h.element.removeEventListener(h.event, h.handler, h.options);
-        }
-
+        self.parseDate = createDateParser({ config: self.config, l10n: self.l10n });
         self._handlers = [];
-
-        if (self.mobileInput) {
-          if (self.mobileInput.parentNode) self.mobileInput.parentNode.removeChild(self.mobileInput);
-          self.mobileInput = undefined;
-        } else if (self.calendarContainer && self.calendarContainer.parentNode) {
-          if (self.config.static && self.calendarContainer.parentNode) {
-            var wrapper = self.calendarContainer.parentNode;
-            wrapper.lastChild && wrapper.removeChild(wrapper.lastChild);
-
-            if (wrapper.parentNode) {
-              while (wrapper.firstChild) {
-                wrapper.parentNode.insertBefore(wrapper.firstChild, wrapper);
-              }
-
-              wrapper.parentNode.removeChild(wrapper);
-            }
-          } else self.calendarContainer.parentNode.removeChild(self.calendarContainer);
-        }
-
-        if (self.altInput) {
-          self.input.type = "text";
-          if (self.altInput.parentNode) self.altInput.parentNode.removeChild(self.altInput);
-          delete self.altInput;
-        }
-
-        if (self.input) {
-          self.input.type = self.input._type;
-          self.input.classList.remove("flatpickr-input");
-          self.input.removeAttribute("readonly");
-          self.input.value = "";
-        }
-
-        ["_showTimeInput", "latestSelectedDateObj", "_hideNextMonthArrow", "_hidePrevMonthArrow", "__hideNextMonthArrow", "__hidePrevMonthArrow", "isMobile", "isOpen", "selectedDateElem", "minDateHasTime", "maxDateHasTime", "days", "daysContainer", "_input", "_positionElement", "innerContainer", "rContainer", "monthNav", "todayDateElem", "calendarContainer", "weekdayContainer", "prevMonthNav", "nextMonthNav", "currentMonthElement", "currentYearElement", "navigationCurrentMonth", "selectedDateElem", "config"].forEach(function (k) {
-          try {
-            delete self[k];
-          } catch (_) {}
-        });
-      }
-
-      function isCalendarElem(elem) {
-        if (self.config.appendTo && self.config.appendTo.contains(elem)) return true;
-        return self.calendarContainer.contains(elem);
-      }
-
-      function documentClick(e) {
-        if (self.isOpen && !self.config.inline) {
-          var isCalendarElement = isCalendarElem(e.target);
-          var isInput = e.target === self.input || e.target === self.altInput || self.element.contains(e.target) || e.path && e.path.indexOf && (~e.path.indexOf(self.input) || ~e.path.indexOf(self.altInput));
-          var lostFocus = e.type === "blur" ? isInput && e.relatedTarget && !isCalendarElem(e.relatedTarget) : !isInput && !isCalendarElement;
-          var isIgnored = !self.config.ignoredFocusElements.some(function (elem) {
-            return elem.contains(e.target);
-          });
-
-          if (lostFocus && isIgnored) {
-            self.close();
-
-            if (self.config.mode === "range" && self.selectedDates.length === 1) {
-              self.clear(false);
-              self.redraw();
-            }
-          }
-        }
-      }
-
-      function changeYear(newYear) {
-        if (!newYear || self.config.minDate && newYear < self.config.minDate.getFullYear() || self.config.maxDate && newYear > self.config.maxDate.getFullYear()) return;
-        var newYearNum = newYear,
-            isNewYear = self.currentYear !== newYearNum;
-        self.currentYear = newYearNum || self.currentYear;
-
-        if (self.config.maxDate && self.currentYear === self.config.maxDate.getFullYear()) {
-          self.currentMonth = Math.min(self.config.maxDate.getMonth(), self.currentMonth);
-        } else if (self.config.minDate && self.currentYear === self.config.minDate.getFullYear()) {
-          self.currentMonth = Math.max(self.config.minDate.getMonth(), self.currentMonth);
-        }
-
-        if (isNewYear) {
-          self.redraw();
-          triggerEvent("onYearChange");
-        }
-      }
-
-      function isEnabled(date, timeless) {
-        if (timeless === void 0) {
-          timeless = true;
-        }
-
-        var dateToCheck = self.parseDate(date, undefined, timeless);
-        if (self.config.minDate && dateToCheck && compareDates(dateToCheck, self.config.minDate, timeless !== undefined ? timeless : !self.minDateHasTime) < 0 || self.config.maxDate && dateToCheck && compareDates(dateToCheck, self.config.maxDate, timeless !== undefined ? timeless : !self.maxDateHasTime) > 0) return false;
-        if (self.config.enable.length === 0 && self.config.disable.length === 0) return true;
-        if (dateToCheck === undefined) return false;
-        var bool = self.config.enable.length > 0,
-            array = bool ? self.config.enable : self.config.disable;
-
-        for (var i = 0, d; i < array.length; i++) {
-          d = array[i];
-          if (typeof d === "function" && d(dateToCheck)) return bool;else if (d instanceof Date && dateToCheck !== undefined && d.getTime() === dateToCheck.getTime()) return bool;else if (typeof d === "string" && dateToCheck !== undefined) {
-            var parsed = self.parseDate(d, undefined, true);
-            return parsed && parsed.getTime() === dateToCheck.getTime() ? bool : !bool;
-          } else if (typeof d === "object" && dateToCheck !== undefined && d.from && d.to && dateToCheck.getTime() >= d.from.getTime() && dateToCheck.getTime() <= d.to.getTime()) return bool;
-        }
-
-        return !bool;
-      }
-
-      function isInView(elem) {
-        if (self.daysContainer !== undefined) return elem.className.indexOf("hidden") === -1 && self.daysContainer.contains(elem);
-        return false;
-      }
-
-      function onKeyDown(e) {
-        var isInput = e.target === self._input;
-        var allowInput = self.config.allowInput;
-        var allowKeydown = self.isOpen && (!allowInput || !isInput);
-        var allowInlineKeydown = self.config.inline && isInput && !allowInput;
-
-        if (e.keyCode === 13 && isInput) {
-          if (allowInput) {
-            self.setDate(self._input.value, true, e.target === self.altInput ? self.config.altFormat : self.config.dateFormat);
-            return e.target.blur();
-          } else self.open();
-        } else if (isCalendarElem(e.target) || allowKeydown || allowInlineKeydown) {
-          var isTimeObj = !!self.timeContainer && self.timeContainer.contains(e.target);
-
-          switch (e.keyCode) {
-            case 13:
-              if (isTimeObj) updateTime();else selectDate(e);
-              break;
-
-            case 27:
-              e.preventDefault();
-              focusAndClose();
-              break;
-
-            case 8:
-            case 46:
-              if (isInput && !self.config.allowInput) {
-                e.preventDefault();
-                self.clear();
-              }
-
-              break;
-
-            case 37:
-            case 39:
-              if (!isTimeObj) {
-                e.preventDefault();
-
-                if (self.daysContainer !== undefined && (allowInput === false || isInView(document.activeElement))) {
-                  var _delta = e.keyCode === 39 ? 1 : -1;
-
-                  if (!e.ctrlKey) focusOnDay(undefined, _delta);else {
-                    changeMonth(_delta);
-                    focusOnDay(getFirstAvailableDay(1), 0);
-                  }
+        self._bind = bind;
+        self._setHoursFromDate = setHoursFromDate;
+        self._positionCalendar = positionCalendar;
+        self.changeMonth = changeMonth;
+        self.changeYear = changeYear;
+        self.clear = clear;
+        self.close = close;
+        self._createElement = createElement;
+        self.destroy = destroy;
+        self.isEnabled = isEnabled;
+        self.jumpToDate = jumpToDate;
+        self.open = open;
+        self.redraw = redraw;
+        self.set = set;
+        self.setDate = setDate;
+        self.toggle = toggle;
+        function setupHelperFunctions() {
+            self.utils = {
+                getDaysInMonth: function (month, yr) {
+                    if (month === void 0) { month = self.currentMonth; }
+                    if (yr === void 0) { yr = self.currentYear; }
+                    if (month === 1 && ((yr % 4 === 0 && yr % 100 !== 0) || yr % 400 === 0))
+                        return 29;
+                    return self.l10n.daysInMonth[month];
                 }
-              } else if (self.hourElement) self.hourElement.focus();
-
-              break;
-
-            case 38:
-            case 40:
-              e.preventDefault();
-              var delta = e.keyCode === 40 ? 1 : -1;
-
-              if (self.daysContainer && e.target.$i !== undefined) {
-                if (e.ctrlKey) {
-                  changeYear(self.currentYear - delta);
-                  focusOnDay(getFirstAvailableDay(1), 0);
-                } else if (!isTimeObj) focusOnDay(undefined, delta * 7);
-              } else if (self.config.enableTime) {
-                if (!isTimeObj && self.hourElement) self.hourElement.focus();
-                updateTime(e);
-
+            };
+        }
+        function init() {
+            self.element = self.input = element;
+            self.isOpen = false;
+            parseConfig();
+            setupLocale();
+            setupInputs();
+            setupDates();
+            setupHelperFunctions();
+            if (!self.isMobile)
+                build();
+            bindEvents();
+            if (self.selectedDates.length || self.config.noCalendar) {
+                if (self.config.enableTime) {
+                    setHoursFromDate(self.config.noCalendar
+                        ? self.latestSelectedDateObj || self.config.minDate
+                        : undefined);
+                }
+                updateValue(false);
+            }
+            setCalendarWidth();
+            self.showTimeInput =
+                self.selectedDates.length > 0 || self.config.noCalendar;
+            var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+            /* TODO: investigate this further
+        
+              Currently, there is weird positioning behavior in safari causing pages
+              to scroll up. https://github.com/chmln/flatpickr/issues/563
+        
+              However, most browsers are not Safari and positioning is expensive when used
+              in scale. https://github.com/chmln/flatpickr/issues/1096
+            */
+            if (!self.isMobile && isSafari) {
+                positionCalendar();
+            }
+            triggerEvent("onReady");
+        }
+        function bindToInstance(fn) {
+            return fn.bind(self);
+        }
+        function setCalendarWidth() {
+            var config = self.config;
+            if (config.weekNumbers === false && config.showMonths === 1)
+                return;
+            else if (config.noCalendar !== true) {
+                window.requestAnimationFrame(function () {
+                    if (self.calendarContainer !== undefined) {
+                        self.calendarContainer.style.visibility = "hidden";
+                        self.calendarContainer.style.display = "block";
+                    }
+                    if (self.daysContainer !== undefined) {
+                        var daysWidth = (self.days.offsetWidth + 1) * config.showMonths;
+                        self.daysContainer.style.width = daysWidth + "px";
+                        self.calendarContainer.style.width =
+                            daysWidth +
+                                (self.weekWrapper !== undefined
+                                    ? self.weekWrapper.offsetWidth
+                                    : 0) +
+                                "px";
+                        self.calendarContainer.style.removeProperty("visibility");
+                        self.calendarContainer.style.removeProperty("display");
+                    }
+                });
+            }
+        }
+        /**
+         * The handler for all events targeting the time inputs
+         */
+        function updateTime(e) {
+            if (self.selectedDates.length === 0) {
+                setDefaultTime();
+            }
+            if (e !== undefined && e.type !== "blur") {
+                timeWrapper(e);
+            }
+            var prevValue = self._input.value;
+            setHoursFromInputs();
+            updateValue();
+            if (self._input.value !== prevValue) {
                 self._debouncedChange();
-              }
-
-              break;
-
-            case 9:
-              if (!isTimeObj) {
-                self.element.focus();
-                break;
-              }
-
-              var elems = [self.hourElement, self.minuteElement, self.secondElement, self.amPM].filter(function (x) {
-                return x;
-              });
-              var i = elems.indexOf(e.target);
-
-              if (i !== -1) {
-                var target = elems[i + (e.shiftKey ? -1 : 1)];
-
-                if (target !== undefined) {
-                  e.preventDefault();
-                  target.focus();
-                } else {
-                  self.element.focus();
-                }
-              }
-
-              break;
-
-            default:
-              break;
-          }
-        }
-
-        if (self.amPM !== undefined && e.target === self.amPM) {
-          switch (e.key) {
-            case self.l10n.amPM[0].charAt(0):
-            case self.l10n.amPM[0].charAt(0).toLowerCase():
-              self.amPM.textContent = self.l10n.amPM[0];
-              setHoursFromInputs();
-              updateValue();
-              break;
-
-            case self.l10n.amPM[1].charAt(0):
-            case self.l10n.amPM[1].charAt(0).toLowerCase():
-              self.amPM.textContent = self.l10n.amPM[1];
-              setHoursFromInputs();
-              updateValue();
-              break;
-          }
-        }
-
-        triggerEvent("onKeyDown", e);
-      }
-
-      function onMouseOver(elem) {
-        if (self.selectedDates.length !== 1 || elem && (!elem.classList.contains("flatpickr-day") || elem.classList.contains("disabled"))) return;
-        var hoverDate = elem ? elem.dateObj.getTime() : self.days.firstElementChild.dateObj.getTime(),
-            initialDate = self.parseDate(self.selectedDates[0], undefined, true).getTime(),
-            rangeStartDate = Math.min(hoverDate, self.selectedDates[0].getTime()),
-            rangeEndDate = Math.max(hoverDate, self.selectedDates[0].getTime()),
-            lastDate = self.daysContainer.lastChild.lastChild.dateObj.getTime();
-        var containsDisabled = false;
-        var minRange = 0,
-            maxRange = 0;
-
-        for (var t = rangeStartDate; t < lastDate; t += duration.DAY) {
-          if (!isEnabled(new Date(t), true)) {
-            containsDisabled = containsDisabled || t > rangeStartDate && t < rangeEndDate;
-            if (t < initialDate && (!minRange || t > minRange)) minRange = t;else if (t > initialDate && (!maxRange || t < maxRange)) maxRange = t;
-          }
-        }
-
-        for (var m = 0; m < self.config.showMonths; m++) {
-          var month = self.daysContainer.children[m];
-          var prevMonth = self.daysContainer.children[m - 1];
-
-          var _loop = function _loop(i, l) {
-            var dayElem = month.children[i],
-                date = dayElem.dateObj;
-            var timestamp = date.getTime();
-            var outOfRange = minRange > 0 && timestamp < minRange || maxRange > 0 && timestamp > maxRange;
-
-            if (outOfRange) {
-              dayElem.classList.add("notAllowed");
-              ["inRange", "startRange", "endRange"].forEach(function (c) {
-                dayElem.classList.remove(c);
-              });
-              return "continue";
-            } else if (containsDisabled && !outOfRange) return "continue";
-
-            ["startRange", "inRange", "endRange", "notAllowed"].forEach(function (c) {
-              dayElem.classList.remove(c);
-            });
-
-            if (elem !== undefined) {
-              elem.classList.add(hoverDate < self.selectedDates[0].getTime() ? "startRange" : "endRange");
-
-              if (month.contains(elem) || !(m > 0 && prevMonth && prevMonth.lastChild.dateObj.getTime() >= timestamp)) {
-                if (initialDate < hoverDate && timestamp === initialDate) dayElem.classList.add("startRange");else if (initialDate > hoverDate && timestamp === initialDate) dayElem.classList.add("endRange");
-                if (timestamp >= minRange && (maxRange === 0 || timestamp <= maxRange) && isBetween(timestamp, initialDate, hoverDate)) dayElem.classList.add("inRange");
-              }
             }
-          };
-
-          for (var i = 0, l = month.children.length; i < l; i++) {
-            var _ret = _loop(i, l);
-
-            if (_ret === "continue") continue;
-          }
         }
-      }
-
-      function onResize() {
-        if (self.isOpen && !self.config.static && !self.config.inline) positionCalendar();
-      }
-
-      function open(e, positionElement) {
-        if (positionElement === void 0) {
-          positionElement = self._positionElement;
+        function ampm2military(hour, amPM) {
+            return (hour % 12) + 12 * int(amPM === self.l10n.amPM[1]);
         }
-
-        if (self.isMobile === true) {
-          if (e) {
-            e.preventDefault();
-            e.target && e.target.blur();
-          }
-
-          if (self.mobileInput !== undefined) {
-            self.mobileInput.focus();
-            self.mobileInput.click();
-          }
-
-          triggerEvent("onOpen");
-          return;
+        function military2ampm(hour) {
+            switch (hour % 24) {
+                case 0:
+                case 12:
+                    return 12;
+                default:
+                    return hour % 12;
+            }
         }
-
-        if (self._input.disabled || self.config.inline) return;
-        var wasOpen = self.isOpen;
-        self.isOpen = true;
-
-        if (!wasOpen) {
-          self.calendarContainer.classList.add("open");
-
-          self._input.classList.add("active");
-
-          triggerEvent("onOpen");
-          positionCalendar(positionElement);
+        /**
+         * Syncs the selected date object time with user's time input
+         */
+        function setHoursFromInputs() {
+            if (self.hourElement === undefined || self.minuteElement === undefined)
+                return;
+            var hours = (parseInt(self.hourElement.value.slice(-2), 10) || 0) % 24, minutes = (parseInt(self.minuteElement.value, 10) || 0) % 60, seconds = self.secondElement !== undefined
+                ? (parseInt(self.secondElement.value, 10) || 0) % 60
+                : 0;
+            if (self.amPM !== undefined) {
+                hours = ampm2military(hours, self.amPM.textContent);
+            }
+            var limitMinHours = self.config.minTime !== undefined ||
+                (self.config.minDate &&
+                    self.minDateHasTime &&
+                    self.latestSelectedDateObj &&
+                    compareDates(self.latestSelectedDateObj, self.config.minDate, true) ===
+                        0);
+            var limitMaxHours = self.config.maxTime !== undefined ||
+                (self.config.maxDate &&
+                    self.maxDateHasTime &&
+                    self.latestSelectedDateObj &&
+                    compareDates(self.latestSelectedDateObj, self.config.maxDate, true) ===
+                        0);
+            if (limitMaxHours) {
+                var maxTime = self.config.maxTime !== undefined
+                    ? self.config.maxTime
+                    : self.config.maxDate;
+                hours = Math.min(hours, maxTime.getHours());
+                if (hours === maxTime.getHours())
+                    minutes = Math.min(minutes, maxTime.getMinutes());
+                if (minutes === maxTime.getMinutes())
+                    seconds = Math.min(seconds, maxTime.getSeconds());
+            }
+            if (limitMinHours) {
+                var minTime = self.config.minTime !== undefined
+                    ? self.config.minTime
+                    : self.config.minDate;
+                hours = Math.max(hours, minTime.getHours());
+                if (hours === minTime.getHours())
+                    minutes = Math.max(minutes, minTime.getMinutes());
+                if (minutes === minTime.getMinutes())
+                    seconds = Math.max(seconds, minTime.getSeconds());
+            }
+            setHours(hours, minutes, seconds);
         }
-
-        if (self.config.enableTime === true && self.config.noCalendar === true) {
-          if (self.selectedDates.length === 0) {
-            self.setDate(self.config.minDate !== undefined ? new Date(self.config.minDate.getTime()) : new Date(), false);
+        /**
+         * Syncs time input values with a date
+         */
+        function setHoursFromDate(dateObj) {
+            var date = dateObj || self.latestSelectedDateObj;
+            if (date)
+                setHours(date.getHours(), date.getMinutes(), date.getSeconds());
+        }
+        function setDefaultHours() {
+            var hours = self.config.defaultHour;
+            var minutes = self.config.defaultMinute;
+            var seconds = self.config.defaultSeconds;
+            if (self.config.minDate !== undefined) {
+                var min_hr = self.config.minDate.getHours();
+                var min_minutes = self.config.minDate.getMinutes();
+                hours = Math.max(hours, min_hr);
+                if (hours === min_hr)
+                    minutes = Math.max(min_minutes, minutes);
+                if (hours === min_hr && minutes === min_minutes)
+                    seconds = self.config.minDate.getSeconds();
+            }
+            if (self.config.maxDate !== undefined) {
+                var max_hr = self.config.maxDate.getHours();
+                var max_minutes = self.config.maxDate.getMinutes();
+                hours = Math.min(hours, max_hr);
+                if (hours === max_hr)
+                    minutes = Math.min(max_minutes, minutes);
+                if (hours === max_hr && minutes === max_minutes)
+                    seconds = self.config.maxDate.getSeconds();
+            }
+            setHours(hours, minutes, seconds);
+        }
+        /**
+         * Sets the hours, minutes, and optionally seconds
+         * of the latest selected date object and the
+         * corresponding time inputs
+         * @param {Number} hours the hour. whether its military
+         *                 or am-pm gets inferred from config
+         * @param {Number} minutes the minutes
+         * @param {Number} seconds the seconds (optional)
+         */
+        function setHours(hours, minutes, seconds) {
+            if (self.latestSelectedDateObj !== undefined) {
+                self.latestSelectedDateObj.setHours(hours % 24, minutes, seconds || 0, 0);
+            }
+            if (!self.hourElement || !self.minuteElement || self.isMobile)
+                return;
+            self.hourElement.value = pad(!self.config.time_24hr
+                ? ((12 + hours) % 12) + 12 * int(hours % 12 === 0)
+                : hours);
+            self.minuteElement.value = pad(minutes);
+            if (self.amPM !== undefined)
+                self.amPM.textContent = self.l10n.amPM[int(hours >= 12)];
+            if (self.secondElement !== undefined)
+                self.secondElement.value = pad(seconds);
+        }
+        /**
+         * Handles the year input and incrementing events
+         * @param {Event} event the keyup or increment event
+         */
+        function onYearInput(event) {
+            var year = parseInt(event.target.value) + (event.delta || 0);
+            if (year / 1000 > 1 ||
+                (event.key === "Enter" && !/[^\d]/.test(year.toString()))) {
+                changeYear(year);
+            }
+        }
+        /**
+         * Essentially addEventListener + tracking
+         * @param {Element} element the element to addEventListener to
+         * @param {String} event the event name
+         * @param {Function} handler the event handler
+         */
+        function bind(element, event, handler, options) {
+            if (event instanceof Array)
+                return event.forEach(function (ev) { return bind(element, ev, handler, options); });
+            if (element instanceof Array)
+                return element.forEach(function (el) { return bind(el, event, handler, options); });
+            element.addEventListener(event, handler, options);
+            self._handlers.push({
+                element: element,
+                event: event,
+                handler: handler,
+                options: options
+            });
+        }
+        /**
+         * A mousedown handler which mimics click.
+         * Minimizes latency, since we don't need to wait for mouseup in most cases.
+         * Also, avoids handling right clicks.
+         *
+         * @param {Function} handler the event handler
+         */
+        function onClick(handler) {
+            return function (evt) {
+                evt.which === 1 && handler(evt);
+            };
+        }
+        function triggerChange() {
+            triggerEvent("onChange");
+        }
+        /**
+         * Adds all the necessary event listeners
+         */
+        function bindEvents() {
+            if (self.config.wrap) {
+                ["open", "close", "toggle", "clear"].forEach(function (evt) {
+                    Array.prototype.forEach.call(self.element.querySelectorAll("[data-" + evt + "]"), function (el) {
+                        return bind(el, "click", self[evt]);
+                    });
+                });
+            }
+            if (self.isMobile) {
+                setupMobile();
+                return;
+            }
+            var debouncedResize = debounce(onResize, 50);
+            self._debouncedChange = debounce(triggerChange, DEBOUNCED_CHANGE_MS);
+            if (self.daysContainer && !/iPhone|iPad|iPod/i.test(navigator.userAgent))
+                bind(self.daysContainer, "mouseover", function (e) {
+                    if (self.config.mode === "range")
+                        onMouseOver(e.target);
+                });
+            bind(window.document.body, "keydown", onKeyDown);
+            if (!self.config.static)
+                bind(self._input, "keydown", onKeyDown);
+            if (!self.config.inline && !self.config.static)
+                bind(window, "resize", debouncedResize);
+            if (window.ontouchstart !== undefined)
+                bind(window.document, "click", documentClick);
+            else
+                bind(window.document, "mousedown", onClick(documentClick));
+            bind(window.document, "focus", documentClick, { capture: true });
+            if (self.config.clickOpens === true) {
+                bind(self._input, "focus", self.open);
+                bind(self._input, "mousedown", onClick(self.open));
+            }
+            if (self.daysContainer !== undefined) {
+                bind(self.monthNav, "mousedown", onClick(onMonthNavClick));
+                bind(self.monthNav, ["keyup", "increment"], onYearInput);
+                bind(self.daysContainer, "mousedown", onClick(selectDate));
+            }
+            if (self.timeContainer !== undefined &&
+                self.minuteElement !== undefined &&
+                self.hourElement !== undefined) {
+                var selText = function (e) {
+                    return e.target.select();
+                };
+                bind(self.timeContainer, ["increment"], updateTime);
+                bind(self.timeContainer, "blur", updateTime, { capture: true });
+                bind(self.timeContainer, "mousedown", onClick(timeIncrement));
+                bind([self.hourElement, self.minuteElement], ["focus", "click"], selText);
+                if (self.secondElement !== undefined)
+                    bind(self.secondElement, "focus", function () { return self.secondElement && self.secondElement.select(); });
+                if (self.amPM !== undefined) {
+                    bind(self.amPM, "mousedown", onClick(function (e) {
+                        updateTime(e);
+                        triggerChange();
+                    }));
+                }
+            }
+        }
+        /**
+         * Set the calendar view to a particular date.
+         * @param {Date} jumpDate the date to set the view to
+         */
+        function jumpToDate(jumpDate) {
+            var jumpTo = jumpDate !== undefined
+                ? self.parseDate(jumpDate)
+                : self.latestSelectedDateObj ||
+                    (self.config.minDate && self.config.minDate > self.now
+                        ? self.config.minDate
+                        : self.config.maxDate && self.config.maxDate < self.now
+                            ? self.config.maxDate
+                            : self.now);
+            try {
+                if (jumpTo !== undefined) {
+                    self.currentYear = jumpTo.getFullYear();
+                    self.currentMonth = jumpTo.getMonth();
+                }
+            }
+            catch (e) {
+                /* istanbul ignore next */
+                e.message = "Invalid date supplied: " + jumpTo;
+                self.config.errorHandler(e);
+            }
+            self.redraw();
+        }
+        /**
+         * The up/down arrow handler for time inputs
+         * @param {Event} e the click event
+         */
+        function timeIncrement(e) {
+            if (~e.target.className.indexOf("arrow"))
+                incrementNumInput(e, e.target.classList.contains("arrowUp") ? 1 : -1);
+        }
+        /**
+         * Increments/decrements the value of input associ-
+         * ated with the up/down arrow by dispatching an
+         * "increment" event on the input.
+         *
+         * @param {Event} e the click event
+         * @param {Number} delta the diff (usually 1 or -1)
+         * @param {Element} inputElem the input element
+         */
+        function incrementNumInput(e, delta, inputElem) {
+            var target = e && e.target;
+            var input = inputElem ||
+                (target && target.parentNode && target.parentNode.firstChild);
+            var event = createEvent("increment");
+            event.delta = delta;
+            input && input.dispatchEvent(event);
+        }
+        function build() {
+            var fragment = window.document.createDocumentFragment();
+            self.calendarContainer = createElement("div", "flatpickr-calendar");
+            self.calendarContainer.tabIndex = -1;
+            if (!self.config.noCalendar) {
+                fragment.appendChild(buildMonthNav());
+                self.innerContainer = createElement("div", "flatpickr-innerContainer");
+                if (self.config.weekNumbers) {
+                    var _a = buildWeeks(), weekWrapper = _a.weekWrapper, weekNumbers = _a.weekNumbers;
+                    self.innerContainer.appendChild(weekWrapper);
+                    self.weekNumbers = weekNumbers;
+                    self.weekWrapper = weekWrapper;
+                }
+                self.rContainer = createElement("div", "flatpickr-rContainer");
+                self.rContainer.appendChild(buildWeekdays());
+                if (!self.daysContainer) {
+                    self.daysContainer = createElement("div", "flatpickr-days");
+                    self.daysContainer.tabIndex = -1;
+                }
+                buildDays();
+                self.rContainer.appendChild(self.daysContainer);
+                self.innerContainer.appendChild(self.rContainer);
+                fragment.appendChild(self.innerContainer);
+            }
+            if (self.config.enableTime) {
+                fragment.appendChild(buildTime());
+            }
+            toggleClass(self.calendarContainer, "rangeMode", self.config.mode === "range");
+            toggleClass(self.calendarContainer, "animate", self.config.animate === true);
+            toggleClass(self.calendarContainer, "multiMonth", self.config.showMonths > 1);
+            self.calendarContainer.appendChild(fragment);
+            var customAppend = self.config.appendTo !== undefined &&
+                self.config.appendTo.nodeType !== undefined;
+            if (self.config.inline || self.config.static) {
+                self.calendarContainer.classList.add(self.config.inline ? "inline" : "static");
+                if (self.config.inline) {
+                    if (!customAppend && self.element.parentNode)
+                        self.element.parentNode.insertBefore(self.calendarContainer, self._input.nextSibling);
+                    else if (self.config.appendTo !== undefined)
+                        self.config.appendTo.appendChild(self.calendarContainer);
+                }
+                if (self.config.static) {
+                    var wrapper = createElement("div", "flatpickr-wrapper");
+                    if (self.element.parentNode)
+                        self.element.parentNode.insertBefore(wrapper, self.element);
+                    wrapper.appendChild(self.element);
+                    if (self.altInput)
+                        wrapper.appendChild(self.altInput);
+                    wrapper.appendChild(self.calendarContainer);
+                }
+            }
+            if (!self.config.static && !self.config.inline)
+                (self.config.appendTo !== undefined
+                    ? self.config.appendTo
+                    : window.document.body).appendChild(self.calendarContainer);
+        }
+        function createDay(className, date, dayNumber, i) {
+            var dateIsEnabled = isEnabled(date, true), dayElement = createElement("span", "flatpickr-day " + className, date.getDate().toString());
+            dayElement.dateObj = date;
+            dayElement.$i = i;
+            dayElement.setAttribute("aria-label", self.formatDate(date, self.config.ariaDateFormat));
+            if (className.indexOf("hidden") === -1 &&
+                compareDates(date, self.now) === 0) {
+                self.todayDateElem = dayElement;
+                dayElement.classList.add("today");
+                dayElement.setAttribute("aria-current", "date");
+            }
+            if (dateIsEnabled) {
+                dayElement.tabIndex = -1;
+                if (isDateSelected(date)) {
+                    dayElement.classList.add("selected");
+                    self.selectedDateElem = dayElement;
+                    if (self.config.mode === "range") {
+                        toggleClass(dayElement, "startRange", self.selectedDates[0] &&
+                            compareDates(date, self.selectedDates[0], true) === 0);
+                        toggleClass(dayElement, "endRange", self.selectedDates[1] &&
+                            compareDates(date, self.selectedDates[1], true) === 0);
+                        if (className === "nextMonthDay")
+                            dayElement.classList.add("inRange");
+                    }
+                }
+            }
+            else {
+                dayElement.classList.add("disabled");
+            }
+            if (self.config.mode === "range") {
+                if (isDateInRange(date) && !isDateSelected(date))
+                    dayElement.classList.add("inRange");
+            }
+            if (self.weekNumbers &&
+                self.config.showMonths === 1 &&
+                className !== "prevMonthDay" &&
+                dayNumber % 7 === 1) {
+                self.weekNumbers.insertAdjacentHTML("beforeend", "<span class='flatpickr-day'>" + self.config.getWeek(date) + "</span>");
+            }
+            triggerEvent("onDayCreate", dayElement);
+            return dayElement;
+        }
+        function focusOnDayElem(targetNode) {
+            targetNode.focus();
+            if (self.config.mode === "range")
+                onMouseOver(targetNode);
+        }
+        function getFirstAvailableDay(delta) {
+            var startMonth = delta > 0 ? 0 : self.config.showMonths - 1;
+            var endMonth = delta > 0 ? self.config.showMonths : -1;
+            for (var m = startMonth; m != endMonth; m += delta) {
+                var month = self.daysContainer.children[m];
+                var startIndex = delta > 0 ? 0 : month.children.length - 1;
+                var endIndex = delta > 0 ? month.children.length : -1;
+                for (var i = startIndex; i != endIndex; i += delta) {
+                    var c = month.children[i];
+                    if (c.className.indexOf("hidden") === -1 && isEnabled(c.dateObj))
+                        return c;
+                }
+            }
+            return undefined;
+        }
+        function getNextAvailableDay(current, delta) {
+            var givenMonth = current.className.indexOf("Month") === -1
+                ? current.dateObj.getMonth()
+                : self.currentMonth;
+            var endMonth = delta > 0 ? self.config.showMonths : -1;
+            var loopDelta = delta > 0 ? 1 : -1;
+            for (var m = givenMonth - self.currentMonth; m != endMonth; m += loopDelta) {
+                var month = self.daysContainer.children[m];
+                var startIndex = givenMonth - self.currentMonth === m
+                    ? current.$i + delta
+                    : delta < 0
+                        ? month.children.length - 1
+                        : 0;
+                var numMonthDays = month.children.length;
+                for (var i = startIndex; i >= 0 && i < numMonthDays && i != (delta > 0 ? numMonthDays : -1); i += loopDelta) {
+                    var c = month.children[i];
+                    if (c.className.indexOf("hidden") === -1 &&
+                        isEnabled(c.dateObj) &&
+                        Math.abs(current.$i - i) >= Math.abs(delta))
+                        return focusOnDayElem(c);
+                }
+            }
+            self.changeMonth(loopDelta);
+            focusOnDay(getFirstAvailableDay(loopDelta), 0);
+            return undefined;
+        }
+        function focusOnDay(current, offset) {
+            var dayFocused = isInView(document.activeElement || document.body);
+            var startElem = current !== undefined
+                ? current
+                : dayFocused
+                    ? document.activeElement
+                    : self.selectedDateElem !== undefined && isInView(self.selectedDateElem)
+                        ? self.selectedDateElem
+                        : self.todayDateElem !== undefined && isInView(self.todayDateElem)
+                            ? self.todayDateElem
+                            : getFirstAvailableDay(offset > 0 ? 1 : -1);
+            if (startElem === undefined)
+                return self._input.focus();
+            if (!dayFocused)
+                return focusOnDayElem(startElem);
+            getNextAvailableDay(startElem, offset);
+        }
+        function buildMonthDays(year, month) {
+            var firstOfMonth = (new Date(year, month, 1).getDay() - self.l10n.firstDayOfWeek + 7) % 7;
+            var prevMonthDays = self.utils.getDaysInMonth((month - 1 + 12) % 12);
+            var daysInMonth = self.utils.getDaysInMonth(month), days = window.document.createDocumentFragment(), isMultiMonth = self.config.showMonths > 1, prevMonthDayClass = isMultiMonth ? "prevMonthDay hidden" : "prevMonthDay", nextMonthDayClass = isMultiMonth ? "nextMonthDay hidden" : "nextMonthDay";
+            var dayNumber = prevMonthDays + 1 - firstOfMonth, dayIndex = 0;
+            // prepend days from the ending of previous month
+            for (; dayNumber <= prevMonthDays; dayNumber++, dayIndex++) {
+                days.appendChild(createDay(prevMonthDayClass, new Date(year, month - 1, dayNumber), dayNumber, dayIndex));
+            }
+            // Start at 1 since there is no 0th day
+            for (dayNumber = 1; dayNumber <= daysInMonth; dayNumber++, dayIndex++) {
+                days.appendChild(createDay("", new Date(year, month, dayNumber), dayNumber, dayIndex));
+            }
+            // append days from the next month
+            for (var dayNum = daysInMonth + 1; dayNum <= 42 - firstOfMonth &&
+                (self.config.showMonths === 1 || dayIndex % 7 !== 0); dayNum++, dayIndex++) {
+                days.appendChild(createDay(nextMonthDayClass, new Date(year, month + 1, dayNum % daysInMonth), dayNum, dayIndex));
+            }
+            //updateNavigationCurrentMonth();
+            var dayContainer = createElement("div", "dayContainer");
+            dayContainer.appendChild(days);
+            return dayContainer;
+        }
+        function buildDays() {
+            if (self.daysContainer === undefined) {
+                return;
+            }
+            clearNode(self.daysContainer);
+            // TODO: week numbers for each month
+            if (self.weekNumbers)
+                clearNode(self.weekNumbers);
+            var frag = document.createDocumentFragment();
+            for (var i = 0; i < self.config.showMonths; i++) {
+                var d = new Date(self.currentYear, self.currentMonth, 1);
+                d.setMonth(self.currentMonth + i);
+                frag.appendChild(buildMonthDays(d.getFullYear(), d.getMonth()));
+            }
+            self.daysContainer.appendChild(frag);
+            self.days = self.daysContainer.firstChild;
+            if (self.config.mode === "range" && self.selectedDates.length === 1) {
+                onMouseOver();
+            }
+        }
+        function buildMonth() {
+            var container = createElement("div", "flatpickr-month");
+            var monthNavFragment = window.document.createDocumentFragment();
+            var monthElement = createElement("span", "cur-month");
+            var yearInput = createNumberInput("cur-year", { tabindex: "-1" });
+            var yearElement = yearInput.getElementsByTagName("input")[0];
+            yearElement.setAttribute("aria-label", self.l10n.yearAriaLabel);
+            if (self.config.minDate) {
+                yearElement.setAttribute("min", self.config.minDate.getFullYear().toString());
+            }
+            if (self.config.maxDate) {
+                yearElement.setAttribute("max", self.config.maxDate.getFullYear().toString());
+                yearElement.disabled =
+                    !!self.config.minDate &&
+                        self.config.minDate.getFullYear() === self.config.maxDate.getFullYear();
+            }
+            var currentMonth = createElement("div", "flatpickr-current-month");
+            currentMonth.appendChild(monthElement);
+            currentMonth.appendChild(yearInput);
+            monthNavFragment.appendChild(currentMonth);
+            container.appendChild(monthNavFragment);
+            return {
+                container: container,
+                yearElement: yearElement,
+                monthElement: monthElement
+            };
+        }
+        function buildMonths() {
+            clearNode(self.monthNav);
+            self.monthNav.appendChild(self.prevMonthNav);
+            if (self.config.showMonths) {
+                self.yearElements = [];
+                self.monthElements = [];
+            }
+            for (var m = self.config.showMonths; m--;) {
+                var month = buildMonth();
+                self.yearElements.push(month.yearElement);
+                self.monthElements.push(month.monthElement);
+                self.monthNav.appendChild(month.container);
+            }
+            self.monthNav.appendChild(self.nextMonthNav);
+        }
+        function buildMonthNav() {
+            self.monthNav = createElement("div", "flatpickr-months");
+            self.yearElements = [];
+            self.monthElements = [];
+            self.prevMonthNav = createElement("span", "flatpickr-prev-month");
+            self.prevMonthNav.innerHTML = self.config.prevArrow;
+            self.nextMonthNav = createElement("span", "flatpickr-next-month");
+            self.nextMonthNav.innerHTML = self.config.nextArrow;
+            buildMonths();
+            Object.defineProperty(self, "_hidePrevMonthArrow", {
+                get: function () { return self.__hidePrevMonthArrow; },
+                set: function (bool) {
+                    if (self.__hidePrevMonthArrow !== bool) {
+                        toggleClass(self.prevMonthNav, "disabled", bool);
+                        self.__hidePrevMonthArrow = bool;
+                    }
+                }
+            });
+            Object.defineProperty(self, "_hideNextMonthArrow", {
+                get: function () { return self.__hideNextMonthArrow; },
+                set: function (bool) {
+                    if (self.__hideNextMonthArrow !== bool) {
+                        toggleClass(self.nextMonthNav, "disabled", bool);
+                        self.__hideNextMonthArrow = bool;
+                    }
+                }
+            });
+            self.currentYearElement = self.yearElements[0];
+            updateNavigationCurrentMonth();
+            return self.monthNav;
+        }
+        function buildTime() {
+            self.calendarContainer.classList.add("hasTime");
+            if (self.config.noCalendar)
+                self.calendarContainer.classList.add("noCalendar");
+            self.timeContainer = createElement("div", "flatpickr-time");
+            self.timeContainer.tabIndex = -1;
+            var separator = createElement("span", "flatpickr-time-separator", ":");
+            var hourInput = createNumberInput("flatpickr-hour");
+            self.hourElement = hourInput.getElementsByTagName("input")[0];
+            var minuteInput = createNumberInput("flatpickr-minute");
+            self.minuteElement = minuteInput.getElementsByTagName("input")[0];
+            self.hourElement.tabIndex = self.minuteElement.tabIndex = -1;
+            self.hourElement.value = pad(self.latestSelectedDateObj
+                ? self.latestSelectedDateObj.getHours()
+                : self.config.time_24hr
+                    ? self.config.defaultHour
+                    : military2ampm(self.config.defaultHour));
+            self.minuteElement.value = pad(self.latestSelectedDateObj
+                ? self.latestSelectedDateObj.getMinutes()
+                : self.config.defaultMinute);
+            self.hourElement.setAttribute("step", self.config.hourIncrement.toString());
+            self.minuteElement.setAttribute("step", self.config.minuteIncrement.toString());
+            self.hourElement.setAttribute("min", self.config.time_24hr ? "0" : "1");
+            self.hourElement.setAttribute("max", self.config.time_24hr ? "23" : "12");
+            self.minuteElement.setAttribute("min", "0");
+            self.minuteElement.setAttribute("max", "59");
+            self.timeContainer.appendChild(hourInput);
+            self.timeContainer.appendChild(separator);
+            self.timeContainer.appendChild(minuteInput);
+            if (self.config.time_24hr)
+                self.timeContainer.classList.add("time24hr");
+            if (self.config.enableSeconds) {
+                self.timeContainer.classList.add("hasSeconds");
+                var secondInput = createNumberInput("flatpickr-second");
+                self.secondElement = secondInput.getElementsByTagName("input")[0];
+                self.secondElement.value = pad(self.latestSelectedDateObj
+                    ? self.latestSelectedDateObj.getSeconds()
+                    : self.config.defaultSeconds);
+                self.secondElement.setAttribute("step", self.minuteElement.getAttribute("step"));
+                self.secondElement.setAttribute("min", "0");
+                self.secondElement.setAttribute("max", "59");
+                self.timeContainer.appendChild(createElement("span", "flatpickr-time-separator", ":"));
+                self.timeContainer.appendChild(secondInput);
+            }
+            if (!self.config.time_24hr) {
+                // add self.amPM if appropriate
+                self.amPM = createElement("span", "flatpickr-am-pm", self.l10n.amPM[int((self.latestSelectedDateObj
+                    ? self.hourElement.value
+                    : self.config.defaultHour) > 11)]);
+                self.amPM.title = self.l10n.toggleTitle;
+                self.amPM.tabIndex = -1;
+                self.timeContainer.appendChild(self.amPM);
+            }
+            return self.timeContainer;
+        }
+        function buildWeekdays() {
+            if (!self.weekdayContainer)
+                self.weekdayContainer = createElement("div", "flatpickr-weekdays");
+            else
+                clearNode(self.weekdayContainer);
+            for (var i = self.config.showMonths; i--;) {
+                var container = createElement("div", "flatpickr-weekdaycontainer");
+                self.weekdayContainer.appendChild(container);
+            }
+            updateWeekdays();
+            return self.weekdayContainer;
+        }
+        function updateWeekdays() {
+            var firstDayOfWeek = self.l10n.firstDayOfWeek;
+            var weekdays = self.l10n.weekdays.shorthand.slice();
+            if (firstDayOfWeek > 0 && firstDayOfWeek < weekdays.length) {
+                weekdays = weekdays.splice(firstDayOfWeek, weekdays.length).concat(weekdays.splice(0, firstDayOfWeek));
+            }
+            for (var i = self.config.showMonths; i--;) {
+                self.weekdayContainer.children[i].innerHTML = "\n      <span class='flatpickr-weekday'>\n        " + weekdays.join("</span><span class='flatpickr-weekday'>") + "\n      </span>\n      ";
+            }
+        }
+        /* istanbul ignore next */
+        function buildWeeks() {
+            self.calendarContainer.classList.add("hasWeeks");
+            var weekWrapper = createElement("div", "flatpickr-weekwrapper");
+            weekWrapper.appendChild(createElement("span", "flatpickr-weekday", self.l10n.weekAbbreviation));
+            var weekNumbers = createElement("div", "flatpickr-weeks");
+            weekWrapper.appendChild(weekNumbers);
+            return {
+                weekWrapper: weekWrapper,
+                weekNumbers: weekNumbers
+            };
+        }
+        function changeMonth(value, is_offset) {
+            if (is_offset === void 0) { is_offset = true; }
+            var delta = is_offset ? value : value - self.currentMonth;
+            if ((delta < 0 && self._hidePrevMonthArrow === true) ||
+                (delta > 0 && self._hideNextMonthArrow === true))
+                return;
+            self.currentMonth += delta;
+            if (self.currentMonth < 0 || self.currentMonth > 11) {
+                self.currentYear += self.currentMonth > 11 ? 1 : -1;
+                self.currentMonth = (self.currentMonth + 12) % 12;
+                triggerEvent("onYearChange");
+            }
+            buildDays();
+            triggerEvent("onMonthChange");
+            updateNavigationCurrentMonth();
+        }
+        function clear(triggerChangeEvent, toInitial) {
+            if (triggerChangeEvent === void 0) { triggerChangeEvent = true; }
+            if (toInitial === void 0) { toInitial = true; }
+            self.input.value = "";
+            if (self.altInput !== undefined)
+                self.altInput.value = "";
+            if (self.mobileInput !== undefined)
+                self.mobileInput.value = "";
+            self.selectedDates = [];
+            self.latestSelectedDateObj = undefined;
+            if (toInitial === true) {
+                self.currentYear = self._initialDate.getFullYear();
+                self.currentMonth = self._initialDate.getMonth();
+            }
+            self.showTimeInput = false;
+            if (self.config.enableTime === true) {
+                setDefaultHours();
+            }
+            self.redraw();
+            if (triggerChangeEvent)
+                // triggerChangeEvent is true (default) or an Event
+                triggerEvent("onChange");
+        }
+        function close() {
+            self.isOpen = false;
+            if (!self.isMobile) {
+                if (self.calendarContainer !== undefined) {
+                    self.calendarContainer.classList.remove("open");
+                }
+                if (self._input !== undefined) {
+                    self._input.classList.remove("active");
+                }
+            }
+            triggerEvent("onClose");
+        }
+        function destroy() {
+            if (self.config !== undefined)
+                triggerEvent("onDestroy");
+            for (var i = self._handlers.length; i--;) {
+                var h = self._handlers[i];
+                h.element.removeEventListener(h.event, h.handler, h.options);
+            }
+            self._handlers = [];
+            if (self.mobileInput) {
+                if (self.mobileInput.parentNode)
+                    self.mobileInput.parentNode.removeChild(self.mobileInput);
+                self.mobileInput = undefined;
+            }
+            else if (self.calendarContainer && self.calendarContainer.parentNode) {
+                if (self.config.static && self.calendarContainer.parentNode) {
+                    var wrapper = self.calendarContainer.parentNode;
+                    wrapper.lastChild && wrapper.removeChild(wrapper.lastChild);
+                    if (wrapper.parentNode) {
+                        while (wrapper.firstChild)
+                            wrapper.parentNode.insertBefore(wrapper.firstChild, wrapper);
+                        wrapper.parentNode.removeChild(wrapper);
+                    }
+                }
+                else
+                    self.calendarContainer.parentNode.removeChild(self.calendarContainer);
+            }
+            if (self.altInput) {
+                self.input.type = "text";
+                if (self.altInput.parentNode)
+                    self.altInput.parentNode.removeChild(self.altInput);
+                delete self.altInput;
+            }
+            if (self.input) {
+                self.input.type = self.input._type;
+                self.input.classList.remove("flatpickr-input");
+                self.input.removeAttribute("readonly");
+                self.input.value = "";
+            }
+            [
+                "_showTimeInput",
+                "latestSelectedDateObj",
+                "_hideNextMonthArrow",
+                "_hidePrevMonthArrow",
+                "__hideNextMonthArrow",
+                "__hidePrevMonthArrow",
+                "isMobile",
+                "isOpen",
+                "selectedDateElem",
+                "minDateHasTime",
+                "maxDateHasTime",
+                "days",
+                "daysContainer",
+                "_input",
+                "_positionElement",
+                "innerContainer",
+                "rContainer",
+                "monthNav",
+                "todayDateElem",
+                "calendarContainer",
+                "weekdayContainer",
+                "prevMonthNav",
+                "nextMonthNav",
+                "currentMonthElement",
+                "currentYearElement",
+                "navigationCurrentMonth",
+                "selectedDateElem",
+                "config",
+            ].forEach(function (k) {
+                try {
+                    delete self[k];
+                }
+                catch (_) { }
+            });
+        }
+        function isCalendarElem(elem) {
+            if (self.config.appendTo && self.config.appendTo.contains(elem))
+                return true;
+            return self.calendarContainer.contains(elem);
+        }
+        function documentClick(e) {
+            if (self.isOpen && !self.config.inline) {
+                var eventTarget_1 = getEventTarget(e);
+                var isCalendarElement = isCalendarElem(eventTarget_1);
+                var isInput = eventTarget_1 === self.input ||
+                    eventTarget_1 === self.altInput ||
+                    self.element.contains(eventTarget_1) ||
+                    // web components
+                    // e.path is not present in all browsers. circumventing typechecks
+                    (e.path &&
+                        e.path.indexOf &&
+                        (~e.path.indexOf(self.input) ||
+                            ~e.path.indexOf(self.altInput)));
+                var lostFocus = e.type === "blur"
+                    ? isInput &&
+                        e.relatedTarget &&
+                        !isCalendarElem(e.relatedTarget)
+                    : !isInput &&
+                        !isCalendarElement &&
+                        !isCalendarElem(e.relatedTarget);
+                var isIgnored = !self.config.ignoredFocusElements.some(function (elem) {
+                    return elem.contains(eventTarget_1);
+                });
+                if (lostFocus && isIgnored) {
+                    self.close();
+                    if (self.config.mode === "range" && self.selectedDates.length === 1) {
+                        self.clear(false);
+                        self.redraw();
+                    }
+                }
+            }
+        }
+        function changeYear(newYear) {
+            if (!newYear ||
+                (self.config.minDate && newYear < self.config.minDate.getFullYear()) ||
+                (self.config.maxDate && newYear > self.config.maxDate.getFullYear()))
+                return;
+            var newYearNum = newYear, isNewYear = self.currentYear !== newYearNum;
+            self.currentYear = newYearNum || self.currentYear;
+            if (self.config.maxDate &&
+                self.currentYear === self.config.maxDate.getFullYear()) {
+                self.currentMonth = Math.min(self.config.maxDate.getMonth(), self.currentMonth);
+            }
+            else if (self.config.minDate &&
+                self.currentYear === self.config.minDate.getFullYear()) {
+                self.currentMonth = Math.max(self.config.minDate.getMonth(), self.currentMonth);
+            }
+            if (isNewYear) {
+                self.redraw();
+                triggerEvent("onYearChange");
+            }
+        }
+        function isEnabled(date, timeless) {
+            if (timeless === void 0) { timeless = true; }
+            var dateToCheck = self.parseDate(date, undefined, timeless); // timeless
+            if ((self.config.minDate &&
+                dateToCheck &&
+                compareDates(dateToCheck, self.config.minDate, timeless !== undefined ? timeless : !self.minDateHasTime) < 0) ||
+                (self.config.maxDate &&
+                    dateToCheck &&
+                    compareDates(dateToCheck, self.config.maxDate, timeless !== undefined ? timeless : !self.maxDateHasTime) > 0))
+                return false;
+            if (self.config.enable.length === 0 && self.config.disable.length === 0)
+                return true;
+            if (dateToCheck === undefined)
+                return false;
+            var bool = self.config.enable.length > 0, array = bool ? self.config.enable : self.config.disable;
+            for (var i = 0, d = void 0; i < array.length; i++) {
+                d = array[i];
+                if (typeof d === "function" &&
+                    d(dateToCheck) // disabled by function
+                )
+                    return bool;
+                else if (d instanceof Date &&
+                    dateToCheck !== undefined &&
+                    d.getTime() === dateToCheck.getTime())
+                    // disabled by date
+                    return bool;
+                else if (typeof d === "string" && dateToCheck !== undefined) {
+                    // disabled by date string
+                    var parsed = self.parseDate(d, undefined, true);
+                    return parsed && parsed.getTime() === dateToCheck.getTime()
+                        ? bool
+                        : !bool;
+                }
+                else if (
+                // disabled by range
+                typeof d === "object" &&
+                    dateToCheck !== undefined &&
+                    d.from &&
+                    d.to &&
+                    dateToCheck.getTime() >= d.from.getTime() &&
+                    dateToCheck.getTime() <= d.to.getTime())
+                    return bool;
+            }
+            return !bool;
+        }
+        function isInView(elem) {
+            if (self.daysContainer !== undefined)
+                return (elem.className.indexOf("hidden") === -1 &&
+                    self.daysContainer.contains(elem));
+            return false;
+        }
+        function onKeyDown(e) {
+            // e.key                      e.keyCode
+            // "Backspace"                        8
+            // "Tab"                              9
+            // "Enter"                           13
+            // "Escape"     (IE "Esc")           27
+            // "ArrowLeft"  (IE "Left")          37
+            // "ArrowUp"    (IE "Up")            38
+            // "ArrowRight" (IE "Right")         39
+            // "ArrowDown"  (IE "Down")          40
+            // "Delete"     (IE "Del")           46
+            var isInput = e.target === self._input;
+            var allowInput = self.config.allowInput;
+            var allowKeydown = self.isOpen && (!allowInput || !isInput);
+            var allowInlineKeydown = self.config.inline && isInput && !allowInput;
+            if (e.keyCode === 13 && isInput) {
+                if (allowInput) {
+                    self.setDate(self._input.value, true, e.target === self.altInput
+                        ? self.config.altFormat
+                        : self.config.dateFormat);
+                    return e.target.blur();
+                }
+                else
+                    self.open();
+            }
+            else if (isCalendarElem(e.target) ||
+                allowKeydown ||
+                allowInlineKeydown) {
+                var isTimeObj = !!self.timeContainer &&
+                    self.timeContainer.contains(e.target);
+                switch (e.keyCode) {
+                    case 13:
+                        if (isTimeObj) {
+                            updateTime();
+                            focusAndClose();
+                        }
+                        else
+                            selectDate(e);
+                        break;
+                    case 27: // escape
+                        e.preventDefault();
+                        focusAndClose();
+                        break;
+                    case 8:
+                    case 46:
+                        if (isInput && !self.config.allowInput) {
+                            e.preventDefault();
+                            self.clear();
+                        }
+                        break;
+                    case 37:
+                    case 39:
+                        if (!isTimeObj) {
+                            e.preventDefault();
+                            if (self.daysContainer !== undefined &&
+                                (allowInput === false ||
+                                    (document.activeElement && isInView(document.activeElement)))) {
+                                var delta_1 = e.keyCode === 39 ? 1 : -1;
+                                if (!e.ctrlKey)
+                                    focusOnDay(undefined, delta_1);
+                                else {
+                                    e.stopPropagation();
+                                    changeMonth(delta_1);
+                                    focusOnDay(getFirstAvailableDay(1), 0);
+                                }
+                            }
+                        }
+                        else if (self.hourElement)
+                            self.hourElement.focus();
+                        break;
+                    case 38:
+                    case 40:
+                        e.preventDefault();
+                        var delta = e.keyCode === 40 ? 1 : -1;
+                        if ((self.daysContainer && e.target.$i !== undefined) ||
+                            e.target === self.input) {
+                            if (e.ctrlKey) {
+                                e.stopPropagation();
+                                changeYear(self.currentYear - delta);
+                                focusOnDay(getFirstAvailableDay(1), 0);
+                            }
+                            else if (!isTimeObj)
+                                focusOnDay(undefined, delta * 7);
+                        }
+                        else if (self.config.enableTime) {
+                            if (!isTimeObj && self.hourElement)
+                                self.hourElement.focus();
+                            updateTime(e);
+                            self._debouncedChange();
+                        }
+                        break;
+                    case 9:
+                        if (isTimeObj) {
+                            var elems = [
+                                self.hourElement,
+                                self.minuteElement,
+                                self.secondElement,
+                                self.amPM,
+                            ].filter(function (x) { return x; });
+                            var i = elems.indexOf(e.target);
+                            if (i !== -1) {
+                                var target = elems[i + (e.shiftKey ? -1 : 1)];
+                                if (target !== undefined) {
+                                    e.preventDefault();
+                                    target.focus();
+                                }
+                                else if (e.shiftKey) {
+                                    e.preventDefault();
+                                    self._input.focus();
+                                }
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (self.amPM !== undefined && e.target === self.amPM) {
+                switch (e.key) {
+                    case self.l10n.amPM[0].charAt(0):
+                    case self.l10n.amPM[0].charAt(0).toLowerCase():
+                        self.amPM.textContent = self.l10n.amPM[0];
+                        setHoursFromInputs();
+                        updateValue();
+                        break;
+                    case self.l10n.amPM[1].charAt(0):
+                    case self.l10n.amPM[1].charAt(0).toLowerCase():
+                        self.amPM.textContent = self.l10n.amPM[1];
+                        setHoursFromInputs();
+                        updateValue();
+                        break;
+                }
+            }
+            triggerEvent("onKeyDown", e);
+        }
+        function onMouseOver(elem) {
+            if (self.selectedDates.length !== 1 ||
+                (elem &&
+                    (!elem.classList.contains("flatpickr-day") ||
+                        elem.classList.contains("disabled"))))
+                return;
+            var hoverDate = elem
+                ? elem.dateObj.getTime()
+                : self.days.firstElementChild.dateObj.getTime(), initialDate = self.parseDate(self.selectedDates[0], undefined, true).getTime(), rangeStartDate = Math.min(hoverDate, self.selectedDates[0].getTime()), rangeEndDate = Math.max(hoverDate, self.selectedDates[0].getTime()), lastDate = self.daysContainer.lastChild
+                .lastChild.dateObj.getTime();
+            var containsDisabled = false;
+            var minRange = 0, maxRange = 0;
+            for (var t = rangeStartDate; t < lastDate; t += duration.DAY) {
+                if (!isEnabled(new Date(t), true)) {
+                    containsDisabled =
+                        containsDisabled || (t > rangeStartDate && t < rangeEndDate);
+                    if (t < initialDate && (!minRange || t > minRange))
+                        minRange = t;
+                    else if (t > initialDate && (!maxRange || t < maxRange))
+                        maxRange = t;
+                }
+            }
+            for (var m = 0; m < self.config.showMonths; m++) {
+                var month = self.daysContainer.children[m];
+                var prevMonth = self.daysContainer.children[m - 1];
+                var _loop_1 = function (i, l) {
+                    var dayElem = month.children[i], date = dayElem.dateObj;
+                    var timestamp = date.getTime();
+                    var outOfRange = (minRange > 0 && timestamp < minRange) ||
+                        (maxRange > 0 && timestamp > maxRange);
+                    if (outOfRange) {
+                        dayElem.classList.add("notAllowed");
+                        ["inRange", "startRange", "endRange"].forEach(function (c) {
+                            dayElem.classList.remove(c);
+                        });
+                        return "continue";
+                    }
+                    else if (containsDisabled && !outOfRange)
+                        return "continue";
+                    ["startRange", "inRange", "endRange", "notAllowed"].forEach(function (c) {
+                        dayElem.classList.remove(c);
+                    });
+                    if (elem !== undefined) {
+                        elem.classList.add(hoverDate < self.selectedDates[0].getTime()
+                            ? "startRange"
+                            : "endRange");
+                        if (month.contains(elem) ||
+                            !(m > 0 &&
+                                prevMonth &&
+                                prevMonth.lastChild.dateObj.getTime() >= timestamp)) {
+                            if (initialDate < hoverDate && timestamp === initialDate)
+                                dayElem.classList.add("startRange");
+                            else if (initialDate > hoverDate && timestamp === initialDate)
+                                dayElem.classList.add("endRange");
+                            if (timestamp >= minRange &&
+                                (maxRange === 0 || timestamp <= maxRange) &&
+                                isBetween(timestamp, initialDate, hoverDate))
+                                dayElem.classList.add("inRange");
+                        }
+                    }
+                };
+                for (var i = 0, l = month.children.length; i < l; i++) {
+                    _loop_1(i, l);
+                }
+            }
+        }
+        function onResize() {
+            if (self.isOpen && !self.config.static && !self.config.inline)
+                positionCalendar();
+        }
+        function setDefaultTime() {
+            self.setDate(self.config.minDate !== undefined
+                ? new Date(self.config.minDate.getTime())
+                : new Date(), false);
             setDefaultHours();
             updateValue();
-          }
-
-          if (self.config.allowInput === false && (e === undefined || !self.timeContainer.contains(e.relatedTarget))) {
-            setTimeout(function () {
-              return self.hourElement.select();
-            }, 50);
-          }
         }
-      }
-
-      function minMaxDateSetter(type) {
-        return function (date) {
-          var dateObj = self.config["_" + type + "Date"] = self.parseDate(date, self.config.dateFormat);
-          var inverseDateObj = self.config["_" + (type === "min" ? "max" : "min") + "Date"];
-
-          if (dateObj !== undefined) {
-            self[type === "min" ? "minDateHasTime" : "maxDateHasTime"] = dateObj.getHours() > 0 || dateObj.getMinutes() > 0 || dateObj.getSeconds() > 0;
-          }
-
-          if (self.selectedDates) {
-            self.selectedDates = self.selectedDates.filter(function (d) {
-              return isEnabled(d);
+        function open(e, positionElement) {
+            if (positionElement === void 0) { positionElement = self._positionElement; }
+            if (self.isMobile === true) {
+                if (e) {
+                    e.preventDefault();
+                    e.target && e.target.blur();
+                }
+                if (self.mobileInput !== undefined) {
+                    self.mobileInput.focus();
+                    self.mobileInput.click();
+                }
+                triggerEvent("onOpen");
+                return;
+            }
+            if (self._input.disabled || self.config.inline)
+                return;
+            var wasOpen = self.isOpen;
+            self.isOpen = true;
+            if (!wasOpen) {
+                self.calendarContainer.classList.add("open");
+                self._input.classList.add("active");
+                triggerEvent("onOpen");
+                positionCalendar(positionElement);
+            }
+            if (self.config.enableTime === true && self.config.noCalendar === true) {
+                if (self.selectedDates.length === 0) {
+                    setDefaultTime();
+                }
+                if (self.config.allowInput === false &&
+                    (e === undefined ||
+                        !self.timeContainer.contains(e.relatedTarget))) {
+                    setTimeout(function () { return self.hourElement.select(); }, 50);
+                }
+            }
+        }
+        function minMaxDateSetter(type) {
+            return function (date) {
+                var dateObj = (self.config["_" + type + "Date"] = self.parseDate(date, self.config.dateFormat));
+                var inverseDateObj = self.config["_" + (type === "min" ? "max" : "min") + "Date"];
+                if (dateObj !== undefined) {
+                    self[type === "min" ? "minDateHasTime" : "maxDateHasTime"] =
+                        dateObj.getHours() > 0 ||
+                            dateObj.getMinutes() > 0 ||
+                            dateObj.getSeconds() > 0;
+                }
+                if (self.selectedDates) {
+                    self.selectedDates = self.selectedDates.filter(function (d) { return isEnabled(d); });
+                    if (!self.selectedDates.length && type === "min")
+                        setHoursFromDate(dateObj);
+                    updateValue();
+                }
+                if (self.daysContainer) {
+                    redraw();
+                    if (dateObj !== undefined)
+                        self.currentYearElement[type] = dateObj.getFullYear().toString();
+                    else
+                        self.currentYearElement.removeAttribute(type);
+                    self.currentYearElement.disabled =
+                        !!inverseDateObj &&
+                            dateObj !== undefined &&
+                            inverseDateObj.getFullYear() === dateObj.getFullYear();
+                }
+            };
+        }
+        function parseConfig() {
+            var boolOpts = [
+                "wrap",
+                "weekNumbers",
+                "allowInput",
+                "clickOpens",
+                "time_24hr",
+                "enableTime",
+                "noCalendar",
+                "altInput",
+                "shorthandCurrentMonth",
+                "inline",
+                "static",
+                "enableSeconds",
+                "disableMobile",
+            ];
+            var userConfig = __assign({}, instanceConfig, JSON.parse(JSON.stringify(element.dataset || {})));
+            var formats = {};
+            self.config.parseDate = userConfig.parseDate;
+            self.config.formatDate = userConfig.formatDate;
+            Object.defineProperty(self.config, "enable", {
+                get: function () { return self.config._enable; },
+                set: function (dates) {
+                    self.config._enable = parseDateRules(dates);
+                }
             });
-            if (!self.selectedDates.length && type === "min") setHoursFromDate(dateObj);
+            Object.defineProperty(self.config, "disable", {
+                get: function () { return self.config._disable; },
+                set: function (dates) {
+                    self.config._disable = parseDateRules(dates);
+                }
+            });
+            var timeMode = userConfig.mode === "time";
+            if (!userConfig.dateFormat && (userConfig.enableTime || timeMode)) {
+                formats.dateFormat =
+                    userConfig.noCalendar || timeMode
+                        ? "H:i" + (userConfig.enableSeconds ? ":S" : "")
+                        : flatpickr.defaultConfig.dateFormat +
+                            " H:i" +
+                            (userConfig.enableSeconds ? ":S" : "");
+            }
+            if (userConfig.altInput &&
+                (userConfig.enableTime || timeMode) &&
+                !userConfig.altFormat) {
+                formats.altFormat =
+                    userConfig.noCalendar || timeMode
+                        ? "h:i" + (userConfig.enableSeconds ? ":S K" : " K")
+                        : flatpickr.defaultConfig.altFormat +
+                            (" h:i" + (userConfig.enableSeconds ? ":S" : "") + " K");
+            }
+            Object.defineProperty(self.config, "minDate", {
+                get: function () { return self.config._minDate; },
+                set: minMaxDateSetter("min")
+            });
+            Object.defineProperty(self.config, "maxDate", {
+                get: function () { return self.config._maxDate; },
+                set: minMaxDateSetter("max")
+            });
+            var minMaxTimeSetter = function (type) { return function (val) {
+                self.config[type === "min" ? "_minTime" : "_maxTime"] = self.parseDate(val, "H:i");
+            }; };
+            Object.defineProperty(self.config, "minTime", {
+                get: function () { return self.config._minTime; },
+                set: minMaxTimeSetter("min")
+            });
+            Object.defineProperty(self.config, "maxTime", {
+                get: function () { return self.config._maxTime; },
+                set: minMaxTimeSetter("max")
+            });
+            if (userConfig.mode === "time") {
+                self.config.noCalendar = true;
+                self.config.enableTime = true;
+            }
+            Object.assign(self.config, formats, userConfig);
+            for (var i = 0; i < boolOpts.length; i++)
+                self.config[boolOpts[i]] =
+                    self.config[boolOpts[i]] === true ||
+                        self.config[boolOpts[i]] === "true";
+            HOOKS.filter(function (hook) { return self.config[hook] !== undefined; }).forEach(function (hook) {
+                self.config[hook] = arrayify(self.config[hook] || []).map(bindToInstance);
+            });
+            self.isMobile =
+                !self.config.disableMobile &&
+                    !self.config.inline &&
+                    self.config.mode === "single" &&
+                    !self.config.disable.length &&
+                    !self.config.enable.length &&
+                    !self.config.weekNumbers &&
+                    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            for (var i = 0; i < self.config.plugins.length; i++) {
+                var pluginConf = self.config.plugins[i](self) || {};
+                for (var key in pluginConf) {
+                    if (HOOKS.indexOf(key) > -1) {
+                        self.config[key] = arrayify(pluginConf[key])
+                            .map(bindToInstance)
+                            .concat(self.config[key]);
+                    }
+                    else if (typeof userConfig[key] === "undefined")
+                        self.config[key] = pluginConf[key];
+                }
+            }
+            triggerEvent("onParseConfig");
+        }
+        function setupLocale() {
+            if (typeof self.config.locale !== "object" &&
+                typeof flatpickr.l10ns[self.config.locale] === "undefined")
+                self.config.errorHandler(new Error("flatpickr: invalid locale " + self.config.locale));
+            self.l10n = __assign({}, flatpickr.l10ns["default"], (typeof self.config.locale === "object"
+                ? self.config.locale
+                : self.config.locale !== "default"
+                    ? flatpickr.l10ns[self.config.locale]
+                    : undefined));
+            tokenRegex.K = "(" + self.l10n.amPM[0] + "|" + self.l10n.amPM[1] + "|" + self.l10n.amPM[0].toLowerCase() + "|" + self.l10n.amPM[1].toLowerCase() + ")";
+            self.formatDate = createDateFormatter(self);
+            self.parseDate = createDateParser({ config: self.config, l10n: self.l10n });
+        }
+        function positionCalendar(customPositionElement) {
+            if (self.calendarContainer === undefined)
+                return;
+            triggerEvent("onPreCalendarPosition");
+            var positionElement = customPositionElement || self._positionElement;
+            var calendarHeight = Array.prototype.reduce.call(self.calendarContainer.children, (function (acc, child) { return acc + child.offsetHeight; }), 0), calendarWidth = self.calendarContainer.offsetWidth, configPos = self.config.position.split(" "), configPosVertical = configPos[0], configPosHorizontal = configPos.length > 1 ? configPos[1] : null, inputBounds = positionElement.getBoundingClientRect(), distanceFromBottom = window.innerHeight - inputBounds.bottom, showOnTop = configPosVertical === "above" ||
+                (configPosVertical !== "below" &&
+                    distanceFromBottom < calendarHeight &&
+                    inputBounds.top > calendarHeight);
+            var top = window.pageYOffset +
+                inputBounds.top +
+                (!showOnTop ? positionElement.offsetHeight + 2 : -calendarHeight - 2);
+            toggleClass(self.calendarContainer, "arrowTop", !showOnTop);
+            toggleClass(self.calendarContainer, "arrowBottom", showOnTop);
+            if (self.config.inline)
+                return;
+            var left = window.pageXOffset +
+                inputBounds.left -
+                (configPosHorizontal != null && configPosHorizontal === "center"
+                    ? (calendarWidth - inputBounds.width) / 2
+                    : 0);
+            var right = window.document.body.offsetWidth - inputBounds.right;
+            var rightMost = left + calendarWidth > window.document.body.offsetWidth;
+            var centerMost = right + calendarWidth > window.document.body.offsetWidth;
+            toggleClass(self.calendarContainer, "rightMost", rightMost);
+            if (self.config.static)
+                return;
+            self.calendarContainer.style.top = top + "px";
+            if (!rightMost) {
+                self.calendarContainer.style.left = left + "px";
+                self.calendarContainer.style.right = "auto";
+            }
+            else if (!centerMost) {
+                self.calendarContainer.style.left = "auto";
+                self.calendarContainer.style.right = right + "px";
+            }
+            else {
+                var doc = document.styleSheets[0];
+                // some testing environments don't have css support
+                if (doc === undefined)
+                    return;
+                var bodyWidth = window.document.body.offsetWidth;
+                var centerLeft = Math.max(0, bodyWidth / 2 - calendarWidth / 2);
+                var centerBefore = ".flatpickr-calendar.centerMost:before";
+                var centerAfter = ".flatpickr-calendar.centerMost:after";
+                var centerIndex = doc.cssRules.length;
+                var centerStyle = "{left:" + inputBounds.left + "px;right:auto;}";
+                toggleClass(self.calendarContainer, "rightMost", false);
+                toggleClass(self.calendarContainer, "centerMost", true);
+                doc.insertRule(centerBefore + "," + centerAfter + centerStyle, centerIndex);
+                self.calendarContainer.style.left = centerLeft + "px";
+                self.calendarContainer.style.right = "auto";
+            }
+        }
+        function redraw() {
+            if (self.config.noCalendar || self.isMobile)
+                return;
+            updateNavigationCurrentMonth();
+            buildDays();
+        }
+        function focusAndClose() {
+            self._input.focus();
+            if (window.navigator.userAgent.indexOf("MSIE") !== -1 ||
+                navigator.msMaxTouchPoints !== undefined) {
+                // hack - bugs in the way IE handles focus keeps the calendar open
+                setTimeout(self.close, 0);
+            }
+            else {
+                self.close();
+            }
+        }
+        function selectDate(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var isSelectable = function (day) {
+                return day.classList &&
+                    day.classList.contains("flatpickr-day") &&
+                    !day.classList.contains("disabled") &&
+                    !day.classList.contains("notAllowed");
+            };
+            var t = findParent(e.target, isSelectable);
+            if (t === undefined)
+                return;
+            var target = t;
+            var selectedDate = (self.latestSelectedDateObj = new Date(target.dateObj.getTime()));
+            var shouldChangeMonth = (selectedDate.getMonth() < self.currentMonth ||
+                selectedDate.getMonth() >
+                    self.currentMonth + self.config.showMonths - 1) &&
+                self.config.mode !== "range";
+            self.selectedDateElem = target;
+            if (self.config.mode === "single")
+                self.selectedDates = [selectedDate];
+            else if (self.config.mode === "multiple") {
+                var selectedIndex = isDateSelected(selectedDate);
+                if (selectedIndex)
+                    self.selectedDates.splice(parseInt(selectedIndex), 1);
+                else
+                    self.selectedDates.push(selectedDate);
+            }
+            else if (self.config.mode === "range") {
+                if (self.selectedDates.length === 2) {
+                    self.clear(false, false);
+                }
+                self.latestSelectedDateObj = selectedDate;
+                self.selectedDates.push(selectedDate);
+                // unless selecting same date twice, sort ascendingly
+                if (compareDates(selectedDate, self.selectedDates[0], true) !== 0)
+                    self.selectedDates.sort(function (a, b) { return a.getTime() - b.getTime(); });
+            }
+            setHoursFromInputs();
+            if (shouldChangeMonth) {
+                var isNewYear = self.currentYear !== selectedDate.getFullYear();
+                self.currentYear = selectedDate.getFullYear();
+                self.currentMonth = selectedDate.getMonth();
+                if (isNewYear)
+                    triggerEvent("onYearChange");
+                triggerEvent("onMonthChange");
+            }
+            updateNavigationCurrentMonth();
+            buildDays();
             updateValue();
-          }
-
-          if (self.daysContainer) {
-            redraw();
-            if (dateObj !== undefined) self.currentYearElement[type] = dateObj.getFullYear().toString();else self.currentYearElement.removeAttribute(type);
-            self.currentYearElement.disabled = !!inverseDateObj && dateObj !== undefined && inverseDateObj.getFullYear() === dateObj.getFullYear();
-          }
+            if (self.config.enableTime)
+                setTimeout(function () { return (self.showTimeInput = true); }, 50);
+            // maintain focus
+            if (!shouldChangeMonth &&
+                self.config.mode !== "range" &&
+                self.config.showMonths === 1)
+                focusOnDayElem(target);
+            else if (self.selectedDateElem !== undefined &&
+                self.hourElement === undefined) {
+                self.selectedDateElem && self.selectedDateElem.focus();
+            }
+            if (self.hourElement !== undefined)
+                self.hourElement !== undefined && self.hourElement.focus();
+            if (self.config.closeOnSelect) {
+                var single = self.config.mode === "single" && !self.config.enableTime;
+                var range = self.config.mode === "range" &&
+                    self.selectedDates.length === 2 &&
+                    !self.config.enableTime;
+                if (single || range) {
+                    focusAndClose();
+                }
+            }
+            triggerChange();
+        }
+        var CALLBACKS = {
+            locale: [setupLocale, updateWeekdays],
+            showMonths: [buildMonths, setCalendarWidth, buildWeekdays]
         };
-      }
-
-      function parseConfig() {
-        var boolOpts = ["wrap", "weekNumbers", "allowInput", "clickOpens", "time_24hr", "enableTime", "noCalendar", "altInput", "shorthandCurrentMonth", "inline", "static", "enableSeconds", "disableMobile"];
-        var userConfig = Object.assign({}, instanceConfig, JSON.parse(JSON.stringify(element.dataset || {})));
-        var formats$$1 = {};
-        self.config.parseDate = userConfig.parseDate;
-        self.config.formatDate = userConfig.formatDate;
-        Object.defineProperty(self.config, "enable", {
-          get: function get() {
-            return self.config._enable;
-          },
-          set: function set(dates) {
-            self.config._enable = parseDateRules(dates);
-          }
-        });
-        Object.defineProperty(self.config, "disable", {
-          get: function get() {
-            return self.config._disable;
-          },
-          set: function set(dates) {
-            self.config._disable = parseDateRules(dates);
-          }
-        });
-        var timeMode = userConfig.mode === "time";
-
-        if (!userConfig.dateFormat && (userConfig.enableTime || timeMode)) {
-          formats$$1.dateFormat = userConfig.noCalendar || timeMode ? "H:i" + (userConfig.enableSeconds ? ":S" : "") : flatpickr.defaultConfig.dateFormat + " H:i" + (userConfig.enableSeconds ? ":S" : "");
+        function set(option, value) {
+            if (option !== null && typeof option === "object")
+                Object.assign(self.config, option);
+            else {
+                self.config[option] = value;
+                if (CALLBACKS[option] !== undefined)
+                    CALLBACKS[option].forEach(function (x) { return x(); });
+                else if (HOOKS.indexOf(option) > -1)
+                    self.config[option] = arrayify(value);
+            }
+            self.redraw();
+            updateValue(false);
         }
-
-        if (userConfig.altInput && (userConfig.enableTime || timeMode) && !userConfig.altFormat) {
-          formats$$1.altFormat = userConfig.noCalendar || timeMode ? "h:i" + (userConfig.enableSeconds ? ":S K" : " K") : flatpickr.defaultConfig.altFormat + (" h:i" + (userConfig.enableSeconds ? ":S" : "") + " K");
+        function setSelectedDate(inputDate, format) {
+            var dates = [];
+            if (inputDate instanceof Array)
+                dates = inputDate.map(function (d) { return self.parseDate(d, format); });
+            else if (inputDate instanceof Date || typeof inputDate === "number")
+                dates = [self.parseDate(inputDate, format)];
+            else if (typeof inputDate === "string") {
+                switch (self.config.mode) {
+                    case "single":
+                    case "time":
+                        dates = [self.parseDate(inputDate, format)];
+                        break;
+                    case "multiple":
+                        dates = inputDate
+                            .split(self.config.conjunction)
+                            .map(function (date) { return self.parseDate(date, format); });
+                        break;
+                    case "range":
+                        dates = inputDate
+                            .split(self.l10n.rangeSeparator)
+                            .map(function (date) { return self.parseDate(date, format); });
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+                self.config.errorHandler(new Error("Invalid date supplied: " + JSON.stringify(inputDate)));
+            self.selectedDates = dates.filter(function (d) { return d instanceof Date && isEnabled(d, false); });
+            if (self.config.mode === "range")
+                self.selectedDates.sort(function (a, b) { return a.getTime() - b.getTime(); });
         }
-
-        Object.defineProperty(self.config, "minDate", {
-          get: function get() {
-            return self.config._minDate;
-          },
-          set: minMaxDateSetter("min")
-        });
-        Object.defineProperty(self.config, "maxDate", {
-          get: function get() {
-            return self.config._maxDate;
-          },
-          set: minMaxDateSetter("max")
-        });
-
-        var minMaxTimeSetter = function minMaxTimeSetter(type) {
-          return function (val) {
-            self.config[type === "min" ? "_minTime" : "_maxTime"] = self.parseDate(val, "H:i");
-          };
-        };
-
-        Object.defineProperty(self.config, "minTime", {
-          get: function get() {
-            return self.config._minTime;
-          },
-          set: minMaxTimeSetter("min")
-        });
-        Object.defineProperty(self.config, "maxTime", {
-          get: function get() {
-            return self.config._maxTime;
-          },
-          set: minMaxTimeSetter("max")
-        });
-
-        if (userConfig.mode === "time") {
-          self.config.noCalendar = true;
-          self.config.enableTime = true;
+        function setDate(date, triggerChange, format) {
+            if (triggerChange === void 0) { triggerChange = false; }
+            if (format === void 0) { format = self.config.dateFormat; }
+            if ((date !== 0 && !date) || (date instanceof Array && date.length === 0))
+                return self.clear(triggerChange);
+            setSelectedDate(date, format);
+            self.showTimeInput = self.selectedDates.length > 0;
+            self.latestSelectedDateObj = self.selectedDates[0];
+            self.redraw();
+            jumpToDate();
+            setHoursFromDate();
+            updateValue(triggerChange);
+            if (triggerChange)
+                triggerEvent("onChange");
         }
-
-        Object.assign(self.config, formats$$1, userConfig);
-
-        for (var i = 0; i < boolOpts.length; i++) {
-          self.config[boolOpts[i]] = self.config[boolOpts[i]] === true || self.config[boolOpts[i]] === "true";
+        function parseDateRules(arr) {
+            return arr
+                .slice()
+                .map(function (rule) {
+                if (typeof rule === "string" ||
+                    typeof rule === "number" ||
+                    rule instanceof Date) {
+                    return self.parseDate(rule, undefined, true);
+                }
+                else if (rule &&
+                    typeof rule === "object" &&
+                    rule.from &&
+                    rule.to)
+                    return {
+                        from: self.parseDate(rule.from, undefined),
+                        to: self.parseDate(rule.to, undefined)
+                    };
+                return rule;
+            })
+                .filter(function (x) { return x; }); // remove falsy values
         }
-
-        HOOKS.filter(function (hook) {
-          return self.config[hook] !== undefined;
-        }).forEach(function (hook) {
-          self.config[hook] = arrayify(self.config[hook] || []).map(bindToInstance);
-        });
-        self.isMobile = !self.config.disableMobile && !self.config.inline && self.config.mode === "single" && !self.config.disable.length && !self.config.enable.length && !self.config.weekNumbers && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-        for (var _i = 0; _i < self.config.plugins.length; _i++) {
-          var pluginConf = self.config.plugins[_i](self) || {};
-
-          for (var key in pluginConf) {
-            if (HOOKS.indexOf(key) > -1) {
-              self.config[key] = arrayify(pluginConf[key]).map(bindToInstance).concat(self.config[key]);
-            } else if (typeof userConfig[key] === "undefined") self.config[key] = pluginConf[key];
-          }
+        function setupDates() {
+            self.selectedDates = [];
+            self.now = self.parseDate(self.config.now) || new Date();
+            // Workaround IE11 setting placeholder as the input's value
+            var preloadedDate = self.config.defaultDate ||
+                ((self.input.nodeName === "INPUT" ||
+                    self.input.nodeName === "TEXTAREA") &&
+                    self.input.placeholder &&
+                    self.input.value === self.input.placeholder
+                    ? null
+                    : self.input.value);
+            if (preloadedDate)
+                setSelectedDate(preloadedDate, self.config.dateFormat);
+            self._initialDate =
+                self.selectedDates.length > 0
+                    ? self.selectedDates[0]
+                    : self.config.minDate &&
+                        self.config.minDate.getTime() > self.now.getTime()
+                        ? self.config.minDate
+                        : self.config.maxDate &&
+                            self.config.maxDate.getTime() < self.now.getTime()
+                            ? self.config.maxDate
+                            : self.now;
+            self.currentYear = self._initialDate.getFullYear();
+            self.currentMonth = self._initialDate.getMonth();
+            if (self.selectedDates.length > 0)
+                self.latestSelectedDateObj = self.selectedDates[0];
+            if (self.config.minTime !== undefined)
+                self.config.minTime = self.parseDate(self.config.minTime, "H:i");
+            if (self.config.maxTime !== undefined)
+                self.config.maxTime = self.parseDate(self.config.maxTime, "H:i");
+            self.minDateHasTime =
+                !!self.config.minDate &&
+                    (self.config.minDate.getHours() > 0 ||
+                        self.config.minDate.getMinutes() > 0 ||
+                        self.config.minDate.getSeconds() > 0);
+            self.maxDateHasTime =
+                !!self.config.maxDate &&
+                    (self.config.maxDate.getHours() > 0 ||
+                        self.config.maxDate.getMinutes() > 0 ||
+                        self.config.maxDate.getSeconds() > 0);
+            Object.defineProperty(self, "showTimeInput", {
+                get: function () { return self._showTimeInput; },
+                set: function (bool) {
+                    self._showTimeInput = bool;
+                    if (self.calendarContainer)
+                        toggleClass(self.calendarContainer, "showTimeInput", bool);
+                    self.isOpen && positionCalendar();
+                }
+            });
         }
-
-        triggerEvent("onParseConfig");
-      }
-
-      function setupLocale() {
-        if (typeof self.config.locale !== "object" && typeof flatpickr.l10ns[self.config.locale] === "undefined") self.config.errorHandler(new Error("flatpickr: invalid locale " + self.config.locale));
-        self.l10n = Object.assign({}, flatpickr.l10ns.default, typeof self.config.locale === "object" ? self.config.locale : self.config.locale !== "default" ? flatpickr.l10ns[self.config.locale] : undefined);
-        tokenRegex.K = "(" + self.l10n.amPM[0] + "|" + self.l10n.amPM[1] + "|" + self.l10n.amPM[0].toLowerCase() + "|" + self.l10n.amPM[1].toLowerCase() + ")";
-        self.formatDate = createDateFormatter(self);
-        self.parseDate = createDateParser({
-          config: self.config,
-          l10n: self.l10n
-        });
-      }
-
-      function positionCalendar(customPositionElement) {
-        if (self.calendarContainer === undefined) return;
-        triggerEvent("onPreCalendarPosition");
-        var positionElement = customPositionElement || self._positionElement;
-        var calendarHeight = Array.prototype.reduce.call(self.calendarContainer.children, function (acc, child) {
-          return acc + child.offsetHeight;
-        }, 0),
-            calendarWidth = self.calendarContainer.offsetWidth,
-            configPos = self.config.position.split(" "),
-            configPosVertical = configPos[0],
-            configPosHorizontal = configPos.length > 1 ? configPos[1] : null,
-            inputBounds = positionElement.getBoundingClientRect(),
-            distanceFromBottom = window.innerHeight - inputBounds.bottom,
-            showOnTop = configPosVertical === "above" || configPosVertical !== "below" && distanceFromBottom < calendarHeight && inputBounds.top > calendarHeight;
-        var top = window.pageYOffset + inputBounds.top + (!showOnTop ? positionElement.offsetHeight + 2 : -calendarHeight - 2);
-        toggleClass(self.calendarContainer, "arrowTop", !showOnTop);
-        toggleClass(self.calendarContainer, "arrowBottom", showOnTop);
-        if (self.config.inline) return;
-        var left = window.pageXOffset + inputBounds.left - (configPosHorizontal != null && configPosHorizontal === "center" ? (calendarWidth - inputBounds.width) / 2 : 0);
-        var right = window.document.body.offsetWidth - inputBounds.right;
-        var rightMost = left + calendarWidth > window.document.body.offsetWidth;
-        toggleClass(self.calendarContainer, "rightMost", rightMost);
-        if (self.config.static) return;
-        self.calendarContainer.style.top = top + "px";
-
-        if (!rightMost) {
-          self.calendarContainer.style.left = left + "px";
-          self.calendarContainer.style.right = "auto";
-        } else {
-          self.calendarContainer.style.left = "auto";
-          self.calendarContainer.style.right = right + "px";
+        function setupInputs() {
+            self.input = self.config.wrap
+                ? element.querySelector("[data-input]")
+                : element;
+            /* istanbul ignore next */
+            if (!self.input) {
+                self.config.errorHandler(new Error("Invalid input element specified"));
+                return;
+            }
+            // hack: store previous type to restore it after destroy()
+            self.input._type = self.input.type;
+            self.input.type = "text";
+            self.input.classList.add("flatpickr-input");
+            self._input = self.input;
+            if (self.config.altInput) {
+                // replicate self.element
+                self.altInput = createElement(self.input.nodeName, self.input.className + " " + self.config.altInputClass);
+                self._input = self.altInput;
+                self.altInput.placeholder = self.input.placeholder;
+                self.altInput.disabled = self.input.disabled;
+                self.altInput.required = self.input.required;
+                self.altInput.tabIndex = self.input.tabIndex;
+                self.altInput.type = "text";
+                self.input.setAttribute("type", "hidden");
+                if (!self.config.static && self.input.parentNode)
+                    self.input.parentNode.insertBefore(self.altInput, self.input.nextSibling);
+            }
+            if (!self.config.allowInput)
+                self._input.setAttribute("readonly", "readonly");
+            self._positionElement = self.config.positionElement || self._input;
         }
-      }
-
-      function redraw() {
-        if (self.config.noCalendar || self.isMobile) return;
-        updateNavigationCurrentMonth();
-        buildDays();
-      }
-
-      function focusAndClose() {
-        self._input.focus();
-
-        if (window.navigator.userAgent.indexOf("MSIE") !== -1 || navigator.msMaxTouchPoints !== undefined) {
-          setTimeout(self.close, 0);
-        } else {
-          self.close();
+        function setupMobile() {
+            var inputType = self.config.enableTime
+                ? self.config.noCalendar
+                    ? "time"
+                    : "datetime-local"
+                : "date";
+            self.mobileInput = createElement("input", self.input.className + " flatpickr-mobile");
+            self.mobileInput.step = self.input.getAttribute("step") || "any";
+            self.mobileInput.tabIndex = 1;
+            self.mobileInput.type = inputType;
+            self.mobileInput.disabled = self.input.disabled;
+            self.mobileInput.required = self.input.required;
+            self.mobileInput.placeholder = self.input.placeholder;
+            self.mobileFormatStr =
+                inputType === "datetime-local"
+                    ? "Y-m-d\\TH:i:S"
+                    : inputType === "date"
+                        ? "Y-m-d"
+                        : "H:i:S";
+            if (self.selectedDates.length > 0) {
+                self.mobileInput.defaultValue = self.mobileInput.value = self.formatDate(self.selectedDates[0], self.mobileFormatStr);
+            }
+            if (self.config.minDate)
+                self.mobileInput.min = self.formatDate(self.config.minDate, "Y-m-d");
+            if (self.config.maxDate)
+                self.mobileInput.max = self.formatDate(self.config.maxDate, "Y-m-d");
+            self.input.type = "hidden";
+            if (self.altInput !== undefined)
+                self.altInput.type = "hidden";
+            try {
+                if (self.input.parentNode)
+                    self.input.parentNode.insertBefore(self.mobileInput, self.input.nextSibling);
+            }
+            catch (_a) { }
+            bind(self.mobileInput, "change", function (e) {
+                self.setDate(e.target.value, false, self.mobileFormatStr);
+                triggerEvent("onChange");
+                triggerEvent("onClose");
+            });
         }
-      }
-
-      function selectDate(e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        var isSelectable = function isSelectable(day) {
-          return day.classList && day.classList.contains("flatpickr-day") && !day.classList.contains("disabled") && !day.classList.contains("notAllowed");
-        };
-
-        var t = findParent(e.target, isSelectable);
-        if (t === undefined) return;
-        var target = t;
-        var selectedDate = self.latestSelectedDateObj = new Date(target.dateObj.getTime());
-        var shouldChangeMonth = (selectedDate.getMonth() < self.currentMonth || selectedDate.getMonth() > self.currentMonth + self.config.showMonths - 1) && self.config.mode !== "range";
-        self.selectedDateElem = target;
-        if (self.config.mode === "single") self.selectedDates = [selectedDate];else if (self.config.mode === "multiple") {
-          var selectedIndex = isDateSelected(selectedDate);
-          if (selectedIndex) self.selectedDates.splice(parseInt(selectedIndex), 1);else self.selectedDates.push(selectedDate);
-        } else if (self.config.mode === "range") {
-          if (self.selectedDates.length === 2) self.clear(false);
-          self.selectedDates.push(selectedDate);
-          if (compareDates(selectedDate, self.selectedDates[0], true) !== 0) self.selectedDates.sort(function (a, b) {
-            return a.getTime() - b.getTime();
-          });
+        function toggle(e) {
+            if (self.isOpen === true)
+                return self.close();
+            self.open(e);
         }
-        setHoursFromInputs();
-
-        if (shouldChangeMonth) {
-          var isNewYear = self.currentYear !== selectedDate.getFullYear();
-          self.currentYear = selectedDate.getFullYear();
-          self.currentMonth = selectedDate.getMonth();
-          if (isNewYear) triggerEvent("onYearChange");
-          triggerEvent("onMonthChange");
+        function triggerEvent(event, data) {
+            // If the instance has been destroyed already, all hooks have been removed
+            if (self.config === undefined)
+                return;
+            var hooks = self.config[event];
+            if (hooks !== undefined && hooks.length > 0) {
+                for (var i = 0; hooks[i] && i < hooks.length; i++)
+                    hooks[i](self.selectedDates, self.input.value, self, data);
+            }
+            if (event === "onChange") {
+                self.input.dispatchEvent(createEvent("change"));
+                // many front-end frameworks bind to the input event
+                self.input.dispatchEvent(createEvent("input"));
+            }
         }
-
-        updateNavigationCurrentMonth();
-        buildDays();
-        updateValue();
-        if (self.config.enableTime) setTimeout(function () {
-          return self.showTimeInput = true;
-        }, 50);
-        if (!shouldChangeMonth && self.config.mode !== "range" && self.config.showMonths === 1) focusOnDayElem(target);else self.selectedDateElem && self.selectedDateElem.focus();
-        if (self.hourElement !== undefined) setTimeout(function () {
-          return self.hourElement !== undefined && self.hourElement.select();
-        }, 451);
-
-        if (self.config.closeOnSelect) {
-          var single = self.config.mode === "single" && !self.config.enableTime;
-          var range = self.config.mode === "range" && self.selectedDates.length === 2 && !self.config.enableTime;
-
-          if (single || range) {
-            focusAndClose();
-          }
+        function createEvent(name) {
+            var e = document.createEvent("Event");
+            e.initEvent(name, true, true);
+            return e;
         }
-
-        triggerChange();
-      }
-
-      var CALLBACKS = {
-        locale: [setupLocale, updateWeekdays],
-        showMonths: [buildMonths, setCalendarWidth, buildWeekdays]
-      };
-
-      function set(option, value) {
-        if (option !== null && typeof option === "object") Object.assign(self.config, option);else {
-          self.config[option] = value;
-          if (CALLBACKS[option] !== undefined) CALLBACKS[option].forEach(function (x) {
-            return x();
-          });else if (HOOKS.indexOf(option) > -1) self.config[option] = arrayify(value);
+        function isDateSelected(date) {
+            for (var i = 0; i < self.selectedDates.length; i++) {
+                if (compareDates(self.selectedDates[i], date) === 0)
+                    return "" + i;
+            }
+            return false;
         }
-        self.redraw();
-        jumpToDate();
-        updateValue(false);
-      }
-
-      function setSelectedDate(inputDate, format) {
-        var dates = [];
-        if (inputDate instanceof Array) dates = inputDate.map(function (d) {
-          return self.parseDate(d, format);
-        });else if (inputDate instanceof Date || typeof inputDate === "number") dates = [self.parseDate(inputDate, format)];else if (typeof inputDate === "string") {
-          switch (self.config.mode) {
-            case "single":
-            case "time":
-              dates = [self.parseDate(inputDate, format)];
-              break;
-
-            case "multiple":
-              dates = inputDate.split(self.config.conjunction).map(function (date) {
-                return self.parseDate(date, format);
-              });
-              break;
-
-            case "range":
-              dates = inputDate.split(self.l10n.rangeSeparator).map(function (date) {
-                return self.parseDate(date, format);
-              });
-              break;
-
-            default:
-              break;
-          }
-        } else self.config.errorHandler(new Error("Invalid date supplied: " + JSON.stringify(inputDate)));
-        self.selectedDates = dates.filter(function (d) {
-          return d instanceof Date && isEnabled(d, false);
-        });
-        if (self.config.mode === "range") self.selectedDates.sort(function (a, b) {
-          return a.getTime() - b.getTime();
-        });
-      }
-
-      function setDate(date, triggerChange, format) {
-        if (triggerChange === void 0) {
-          triggerChange = false;
+        function isDateInRange(date) {
+            if (self.config.mode !== "range" || self.selectedDates.length < 2)
+                return false;
+            return (compareDates(date, self.selectedDates[0]) >= 0 &&
+                compareDates(date, self.selectedDates[1]) <= 0);
         }
-
-        if (format === void 0) {
-          format = self.config.dateFormat;
+        function updateNavigationCurrentMonth() {
+            if (self.config.noCalendar || self.isMobile || !self.monthNav)
+                return;
+            self.yearElements.forEach(function (yearElement, i) {
+                var d = new Date(self.currentYear, self.currentMonth, 1);
+                d.setMonth(self.currentMonth + i);
+                self.monthElements[i].textContent =
+                    monthToStr(d.getMonth(), self.config.shorthandCurrentMonth, self.l10n) +
+                        " ";
+                yearElement.value = d.getFullYear().toString();
+            });
+            self._hidePrevMonthArrow =
+                self.config.minDate !== undefined &&
+                    (self.currentYear === self.config.minDate.getFullYear()
+                        ? self.currentMonth <= self.config.minDate.getMonth()
+                        : self.currentYear < self.config.minDate.getFullYear());
+            self._hideNextMonthArrow =
+                self.config.maxDate !== undefined &&
+                    (self.currentYear === self.config.maxDate.getFullYear()
+                        ? self.currentMonth + 1 > self.config.maxDate.getMonth()
+                        : self.currentYear > self.config.maxDate.getFullYear());
         }
-
-        if (date !== 0 && !date || date instanceof Array && date.length === 0) return self.clear(triggerChange);
-        setSelectedDate(date, format);
-        self.showTimeInput = self.selectedDates.length > 0;
-        self.latestSelectedDateObj = self.selectedDates[0];
-        self.redraw();
-        jumpToDate();
-        setHoursFromDate();
-        updateValue(triggerChange);
-        if (triggerChange) triggerEvent("onChange");
-      }
-
-      function parseDateRules(arr) {
-        return arr.slice().map(function (rule) {
-          if (typeof rule === "string" || typeof rule === "number" || rule instanceof Date) {
-            return self.parseDate(rule, undefined, true);
-          } else if (rule && typeof rule === "object" && rule.from && rule.to) return {
-            from: self.parseDate(rule.from, undefined),
-            to: self.parseDate(rule.to, undefined)
-          };
-
-          return rule;
-        }).filter(function (x) {
-          return x;
-        });
-      }
-
-      function setupDates() {
-        self.selectedDates = [];
-        self.now = self.parseDate(self.config.now) || new Date();
-        var preloadedDate = self.config.defaultDate || ((self.input.nodeName === "INPUT" || self.input.nodeName === "TEXTAREA") && self.input.placeholder && self.input.value === self.input.placeholder ? null : self.input.value);
-        if (preloadedDate) setSelectedDate(preloadedDate, self.config.dateFormat);
-        var initialDate = self.selectedDates.length > 0 ? self.selectedDates[0] : self.config.minDate && self.config.minDate.getTime() > self.now.getTime() ? self.config.minDate : self.config.maxDate && self.config.maxDate.getTime() < self.now.getTime() ? self.config.maxDate : self.now;
-        self.currentYear = initialDate.getFullYear();
-        self.currentMonth = initialDate.getMonth();
-        if (self.selectedDates.length > 0) self.latestSelectedDateObj = self.selectedDates[0];
-        if (self.config.minTime !== undefined) self.config.minTime = self.parseDate(self.config.minTime, "H:i");
-        if (self.config.maxTime !== undefined) self.config.maxTime = self.parseDate(self.config.maxTime, "H:i");
-        self.minDateHasTime = !!self.config.minDate && (self.config.minDate.getHours() > 0 || self.config.minDate.getMinutes() > 0 || self.config.minDate.getSeconds() > 0);
-        self.maxDateHasTime = !!self.config.maxDate && (self.config.maxDate.getHours() > 0 || self.config.maxDate.getMinutes() > 0 || self.config.maxDate.getSeconds() > 0);
-        Object.defineProperty(self, "showTimeInput", {
-          get: function get() {
-            return self._showTimeInput;
-          },
-          set: function set(bool) {
-            self._showTimeInput = bool;
-            if (self.calendarContainer) toggleClass(self.calendarContainer, "showTimeInput", bool);
-            self.isOpen && positionCalendar();
-          }
-        });
-      }
-
-      function setupInputs() {
-        self.input = self.config.wrap ? element.querySelector("[data-input]") : element;
-
-        if (!self.input) {
-          self.config.errorHandler(new Error("Invalid input element specified"));
-          return;
+        function getDateStr(format) {
+            return self.selectedDates
+                .map(function (dObj) { return self.formatDate(dObj, format); })
+                .filter(function (d, i, arr) {
+                return self.config.mode !== "range" ||
+                    self.config.enableTime ||
+                    arr.indexOf(d) === i;
+            })
+                .join(self.config.mode !== "range"
+                ? self.config.conjunction
+                : self.l10n.rangeSeparator);
         }
-
-        self.input._type = self.input.type;
-        self.input.type = "text";
-        self.input.classList.add("flatpickr-input");
-        self._input = self.input;
-
-        if (self.config.altInput) {
-          self.altInput = createElement(self.input.nodeName, self.input.className + " " + self.config.altInputClass);
-          self._input = self.altInput;
-          self.altInput.placeholder = self.input.placeholder;
-          self.altInput.disabled = self.input.disabled;
-          self.altInput.required = self.input.required;
-          self.altInput.tabIndex = self.input.tabIndex;
-          self.altInput.type = "text";
-          self.input.setAttribute("type", "hidden");
-          if (!self.config.static && self.input.parentNode) self.input.parentNode.insertBefore(self.altInput, self.input.nextSibling);
+        /**
+         * Updates the values of inputs associated with the calendar
+         */
+        function updateValue(triggerChange) {
+            if (triggerChange === void 0) { triggerChange = true; }
+            if (self.selectedDates.length === 0)
+                return self.clear(triggerChange);
+            if (self.mobileInput !== undefined && self.mobileFormatStr) {
+                self.mobileInput.value =
+                    self.latestSelectedDateObj !== undefined
+                        ? self.formatDate(self.latestSelectedDateObj, self.mobileFormatStr)
+                        : "";
+            }
+            self.input.value = getDateStr(self.config.dateFormat);
+            if (self.altInput !== undefined) {
+                self.altInput.value = getDateStr(self.config.altFormat);
+            }
+            if (triggerChange !== false)
+                triggerEvent("onValueUpdate");
         }
-
-        if (!self.config.allowInput) self._input.setAttribute("readonly", "readonly");
-        self._positionElement = self.config.positionElement || self._input;
-      }
-
-      function setupMobile() {
-        var inputType = self.config.enableTime ? self.config.noCalendar ? "time" : "datetime-local" : "date";
-        self.mobileInput = createElement("input", self.input.className + " flatpickr-mobile");
-        self.mobileInput.step = self.input.getAttribute("step") || "any";
-        self.mobileInput.tabIndex = 1;
-        self.mobileInput.type = inputType;
-        self.mobileInput.disabled = self.input.disabled;
-        self.mobileInput.required = self.input.required;
-        self.mobileInput.placeholder = self.input.placeholder;
-        self.mobileFormatStr = inputType === "datetime-local" ? "Y-m-d\\TH:i:S" : inputType === "date" ? "Y-m-d" : "H:i:S";
-
-        if (self.selectedDates.length > 0) {
-          self.mobileInput.defaultValue = self.mobileInput.value = self.formatDate(self.selectedDates[0], self.mobileFormatStr);
+        function onMonthNavClick(e) {
+            e.preventDefault();
+            var isPrevMonth = self.prevMonthNav.contains(e.target);
+            var isNextMonth = self.nextMonthNav.contains(e.target);
+            if (isPrevMonth || isNextMonth) {
+                changeMonth(isPrevMonth ? -1 : 1);
+            }
+            else if (self.yearElements.indexOf(e.target) >= 0) {
+                e.target.select();
+            }
+            else if (e.target.classList.contains("arrowUp")) {
+                self.changeYear(self.currentYear + 1);
+            }
+            else if (e.target.classList.contains("arrowDown")) {
+                self.changeYear(self.currentYear - 1);
+            }
         }
-
-        if (self.config.minDate) self.mobileInput.min = self.formatDate(self.config.minDate, "Y-m-d");
-        if (self.config.maxDate) self.mobileInput.max = self.formatDate(self.config.maxDate, "Y-m-d");
-        self.input.type = "hidden";
-        if (self.altInput !== undefined) self.altInput.type = "hidden";
-
-        try {
-          if (self.input.parentNode) self.input.parentNode.insertBefore(self.mobileInput, self.input.nextSibling);
-        } catch (_a) {}
-
-        bind(self.mobileInput, "change", function (e) {
-          self.setDate(e.target.value, false, self.mobileFormatStr);
-          triggerEvent("onChange");
-          triggerEvent("onClose");
-        });
-      }
-
-      function toggle(e) {
-        if (self.isOpen === true) return self.close();
-        self.open(e);
-      }
-
-      function triggerEvent(event, data) {
-        if (self.config === undefined) return;
-        var hooks = self.config[event];
-
-        if (hooks !== undefined && hooks.length > 0) {
-          for (var i = 0; hooks[i] && i < hooks.length; i++) {
-            hooks[i](self.selectedDates, self.input.value, self, data);
-          }
+        function timeWrapper(e) {
+            e.preventDefault();
+            var isKeyDown = e.type === "keydown", input = e.target;
+            if (self.amPM !== undefined && e.target === self.amPM) {
+                self.amPM.textContent =
+                    self.l10n.amPM[int(self.amPM.textContent === self.l10n.amPM[0])];
+            }
+            var min = parseFloat(input.getAttribute("min")), max = parseFloat(input.getAttribute("max")), step = parseFloat(input.getAttribute("step")), curValue = parseInt(input.value, 10), delta = e.delta ||
+                (isKeyDown ? (e.which === 38 ? 1 : -1) : 0);
+            var newValue = curValue + step * delta;
+            if (typeof input.value !== "undefined" && input.value.length === 2) {
+                var isHourElem = input === self.hourElement, isMinuteElem = input === self.minuteElement;
+                if (newValue < min) {
+                    newValue =
+                        max +
+                            newValue +
+                            int(!isHourElem) +
+                            (int(isHourElem) && int(!self.amPM));
+                    if (isMinuteElem)
+                        incrementNumInput(undefined, -1, self.hourElement);
+                }
+                else if (newValue > max) {
+                    newValue =
+                        input === self.hourElement ? newValue - max - int(!self.amPM) : min;
+                    if (isMinuteElem)
+                        incrementNumInput(undefined, 1, self.hourElement);
+                }
+                if (self.amPM &&
+                    isHourElem &&
+                    (step === 1
+                        ? newValue + curValue === 23
+                        : Math.abs(newValue - curValue) > step)) {
+                    self.amPM.textContent =
+                        self.l10n.amPM[int(self.amPM.textContent === self.l10n.amPM[0])];
+                }
+                input.value = pad(newValue);
+            }
         }
-
-        if (event === "onChange") {
-          self.input.dispatchEvent(createEvent("change"));
-          self.input.dispatchEvent(createEvent("input"));
-        }
-      }
-
-      function createEvent(name) {
-        var e = document.createEvent("Event");
-        e.initEvent(name, true, true);
-        return e;
-      }
-
-      function isDateSelected(date) {
-        for (var i = 0; i < self.selectedDates.length; i++) {
-          if (compareDates(self.selectedDates[i], date) === 0) return "" + i;
-        }
-
-        return false;
-      }
-
-      function isDateInRange(date) {
-        if (self.config.mode !== "range" || self.selectedDates.length < 2) return false;
-        return compareDates(date, self.selectedDates[0]) >= 0 && compareDates(date, self.selectedDates[1]) <= 0;
-      }
-
-      function updateNavigationCurrentMonth() {
-        if (self.config.noCalendar || self.isMobile || !self.monthNav) return;
-        self.yearElements.forEach(function (yearElement, i) {
-          var d = new Date(self.currentYear, self.currentMonth, 1);
-          d.setMonth(self.currentMonth + i);
-          self.monthElements[i].textContent = monthToStr(d.getMonth(), self.config.shorthandCurrentMonth, self.l10n) + " ";
-          yearElement.value = d.getFullYear().toString();
-        });
-        self._hidePrevMonthArrow = self.config.minDate !== undefined && (self.currentYear === self.config.minDate.getFullYear() ? self.currentMonth <= self.config.minDate.getMonth() : self.currentYear < self.config.minDate.getFullYear());
-        self._hideNextMonthArrow = self.config.maxDate !== undefined && (self.currentYear === self.config.maxDate.getFullYear() ? self.currentMonth + 1 > self.config.maxDate.getMonth() : self.currentYear > self.config.maxDate.getFullYear());
-      }
-
-      function getDateStr(format) {
-        return self.selectedDates.map(function (dObj) {
-          return self.formatDate(dObj, format);
-        }).filter(function (d, i, arr) {
-          return self.config.mode !== "range" || self.config.enableTime || arr.indexOf(d) === i;
-        }).join(self.config.mode !== "range" ? self.config.conjunction : self.l10n.rangeSeparator);
-      }
-
-      function updateValue(triggerChange) {
-        if (triggerChange === void 0) {
-          triggerChange = true;
-        }
-
-        if (self.selectedDates.length === 0) return self.clear(triggerChange);
-
-        if (self.mobileInput !== undefined && self.mobileFormatStr) {
-          self.mobileInput.value = self.latestSelectedDateObj !== undefined ? self.formatDate(self.latestSelectedDateObj, self.mobileFormatStr) : "";
-        }
-
-        self.input.value = getDateStr(self.config.dateFormat);
-
-        if (self.altInput !== undefined) {
-          self.altInput.value = getDateStr(self.config.altFormat);
-        }
-
-        if (triggerChange !== false) triggerEvent("onValueUpdate");
-      }
-
-      function onMonthNavClick(e) {
-        e.preventDefault();
-        var isPrevMonth = self.prevMonthNav.contains(e.target);
-        var isNextMonth = self.nextMonthNav.contains(e.target);
-
-        if (isPrevMonth || isNextMonth) {
-          changeMonth(isPrevMonth ? -1 : 1);
-        } else if (self.yearElements.indexOf(e.target) >= 0) {
-          e.target.select();
-        } else if (e.target.classList.contains("arrowUp")) {
-          self.changeYear(self.currentYear + 1);
-        } else if (e.target.classList.contains("arrowDown")) {
-          self.changeYear(self.currentYear - 1);
-        }
-      }
-
-      function timeWrapper(e) {
-        e.preventDefault();
-        var isKeyDown = e.type === "keydown",
-            input = e.target;
-
-        if (self.amPM !== undefined && e.target === self.amPM) {
-          self.amPM.textContent = self.l10n.amPM[int(self.amPM.textContent === self.l10n.amPM[0])];
-        }
-
-        var min = parseFloat(input.getAttribute("data-min")),
-            max = parseFloat(input.getAttribute("data-max")),
-            step = parseFloat(input.getAttribute("data-step")),
-            curValue = parseInt(input.value, 10),
-            delta = e.delta || (isKeyDown ? e.which === 38 ? 1 : -1 : 0);
-        var newValue = curValue + step * delta;
-
-        if (typeof input.value !== "undefined" && input.value.length === 2) {
-          var isHourElem = input === self.hourElement,
-              isMinuteElem = input === self.minuteElement;
-
-          if (newValue < min) {
-            newValue = max + newValue + int(!isHourElem) + (int(isHourElem) && int(!self.amPM));
-            if (isMinuteElem) incrementNumInput(undefined, -1, self.hourElement);
-          } else if (newValue > max) {
-            newValue = input === self.hourElement ? newValue - max - int(!self.amPM) : min;
-            if (isMinuteElem) incrementNumInput(undefined, 1, self.hourElement);
-          }
-
-          if (self.amPM && isHourElem && (step === 1 ? newValue + curValue === 23 : Math.abs(newValue - curValue) > step)) {
-            self.amPM.textContent = self.l10n.amPM[int(self.amPM.textContent === self.l10n.amPM[0])];
-          }
-
-          input.value = pad(newValue);
-        }
-      }
-
-      init();
-      return self;
+        init();
+        return self;
     }
-
+    /* istanbul ignore next */
     function _flatpickr(nodeList, config) {
-      var nodes = Array.prototype.slice.call(nodeList);
-      var instances = [];
-
-      for (var i = 0; i < nodes.length; i++) {
-        var node = nodes[i];
-
-        try {
-          if (node.getAttribute("data-fp-omit") !== null) continue;
-
-          if (node._flatpickr !== undefined) {
-            node._flatpickr.destroy();
-
-            node._flatpickr = undefined;
-          }
-
-          node._flatpickr = FlatpickrInstance(node, config || {});
-          instances.push(node._flatpickr);
-        } catch (e) {
-          console.error(e);
+        // static list
+        var nodes = Array.prototype.slice
+            .call(nodeList)
+            .filter(function (x) { return x instanceof HTMLElement; });
+        var instances = [];
+        for (var i = 0; i < nodes.length; i++) {
+            var node = nodes[i];
+            try {
+                if (node.getAttribute("data-fp-omit") !== null)
+                    continue;
+                if (node._flatpickr !== undefined) {
+                    node._flatpickr.destroy();
+                    node._flatpickr = undefined;
+                }
+                node._flatpickr = FlatpickrInstance(node, config || {});
+                instances.push(node._flatpickr);
+            }
+            catch (e) {
+                console.error(e);
+            }
         }
-      }
-
-      return instances.length === 1 ? instances[0] : instances;
+        return instances.length === 1 ? instances[0] : instances;
     }
-
+    /* istanbul ignore next */
     if (typeof HTMLElement !== "undefined") {
-      HTMLCollection.prototype.flatpickr = NodeList.prototype.flatpickr = function (config) {
-        return _flatpickr(this, config);
-      };
-
-      HTMLElement.prototype.flatpickr = function (config) {
-        return _flatpickr([this], config);
-      };
+        // browser env
+        HTMLCollection.prototype.flatpickr = NodeList.prototype.flatpickr = function (config) {
+            return _flatpickr(this, config);
+        };
+        HTMLElement.prototype.flatpickr = function (config) {
+            return _flatpickr([this], config);
+        };
     }
-
-    var flatpickr = function flatpickr(selector, config) {
-      if (selector instanceof NodeList) return _flatpickr(selector, config);else if (typeof selector === "string") return _flatpickr(window.document.querySelectorAll(selector), config);
-      return _flatpickr([selector], config);
+    /* istanbul ignore next */
+    var flatpickr = function (selector, config) {
+        if (typeof selector === "string") {
+            return _flatpickr(window.document.querySelectorAll(selector), config);
+        }
+        else if (selector instanceof Node) {
+            return _flatpickr([selector], config);
+        }
+        else {
+            return _flatpickr(selector, config);
+        }
     };
-
+    /* istanbul ignore next */
     flatpickr.defaultConfig = defaults;
     flatpickr.l10ns = {
-      en: Object.assign({}, english),
-      default: Object.assign({}, english)
+        en: __assign({}, english),
+        "default": __assign({}, english)
     };
-
     flatpickr.localize = function (l10n) {
-      flatpickr.l10ns.default = Object.assign({}, flatpickr.l10ns.default, l10n);
+        flatpickr.l10ns["default"] = __assign({}, flatpickr.l10ns["default"], l10n);
     };
-
     flatpickr.setDefaults = function (config) {
-      flatpickr.defaultConfig = Object.assign({}, flatpickr.defaultConfig, config);
+        flatpickr.defaultConfig = __assign({}, flatpickr.defaultConfig, config);
     };
-
     flatpickr.parseDate = createDateParser({});
     flatpickr.formatDate = createDateFormatter({});
     flatpickr.compareDates = compareDates;
-
+    /* istanbul ignore next */
     if (typeof jQuery !== "undefined") {
-      jQuery.fn.flatpickr = function (config) {
-        return _flatpickr(this, config);
-      };
+        jQuery.fn.flatpickr = function (config) {
+            return _flatpickr(this, config);
+        };
     }
-
     Date.prototype.fp_incr = function (days) {
-      return new Date(this.getFullYear(), this.getMonth(), this.getDate() + (typeof days === "string" ? parseInt(days, 10) : days));
+        return new Date(this.getFullYear(), this.getMonth(), this.getDate() + (typeof days === "string" ? parseInt(days, 10) : days));
     };
-
     if (typeof window !== "undefined") {
-      window.flatpickr = flatpickr;
+        window.flatpickr = flatpickr;
     }
 
     return flatpickr;
 
-})));
+}));
 
 
 /***/ }),
@@ -29579,39 +25836,74 @@ return Promise;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* flatpickr v4.5.2, @license MIT */
 (function (global, factory) {
-     true ? factory(exports) :
-    undefined;
-}(this, (function (exports) { 'use strict';
+   true ? factory(exports) :
+  undefined;
+}(this, function (exports) { 'use strict';
 
-    var fp = typeof window !== "undefined" && window.flatpickr !== undefined ? window.flatpickr : {
-      l10ns: {}
-    };
-    var Spanish = {
+  var fp = typeof window !== "undefined" && window.flatpickr !== undefined
+      ? window.flatpickr
+      : {
+          l10ns: {}
+      };
+  var Spanish = {
       weekdays: {
-        shorthand: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
-        longhand: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
+          shorthand: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
+          longhand: [
+              "Domingo",
+              "Lunes",
+              "Martes",
+              "Miércoles",
+              "Jueves",
+              "Viernes",
+              "Sábado",
+          ]
       },
       months: {
-        shorthand: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
-        longhand: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+          shorthand: [
+              "Ene",
+              "Feb",
+              "Mar",
+              "Abr",
+              "May",
+              "Jun",
+              "Jul",
+              "Ago",
+              "Sep",
+              "Oct",
+              "Nov",
+              "Dic",
+          ],
+          longhand: [
+              "Enero",
+              "Febrero",
+              "Marzo",
+              "Abril",
+              "Mayo",
+              "Junio",
+              "Julio",
+              "Agosto",
+              "Septiembre",
+              "Octubre",
+              "Noviembre",
+              "Diciembre",
+          ]
       },
-      ordinal: function ordinal() {
-        return "º";
+      ordinal: function () {
+          return "º";
       },
       firstDayOfWeek: 1,
       rangeSeparator: " a "
-    };
-    fp.l10ns.es = Spanish;
-    var es = fp.l10ns;
+  };
+  fp.l10ns.es = Spanish;
+  var es = fp.l10ns;
 
-    exports.Spanish = Spanish;
-    exports.default = es;
+  exports.Spanish = Spanish;
+  exports.default = es;
 
-    Object.defineProperty(exports, '__esModule', { value: true });
+  Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+}));
 
 
 /***/ }),
@@ -84748,6 +81040,8 @@ var Tribute = function () {
             selectClass = _ref$selectClass === undefined ? 'highlight' : _ref$selectClass,
             _ref$trigger = _ref.trigger,
             trigger = _ref$trigger === undefined ? '@' : _ref$trigger,
+            _ref$autocompleteMode = _ref.autocompleteMode,
+            autocompleteMode = _ref$autocompleteMode === undefined ? false : _ref$autocompleteMode,
             _ref$selectTemplate = _ref.selectTemplate,
             selectTemplate = _ref$selectTemplate === undefined ? null : _ref$selectTemplate,
             _ref$menuItemTemplate = _ref.menuItemTemplate,
@@ -84777,6 +81071,7 @@ var Tribute = function () {
 
         _classCallCheck(this, Tribute);
 
+        this.autocompleteMode = autocompleteMode;
         this.menuSelected = 0;
         this.current = {};
         this.inputEvent = false;
@@ -84787,6 +81082,11 @@ var Tribute = function () {
         this.positionMenu = positionMenu;
         this.hasTrailingSpace = false;
         this.spaceSelectsMatch = spaceSelectsMatch;
+
+        if (this.autocompleteMode) {
+            trigger = '';
+            allowSpaces = false;
+        }
 
         if (values) {
             this.collection = [{
@@ -84830,6 +81130,7 @@ var Tribute = function () {
                 searchOpts: searchOpts
             }];
         } else if (collection) {
+            if (this.autocompleteMode) console.warn('Tribute in autocomplete mode does not work for collections');
             this.collection = collection.map(function (item) {
                 return {
                     trigger: item.trigger || trigger,
@@ -84999,7 +81300,9 @@ var Tribute = function () {
                     li.addEventListener('mouseenter', function (e) {
                         var li = e.target;
                         var index = li.getAttribute('data-index');
-                        _this2.events.setActiveLi(index);
+                        if (e.movementX !== 0 && e.movementY !== 0) {
+                            _this2.events.setActiveLi(index);
+                        }
                     });
                     if (_this2.menuSelected === index) {
                         li.className = _this2.current.collection.selectClass;
@@ -85100,7 +81403,7 @@ var Tribute = function () {
         key: "selectItemAtIndex",
         value: function selectItemAtIndex(index, originalEvent) {
             index = parseInt(index);
-            if (typeof index !== 'number') return;
+            if (typeof index !== 'number' || isNaN(index)) return;
             var item = this.current.filteredItems[index];
             var content = this.current.collection.selectTemplate(item);
             if (content !== null) this.replaceText(content, originalEvent, item);
@@ -85206,7 +81509,7 @@ var Tribute = function () {
 }();
 
 exports.default = Tribute;
-module.exports = exports["default"];
+module.exports = exports.default;
 
 },{"./TributeEvents":2,"./TributeMenuEvents":3,"./TributeRange":4,"./TributeSearch":5,"./utils":7}],2:[function(require,module,exports){
 'use strict';
@@ -85316,20 +81619,24 @@ var TributeEvents = function () {
             }
 
             if (!instance.tribute.isActive) {
-                var keyCode = instance.getKeyCode(instance, this, event);
+                if (instance.tribute.autocompleteMode) {
+                    instance.callbacks().triggerChar(event, this, '');
+                } else {
+                    var keyCode = instance.getKeyCode(instance, this, event);
 
-                if (isNaN(keyCode) || !keyCode) return;
+                    if (isNaN(keyCode) || !keyCode) return;
 
-                var trigger = instance.tribute.triggers().find(function (trigger) {
-                    return trigger.charCodeAt(0) === keyCode;
-                });
+                    var trigger = instance.tribute.triggers().find(function (trigger) {
+                        return trigger.charCodeAt(0) === keyCode;
+                    });
 
-                if (typeof trigger !== 'undefined') {
-                    instance.callbacks().triggerChar(event, this, trigger);
+                    if (typeof trigger !== 'undefined') {
+                        instance.callbacks().triggerChar(event, this, trigger);
+                    }
                 }
             }
 
-            if (instance.tribute.current.trigger && instance.commandEvent === false || instance.tribute.isActive && event.keyCode === 8) {
+            if ((instance.tribute.current.trigger || instance.tribute.autocompleteMode) && instance.commandEvent === false || instance.tribute.isActive && event.keyCode === 8) {
                 instance.tribute.showMenuFor(this, true);
             }
         }
@@ -85354,7 +81661,7 @@ var TributeEvents = function () {
         value: function getKeyCode(instance, el, event) {
             var char = void 0;
             var tribute = instance.tribute;
-            var info = tribute.range.getTriggerInfo(false, tribute.hasTrailingSpace, true, tribute.allowSpaces);
+            var info = tribute.range.getTriggerInfo(false, tribute.hasTrailingSpace, true, tribute.allowSpaces, tribute.autocompleteMode);
 
             if (info) {
                 return info.mentionTriggerChar.charCodeAt(0);
@@ -85366,7 +81673,7 @@ var TributeEvents = function () {
         key: 'updateSelection',
         value: function updateSelection(el) {
             this.tribute.current.element = el;
-            var info = this.tribute.range.getTriggerInfo(false, this.tribute.hasTrailingSpace, true, this.tribute.allowSpaces);
+            var info = this.tribute.range.getTriggerInfo(false, this.tribute.hasTrailingSpace, true, this.tribute.allowSpaces, this.tribute.autocompleteMode);
 
             if (info) {
                 this.tribute.current.selectedPath = info.mentionSelectedPath;
@@ -85478,28 +81785,25 @@ var TributeEvents = function () {
             var lis = this.tribute.menu.querySelectorAll('li'),
                 length = lis.length >>> 0;
 
-            // get heights
-            var menuFullHeight = this.getFullHeight(this.tribute.menu),
-                liHeight = this.getFullHeight(lis[0]);
-
-            if (index) this.tribute.menuSelected = index;
+            if (index) this.tribute.menuSelected = parseInt(index);
 
             for (var i = 0; i < length; i++) {
                 var li = lis[i];
                 if (i === this.tribute.menuSelected) {
-                    var offset = liHeight * (i + 1);
-                    var scrollTop = this.tribute.menu.scrollTop;
-                    var totalScroll = scrollTop + menuFullHeight;
+                    li.classList.add(this.tribute.current.collection.selectClass);
 
-                    if (offset > totalScroll) {
-                        this.tribute.menu.scrollTop += liHeight;
-                    } else if (offset < totalScroll) {
-                        this.tribute.menu.scrollTop -= liHeight;
+                    var liClientRect = li.getBoundingClientRect();
+                    var menuClientRect = this.tribute.menu.getBoundingClientRect();
+
+                    if (liClientRect.bottom > menuClientRect.bottom) {
+                        var scrollDistance = liClientRect.bottom - menuClientRect.bottom;
+                        this.tribute.menu.scrollTop += scrollDistance;
+                    } else if (liClientRect.top < menuClientRect.top) {
+                        var _scrollDistance = menuClientRect.top - liClientRect.top;
+                        this.tribute.menu.scrollTop -= _scrollDistance;
                     }
-
-                    li.className = this.tribute.current.collection.selectClass;
                 } else {
-                    li.className = '';
+                    li.classList.remove(this.tribute.current.collection.selectClass);
                 }
             }
         }
@@ -85547,7 +81851,7 @@ var TributeEvents = function () {
 }();
 
 exports.default = TributeEvents;
-module.exports = exports['default'];
+module.exports = exports.default;
 
 },{}],3:[function(require,module,exports){
 'use strict';
@@ -85636,7 +81940,7 @@ var TributeMenuEvents = function () {
 }();
 
 exports.default = TributeMenuEvents;
-module.exports = exports['default'];
+module.exports = exports.default;
 
 },{}],4:[function(require,module,exports){
 'use strict';
@@ -85680,7 +81984,7 @@ var TributeRange = function () {
             var context = this.tribute.current,
                 coordinates = void 0;
 
-            var info = this.getTriggerInfo(false, this.tribute.hasTrailingSpace, true, this.tribute.allowSpaces);
+            var info = this.getTriggerInfo(false, this.tribute.hasTrailingSpace, true, this.tribute.allowSpaces, this.tribute.autocompleteMode);
 
             if (typeof info !== 'undefined') {
 
@@ -85764,7 +82068,7 @@ var TributeRange = function () {
         key: 'replaceTriggerText',
         value: function replaceTriggerText(text, requireLeadingSpace, hasTrailingSpace, originalEvent, item) {
             var context = this.tribute.current;
-            var info = this.getTriggerInfo(true, hasTrailingSpace, requireLeadingSpace, this.tribute.allowSpaces);
+            var info = this.getTriggerInfo(true, hasTrailingSpace, requireLeadingSpace, this.tribute.allowSpaces, this.tribute.autocompleteMode);
 
             // Create the event
             var replaceEvent = new CustomEvent('tribute-replaced', {
@@ -85788,7 +82092,7 @@ var TributeRange = function () {
                     // add a space to the end of the pasted text
                     var _textSuffix = typeof this.tribute.replaceTextSuffix == 'string' ? this.tribute.replaceTextSuffix : '\xA0';
                     text += _textSuffix;
-                    this.pasteHtml(text, info.mentionPosition, info.mentionPosition + info.mentionText.length + 1);
+                    this.pasteHtml(text, info.mentionPosition, info.mentionPosition + info.mentionText.length + !this.tribute.autocompleteMode);
                 }
 
                 context.element.dispatchEvent(replaceEvent);
@@ -85909,8 +82213,16 @@ var TributeRange = function () {
             return text;
         }
     }, {
+        key: 'getLastWordInText',
+        value: function getLastWordInText(text) {
+            text = text.replace(/\u00A0/g, ' '); // https://stackoverflow.com/questions/29850407/how-do-i-replace-unicode-character-u00a0-with-a-space-in-javascript
+            var wordsArray = text.split(' ');
+            var worldsCount = wordsArray.length - 1;
+            return wordsArray[worldsCount].trim();
+        }
+    }, {
         key: 'getTriggerInfo',
-        value: function getTriggerInfo(menuAlreadyActive, hasTrailingSpace, requireLeadingSpace, allowSpaces) {
+        value: function getTriggerInfo(menuAlreadyActive, hasTrailingSpace, requireLeadingSpace, allowSpaces, isAutocomplete) {
             var _this2 = this;
 
             var ctx = this.tribute.current;
@@ -85931,6 +82243,17 @@ var TributeRange = function () {
             }
 
             var effectiveRange = this.getTextPrecedingCurrentSelection();
+            var lastWordOfEffectiveRange = this.getLastWordInText(effectiveRange);
+
+            if (isAutocomplete) {
+                return {
+                    mentionPosition: effectiveRange.length - lastWordOfEffectiveRange.length,
+                    mentionText: lastWordOfEffectiveRange,
+                    mentionSelectedElement: selected,
+                    mentionSelectedPath: path,
+                    mentionSelectedOffset: offset
+                };
+            }
 
             if (effectiveRange !== undefined && effectiveRange !== null) {
                 var mostRecentTriggerCharPos = -1;
@@ -86242,7 +82565,7 @@ var TributeRange = function () {
 }();
 
 exports.default = TributeRange;
-module.exports = exports['default'];
+module.exports = exports.default;
 
 },{}],5:[function(require,module,exports){
 'use strict';
@@ -86420,7 +82743,7 @@ var TributeSearch = function () {
 }();
 
 exports.default = TributeSearch;
-module.exports = exports['default'];
+module.exports = exports.default;
 
 },{}],6:[function(require,module,exports){
 "use strict";
@@ -86440,7 +82763,7 @@ exports.default = _Tribute2.default; /**
                                      * Native ES6 JavaScript @mention Plugin
                                      **/
 
-module.exports = exports["default"];
+module.exports = exports.default;
 
 },{"./Tribute":1}],7:[function(require,module,exports){
 'use strict';
@@ -86490,7 +82813,7 @@ if (window && typeof window.CustomEvent !== "function") {
 },{}]},{},[6])(6)
 });
 
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm5vZGVfbW9kdWxlcy9icm93c2VyLXBhY2svX3ByZWx1ZGUuanMiLCJzcmMvVHJpYnV0ZS5qcyIsInNyYy9UcmlidXRlRXZlbnRzLmpzIiwic3JjL1RyaWJ1dGVNZW51RXZlbnRzLmpzIiwic3JjL1RyaWJ1dGVSYW5nZS5qcyIsInNyYy9UcmlidXRlU2VhcmNoLmpzIiwic3JjL2luZGV4LmpzIiwic3JjL3V0aWxzLmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOzs7Ozs7Ozs7QUNBQTs7OztBQUNBOzs7O0FBQ0E7Ozs7QUFDQTs7OztBQUNBOzs7Ozs7OztJQUVNLE87QUFDRiwyQkFrQkc7QUFBQTs7QUFBQSwrQkFqQkMsTUFpQkQ7QUFBQSxZQWpCQyxNQWlCRCwrQkFqQlUsSUFpQlY7QUFBQSwrQkFoQkMsTUFnQkQ7QUFBQSxZQWhCQyxNQWdCRCwrQkFoQlUsSUFnQlY7QUFBQSxvQ0FmQyxXQWVEO0FBQUEsWUFmQyxXQWVELG9DQWZlLFdBZWY7QUFBQSxnQ0FkQyxPQWNEO0FBQUEsWUFkQyxPQWNELGdDQWRXLEdBY1g7QUFBQSx1Q0FiQyxjQWFEO0FBQUEsWUFiQyxjQWFELHVDQWJrQixJQWFsQjtBQUFBLHlDQVpDLGdCQVlEO0FBQUEsWUFaQyxnQkFZRCx5Q0Fab0IsSUFZcEI7QUFBQSwrQkFYQyxNQVdEO0FBQUEsWUFYQyxNQVdELCtCQVhVLEtBV1Y7QUFBQSxpQ0FWQyxRQVVEO0FBQUEsWUFWQyxRQVVELGlDQVZZLE9BVVo7QUFBQSxtQ0FUQyxVQVNEO0FBQUEsWUFUQyxVQVNELG1DQVRjLElBU2Q7QUFBQSxzQ0FSQyxhQVFEO0FBQUEsWUFSQyxhQVFELHNDQVJpQixJQVFqQjtBQUFBLHdDQVBDLGVBT0Q7QUFBQSxZQVBDLGVBT0Qsd0NBUG1CLElBT25CO0FBQUEseUNBTkMsbUJBTUQ7QUFBQSxZQU5DLG1CQU1ELHlDQU51QixJQU12QjtBQUFBLG9DQUxDLFdBS0Q7QUFBQSxZQUxDLFdBS0Qsb0NBTGUsS0FLZjtBQUFBLHlDQUpDLGlCQUlE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RUFBOEQsT0FBTyxNQUFyRTtBQUNBLGVBQU8sR0FBUDtBQUNELEtBVnFEOztBQVl2RCxRQUFJLE9BQU8sT0FBTyxLQUFkLEtBQXdCLFdBQTVCLEVBQXlDO0FBQ3ZDLG9CQUFZLFNBQVosR0FBd0IsT0FBTyxLQUFQLENBQWEsU0FBckM7QUFDRDs7QUFFQSxXQUFPLFdBQVAsR0FBcUIsV0FBckI7QUFDRCIsImZpbGUiOiJnZW5lcmF0ZWQuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlc0NvbnRlbnQiOlsiKGZ1bmN0aW9uKCl7ZnVuY3Rpb24gcihlLG4sdCl7ZnVuY3Rpb24gbyhpLGYpe2lmKCFuW2ldKXtpZighZVtpXSl7dmFyIGM9XCJmdW5jdGlvblwiPT10eXBlb2YgcmVxdWlyZSYmcmVxdWlyZTtpZighZiYmYylyZXR1cm4gYyhpLCEwKTtpZih1KXJldHVybiB1KGksITApO3ZhciBhPW5ldyBFcnJvcihcIkNhbm5vdCBmaW5kIG1vZHVsZSAnXCIraStcIidcIik7dGhyb3cgYS5jb2RlPVwiTU9EVUxFX05PVF9GT1VORFwiLGF9dmFyIHA9bltpXT17ZXhwb3J0czp7fX07ZVtpXVswXS5jYWxsKHAuZXhwb3J0cyxmdW5jdGlvbihyKXt2YXIgbj1lW2ldWzFdW3JdO3JldHVybiBvKG58fHIpfSxwLHAuZXhwb3J0cyxyLGUsbix0KX1yZXR1cm4gbltpXS5leHBvcnRzfWZvcih2YXIgdT1cImZ1bmN0aW9uXCI9PXR5cGVvZiByZXF1aXJlJiZyZXF1aXJlLGk9MDtpPHQubGVuZ3RoO2krKylvKHRbaV0pO3JldHVybiBvfXJldHVybiByfSkoKSIsImltcG9ydCBUcmlidXRlVXRpbHMgZnJvbSBcIi4vdXRpbHNcIjtcbmltcG9ydCBUcmlidXRlRXZlbnRzIGZyb20gXCIuL1RyaWJ1dGVFdmVudHNcIjtcbmltcG9ydCBUcmlidXRlTWVudUV2ZW50cyBmcm9tIFwiLi9UcmlidXRlTWVudUV2ZW50c1wiO1xuaW1wb3J0IFRyaWJ1dGVSYW5nZSBmcm9tIFwiLi9UcmlidXRlUmFuZ2VcIjtcbmltcG9ydCBUcmlidXRlU2VhcmNoIGZyb20gXCIuL1RyaWJ1dGVTZWFyY2hcIjtcblxuY2xhc3MgVHJpYnV0ZSB7XG4gICAgY29uc3RydWN0b3Ioe1xuICAgICAgICB2YWx1ZXMgPSBudWxsLFxuICAgICAgICBpZnJhbWUgPSBudWxsLFxuICAgICAgICBzZWxlY3RDbGFzcyA9ICdoaWdobGlnaHQnLFxuICAgICAgICB0cmlnZ2VyID0gJ0AnLFxuICAgICAgICBzZWxlY3RUZW1wbGF0ZSA9IG51bGwsXG4gICAgICAgIG1lbnVJdGVtVGVtcGxhdGUgPSBudWxsLFxuICAgICAgICBsb29rdXAgPSAna2V5JyxcbiAgICAgICAgZmlsbEF0dHIgPSAndmFsdWUnLFxuICAgICAgICBjb2xsZWN0aW9uID0gbnVsbCxcbiAgICAgICAgbWVudUNvbnRhaW5lciA9IG51bGwsXG4gICAgICAgIG5vTWF0Y2hUZW1wbGF0ZSA9IG51bGwsXG4gICAgICAgIHJlcXVpcmVMZWFkaW5nU3BhY2UgPSB0cnVlLFxuICAgICAgICBhbGxvd1NwYWNlcyA9IGZhbHNlLFxuICAgICAgICByZXBsYWNlVGV4dFN1ZmZpeCA9IG51bGwsXG4gICAgICAgIHBvc2l0aW9uTWVudSA9IHRydWUsXG4gICAgICAgIHNwYWNlU2VsZWN0c01hdGNoID0gZmFsc2UsXG4gICAgICAgIHNlYXJjaE9wdHMgPSB7fSxcbiAgICB9KSB7XG5cbiAgICAgICAgdGhpcy5tZW51U2VsZWN0ZWQgPSAwXG4gICAgICAgIHRoaXMuY3VycmVudCA9IHt9XG4gICAgICAgIHRoaXMuaW5wdXRFdmVudCA9IGZhbHNlXG4gICAgICAgIHRoaXMuaXNBY3RpdmUgPSBmYWxzZVxuICAgICAgICB0aGlzLm1lbnVDb250YWluZXIgPSBtZW51Q29udGFpbmVyXG4gICAgICAgIHRoaXMuYWxsb3dTcGFjZXMgPSBhbGxvd1NwYWNlc1xuICAgICAgICB0aGlzLnJlcGxhY2VUZXh0U3VmZml4ID0gcmVwbGFjZVRleHRTdWZmaXhcbiAgICAgICAgdGhpcy5wb3NpdGlvbk1lbnUgPSBwb3NpdGlvbk1lbnVcbiAgICAgICAgdGhpcy5oYXNUcmFpbGluZ1NwYWNlID0gZmFsc2U7XG4gICAgICAgIHRoaXMuc3BhY2VTZWxlY3RzTWF0Y2ggPSBzcGFjZVNlbGVjdHNNYXRjaDtcblxuICAgICAgICBpZiAodmFsdWVzKSB7XG4gICAgICAgICAgICB0aGlzLmNvbGxlY3Rpb24gPSBbe1xuICAgICAgICAgICAgICAgIC8vIHN5bWJvbCB0aGF0IHN0YXJ0cyB0aGUgbG9va3VwXG4gICAgICAgICAgICAgICAgdHJpZ2dlcjogdHJpZ2dlcixcblxuICAgICAgICAgICAgICAgIC8vIGlzIGl0IHdyYXBwZWQgaW4gYW4gaWZyYW1lXG4gICAgICAgICAgICAgICAgaWZyYW1lOiBpZnJhbWUsXG5cbiAgICAgICAgICAgICAgICAvLyBjbGFzcyBhcHBsaWVkIHRvIHNlbGVjdGVkIGl0ZW1cbiAgICAgICAgICAgICAgICBzZWxlY3RDbGFzczogc2VsZWN0Q2xhc3MsXG5cbiAgICAgICAgICAgICAgICAvLyBmdW5jdGlvbiBjYWxsZWQgb24gc2VsZWN0IHRoYXQgcmV0dW5zIHRoZSBjb250ZW50IHRvIGluc2VydFxuICAgICAgICAgICAgICAgIHNlbGVjdFRlbXBsYXRlOiAoc2VsZWN0VGVtcGxhdGUgfHwgVHJpYnV0ZS5kZWZhdWx0U2VsZWN0VGVtcGxhdGUpLmJpbmQodGhpcyksXG5cbiAgICAgICAgICAgICAgICAvLyBmdW5jdGlvbiBjYWxsZWQgdGhhdCByZXR1cm5zIGNvbnRlbnQgZm9yIGFuIGl0ZW1cbiAgICAgICAgICAgICAgICBtZW51SXRlbVRlbXBsYXRlOiAobWVudUl0ZW1UZW1wbGF0ZSB8fCBUcmlidXRlLmRlZmF1bHRNZW51SXRlbVRlbXBsYXRlKS5iaW5kKHRoaXMpLFxuXG4gICAgICAgICAgICAgICAgLy8gZnVuY3Rpb24gY2FsbGVkIHdoZW4gbWVudSBpcyBlbXB0eSwgZGlzYWJsZXMgaGlkaW5nIG9mIG1lbnUuXG4gICAgICAgICAgICAgICAgbm9NYXRjaFRlbXBsYXRlOiAodCA9PiB7XG4gICAgICAgICAgICAgICAgICAgIGlmICh0eXBlb2YgdCA9PT0gJ2Z1bmN0aW9uJykge1xuICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIHQuYmluZCh0aGlzKVxuICAgICAgICAgICAgICAgICAgICB9XG5cbiAgICAgICAgICAgICAgICAgICAgcmV0dXJuIG5vTWF0Y2hUZW1wbGF0ZSB8fCBmdW5jdGlvbiAoKSB7cmV0dXJuICcnfS5iaW5kKHRoaXMpXG4gICAgICAgICAgICAgICAgfSkobm9NYXRjaFRlbXBsYXRlKSxcblxuICAgICAgICAgICAgICAgIC8vIGNvbHVtbiB0byBzZWFyY2ggYWdhaW5zdCBpbiB0aGUgb2JqZWN0XG4gICAgICAgICAgICAgICAgbG9va3VwOiBsb29rdXAsXG5cbiAgICAgICAgICAgICAgICAvLyBjb2x1bW4gdGhhdCBjb250YWlucyB0aGUgY29udGVudCB0byBpbnNlcnQgYnkgZGVmYXVsdFxuICAgICAgICAgICAgICAgIGZpbGxBdHRyOiBmaWxsQXR0cixcblxuICAgICAgICAgICAgICAgIC8vIGFycmF5IG9mIG9iamVjdHMgb3IgYSBmdW5jdGlvbiByZXR1cm5pbmcgYW4gYXJyYXkgb2Ygb2JqZWN0c1xuICAgICAgICAgICAgICAgIHZhbHVlczogdmFsdWVzLFxuXG4gICAgICAgICAgICAgICAgcmVxdWlyZUxlYWRpbmdTcGFjZTogcmVxdWlyZUxlYWRpbmdTcGFjZSxcblxuICAgICAgICAgICAgICAgIHNlYXJjaE9wdHM6IHNlYXJjaE9wdHNcbiAgICAgICAgICAgIH1dXG4gICAgICAgIH1cbiAgICAgICAgZWxzZSBpZiAoY29sbGVjdGlvbikge1xuICAgICAgICAgICAgdGhpcy5jb2xsZWN0aW9uID0gY29sbGVjdGlvbi5tYXAoaXRlbSA9PiB7XG4gICAgICAgICAgICAgICAgcmV0dXJuIHtcbiAgICAgICAgICAgICAgICAgICAgdHJpZ2dlcjogaXRlbS50cmlnZ2VyIHx8IHRyaWdnZXIsXG4gICAgICAgICAgICAgICAgICAgIGlmcmFtZTogaXRlbS5pZnJhbWUgfHwgaWZyYW1lLFxuICAgICAgICAgICAgICAgICAgICBzZWxlY3RDbGFzczogaXRlbS5zZWxlY3RDbGFzcyB8fCBzZWxlY3RDbGFzcyxcbiAgICAgICAgICAgICAgICAgICAgc2VsZWN0VGVtcGxhdGU6IChpdGVtLnNlbGVjdFRlbXBsYXRlIHx8IFRyaWJ1dGUuZGVmYXVsdFNlbGVjdFRlbXBsYXRlKS5iaW5kKHRoaXMpLFxuICAgICAgICAgICAgICAgICAgICBtZW51SXRlbVRlbXBsYXRlOiAoaXRlbS5tZW51SXRlbVRlbXBsYXRlIHx8IFRyaWJ1dGUuZGVmYXVsdE1lbnVJdGVtVGVtcGxhdGUpLmJpbmQodGhpcyksXG4gICAgICAgICAgICAgICAgICAgIC8vIGZ1bmN0aW9uIGNhbGxlZCB3aGVuIG1lbnUgaXMgZW1wdHksIGRpc2FibGVzIGhpZGluZyBvZiBtZW51LlxuICAgICAgICAgICAgICAgICAgICBub01hdGNoVGVtcGxhdGU6ICh0ID0+IHtcbiAgICAgICAgICAgICAgICAgICAgICAgIGlmICh0eXBlb2YgdCA9PT0gJ2Z1bmN0aW9uJykge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiB0LmJpbmQodGhpcylcbiAgICAgICAgICAgICAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIG51bGxcbiAgICAgICAgICAgICAgICAgICAgfSkobm9NYXRjaFRlbXBsYXRlKSxcbiAgICAgICAgICAgICAgICAgICAgbG9va3VwOiBpdGVtLmxvb2t1cCB8fCBsb29rdXAsXG4gICAgICAgICAgICAgICAgICAgIGZpbGxBdHRyOiBpdGVtLmZpbGxBdHRyIHx8IGZpbGxBdHRyLFxuICAgICAgICAgICAgICAgICAgICB2YWx1ZXM6IGl0ZW0udmFsdWVzLFxuICAgICAgICAgICAgICAgICAgICByZXF1aXJlTGVhZGluZ1NwYWNlOiBpdGVtLnJlcXVpcmVMZWFkaW5nU3BhY2UsXG4gICAgICAgICAgICAgICAgICAgIHNlYXJjaE9wdHM6IGl0ZW0uc2VhcmNoT3B0cyB8fCBzZWFyY2hPcHRzXG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgfSlcbiAgICAgICAgfVxuICAgICAgICBlbHNlIHtcbiAgICAgICAgICAgIHRocm93IG5ldyBFcnJvcignW1RyaWJ1dGVdIE5vIGNvbGxlY3Rpb24gc3BlY2lmaWVkLicpXG4gICAgICAgIH1cblxuICAgICAgICBuZXcgVHJpYnV0ZVJhbmdlKHRoaXMpXG4gICAgICAgIG5ldyBUcmlidXRlRXZlbnRzKHRoaXMpXG4gICAgICAgIG5ldyBUcmlidXRlTWVudUV2ZW50cyh0aGlzKVxuICAgICAgICBuZXcgVHJpYnV0ZVNlYXJjaCh0aGlzKVxuICAgIH1cblxuICAgIHN0YXRpYyBkZWZhdWx0U2VsZWN0VGVtcGxhdGUoaXRlbSkge1xuICAgICAgaWYgKHR5cGVvZiBpdGVtID09PSAndW5kZWZpbmVkJykgcmV0dXJuIG51bGw7XG4gICAgICBpZiAodGhpcy5yYW5nZS5pc0NvbnRlbnRFZGl0YWJsZSh0aGlzLmN1cnJlbnQuZWxlbWVudCkpIHtcbiAgICAgICAgICByZXR1cm4gJzxzcGFuIGNsYXNzPVwidHJpYnV0ZS1tZW50aW9uXCI+JyArICh0aGlzLmN1cnJlbnQuY29sbGVjdGlvbi50cmlnZ2VyICsgaXRlbS5vcmlnaW5hbFt0aGlzLmN1cnJlbnQuY29sbGVjdGlvbi5maWxsQXR0cl0pICsgJzwvc3Bhbj4nO1xuICAgICAgfVxuXG4gICAgICByZXR1cm4gdGhpcy5jdXJyZW50LmNvbGxlY3Rpb24udHJpZ2dlciArIGl0ZW0ub3JpZ2luYWxbdGhpcy5jdXJyZW50LmNvbGxlY3Rpb24uZmlsbEF0dHJdO1xuICAgIH1cblxuICAgIHN0YXRpYyBkZWZhdWx0TWVudUl0ZW1UZW1wbGF0ZShtYXRjaEl0ZW0pIHtcbiAgICAgICAgcmV0dXJuIG1hdGNoSXRlbS5zdHJpbmdcbiAgICB9XG5cbiAgICBzdGF0aWMgaW5wdXRUeXBlcygpIHtcbiAgICAgICAgcmV0dXJuIFsnVEVYVEFSRUEnLCAnSU5QVVQnXVxuICAgIH1cblxuICAgIHRyaWdnZXJzKCkge1xuICAgICAgICByZXR1cm4gdGhpcy5jb2xsZWN0aW9uLm1hcChjb25maWcgPT4ge1xuICAgICAgICAgICAgcmV0dXJuIGNvbmZpZy50cmlnZ2VyXG4gICAgICAgIH0pXG4gICAgfVxuXG4gICAgYXR0YWNoKGVsKSB7XG4gICAgICAgIGlmICghZWwpIHtcbiAgICAgICAgICAgIHRocm93IG5ldyBFcnJvcignW1RyaWJ1dGVdIE11c3QgcGFzcyBpbiBhIERPTSBub2RlIG9yIE5vZGVMaXN0LicpXG4gICAgICAgIH1cblxuICAgICAgICAvLyBDaGVjayBpZiBpdCBpcyBhIGpRdWVyeSBjb2xsZWN0aW9uXG4gICAgICAgIGlmICh0eXBlb2YgalF1ZXJ5ICE9PSAndW5kZWZpbmVkJyAmJiBlbCBpbnN0YW5jZW9mIGpRdWVyeSkge1xuICAgICAgICAgICAgZWwgPSBlbC5nZXQoKVxuICAgICAgICB9XG5cbiAgICAgICAgLy8gSXMgZWwgYW4gQXJyYXkvQXJyYXktbGlrZSBvYmplY3Q/XG4gICAgICAgIGlmIChlbC5jb25zdHJ1Y3RvciA9PT0gTm9kZUxpc3QgfHwgZWwuY29uc3RydWN0b3IgPT09IEhUTUxDb2xsZWN0aW9uIHx8IGVsLmNvbnN0cnVjdG9yID09PSBBcnJheSkge1xuICAgICAgICAgICAgbGV0IGxlbmd0aCA9IGVsLmxlbmd0aFxuICAgICAgICAgICAgZm9yICh2YXIgaSA9IDA7IGkgPCBsZW5ndGg7ICsraSkge1xuICAgICAgICAgICAgICAgIHRoaXMuX2F0dGFjaChlbFtpXSlcbiAgICAgICAgICAgIH1cbiAgICAgICAgfSBlbHNlIHtcbiAgICAgICAgICAgIHRoaXMuX2F0dGFjaChlbClcbiAgICAgICAgfVxuICAgIH1cblxuICAgIF9hdHRhY2goZWwpIHtcbiAgICAgICAgaWYgKGVsLmhhc0F0dHJpYnV0ZSgnZGF0YS10cmlidXRlJykpIHtcbiAgICAgICAgICAgIGNvbnNvbGUud2FybignVHJpYnV0ZSB3YXMgYWxyZWFkeSBib3VuZCB0byAnICsgZWwubm9kZU5hbWUpXG4gICAgICAgIH1cblxuICAgICAgICB0aGlzLmVuc3VyZUVkaXRhYmxlKGVsKVxuICAgICAgICB0aGlzLmV2ZW50cy5iaW5kKGVsKVxuICAgICAgICBlbC5zZXRBdHRyaWJ1dGUoJ2RhdGEtdHJpYnV0ZScsIHRydWUpXG4gICAgfVxuXG4gICAgZW5zdXJlRWRpdGFibGUoZWxlbWVudCkge1xuICAgICAgICBpZiAoVHJpYnV0ZS5pbnB1dFR5cGVzKCkuaW5kZXhPZihlbGVtZW50Lm5vZGVOYW1lKSA9PT0gLTEpIHtcbiAgICAgICAgICAgIGlmIChlbGVtZW50LmNvbnRlbnRFZGl0YWJsZSkge1xuICAgICAgICAgICAgICAgIGVsZW1lbnQuY29udGVudEVkaXRhYmxlID0gdHJ1ZVxuICAgICAgICAgICAgfSBlbHNlIHtcbiAgICAgICAgICAgICAgICB0aHJvdyBuZXcgRXJyb3IoJ1tUcmlidXRlXSBDYW5ub3QgYmluZCB0byAnICsgZWxlbWVudC5ub2RlTmFtZSlcbiAgICAgICAgICAgIH1cbiAgICAgICAgfVxuICAgIH1cblxuICAgIGNyZWF0ZU1lbnUoKSB7XG4gICAgICAgIGxldCB3cmFwcGVyID0gdGhpcy5yYW5nZS5nZXREb2N1bWVudCgpLmNyZWF0ZUVsZW1lbnQoJ2RpdicpLFxuICAgICAgICAgICAgdWwgPSB0aGlzLnJhbmdlLmdldERvY3VtZW50KCkuY3JlYXRlRWxlbWVudCgndWwnKVxuXG4gICAgICAgIHdyYXBwZXIuY2xhc3NOYW1lID0gJ3RyaWJ1dGUtY29udGFpbmVyJ1xuICAgICAgICB3cmFwcGVyLmFwcGVuZENoaWxkKHVsKVxuXG4gICAgICAgIGlmICh0aGlzLm1lbnVDb250YWluZXIpIHtcbiAgICAgICAgICAgIHJldHVybiB0aGlzLm1lbnVDb250YWluZXIuYXBwZW5kQ2hpbGQod3JhcHBlcilcbiAgICAgICAgfVxuXG4gICAgICAgIHJldHVybiB0aGlzLnJhbmdlLmdldERvY3VtZW50KCkuYm9keS5hcHBlbmRDaGlsZCh3cmFwcGVyKVxuICAgIH1cblxuICAgIHNob3dNZW51Rm9yKGVsZW1lbnQsIHNjcm9sbFRvKSB7XG4gICAgICAgIC8vIE9ubHkgcHJvY2VlZCBpZiBtZW51IGlzbid0IGFscmVhZHkgc2hvd24gZm9yIHRoZSBjdXJyZW50IGVsZW1lbnQgJiBtZW50aW9uVGV4dFxuICAgICAgICBpZiAodGhpcy5pc0FjdGl2ZSAmJiB0aGlzLmN1cnJlbnQuZWxlbWVudCA9PT0gZWxlbWVudCAmJiB0aGlzLmN1cnJlbnQubWVudGlvblRleHQgPT09IHRoaXMuY3VycmVudE1lbnRpb25UZXh0U25hcHNob3QpIHtcbiAgICAgICAgICByZXR1cm5cbiAgICAgICAgfVxuICAgICAgICB0aGlzLmN1cnJlbnRNZW50aW9uVGV4dFNuYXBzaG90ID0gdGhpcy5jdXJyZW50Lm1lbnRpb25UZXh0XG5cbiAgICAgICAgLy8gY3JlYXRlIHRoZSBtZW51IGlmIGl0IGRvZXNuJ3QgZXhpc3QuXG4gICAgICAgIGlmICghdGhpcy5tZW51KSB7XG4gICAgICAgICAgICB0aGlzLm1lbnUgPSB0aGlzLmNyZWF0ZU1lbnUoKVxuICAgICAgICAgICAgZWxlbWVudC50cmlidXRlTWVudSA9IHRoaXMubWVudVxuICAgICAgICAgICAgdGhpcy5tZW51RXZlbnRzLmJpbmQodGhpcy5tZW51KVxuICAgICAgICB9XG5cbiAgICAgICAgdGhpcy5pc0FjdGl2ZSA9IHRydWVcbiAgICAgICAgdGhpcy5tZW51U2VsZWN0ZWQgPSAwXG5cbiAgICAgICAgaWYgKCF0aGlzLmN1cnJlbnQubWVudGlvblRleHQpIHtcbiAgICAgICAgICAgIHRoaXMuY3VycmVudC5tZW50aW9uVGV4dCA9ICcnXG4gICAgICAgIH1cblxuICAgICAgICBjb25zdCBwcm9jZXNzVmFsdWVzID0gKHZhbHVlcykgPT4ge1xuICAgICAgICAgICAgLy8gVHJpYnV0ZSBtYXkgbm90IGJlIGFjdGl2ZSBhbnkgbW9yZSBieSB0aGUgdGltZSB0aGUgdmFsdWUgY2FsbGJhY2sgcmV0dXJuc1xuICAgICAgICAgICAgaWYgKCF0aGlzLmlzQWN0aXZlKSB7XG4gICAgICAgICAgICAgICAgcmV0dXJuXG4gICAgICAgICAgICB9XG5cbiAgICAgICAgICAgIGxldCBpdGVtcyA9IHRoaXMuc2VhcmNoLmZpbHRlcih0aGlzLmN1cnJlbnQubWVudGlvblRleHQsIHZhbHVlcywge1xuICAgICAgICAgICAgICAgIHByZTogdGhpcy5jdXJyZW50LmNvbGxlY3Rpb24uc2VhcmNoT3B0cy5wcmUgfHwgJzxzcGFuPicsXG4gICAgICAgICAgICAgICAgcG9zdDogdGhpcy5jdXJyZW50LmNvbGxlY3Rpb24uc2VhcmNoT3B0cy5wb3N0IHx8ICc8L3NwYW4+JyxcbiAgICAgICAgICAgICAgICBleHRyYWN0OiAoZWwpID0+IHtcbiAgICAgICAgICAgICAgICAgICAgaWYgKHR5cGVvZiB0aGlzLmN1cnJlbnQuY29sbGVjdGlvbi5sb29rdXAgPT09ICdzdHJpbmcnKSB7XG4gICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gZWxbdGhpcy5jdXJyZW50LmNvbGxlY3Rpb24ubG9va3VwXVxuICAgICAgICAgICAgICAgICAgICB9IGVsc2UgaWYgKHR5cGVvZiB0aGlzLmN1cnJlbnQuY29sbGVjdGlvbi5sb29rdXAgPT09ICdmdW5jdGlvbicpIHtcbiAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiB0aGlzLmN1cnJlbnQuY29sbGVjdGlvbi5sb29rdXAoZWwsIHRoaXMuY3VycmVudC5tZW50aW9uVGV4dClcbiAgICAgICAgICAgICAgICAgICAgfSBlbHNlIHtcbiAgICAgICAgICAgICAgICAgICAgICAgIHRocm93IG5ldyBFcnJvcignSW52YWxpZCBsb29rdXAgYXR0cmlidXRlLCBsb29rdXAgbXVzdCBiZSBzdHJpbmcgb3IgZnVuY3Rpb24uJylcbiAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgIH0pXG5cbiAgICAgICAgICAgIHRoaXMuY3VycmVudC5maWx0ZXJlZEl0ZW1zID0gaXRlbXNcblxuXG4gICAgICAgICAgICBsZXQgdWwgPSB0aGlzLm1lbnUucXVlcnlTZWxlY3RvcigndWwnKVxuXG4gICAgICAgICAgICB0aGlzLnJhbmdlLnBvc2l0aW9uTWVudUF0Q2FyZXQoc2Nyb2xsVG8pXG5cbiAgICAgICAgICAgIGlmICghaXRlbXMubGVuZ3RoKSB7XG4gICAgICAgICAgICAgICAgbGV0IG5vTWF0Y2hFdmVudCA9IG5ldyBDdXN0b21FdmVudCgndHJpYnV0ZS1uby1tYXRjaCcsIHsgZGV0YWlsOiB0aGlzLm1lbnUgfSlcbiAgICAgICAgICAgICAgICB0aGlzLmN1cnJlbnQuZWxlbWVudC5kaXNwYXRjaEV2ZW50KG5vTWF0Y2hFdmVudClcbiAgICAgICAgICAgICAgICBpZiAoIXRoaXMuY3VycmVudC5jb2xsZWN0aW9uLm5vTWF0Y2hUZW1wbGF0ZSkge1xuICAgICAgICAgICAgICAgICAgICB0aGlzLmhpZGVNZW51KClcbiAgICAgICAgICAgICAgICB9IGVsc2Uge1xuICAgICAgICAgICAgICAgICAgICB1bC5pbm5lckhUTUwgPSB0aGlzLmN1cnJlbnQuY29sbGVjdGlvbi5ub01hdGNoVGVtcGxhdGUoKVxuICAgICAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgICAgIHJldHVyblxuICAgICAgICAgICAgfVxuXG4gICAgICAgICAgICB1bC5pbm5lckhUTUwgPSAnJ1xuXG4gICAgICAgICAgICBpdGVtcy5mb3JFYWNoKChpdGVtLCBpbmRleCkgPT4ge1xuICAgICAgICAgICAgICAgIGxldCBsaSA9IHRoaXMucmFuZ2UuZ2V0RG9jdW1lbnQoKS5jcmVhdGVFbGVtZW50KCdsaScpXG4gICAgICAgICAgICAgICAgbGkuc2V0QXR0cmlidXRlKCdkYXRhLWluZGV4JywgaW5kZXgpXG4gICAgICAgICAgICAgICAgbGkuYWRkRXZlbnRMaXN0ZW5lcignbW91c2VlbnRlcicsIChlKSA9PiB7XG4gICAgICAgICAgICAgICAgICBsZXQgbGkgPSBlLnRhcmdldDtcbiAgICAgICAgICAgICAgICAgIGxldCBpbmRleCA9IGxpLmdldEF0dHJpYnV0ZSgnZGF0YS1pbmRleCcpXG4gICAgICAgICAgICAgICAgICB0aGlzLmV2ZW50cy5zZXRBY3RpdmVMaShpbmRleClcbiAgICAgICAgICAgICAgICB9KVxuICAgICAgICAgICAgICAgIGlmICh0aGlzLm1lbnVTZWxlY3RlZCA9PT0gaW5kZXgpIHtcbiAgICAgICAgICAgICAgICAgICAgbGkuY2xhc3NOYW1lID0gdGhpcy5jdXJyZW50LmNvbGxlY3Rpb24uc2VsZWN0Q2xhc3NcbiAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgbGkuaW5uZXJIVE1MID0gdGhpcy5jdXJyZW50LmNvbGxlY3Rpb24ubWVudUl0ZW1UZW1wbGF0ZShpdGVtKVxuICAgICAgICAgICAgICAgIHVsLmFwcGVuZENoaWxkKGxpKVxuICAgICAgICAgICAgfSlcbiAgICAgICAgfVxuXG4gICAgICAgIGlmICh0eXBlb2YgdGhpcy5jdXJyZW50LmNvbGxlY3Rpb24udmFsdWVzID09PSAnZnVuY3Rpb24nKSB7XG4gICAgICAgICAgICB0aGlzLmN1cnJlbnQuY29sbGVjdGlvbi52YWx1ZXModGhpcy5jdXJyZW50Lm1lbnRpb25UZXh0LCBwcm9jZXNzVmFsdWVzKVxuICAgICAgICB9IGVsc2Uge1xuICAgICAgICAgICAgcHJvY2Vzc1ZhbHVlcyh0aGlzLmN1cnJlbnQuY29sbGVjdGlvbi52YWx1ZXMpXG4gICAgICAgIH1cbiAgICB9XG5cbiAgICBzaG93TWVudUZvckNvbGxlY3Rpb24oZWxlbWVudCwgY29sbGVjdGlvbkluZGV4KSB7XG4gICAgICAgIGlmIChlbGVtZW50ICE9PSBkb2N1bWVudC5hY3RpdmVFbGVtZW50KSB7XG4gICAgICAgICAgICB0aGlzLnBsYWNlQ2FyZXRBdEVuZChlbGVtZW50KVxuICAgICAgICB9XG5cbiAgICAgICAgdGhpcy5jdXJyZW50LmNvbGxlY3Rpb24gPSB0aGlzLmNvbGxlY3Rpb25bY29sbGVjdGlvbkluZGV4IHx8IDBdXG4gICAgICAgIHRoaXMuY3VycmVudC5leHRlcm5hbFRyaWdnZXIgPSB0cnVlXG4gICAgICAgIHRoaXMuY3VycmVudC5lbGVtZW50ID0gZWxlbWVudFxuXG4gICAgICAgIGlmIChlbGVtZW50LmlzQ29udGVudEVkaXRhYmxlKVxuICAgICAgICAgICAgdGhpcy5pbnNlcnRUZXh0QXRDdXJzb3IodGhpcy5jdXJyZW50LmNvbGxlY3Rpb24udHJpZ2dlcilcbiAgICAgICAgZWxzZVxuICAgICAgICAgICAgdGhpcy5pbnNlcnRBdENhcmV0KGVsZW1lbnQsIHRoaXMuY3VycmVudC5jb2xsZWN0aW9uLnRyaWdnZXIpXG5cbiAgICAgICAgdGhpcy5zaG93TWVudUZvcihlbGVtZW50KVxuICAgIH1cblxuICAgIC8vIFRPRE86IG1ha2Ugc3VyZSB0aGlzIHdvcmtzIGZvciBpbnB1dHMvdGV4dGFyZWFzXG4gICAgcGxhY2VDYXJldEF0RW5kKGVsKSB7XG4gICAgICAgIGVsLmZvY3VzKCk7XG4gICAgICAgIGlmICh0eXBlb2Ygd2luZG93LmdldFNlbGVjdGlvbiAhPSBcInVuZGVmaW5lZFwiXG4gICAgICAgICAgICAgICAgJiYgdHlwZW9mIGRvY3VtZW50LmNyZWF0ZVJhbmdlICE9IFwidW5kZWZpbmVkXCIpIHtcbiAgICAgICAgICAgIHZhciByYW5nZSA9IGRvY3VtZW50LmNyZWF0ZVJhbmdlKCk7XG4gICAgICAgICAgICByYW5nZS5zZWxlY3ROb2RlQ29udGVudHMoZWwpO1xuICAgICAgICAgICAgcmFuZ2UuY29sbGFwc2UoZmFsc2UpO1xuICAgICAgICAgICAgdmFyIHNlbCA9IHdpbmRvdy5nZXRTZWxlY3Rpb24oKTtcbiAgICAgICAgICAgIHNlbC5yZW1vdmVBbGxSYW5nZXMoKTtcbiAgICAgICAgICAgIHNlbC5hZGRSYW5nZShyYW5nZSk7XG4gICAgICAgIH0gZWxzZSBpZiAodHlwZW9mIGRvY3VtZW50LmJvZHkuY3JlYXRlVGV4dFJhbmdlICE9IFwidW5kZWZpbmVkXCIpIHtcbiAgICAgICAgICAgIHZhciB0ZXh0UmFuZ2UgPSBkb2N1bWVudC5ib2R5LmNyZWF0ZVRleHRSYW5nZSgpO1xuICAgICAgICAgICAgdGV4dFJhbmdlLm1vdmVUb0VsZW1lbnRUZXh0KGVsKTtcbiAgICAgICAgICAgIHRleHRSYW5nZS5jb2xsYXBzZShmYWxzZSk7XG4gICAgICAgICAgICB0ZXh0UmFuZ2Uuc2VsZWN0KCk7XG4gICAgICAgIH1cbiAgICB9XG5cbiAgICAvLyBmb3IgY29udGVudGVkaXRhYmxlXG4gICAgaW5zZXJ0VGV4dEF0Q3Vyc29yKHRleHQpIHtcbiAgICAgICAgdmFyIHNlbCwgcmFuZ2UsIGh0bWw7XG4gICAgICAgIHNlbCA9IHdpbmRvdy5nZXRTZWxlY3Rpb24oKTtcbiAgICAgICAgcmFuZ2UgPSBzZWwuZ2V0UmFuZ2VBdCgwKTtcbiAgICAgICAgcmFuZ2UuZGVsZXRlQ29udGVudHMoKTtcbiAgICAgICAgdmFyIHRleHROb2RlID0gZG9jdW1lbnQuY3JlYXRlVGV4dE5vZGUodGV4dCk7XG4gICAgICAgIHJhbmdlLmluc2VydE5vZGUodGV4dE5vZGUpO1xuICAgICAgICByYW5nZS5zZWxlY3ROb2RlQ29udGVudHModGV4dE5vZGUpXG4gICAgICAgIHJhbmdlLmNvbGxhcHNlKGZhbHNlKVxuICAgICAgICBzZWwucmVtb3ZlQWxsUmFuZ2VzKClcbiAgICAgICAgc2VsLmFkZFJhbmdlKHJhbmdlKVxuICAgIH1cblxuICAgIC8vIGZvciByZWd1bGFyIGlucHV0c1xuICAgIGluc2VydEF0Q2FyZXQodGV4dGFyZWEsIHRleHQpIHtcbiAgICAgICAgdmFyIHNjcm9sbFBvcyA9IHRleHRhcmVhLnNjcm9sbFRvcDtcbiAgICAgICAgdmFyIGNhcmV0UG9zID0gdGV4dGFyZWEuc2VsZWN0aW9uU3RhcnQ7XG5cbiAgICAgICAgdmFyIGZyb250ID0gKHRleHRhcmVhLnZhbHVlKS5zdWJzdHJpbmcoMCwgY2FyZXRQb3MpO1xuICAgICAgICB2YXIgYmFjayA9ICh0ZXh0YXJlYS52YWx1ZSkuc3Vic3RyaW5nKHRleHRhcmVhLnNlbGVjdGlvbkVuZCwgdGV4dGFyZWEudmFsdWUubGVuZ3RoKTtcbiAgICAgICAgdGV4dGFyZWEudmFsdWUgPSBmcm9udCArIHRleHQgKyBiYWNrO1xuICAgICAgICBjYXJldFBvcyA9IGNhcmV0UG9zICsgdGV4dC5sZW5ndGg7XG4gICAgICAgIHRleHRhcmVhLnNlbGVjdGlvblN0YXJ0ID0gY2FyZXRQb3M7XG4gICAgICAgIHRleHRhcmVhLnNlbGVjdGlvbkVuZCA9IGNhcmV0UG9zO1xuICAgICAgICB0ZXh0YXJlYS5mb2N1cygpO1xuICAgICAgICB0ZXh0YXJlYS5zY3JvbGxUb3AgPSBzY3JvbGxQb3M7XG4gICAgfVxuXG4gICAgaGlkZU1lbnUoKSB7XG4gICAgICAgIGlmICh0aGlzLm1lbnUpIHtcbiAgICAgICAgICAgIHRoaXMubWVudS5zdHlsZS5jc3NUZXh0ID0gJ2Rpc3BsYXk6IG5vbmU7J1xuICAgICAgICAgICAgdGhpcy5pc0FjdGl2ZSA9IGZhbHNlXG4gICAgICAgICAgICB0aGlzLm1lbnVTZWxlY3RlZCA9IDBcbiAgICAgICAgICAgIHRoaXMuY3VycmVudCA9IHt9XG4gICAgICAgIH1cbiAgICB9XG5cbiAgICBzZWxlY3RJdGVtQXRJbmRleChpbmRleCwgb3JpZ2luYWxFdmVudCkge1xuICAgICAgICBpbmRleCA9IHBhcnNlSW50KGluZGV4KVxuICAgICAgICBpZiAodHlwZW9mIGluZGV4ICE9PSAnbnVtYmVyJykgcmV0dXJuXG4gICAgICAgIGxldCBpdGVtID0gdGhpcy5jdXJyZW50LmZpbHRlcmVkSXRlbXNbaW5kZXhdXG4gICAgICAgIGxldCBjb250ZW50ID0gdGhpcy5jdXJyZW50LmNvbGxlY3Rpb24uc2VsZWN0VGVtcGxhdGUoaXRlbSlcbiAgICAgICAgaWYgKGNvbnRlbnQgIT09IG51bGwpIHRoaXMucmVwbGFjZVRleHQoY29udGVudCwgb3JpZ2luYWxFdmVudCwgaXRlbSlcbiAgICB9XG5cbiAgICByZXBsYWNlVGV4dChjb250ZW50LCBvcmlnaW5hbEV2ZW50LCBpdGVtKSB7XG4gICAgICAgIHRoaXMucmFuZ2UucmVwbGFjZVRyaWdnZXJUZXh0KGNvbnRlbnQsIHRydWUsIHRydWUsIG9yaWdpbmFsRXZlbnQsIGl0ZW0pXG4gICAgfVxuXG4gICAgX2FwcGVuZChjb2xsZWN0aW9uLCBuZXdWYWx1ZXMsIHJlcGxhY2UpIHtcbiAgICAgICAgaWYgKHR5cGVvZiBjb2xsZWN0aW9uLnZhbHVlcyA9PT0gJ2Z1bmN0aW9uJykge1xuICAgICAgICAgICAgdGhyb3cgbmV3IEVycm9yKCdVbmFibGUgdG8gYXBwZW5kIHRvIHZhbHVlcywgYXMgaXQgaXMgYSBmdW5jdGlvbi4nKVxuICAgICAgICB9IGVsc2UgaWYgKCFyZXBsYWNlKSB7XG4gICAgICAgICAgICBjb2xsZWN0aW9uLnZhbHVlcyA9IGNvbGxlY3Rpb24udmFsdWVzLmNvbmNhdChuZXdWYWx1ZXMpXG4gICAgICAgIH0gZWxzZSB7XG4gICAgICAgICAgICBjb2xsZWN0aW9uLnZhbHVlcyA9IG5ld1ZhbHVlc1xuICAgICAgICB9XG4gICAgfVxuXG4gICAgYXBwZW5kKGNvbGxlY3Rpb25JbmRleCwgbmV3VmFsdWVzLCByZXBsYWNlKSB7XG4gICAgICAgIGxldCBpbmRleCA9IHBhcnNlSW50KGNvbGxlY3Rpb25JbmRleClcbiAgICAgICAgaWYgKHR5cGVvZiBpbmRleCAhPT0gJ251bWJlcicpIHRocm93IG5ldyBFcnJvcigncGxlYXNlIHByb3ZpZGUgYW4gaW5kZXggZm9yIHRoZSBjb2xsZWN0aW9uIHRvIHVwZGF0ZS4nKVxuXG4gICAgICAgIGxldCBjb2xsZWN0aW9uID0gdGhpcy5jb2xsZWN0aW9uW2luZGV4XVxuXG4gICAgICAgIHRoaXMuX2FwcGVuZChjb2xsZWN0aW9uLCBuZXdWYWx1ZXMsIHJlcGxhY2UpXG4gICAgfVxuXG4gICAgYXBwZW5kQ3VycmVudChuZXdWYWx1ZXMsIHJlcGxhY2UpIHtcbiAgICAgICAgaWYgKHRoaXMuaXNBY3RpdmUpIHtcbiAgICAgICAgICAgIHRoaXMuX2FwcGVuZCh0aGlzLmN1cnJlbnQuY29sbGVjdGlvbiwgbmV3VmFsdWVzLCByZXBsYWNlKVxuICAgICAgICB9IGVsc2Uge1xuICAgICAgICAgICAgdGhyb3cgbmV3IEVycm9yKCdObyBhY3RpdmUgc3RhdGUuIFBsZWFzZSB1c2UgYXBwZW5kIGluc3RlYWQgYW5kIHBhc3MgYW4gaW5kZXguJylcbiAgICAgICAgfVxuICAgIH1cblxuICAgIGRldGFjaChlbCkge1xuICAgICAgICBpZiAoIWVsKSB7XG4gICAgICAgICAgICB0aHJvdyBuZXcgRXJyb3IoJ1tUcmlidXRlXSBNdXN0IHBhc3MgaW4gYSBET00gbm9kZSBvciBOb2RlTGlzdC4nKVxuICAgICAgICB9XG5cbiAgICAgICAgLy8gQ2hlY2sgaWYgaXQgaXMgYSBqUXVlcnkgY29sbGVjdGlvblxuICAgICAgICBpZiAodHlwZW9mIGpRdWVyeSAhPT0gJ3VuZGVmaW5lZCcgJiYgZWwgaW5zdGFuY2VvZiBqUXVlcnkpIHtcbiAgICAgICAgICAgIGVsID0gZWwuZ2V0KClcbiAgICAgICAgfVxuXG4gICAgICAgIC8vIElzIGVsIGFuIEFycmF5L0FycmF5LWxpa2Ugb2JqZWN0P1xuICAgICAgICBpZiAoZWwuY29uc3RydWN0b3IgPT09IE5vZGVMaXN0IHx8IGVsLmNvbnN0cnVjdG9yID09PSBIVE1MQ29sbGVjdGlvbiB8fCBlbC5jb25zdHJ1Y3RvciA9PT0gQXJyYXkpIHtcbiAgICAgICAgICAgIGxldCBsZW5ndGggPSBlbC5sZW5ndGhcbiAgICAgICAgICAgIGZvciAodmFyIGkgPSAwOyBpIDwgbGVuZ3RoOyArK2kpIHtcbiAgICAgICAgICAgICAgICB0aGlzLl9kZXRhY2goZWxbaV0pXG4gICAgICAgICAgICB9XG4gICAgICAgIH0gZWxzZSB7XG4gICAgICAgICAgICB0aGlzLl9kZXRhY2goZWwpXG4gICAgICAgIH1cbiAgICB9XG5cbiAgICBfZGV0YWNoKGVsKSB7XG4gICAgICAgIHRoaXMuZXZlbnRzLnVuYmluZChlbClcbiAgICAgICAgaWYgKGVsLnRyaWJ1dGVNZW51KSB7XG4gICAgICAgICAgICB0aGlzLm1lbnVFdmVudHMudW5iaW5kKGVsLnRyaWJ1dGVNZW51KVxuICAgICAgICB9XG5cbiAgICAgICAgc2V0VGltZW91dCgoKSA9PiB7XG4gICAgICAgICAgICBlbC5yZW1vdmVBdHRyaWJ1dGUoJ2RhdGEtdHJpYnV0ZScpXG4gICAgICAgICAgICB0aGlzLmlzQWN0aXZlID0gZmFsc2VcbiAgICAgICAgICAgIGlmIChlbC50cmlidXRlTWVudSkge1xuICAgICAgICAgICAgICAgIGVsLnRyaWJ1dGVNZW51LnJlbW92ZSgpXG4gICAgICAgICAgICB9XG4gICAgICAgIH0pXG4gICAgfVxufVxuXG5leHBvcnQgZGVmYXVsdCBUcmlidXRlO1xuIiwiY2xhc3MgVHJpYnV0ZUV2ZW50cyB7XG4gICAgY29uc3RydWN0b3IodHJpYnV0ZSkge1xuICAgICAgICB0aGlzLnRyaWJ1dGUgPSB0cmlidXRlXG4gICAgICAgIHRoaXMudHJpYnV0ZS5ldmVudHMgPSB0aGlzXG4gICAgfVxuXG4gICAgc3RhdGljIGtleXMoKSB7XG4gICAgICAgIHJldHVybiBbe1xuICAgICAgICAgICAga2V5OiA5LFxuICAgICAgICAgICAgdmFsdWU6ICdUQUInXG4gICAgICAgIH0sIHtcbiAgICAgICAgICAgIGtleTogOCxcbiAgICAgICAgICAgIHZhbHVlOiAnREVMRVRFJ1xuICAgICAgICB9LCB7XG4gICAgICAgICAgICBrZXk6IDEzLFxuICAgICAgICAgICAgdmFsdWU6ICdFTlRFUidcbiAgICAgICAgfSwge1xuICAgICAgICAgICAga2V5OiAyNyxcbiAgICAgICAgICAgIHZhbHVlOiAnRVNDQVBFJ1xuICAgICAgICB9LCB7XG4gICAgICAgICAgICBrZXk6IDMyLFxuICAgICAgICAgICAgdmFsdWU6ICdTUEFDRSdcbiAgICAgICAgfSwge1xuICAgICAgICAgICAga2V5OiAzOCxcbiAgICAgICAgICAgIHZhbHVlOiAnVVAnXG4gICAgICAgIH0sIHtcbiAgICAgICAgICAgIGtleTogNDAsXG4gICAgICAgICAgICB2YWx1ZTogJ0RPV04nXG4gICAgICAgIH1dXG4gICAgfVxuXG4gICAgYmluZChlbGVtZW50KSB7XG4gICAgICAgIGVsZW1lbnQuYm91bmRLZXlkb3duID0gdGhpcy5rZXlkb3duLmJpbmQoZWxlbWVudCwgdGhpcyk7XG4gICAgICAgIGVsZW1lbnQuYm91bmRLZXl1cCA9IHRoaXMua2V5dXAuYmluZChlbGVtZW50LCB0aGlzKTtcbiAgICAgICAgZWxlbWVudC5ib3VuZElucHV0ID0gdGhpcy5pbnB1dC5iaW5kKGVsZW1lbnQsIHRoaXMpO1xuXG4gICAgICAgIGVsZW1lbnQuYWRkRXZlbnRMaXN0ZW5lcigna2V5ZG93bicsXG4gICAgICAgICAgICBlbGVtZW50LmJvdW5kS2V5ZG93biwgZmFsc2UpXG4gICAgICAgIGVsZW1lbnQuYWRkRXZlbnRMaXN0ZW5lcigna2V5dXAnLFxuICAgICAgICAgICAgZWxlbWVudC5ib3VuZEtleXVwLCBmYWxzZSlcbiAgICAgICAgZWxlbWVudC5hZGRFdmVudExpc3RlbmVyKCdpbnB1dCcsXG4gICAgICAgICAgICBlbGVtZW50LmJvdW5kSW5wdXQsIGZhbHNlKVxuICAgIH1cblxuICAgIHVuYmluZChlbGVtZW50KSB7XG4gICAgICAgIGVsZW1lbnQucmVtb3ZlRXZlbnRMaXN0ZW5lcigna2V5ZG93bicsXG4gICAgICAgICAgICBlbGVtZW50LmJvdW5kS2V5ZG93biwgZmFsc2UpXG4gICAgICAgIGVsZW1lbnQucmVtb3ZlRXZlbnRMaXN0ZW5lcigna2V5dXAnLFxuICAgICAgICAgICAgZWxlbWVudC5ib3VuZEtleXVwLCBmYWxzZSlcbiAgICAgICAgZWxlbWVudC5yZW1vdmVFdmVudExpc3RlbmVyKCdpbnB1dCcsXG4gICAgICAgICAgICBlbGVtZW50LmJvdW5kSW5wdXQsIGZhbHNlKVxuXG4gICAgICAgIGRlbGV0ZSBlbGVtZW50LmJvdW5kS2V5ZG93blxuICAgICAgICBkZWxldGUgZWxlbWVudC5ib3VuZEtleXVwXG4gICAgICAgIGRlbGV0ZSBlbGVtZW50LmJvdW5kSW5wdXRcbiAgICB9XG5cbiAgICBrZXlkb3duKGluc3RhbmNlLCBldmVudCkge1xuICAgICAgICBpZiAoaW5zdGFuY2Uuc2hvdWxkRGVhY3RpdmF0ZShldmVudCkpIHtcbiAgICAgICAgICAgIGluc3RhbmNlLnRyaWJ1dGUuaXNBY3RpdmUgPSBmYWxzZVxuICAgICAgICAgICAgaW5zdGFuY2UudHJpYnV0ZS5oaWRlTWVudSgpXG4gICAgICAgIH1cblxuICAgICAgICBsZXQgZWxlbWVudCA9IHRoaXNcbiAgICAgICAgaW5zdGFuY2UuY29tbWFuZEV2ZW50ID0gZmFsc2VcblxuICAgICAgICBUcmlidXRlRXZlbnRzLmtleXMoKS5mb3JFYWNoKG8gPT4ge1xuICAgICAgICAgICAgaWYgKG8ua2V5ID09PSBldmVudC5rZXlDb2RlKSB7XG4gICAgICAgICAgICAgICAgaW5zdGFuY2UuY29tbWFuZEV2ZW50ID0gdHJ1ZVxuICAgICAgICAgICAgICAgIGluc3RhbmNlLmNhbGxiYWNrcygpW28udmFsdWUudG9Mb3dlckNhc2UoKV0oZXZlbnQsIGVsZW1lbnQpXG4gICAgICAgICAgICB9XG4gICAgICAgIH0pXG4gICAgfVxuXG4gICAgaW5wdXQoaW5zdGFuY2UsIGV2ZW50KSB7XG4gICAgICAgIGluc3RhbmNlLmlucHV0RXZlbnQgPSB0cnVlXG4gICAgICAgIGluc3RhbmNlLmtleXVwLmNhbGwodGhpcywgaW5zdGFuY2UsIGV2ZW50KVxuICAgIH1cblxuICAgIGNsaWNrKGluc3RhbmNlLCBldmVudCkge1xuICAgICAgICBsZXQgdHJpYnV0ZSA9IGluc3RhbmNlLnRyaWJ1dGVcbiAgICAgICAgaWYgKHRyaWJ1dGUubWVudSAmJiB0cmlidXRlLm1lbnUuY29udGFpbnMoZXZlbnQudGFyZ2V0KSkge1xuICAgICAgICAgICAgbGV0IGxpID0gZXZlbnQudGFyZ2V0XG4gICAgICAgICAgICBldmVudC5wcmV2ZW50RGVmYXVsdCgpXG4gICAgICAgICAgICBldmVudC5zdG9wUHJvcGFnYXRpb24oKVxuICAgICAgICAgICAgd2hpbGUgKGxpLm5vZGVOYW1lLnRvTG93ZXJDYXNlKCkgIT09ICdsaScpIHtcbiAgICAgICAgICAgICAgICBsaSA9IGxpLnBhcmVudE5vZGVcbiAgICAgICAgICAgICAgICBpZiAoIWxpIHx8IGxpID09PSB0cmlidXRlLm1lbnUpIHtcbiAgICAgICAgICAgICAgICAgICAgdGhyb3cgbmV3IEVycm9yKCdjYW5ub3QgZmluZCB0aGUgPGxpPiBjb250YWluZXIgZm9yIHRoZSBjbGljaycpXG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgfVxuICAgICAgICAgICAgdHJpYnV0ZS5zZWxlY3RJdGVtQXRJbmRleChsaS5nZXRBdHRyaWJ1dGUoJ2RhdGEtaW5kZXgnKSwgZXZlbnQpXG4gICAgICAgICAgICB0cmlidXRlLmhpZGVNZW51KClcblxuICAgICAgICAvLyBUT0RPOiBzaG91bGQgZmlyZSB3aXRoIGV4dGVybmFsVHJpZ2dlciBhbmQgdGFyZ2V0IGlzIG91dHNpZGUgb2YgbWVudVxuICAgICAgICB9IGVsc2UgaWYgKHRyaWJ1dGUuY3VycmVudC5lbGVtZW50ICYmICF0cmlidXRlLmN1cnJlbnQuZXh0ZXJuYWxUcmlnZ2VyKSB7XG4gICAgICAgICAgICB0cmlidXRlLmN1cnJlbnQuZXh0ZXJuYWxUcmlnZ2VyID0gZmFsc2VcbiAgICAgICAgICAgIHNldFRpbWVvdXQoKCkgPT4gdHJpYnV0ZS5oaWRlTWVudSgpKVxuICAgICAgICB9XG4gICAgfVxuXG4gICAga2V5dXAoaW5zdGFuY2UsIGV2ZW50KSB7XG4gICAgICAgIGlmIChpbnN0YW5jZS5pbnB1dEV2ZW50KSB7XG4gICAgICAgICAgICBpbnN0YW5jZS5pbnB1dEV2ZW50ID0gZmFsc2VcbiAgICAgICAgfVxuICAgICAgICBpbnN0YW5jZS51cGRhdGVTZWxlY3Rpb24odGhpcylcblxuICAgICAgICBpZiAoZXZlbnQua2V5Q29kZSA9PT0gMjcpIHJldHVyblxuXG4gICAgICAgIGlmICghaW5zdGFuY2UudHJpYnV0ZS5hbGxvd1NwYWNlcyAmJiBpbnN0YW5jZS50cmlidXRlLmhhc1RyYWlsaW5nU3BhY2UpIHtcbiAgICAgICAgICAgIGluc3RhbmNlLnRyaWJ1dGUuaGFzVHJhaWxpbmdTcGFjZSA9IGZhbHNlO1xuICAgICAgICAgICAgaW5zdGFuY2UuY29tbWFuZEV2ZW50ID0gdHJ1ZTtcbiAgICAgICAgICAgIGluc3RhbmNlLmNhbGxiYWNrcygpW1wic3BhY2VcIl0oZXZlbnQsIHRoaXMpO1xuICAgICAgICAgICAgcmV0dXJuXG4gICAgICAgIH1cblxuICAgICAgICBpZiAoIWluc3RhbmNlLnRyaWJ1dGUuaXNBY3RpdmUpIHtcbiAgICAgICAgICAgIGxldCBrZXlDb2RlID0gaW5zdGFuY2UuZ2V0S2V5Q29kZShpbnN0YW5jZSwgdGhpcywgZXZlbnQpXG5cbiAgICAgICAgICAgIGlmIChpc05hTihrZXlDb2RlKSB8fCAha2V5Q29kZSkgcmV0dXJuXG5cbiAgICAgICAgICAgIGxldCB0cmlnZ2VyID0gaW5zdGFuY2UudHJpYnV0ZS50cmlnZ2VycygpLmZpbmQodHJpZ2dlciA9PiB7XG4gICAgICAgICAgICAgICAgcmV0dXJuIHRyaWdnZXIuY2hhckNvZGVBdCgwKSA9PT0ga2V5Q29kZVxuICAgICAgICAgICAgfSlcblxuICAgICAgICAgICAgaWYgKHR5cGVvZiB0cmlnZ2VyICE9PSAndW5kZWZpbmVkJykge1xuICAgICAgICAgICAgICAgIGluc3RhbmNlLmNhbGxiYWNrcygpLnRyaWdnZXJDaGFyKGV2ZW50LCB0aGlzLCB0cmlnZ2VyKVxuICAgICAgICAgICAgfVxuICAgICAgICB9XG5cbiAgICAgICAgaWYgKGluc3RhbmNlLnRyaWJ1dGUuY3VycmVudC50cmlnZ2VyICYmIGluc3RhbmNlLmNvbW1hbmRFdmVudCA9PT0gZmFsc2VcbiAgICAgICAgICAgIHx8IGluc3RhbmNlLnRyaWJ1dGUuaXNBY3RpdmUgJiYgZXZlbnQua2V5Q29kZSA9PT0gOCkge1xuICAgICAgICAgIGluc3RhbmNlLnRyaWJ1dGUuc2hvd01lbnVGb3IodGhpcywgdHJ1ZSlcbiAgICAgICAgfVxuICAgIH1cblxuICAgIHNob3VsZERlYWN0aXZhdGUoZXZlbnQpIHtcbiAgICAgICAgaWYgKCF0aGlzLnRyaWJ1dGUuaXNBY3RpdmUpIHJldHVybiBmYWxzZVxuXG4gICAgICAgIGlmICh0aGlzLnRyaWJ1dGUuY3VycmVudC5tZW50aW9uVGV4dC5sZW5ndGggPT09IDApIHtcbiAgICAgICAgICAgIGxldCBldmVudEtleVByZXNzZWQgPSBmYWxzZVxuICAgICAgICAgICAgVHJpYnV0ZUV2ZW50cy5rZXlzKCkuZm9yRWFjaChvID0+IHtcbiAgICAgICAgICAgICAgICBpZiAoZXZlbnQua2V5Q29kZSA9PT0gby5rZXkpIGV2ZW50S2V5UHJlc3NlZCA9IHRydWVcbiAgICAgICAgICAgIH0pXG5cbiAgICAgICAgICAgIHJldHVybiAhZXZlbnRLZXlQcmVzc2VkXG4gICAgICAgIH1cblxuICAgICAgICByZXR1cm4gZmFsc2VcbiAgICB9XG5cbiAgICBnZXRLZXlDb2RlKGluc3RhbmNlLCBlbCwgZXZlbnQpIHtcbiAgICAgICAgbGV0IGNoYXJcbiAgICAgICAgbGV0IHRyaWJ1dGUgPSBpbnN0YW5jZS50cmlidXRlXG4gICAgICAgIGxldCBpbmZvID0gdHJpYnV0ZS5yYW5nZS5nZXRUcmlnZ2VySW5mbyhmYWxzZSwgdHJpYnV0ZS5oYXNUcmFpbGluZ1NwYWNlLCB0cnVlLCB0cmlidXRlLmFsbG93U3BhY2VzKVxuXG4gICAgICAgIGlmIChpbmZvKSB7XG4gICAgICAgICAgICByZXR1cm4gaW5mby5tZW50aW9uVHJpZ2dlckNoYXIuY2hhckNvZGVBdCgwKVxuICAgICAgICB9IGVsc2Uge1xuICAgICAgICAgICAgcmV0dXJuIGZhbHNlXG4gICAgICAgIH1cbiAgICB9XG5cbiAgICB1cGRhdGVTZWxlY3Rpb24oZWwpIHtcbiAgICAgICAgdGhpcy50cmlidXRlLmN1cnJlbnQuZWxlbWVudCA9IGVsXG4gICAgICAgIGxldCBpbmZvID0gdGhpcy50cmlidXRlLnJhbmdlLmdldFRyaWdnZXJJbmZvKGZhbHNlLCB0aGlzLnRyaWJ1dGUuaGFzVHJhaWxpbmdTcGFjZSwgdHJ1ZSwgdGhpcy50cmlidXRlLmFsbG93U3BhY2VzKVxuXG4gICAgICAgIGlmIChpbmZvKSB7XG4gICAgICAgICAgICB0aGlzLnRyaWJ1dGUuY3VycmVudC5zZWxlY3RlZFBhdGggPSBpbmZvLm1lbnRpb25TZWxlY3RlZFBhdGhcbiAgICAgICAgICAgIHRoaXMudHJpYnV0ZS5jdXJyZW50Lm1lbnRpb25UZXh0ID0gaW5mby5tZW50aW9uVGV4dFxuICAgICAgICAgICAgdGhpcy50cmlidXRlLmN1cnJlbnQuc2VsZWN0ZWRPZmZzZXQgPSBpbmZvLm1lbnRpb25TZWxlY3RlZE9mZnNldFxuICAgICAgICB9XG4gICAgfVxuXG4gICAgY2FsbGJhY2tzKCkge1xuICAgICAgICByZXR1cm4ge1xuICAgICAgICAgICAgdHJpZ2dlckNoYXI6IChlLCBlbCwgdHJpZ2dlcikgPT4ge1xuICAgICAgICAgICAgICAgIGxldCB0cmlidXRlID0gdGhpcy50cmlidXRlXG4gICAgICAgICAgICAgICAgdHJpYnV0ZS5jdXJyZW50LnRyaWdnZXIgPSB0cmlnZ2VyXG5cbiAgICAgICAgICAgICAgICBsZXQgY29sbGVjdGlvbkl0ZW0gPSB0cmlidXRlLmNvbGxlY3Rpb24uZmluZChpdGVtID0+IHtcbiAgICAgICAgICAgICAgICAgICAgcmV0dXJuIGl0ZW0udHJpZ2dlciA9PT0gdHJpZ2dlclxuICAgICAgICAgICAgICAgIH0pXG5cbiAgICAgICAgICAgICAgICB0cmlidXRlLmN1cnJlbnQuY29sbGVjdGlvbiA9IGNvbGxlY3Rpb25JdGVtXG4gICAgICAgICAgICAgICAgaWYgKHRyaWJ1dGUuaW5wdXRFdmVudCkgdHJpYnV0ZS5zaG93TWVudUZvcihlbCwgdHJ1ZSlcbiAgICAgICAgICAgIH0sXG4gICAgICAgICAgICBlbnRlcjogKGUsIGVsKSA9PiB7XG4gICAgICAgICAgICAgICAgLy8gY2hvb3NlIHNlbGVjdGlvblxuICAgICAgICAgICAgICAgIGlmICh0aGlzLnRyaWJ1dGUuaXNBY3RpdmUpIHtcbiAgICAgICAgICAgICAgICAgICAgZS5wcmV2ZW50RGVmYXVsdCgpXG4gICAgICAgICAgICAgICAgICAgIGUuc3RvcFByb3BhZ2F0aW9uKClcbiAgICAgICAgICAgICAgICAgICAgc2V0VGltZW91dCgoKSA9PiB7XG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRyaWJ1dGUuc2VsZWN0SXRlbUF0SW5kZXgodGhpcy50cmlidXRlLm1lbnVTZWxlY3RlZCwgZSlcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMudHJpYnV0ZS5oaWRlTWVudSgpXG4gICAgICAgICAgICAgICAgICAgIH0sIDApXG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgfSxcbiAgICAgICAgICAgIGVzY2FwZTogKGUsIGVsKSA9PiB7XG4gICAgICAgICAgICAgICAgaWYgKHRoaXMudHJpYnV0ZS5pc0FjdGl2ZSkge1xuICAgICAgICAgICAgICAgICAgICBlLnByZXZlbnREZWZhdWx0KClcbiAgICAgICAgICAgICAgICAgICAgZS5zdG9wUHJvcGFnYXRpb24oKVxuICAgICAgICAgICAgICAgICAgICB0aGlzLnRyaWJ1dGUuaXNBY3RpdmUgPSBmYWxzZVxuICAgICAgICAgICAgICAgICAgICB0aGlzLnRyaWJ1dGUuaGlkZU1lbnUoKVxuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgIH0sXG4gICAgICAgICAgICB0YWI6IChlLCBlbCkgPT4ge1xuICAgICAgICAgICAgICAgIC8vIGNob29zZSBmaXJzdCBtYXRjaFxuICAgICAgICAgICAgICAgIHRoaXMuY2FsbGJhY2tzKCkuZW50ZXIoZSwgZWwpXG4gICAgICAgICAgICB9LFxuICAgICAgICAgICAgc3BhY2U6IChlLCBlbCkgPT4ge1xuICAgICAgICAgICAgICAgIGlmICh0aGlzLnRyaWJ1dGUuaXNBY3RpdmUpIHtcbiAgICAgICAgICAgICAgICAgICAgaWYgKHRoaXMudHJpYnV0ZS5zcGFjZVNlbGVjdHNNYXRjaCkge1xuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy5jYWxsYmFja3MoKS5lbnRlcihlLCBlbClcbiAgICAgICAgICAgICAgICAgICAgfSBlbHNlIGlmICghdGhpcy50cmlidXRlLmFsbG93U3BhY2VzKSB7XG4gICAgICAgICAgICAgICAgICAgICAgICBlLnN0b3BQcm9wYWdhdGlvbigpO1xuICAgICAgICAgICAgICAgICAgICAgICAgc2V0VGltZW91dCgoKSA9PiB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy50cmlidXRlLmhpZGVNZW51KCk7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy50cmlidXRlLmlzQWN0aXZlID0gZmFsc2U7XG4gICAgICAgICAgICAgICAgICAgICAgICB9LCAwKTtcbiAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgIH0sXG4gICAgICAgICAgICB1cDogKGUsIGVsKSA9PiB7XG4gICAgICAgICAgICAgICAgLy8gbmF2aWdhdGUgdXAgdWxcbiAgICAgICAgICAgICAgICBpZiAodGhpcy50cmlidXRlLmlzQWN0aXZlKSB7XG4gICAgICAgICAgICAgICAgICAgIGUucHJldmVudERlZmF1bHQoKVxuICAgICAgICAgICAgICAgICAgICBlLnN0b3BQcm9wYWdhdGlvbigpXG4gICAgICAgICAgICAgICAgICAgIGxldCBjb3VudCA9IHRoaXMudHJpYnV0ZS5jdXJyZW50LmZpbHRlcmVkSXRlbXMubGVuZ3RoLFxuICAgICAgICAgICAgICAgICAgICAgICAgc2VsZWN0ZWQgPSB0aGlzLnRyaWJ1dGUubWVudVNlbGVjdGVkXG5cbiAgICAgICAgICAgICAgICAgICAgaWYgKGNvdW50ID4gc2VsZWN0ZWQgJiYgc2VsZWN0ZWQgPiAwKSB7XG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRyaWJ1dGUubWVudVNlbGVjdGVkLS1cbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMuc2V0QWN0aXZlTGkoKVxuICAgICAgICAgICAgICAgICAgICB9IGVsc2UgaWYgKHNlbGVjdGVkID09PSAwKSB7XG4gICAgICAgICAgICAgICAgICAgICAgdGhpcy50cmlidXRlLm1lbnVTZWxlY3RlZCA9IGNvdW50IC0gMVxuICAgICAgICAgICAgICAgICAgICAgIHRoaXMuc2V0QWN0aXZlTGkoKVxuICAgICAgICAgICAgICAgICAgICAgIHRoaXMudHJpYnV0ZS5tZW51LnNjcm9sbFRvcCA9IHRoaXMudHJpYnV0ZS5tZW51LnNjcm9sbEhlaWdodFxuICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgfSxcbiAgICAgICAgICAgIGRvd246IChlLCBlbCkgPT4ge1xuICAgICAgICAgICAgICAgIC8vIG5hdmlnYXRlIGRvd24gdWxcbiAgICAgICAgICAgICAgICBpZiAodGhpcy50cmlidXRlLmlzQWN0aXZlKSB7XG4gICAgICAgICAgICAgICAgICAgIGUucHJldmVudERlZmF1bHQoKVxuICAgICAgICAgICAgICAgICAgICBlLnN0b3BQcm9wYWdhdGlvbigpXG4gICAgICAgICAgICAgICAgICAgIGxldCBjb3VudCA9IHRoaXMudHJpYnV0ZS5jdXJyZW50LmZpbHRlcmVkSXRlbXMubGVuZ3RoIC0gMSxcbiAgICAgICAgICAgICAgICAgICAgICAgIHNlbGVjdGVkID0gdGhpcy50cmlidXRlLm1lbnVTZWxlY3RlZFxuXG4gICAgICAgICAgICAgICAgICAgIGlmIChjb3VudCA+IHNlbGVjdGVkKSB7XG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRyaWJ1dGUubWVudVNlbGVjdGVkKytcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMuc2V0QWN0aXZlTGkoKVxuICAgICAgICAgICAgICAgICAgICB9IGVsc2UgaWYgKGNvdW50ID09PSBzZWxlY3RlZCkge1xuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy50cmlidXRlLm1lbnVTZWxlY3RlZCA9IDBcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMuc2V0QWN0aXZlTGkoKVxuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy50cmlidXRlLm1lbnUuc2Nyb2xsVG9wID0gMFxuICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgfSxcbiAgICAgICAgICAgIGRlbGV0ZTogKGUsIGVsKSA9PiB7XG4gICAgICAgICAgICAgICAgaWYgKHRoaXMudHJpYnV0ZS5pc0FjdGl2ZSAmJiB0aGlzLnRyaWJ1dGUuY3VycmVudC5tZW50aW9uVGV4dC5sZW5ndGggPCAxKSB7XG4gICAgICAgICAgICAgICAgICAgIHRoaXMudHJpYnV0ZS5oaWRlTWVudSgpXG4gICAgICAgICAgICAgICAgfSBlbHNlIGlmICh0aGlzLnRyaWJ1dGUuaXNBY3RpdmUpIHtcbiAgICAgICAgICAgICAgICAgICAgdGhpcy50cmlidXRlLnNob3dNZW51Rm9yKGVsKVxuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgIH1cbiAgICAgICAgfVxuICAgIH1cblxuICAgIHNldEFjdGl2ZUxpKGluZGV4KSB7XG4gICAgICAgIGxldCBsaXMgPSB0aGlzLnRyaWJ1dGUubWVudS5xdWVyeVNlbGVjdG9yQWxsKCdsaScpLFxuICAgICAgICAgICAgbGVuZ3RoID0gbGlzLmxlbmd0aCA+Pj4gMFxuXG4gICAgICAgIC8vIGdldCBoZWlnaHRzXG4gICAgICAgIGxldCBtZW51RnVsbEhlaWdodCA9IHRoaXMuZ2V0RnVsbEhlaWdodCh0aGlzLnRyaWJ1dGUubWVudSksXG4gICAgICAgICAgICBsaUhlaWdodCA9IHRoaXMuZ2V0RnVsbEhlaWdodChsaXNbMF0pXG5cbiAgICAgICAgaWYgKGluZGV4KSB0aGlzLnRyaWJ1dGUubWVudVNlbGVjdGVkID0gaW5kZXg7XG5cbiAgICAgICAgZm9yIChsZXQgaSA9IDA7IGkgPCBsZW5ndGg7IGkrKykge1xuICAgICAgICAgICAgbGV0IGxpID0gbGlzW2ldXG4gICAgICAgICAgICBpZiAoaSA9PT0gdGhpcy50cmlidXRlLm1lbnVTZWxlY3RlZCkge1xuICAgICAgICAgICAgICAgIGxldCBvZmZzZXQgPSBsaUhlaWdodCAqIChpKzEpXG4gICAgICAgICAgICAgICAgbGV0IHNjcm9sbFRvcCA9IHRoaXMudHJpYnV0ZS5tZW51LnNjcm9sbFRvcFxuICAgICAgICAgICAgICAgIGxldCB0b3RhbFNjcm9sbCA9IHNjcm9sbFRvcCArIG1lbnVGdWxsSGVpZ2h0XG5cbiAgICAgICAgICAgICAgICBpZiAob2Zmc2V0ID4gdG90YWxTY3JvbGwpIHtcbiAgICAgICAgICAgICAgICAgIHRoaXMudHJpYnV0ZS5tZW51LnNjcm9sbFRvcCArPSBsaUhlaWdodFxuICAgICAgICAgICAgICAgIH0gZWxzZSBpZiAob2Zmc2V0IDwgdG90YWxTY3JvbGwpIHtcbiAgICAgICAgICAgICAgICAgIHRoaXMudHJpYnV0ZS5tZW51LnNjcm9sbFRvcCAtPSBsaUhlaWdodFxuICAgICAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgICAgIGxpLmNsYXNzTmFtZSA9IHRoaXMudHJpYnV0ZS5jdXJyZW50LmNvbGxlY3Rpb24uc2VsZWN0Q2xhc3NcbiAgICAgICAgICAgIH0gZWxzZSB7XG4gICAgICAgICAgICAgICAgbGkuY2xhc3NOYW1lID0gJydcbiAgICAgICAgICAgIH1cbiAgICAgICAgfVxuICAgIH1cblxuICAgIGdldEZ1bGxIZWlnaHQoZWxlbSwgaW5jbHVkZU1hcmdpbikge1xuICAgICAgbGV0IGhlaWdodCA9IGVsZW0uZ2V0Qm91bmRpbmdDbGllbnRSZWN0KCkuaGVpZ2h0XG5cbiAgICAgIGlmIChpbmNsdWRlTWFyZ2luKSB7XG4gICAgICAgIGxldCBzdHlsZSA9IGVsZW0uY3VycmVudFN0eWxlIHx8IHdpbmRvdy5nZXRDb21wdXRlZFN0eWxlKGVsZW0pXG4gICAgICAgIHJldHVybiBoZWlnaHQgKyBwYXJzZUZsb2F0KHN0eWxlLm1hcmdpblRvcCkgKyBwYXJzZUZsb2F0KHN0eWxlLm1hcmdpbkJvdHRvbSlcbiAgICAgIH1cblxuICAgICAgcmV0dXJuIGhlaWdodFxuICAgIH1cblxufVxuXG5leHBvcnQgZGVmYXVsdCBUcmlidXRlRXZlbnRzO1xuIiwiY2xhc3MgVHJpYnV0ZU1lbnVFdmVudHMge1xuICAgIGNvbnN0cnVjdG9yKHRyaWJ1dGUpIHtcbiAgICAgICAgdGhpcy50cmlidXRlID0gdHJpYnV0ZVxuICAgICAgICB0aGlzLnRyaWJ1dGUubWVudUV2ZW50cyA9IHRoaXNcbiAgICAgICAgdGhpcy5tZW51ID0gdGhpcy50cmlidXRlLm1lbnVcbiAgICB9XG5cbiAgICBiaW5kKG1lbnUpIHtcbiAgICAgICAgdGhpcy5tZW51Q2xpY2tFdmVudCA9IHRoaXMudHJpYnV0ZS5ldmVudHMuY2xpY2suYmluZChudWxsLCB0aGlzKVxuICAgICAgICB0aGlzLm1lbnVDb250YWluZXJTY3JvbGxFdmVudCA9IHRoaXMuZGVib3VuY2UoKCkgPT4ge1xuICAgICAgICAgICAgaWYgKHRoaXMudHJpYnV0ZS5pc0FjdGl2ZSkge1xuICAgICAgICAgICAgICAgIHRoaXMudHJpYnV0ZS5zaG93TWVudUZvcih0aGlzLnRyaWJ1dGUuY3VycmVudC5lbGVtZW50LCBmYWxzZSlcbiAgICAgICAgICAgIH1cbiAgICAgICAgfSwgMzAwLCBmYWxzZSlcbiAgICAgICAgdGhpcy53aW5kb3dSZXNpemVFdmVudCA9IHRoaXMuZGVib3VuY2UoKCkgPT4ge1xuICAgICAgICAgICAgaWYgKHRoaXMudHJpYnV0ZS5pc0FjdGl2ZSkge1xuICAgICAgICAgICAgICAgIHRoaXMudHJpYnV0ZS5yYW5nZS5wb3NpdGlvbk1lbnVBdENhcmV0KHRydWUpXG4gICAgICAgICAgICB9XG4gICAgICAgIH0sIDMwMCwgZmFsc2UpXG5cbiAgICAgICAgLy8gZml4ZXMgSUUxMSBpc3N1ZXMgd2l0aCBtb3VzZWRvd25cbiAgICAgICAgdGhpcy50cmlidXRlLnJhbmdlLmdldERvY3VtZW50KCkuYWRkRXZlbnRMaXN0ZW5lcignTVNQb2ludGVyRG93bicsXG4gICAgICAgICAgICB0aGlzLm1lbnVDbGlja0V2ZW50LCBmYWxzZSlcbiAgICAgICAgdGhpcy50cmlidXRlLnJhbmdlLmdldERvY3VtZW50KCkuYWRkRXZlbnRMaXN0ZW5lcignbW91c2Vkb3duJyxcbiAgICAgICAgICAgIHRoaXMubWVudUNsaWNrRXZlbnQsIGZhbHNlKVxuICAgICAgICB3aW5kb3cuYWRkRXZlbnRMaXN0ZW5lcigncmVzaXplJywgdGhpcy53aW5kb3dSZXNpemVFdmVudClcblxuICAgICAgICBpZiAodGhpcy5tZW51Q29udGFpbmVyKSB7XG4gICAgICAgICAgICB0aGlzLm1lbnVDb250YWluZXIuYWRkRXZlbnRMaXN0ZW5lcignc2Nyb2xsJywgdGhpcy5tZW51Q29udGFpbmVyU2Nyb2xsRXZlbnQsIGZhbHNlKVxuICAgICAgICB9IGVsc2Uge1xuICAgICAgICAgICAgd2luZG93LmFkZEV2ZW50TGlzdGVuZXIoJ3Njcm9sbCcsIHRoaXMubWVudUNvbnRhaW5lclNjcm9sbEV2ZW50KVxuICAgICAgICB9XG5cbiAgICB9XG5cbiAgICB1bmJpbmQobWVudSkge1xuICAgICAgICB0aGlzLnRyaWJ1dGUucmFuZ2UuZ2V0RG9jdW1lbnQoKS5yZW1vdmVFdmVudExpc3RlbmVyKCdtb3VzZWRvd24nLFxuICAgICAgICAgICAgdGhpcy5tZW51Q2xpY2tFdmVudCwgZmFsc2UpXG4gICAgICAgIHRoaXMudHJpYnV0ZS5yYW5nZS5nZXREb2N1bWVudCgpLnJlbW92ZUV2ZW50TGlzdGVuZXIoJ01TUG9pbnRlckRvd24nLFxuICAgICAgICAgICAgdGhpcy5tZW51Q2xpY2tFdmVudCwgZmFsc2UpXG4gICAgICAgIHdpbmRvdy5yZW1vdmVFdmVudExpc3RlbmVyKCdyZXNpemUnLCB0aGlzLndpbmRvd1Jlc2l6ZUV2ZW50KVxuXG4gICAgICAgIGlmICh0aGlzLm1lbnVDb250YWluZXIpIHtcbiAgICAgICAgICAgIHRoaXMubWVudUNvbnRhaW5lci5yZW1vdmVFdmVudExpc3RlbmVyKCdzY3JvbGwnLCB0aGlzLm1lbnVDb250YWluZXJTY3JvbGxFdmVudCwgZmFsc2UpXG4gICAgICAgIH0gZWxzZSB7XG4gICAgICAgICAgICB3aW5kb3cucmVtb3ZlRXZlbnRMaXN0ZW5lcignc2Nyb2xsJywgdGhpcy5tZW51Q29udGFpbmVyU2Nyb2xsRXZlbnQpXG4gICAgICAgIH1cbiAgICB9XG5cbiAgICBkZWJvdW5jZShmdW5jLCB3YWl0LCBpbW1lZGlhdGUpIHtcbiAgICAgICAgdmFyIHRpbWVvdXRcbiAgICAgICAgcmV0dXJuICgpID0+IHtcbiAgICAgICAgICAgIHZhciBjb250ZXh0ID0gdGhpcyxcbiAgICAgICAgICAgICAgICBhcmdzID0gYXJndW1lbnRzXG4gICAgICAgICAgICB2YXIgbGF0ZXIgPSAoKSA9PiB7XG4gICAgICAgICAgICAgICAgdGltZW91dCA9IG51bGxcbiAgICAgICAgICAgICAgICBpZiAoIWltbWVkaWF0ZSkgZnVuYy5hcHBseShjb250ZXh0LCBhcmdzKVxuICAgICAgICAgICAgfVxuICAgICAgICAgICAgdmFyIGNhbGxOb3cgPSBpbW1lZGlhdGUgJiYgIXRpbWVvdXRcbiAgICAgICAgICAgIGNsZWFyVGltZW91dCh0aW1lb3V0KVxuICAgICAgICAgICAgdGltZW91dCA9IHNldFRpbWVvdXQobGF0ZXIsIHdhaXQpXG4gICAgICAgICAgICBpZiAoY2FsbE5vdykgZnVuYy5hcHBseShjb250ZXh0LCBhcmdzKVxuICAgICAgICB9XG4gICAgfVxufVxuXG5cbmV4cG9ydCBkZWZhdWx0IFRyaWJ1dGVNZW51RXZlbnRzO1xuIiwiLy8gVGhhbmtzIHRvIGh0dHBzOi8vZ2l0aHViLmNvbS9qZWZmLWNvbGxpbnMvbWVudC5pb1xuY2xhc3MgVHJpYnV0ZVJhbmdlIHtcbiAgICBjb25zdHJ1Y3Rvcih0cmlidXRlKSB7XG4gICAgICAgIHRoaXMudHJpYnV0ZSA9IHRyaWJ1dGVcbiAgICAgICAgdGhpcy50cmlidXRlLnJhbmdlID0gdGhpc1xuICAgIH1cblxuICAgIGdldERvY3VtZW50KCkge1xuICAgICAgICBsZXQgaWZyYW1lXG4gICAgICAgIGlmICh0aGlzLnRyaWJ1dGUuY3VycmVudC5jb2xsZWN0aW9uKSB7XG4gICAgICAgICAgICBpZnJhbWUgPSB0aGlzLnRyaWJ1dGUuY3VycmVudC5jb2xsZWN0aW9uLmlmcmFtZVxuICAgICAgICB9XG5cbiAgICAgICAgaWYgKCFpZnJhbWUpIHtcbiAgICAgICAgICAgIHJldHVybiBkb2N1bWVudFxuICAgICAgICB9XG5cbiAgICAgICAgcmV0dXJuIGlmcmFtZS5jb250ZW50V2luZG93LmRvY3VtZW50XG4gICAgfVxuXG4gICAgcG9zaXRpb25NZW51QXRDYXJldChzY3JvbGxUbykge1xuICAgICAgICBsZXQgY29udGV4dCA9IHRoaXMudHJpYnV0ZS5jdXJyZW50LFxuICAgICAgICAgICAgY29vcmRpbmF0ZXNcblxuICAgICAgICBsZXQgaW5mbyA9IHRoaXMuZ2V0VHJpZ2dlckluZm8oZmFsc2UsIHRoaXMudHJpYnV0ZS5oYXNUcmFpbGluZ1NwYWNlLCB0cnVlLCB0aGlzLnRyaWJ1dGUuYWxsb3dTcGFjZXMpXG5cbiAgICAgICAgaWYgKHR5cGVvZiBpbmZvICE9PSAndW5kZWZpbmVkJykge1xuXG4gICAgICAgICAgICBpZighdGhpcy50cmlidXRlLnBvc2l0aW9uTWVudSl7XG4gICAgICAgICAgICAgICAgdGhpcy50cmlidXRlLm1lbnUuc3R5bGUuY3NzVGV4dCA9IGBkaXNwbGF5OiBibG9jaztgXG4gICAgICAgICAgICAgICAgcmV0dXJuXG4gICAgICAgICAgICB9XG5cbiAgICAgICAgICAgIGlmICghdGhpcy5pc0NvbnRlbnRFZGl0YWJsZShjb250ZXh0LmVsZW1lbnQpKSB7XG4gICAgICAgICAgICAgICAgY29vcmRpbmF0ZXMgPSB0aGlzLmdldFRleHRBcmVhT3JJbnB1dFVuZGVybGluZVBvc2l0aW9uKHRoaXMudHJpYnV0ZS5jdXJyZW50LmVsZW1lbnQsXG4gICAgICAgICAgICAgICAgICAgIGluZm8ubWVudGlvblBvc2l0aW9uKVxuICAgICAgICAgICAgfVxuICAgICAgICAgICAgZWxzZSB7XG4gICAgICAgICAgICAgICAgY29vcmRpbmF0ZXMgPSB0aGlzLmdldENvbnRlbnRFZGl0YWJsZUNhcmV0UG9zaXRpb24oaW5mby5tZW50aW9uUG9zaXRpb24pXG4gICAgICAgICAgICB9XG5cblxuICAgICAgICAgICAgdGhpcy50cmlidXRlLm1lbnUuc3R5bGUuY3NzVGV4dCA9IGB0b3A6ICR7Y29vcmRpbmF0ZXMudG9wfXB4O1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxlZnQ6ICR7Y29vcmRpbmF0ZXMubGVmdH1weDtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByaWdodDogJHtjb29yZGluYXRlcy5yaWdodH1weDtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBib3R0b206ICR7Y29vcmRpbmF0ZXMuYm90dG9tfXB4O1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB6SW5kZXg6IDEwMDAwO1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRpc3BsYXk6IGJsb2NrO2BcblxuICAgICAgICAgICAgaWYgKGNvb3JkaW5hdGVzLmxlZnQgPT09ICdhdXRvJykge1xuICAgICAgICAgICAgICAgIHRoaXMudHJpYnV0ZS5tZW51LnN0eWxlLmxlZnQgPSAnYXV0bydcbiAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgaWYgKGNvb3JkaW5hdGVzLnRvcCA9PT0gJ2F1dG8nKSB7XG4gICAgICAgICAgICAgICAgdGhpcy50cmlidXRlLm1lbnUuc3R5bGUudG9wID0gJ2F1dG8nXG4gICAgICAgICAgICB9XG5cbiAgICAgICAgICAgIGlmIChzY3JvbGxUbykgdGhpcy5zY3JvbGxJbnRvVmlldygpXG5cbiAgICAgICAgICAgIHdpbmRvdy5zZXRUaW1lb3V0KCgpID0+IHtcbiAgICAgICAgICAgICAgICBsZXQgbWVudURpbWVuc2lvbnMgPSB7XG4gICAgICAgICAgICAgICAgICAgd2lkdGg6IHRoaXMudHJpYnV0ZS5tZW51Lm9mZnNldFdpZHRoLFxuICAgICAgICAgICAgICAgICAgIGhlaWdodDogdGhpcy50cmlidXRlLm1lbnUub2Zmc2V0SGVpZ2h0XG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgIGxldCBtZW51SXNPZmZTY3JlZW4gPSB0aGlzLmlzTWVudU9mZlNjcmVlbihjb29yZGluYXRlcywgbWVudURpbWVuc2lvbnMpXG5cbiAgICAgICAgICAgICAgICBsZXQgbWVudUlzT2ZmU2NyZWVuSG9yaXpvbnRhbGx5ID0gd2luZG93LmlubmVyV2lkdGggPiBtZW51RGltZW5zaW9ucy53aWR0aCAmJiAobWVudUlzT2ZmU2NyZWVuLmxlZnQgfHwgbWVudUlzT2ZmU2NyZWVuLnJpZ2h0KVxuICAgICAgICAgICAgICAgIGxldCBtZW51SXNPZmZTY3JlZW5WZXJ0aWNhbGx5ID0gd2luZG93LmlubmVySGVpZ2h0ID4gbWVudURpbWVuc2lvbnMuaGVpZ2h0ICYmIChtZW51SXNPZmZTY3JlZW4udG9wIHx8IG1lbnVJc09mZlNjcmVlbi5ib3R0b20pXG4gICAgICAgICAgICAgICAgaWYgKG1lbnVJc09mZlNjcmVlbkhvcml6b250YWxseSB8fCBtZW51SXNPZmZTY3JlZW5WZXJ0aWNhbGx5KSB7XG4gICAgICAgICAgICAgICAgICAgIHRoaXMudHJpYnV0ZS5tZW51LnN0eWxlLmNzc1RleHQgPSAnZGlzcGxheTogbm9uZSdcbiAgICAgICAgICAgICAgICAgICAgdGhpcy5wb3NpdGlvbk1lbnVBdENhcmV0KHNjcm9sbFRvKVxuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgIH0sIDApXG5cbiAgICAgICAgfSBlbHNlIHtcbiAgICAgICAgICAgIHRoaXMudHJpYnV0ZS5tZW51LnN0eWxlLmNzc1RleHQgPSAnZGlzcGxheTogbm9uZSdcbiAgICAgICAgfVxuICAgIH1cblxuICAgIHNlbGVjdEVsZW1lbnQodGFyZ2V0RWxlbWVudCwgcGF0aCwgb2Zmc2V0KSB7XG4gICAgICAgIGxldCByYW5nZVxuICAgICAgICBsZXQgZWxlbSA9IHRhcmdldEVsZW1lbnRcblxuICAgICAgICBpZiAocGF0aCkge1xuICAgICAgICAgICAgZm9yICh2YXIgaSA9IDA7IGkgPCBwYXRoLmxlbmd0aDsgaSsrKSB7XG4gICAgICAgICAgICAgICAgZWxlbSA9IGVsZW0uY2hpbGROb2Rlc1twYXRoW2ldXVxuICAgICAgICAgICAgICAgIGlmIChlbGVtID09PSB1bmRlZmluZWQpIHtcbiAgICAgICAgICAgICAgICAgICAgcmV0dXJuXG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgIHdoaWxlIChlbGVtLmxlbmd0aCA8IG9mZnNldCkge1xuICAgICAgICAgICAgICAgICAgICBvZmZzZXQgLT0gZWxlbS5sZW5ndGhcbiAgICAgICAgICAgICAgICAgICAgZWxlbSA9IGVsZW0ubmV4dFNpYmxpbmdcbiAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgaWYgKGVsZW0uY2hpbGROb2Rlcy5sZW5ndGggPT09IDAgJiYgIWVsZW0ubGVuZ3RoKSB7XG4gICAgICAgICAgICAgICAgICAgIGVsZW0gPSBlbGVtLnByZXZpb3VzU2libGluZ1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgIH1cbiAgICAgICAgfVxuICAgICAgICBsZXQgc2VsID0gdGhpcy5nZXRXaW5kb3dTZWxlY3Rpb24oKVxuXG4gICAgICAgIHJhbmdlID0gdGhpcy5nZXREb2N1bWVudCgpLmNyZWF0ZVJhbmdlKClcbiAgICAgICAgcmFuZ2Uuc2V0U3RhcnQoZWxlbSwgb2Zmc2V0KVxuICAgICAgICByYW5nZS5zZXRFbmQoZWxlbSwgb2Zmc2V0KVxuICAgICAgICByYW5nZS5jb2xsYXBzZSh0cnVlKVxuXG4gICAgICAgIHRyeSB7XG4gICAgICAgICAgICBzZWwucmVtb3ZlQWxsUmFuZ2VzKClcbiAgICAgICAgfSBjYXRjaCAoZXJyb3IpIHt9XG5cbiAgICAgICAgc2VsLmFkZFJhbmdlKHJhbmdlKVxuICAgICAgICB0YXJnZXRFbGVtZW50LmZvY3VzKClcbiAgICB9XG5cbiAgICByZXBsYWNlVHJpZ2dlclRleHQodGV4dCwgcmVxdWlyZUxlYWRpbmdTcGFjZSwgaGFzVHJhaWxpbmdTcGFjZSwgb3JpZ2luYWxFdmVudCwgaXRlbSkge1xuICAgICAgICBsZXQgY29udGV4dCA9IHRoaXMudHJpYnV0ZS5jdXJyZW50XG4gICAgICAgIGxldCBpbmZvID0gdGhpcy5nZXRUcmlnZ2VySW5mbyh0cnVlLCBoYXNUcmFpbGluZ1NwYWNlLCByZXF1aXJlTGVhZGluZ1NwYWNlLCB0aGlzLnRyaWJ1dGUuYWxsb3dTcGFjZXMpXG5cbiAgICAgICAgLy8gQ3JlYXRlIHRoZSBldmVudFxuICAgICAgICBsZXQgcmVwbGFjZUV2ZW50ID0gbmV3IEN1c3RvbUV2ZW50KCd0cmlidXRlLXJlcGxhY2VkJywge1xuICAgICAgICAgICAgZGV0YWlsOiB7XG4gICAgICAgICAgICAgICAgaXRlbTogaXRlbSxcbiAgICAgICAgICAgICAgICBldmVudDogb3JpZ2luYWxFdmVudFxuICAgICAgICAgICAgfVxuICAgICAgICB9KVxuXG4gICAgICAgIGlmIChpbmZvICE9PSB1bmRlZmluZWQpIHtcbiAgICAgICAgICAgIGlmICghdGhpcy5pc0NvbnRlbnRFZGl0YWJsZShjb250ZXh0LmVsZW1lbnQpKSB7XG4gICAgICAgICAgICAgICAgbGV0IG15RmllbGQgPSB0aGlzLnRyaWJ1dGUuY3VycmVudC5lbGVtZW50XG4gICAgICAgICAgICAgICAgbGV0IHRleHRTdWZmaXggPSB0eXBlb2YgdGhpcy50cmlidXRlLnJlcGxhY2VUZXh0U3VmZml4ID09ICdzdHJpbmcnXG4gICAgICAgICAgICAgICAgICAgID8gdGhpcy50cmlidXRlLnJlcGxhY2VUZXh0U3VmZml4XG4gICAgICAgICAgICAgICAgICAgIDogJyAnXG4gICAgICAgICAgICAgICAgdGV4dCArPSB0ZXh0U3VmZml4XG4gICAgICAgICAgICAgICAgbGV0IHN0YXJ0UG9zID0gaW5mby5tZW50aW9uUG9zaXRpb25cbiAgICAgICAgICAgICAgICBsZXQgZW5kUG9zID0gaW5mby5tZW50aW9uUG9zaXRpb24gKyBpbmZvLm1lbnRpb25UZXh0Lmxlbmd0aCArIHRleHRTdWZmaXgubGVuZ3RoXG4gICAgICAgICAgICAgICAgbXlGaWVsZC52YWx1ZSA9IG15RmllbGQudmFsdWUuc3Vic3RyaW5nKDAsIHN0YXJ0UG9zKSArIHRleHQgK1xuICAgICAgICAgICAgICAgICAgICBteUZpZWxkLnZhbHVlLnN1YnN0cmluZyhlbmRQb3MsIG15RmllbGQudmFsdWUubGVuZ3RoKVxuICAgICAgICAgICAgICAgIG15RmllbGQuc2VsZWN0aW9uU3RhcnQgPSBzdGFydFBvcyArIHRleHQubGVuZ3RoXG4gICAgICAgICAgICAgICAgbXlGaWVsZC5zZWxlY3Rpb25FbmQgPSBzdGFydFBvcyArIHRleHQubGVuZ3RoXG4gICAgICAgICAgICB9IGVsc2Uge1xuICAgICAgICAgICAgICAgIC8vIGFkZCBhIHNwYWNlIHRvIHRoZSBlbmQgb2YgdGhlIHBhc3RlZCB0ZXh0XG4gICAgICAgICAgICAgICAgbGV0IHRleHRTdWZmaXggPSB0eXBlb2YgdGhpcy50cmlidXRlLnJlcGxhY2VUZXh0U3VmZml4ID09ICdzdHJpbmcnXG4gICAgICAgICAgICAgICAgICAgID8gdGhpcy50cmlidXRlLnJlcGxhY2VUZXh0U3VmZml4XG4gICAgICAgICAgICAgICAgICAgIDogJ1xceEEwJ1xuICAgICAgICAgICAgICAgIHRleHQgKz0gdGV4dFN1ZmZpeFxuICAgICAgICAgICAgICAgIHRoaXMucGFzdGVIdG1sKHRleHQsIGluZm8ubWVudGlvblBvc2l0aW9uLFxuICAgICAgICAgICAgICAgICAgICBpbmZvLm1lbnRpb25Qb3NpdGlvbiArIGluZm8ubWVudGlvblRleHQubGVuZ3RoICsgMSlcbiAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgY29udGV4dC5lbGVtZW50LmRpc3BhdGNoRXZlbnQocmVwbGFjZUV2ZW50KVxuICAgICAgICB9XG4gICAgfVxuXG4gICAgcGFzdGVIdG1sKGh0bWwsIHN0YXJ0UG9zLCBlbmRQb3MpIHtcbiAgICAgICAgbGV0IHJhbmdlLCBzZWxcbiAgICAgICAgc2VsID0gdGhpcy5nZXRXaW5kb3dTZWxlY3Rpb24oKVxuICAgICAgICByYW5nZSA9IHRoaXMuZ2V0RG9jdW1lbnQoKS5jcmVhdGVSYW5nZSgpXG4gICAgICAgIHJhbmdlLnNldFN0YXJ0KHNlbC5hbmNob3JOb2RlLCBzdGFydFBvcylcbiAgICAgICAgcmFuZ2Uuc2V0RW5kKHNlbC5hbmNob3JOb2RlLCBlbmRQb3MpXG4gICAgICAgIHJhbmdlLmRlbGV0ZUNvbnRlbnRzKClcblxuICAgICAgICBsZXQgZWwgPSB0aGlzLmdldERvY3VtZW50KCkuY3JlYXRlRWxlbWVudCgnZGl2JylcbiAgICAgICAgZWwuaW5uZXJIVE1MID0gaHRtbFxuICAgICAgICBsZXQgZnJhZyA9IHRoaXMuZ2V0RG9jdW1lbnQoKS5jcmVhdGVEb2N1bWVudEZyYWdtZW50KCksXG4gICAgICAgICAgICBub2RlLCBsYXN0Tm9kZVxuICAgICAgICB3aGlsZSAoKG5vZGUgPSBlbC5maXJzdENoaWxkKSkge1xuICAgICAgICAgICAgbGFzdE5vZGUgPSBmcmFnLmFwcGVuZENoaWxkKG5vZGUpXG4gICAgICAgIH1cbiAgICAgICAgcmFuZ2UuaW5zZXJ0Tm9kZShmcmFnKVxuXG4gICAgICAgIC8vIFByZXNlcnZlIHRoZSBzZWxlY3Rpb25cbiAgICAgICAgaWYgKGxhc3ROb2RlKSB7XG4gICAgICAgICAgICByYW5nZSA9IHJhbmdlLmNsb25lUmFuZ2UoKVxuICAgICAgICAgICAgcmFuZ2Uuc2V0U3RhcnRBZnRlcihsYXN0Tm9kZSlcbiAgICAgICAgICAgIHJhbmdlLmNvbGxhcHNlKHRydWUpXG4gICAgICAgICAgICBzZWwucmVtb3ZlQWxsUmFuZ2VzKClcbiAgICAgICAgICAgIHNlbC5hZGRSYW5nZShyYW5nZSlcbiAgICAgICAgfVxuICAgIH1cblxuICAgIGdldFdpbmRvd1NlbGVjdGlvbigpIHtcbiAgICAgICAgaWYgKHRoaXMudHJpYnV0ZS5jb2xsZWN0aW9uLmlmcmFtZSkge1xuICAgICAgICAgICAgcmV0dXJuIHRoaXMudHJpYnV0ZS5jb2xsZWN0aW9uLmlmcmFtZS5jb250ZW50V2luZG93LmdldFNlbGVjdGlvbigpXG4gICAgICAgIH1cblxuICAgICAgICByZXR1cm4gd2luZG93LmdldFNlbGVjdGlvbigpXG4gICAgfVxuXG4gICAgZ2V0Tm9kZVBvc2l0aW9uSW5QYXJlbnQoZWxlbWVudCkge1xuICAgICAgICBpZiAoZWxlbWVudC5wYXJlbnROb2RlID09PSBudWxsKSB7XG4gICAgICAgICAgICByZXR1cm4gMFxuICAgICAgICB9XG5cbiAgICAgICAgZm9yICh2YXIgaSA9IDA7IGkgPCBlbGVtZW50LnBhcmVudE5vZGUuY2hpbGROb2Rlcy5sZW5ndGg7IGkrKykge1xuICAgICAgICAgICAgbGV0IG5vZGUgPSBlbGVtZW50LnBhcmVudE5vZGUuY2hpbGROb2Rlc1tpXVxuXG4gICAgICAgICAgICBpZiAobm9kZSA9PT0gZWxlbWVudCkge1xuICAgICAgICAgICAgICAgIHJldHVybiBpXG4gICAgICAgICAgICB9XG4gICAgICAgIH1cbiAgICB9XG5cbiAgICBnZXRDb250ZW50RWRpdGFibGVTZWxlY3RlZFBhdGgoY3R4KSB7XG4gICAgICAgIGxldCBzZWwgPSB0aGlzLmdldFdpbmRvd1NlbGVjdGlvbigpXG4gICAgICAgIGxldCBzZWxlY3RlZCA9IHNlbC5hbmNob3JOb2RlXG4gICAgICAgIGxldCBwYXRoID0gW11cbiAgICAgICAgbGV0IG9mZnNldFxuXG4gICAgICAgIGlmIChzZWxlY3RlZCAhPSBudWxsKSB7XG4gICAgICAgICAgICBsZXQgaVxuICAgICAgICAgICAgbGV0IGNlID0gc2VsZWN0ZWQuY29udGVudEVkaXRhYmxlXG4gICAgICAgICAgICB3aGlsZSAoc2VsZWN0ZWQgIT09IG51bGwgJiYgY2UgIT09ICd0cnVlJykge1xuICAgICAgICAgICAgICAgIGkgPSB0aGlzLmdldE5vZGVQb3NpdGlvbkluUGFyZW50KHNlbGVjdGVkKVxuICAgICAgICAgICAgICAgIHBhdGgucHVzaChpKVxuICAgICAgICAgICAgICAgIHNlbGVjdGVkID0gc2VsZWN0ZWQucGFyZW50Tm9kZVxuICAgICAgICAgICAgICAgIGlmIChzZWxlY3RlZCAhPT0gbnVsbCkge1xuICAgICAgICAgICAgICAgICAgICBjZSA9IHNlbGVjdGVkLmNvbnRlbnRFZGl0YWJsZVxuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgIH1cbiAgICAgICAgICAgIHBhdGgucmV2ZXJzZSgpXG5cbiAgICAgICAgICAgIC8vIGdldFJhbmdlQXQgbWF5IG5vdCBleGlzdCwgbmVlZCBhbHRlcm5hdGl2ZVxuICAgICAgICAgICAgb2Zmc2V0ID0gc2VsLmdldFJhbmdlQXQoMCkuc3RhcnRPZmZzZXRcblxuICAgICAgICAgICAgcmV0dXJuIHtcbiAgICAgICAgICAgICAgICBzZWxlY3RlZDogc2VsZWN0ZWQsXG4gICAgICAgICAgICAgICAgcGF0aDogcGF0aCxcbiAgICAgICAgICAgICAgICBvZmZzZXQ6IG9mZnNldFxuICAgICAgICAgICAgfVxuICAgICAgICB9XG4gICAgfVxuXG4gICAgZ2V0VGV4dFByZWNlZGluZ0N1cnJlbnRTZWxlY3Rpb24oKSB7XG4gICAgICAgIGxldCBjb250ZXh0ID0gdGhpcy50cmlidXRlLmN1cnJlbnQsXG4gICAgICAgICAgICB0ZXh0ID0gJydcblxuICAgICAgICBpZiAoIXRoaXMuaXNDb250ZW50RWRpdGFibGUoY29udGV4dC5lbGVtZW50KSkge1xuICAgICAgICAgICAgbGV0IHRleHRDb21wb25lbnQgPSB0aGlzLnRyaWJ1dGUuY3VycmVudC5lbGVtZW50O1xuICAgICAgICAgICAgaWYgKHRleHRDb21wb25lbnQpIHtcbiAgICAgICAgICAgICAgICBsZXQgc3RhcnRQb3MgPSB0ZXh0Q29tcG9uZW50LnNlbGVjdGlvblN0YXJ0XG4gICAgICAgICAgICAgICAgaWYgKHRleHRDb21wb25lbnQudmFsdWUgJiYgc3RhcnRQb3MgPj0gMCkge1xuICAgICAgICAgICAgICAgICAgICB0ZXh0ID0gdGV4dENvbXBvbmVudC52YWx1ZS5zdWJzdHJpbmcoMCwgc3RhcnRQb3MpXG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgfVxuXG4gICAgICAgIH0gZWxzZSB7XG4gICAgICAgICAgICBsZXQgc2VsZWN0ZWRFbGVtID0gdGhpcy5nZXRXaW5kb3dTZWxlY3Rpb24oKS5hbmNob3JOb2RlXG5cbiAgICAgICAgICAgIGlmIChzZWxlY3RlZEVsZW0gIT0gbnVsbCkge1xuICAgICAgICAgICAgICAgIGxldCB3b3JraW5nTm9kZUNvbnRlbnQgPSBzZWxlY3RlZEVsZW0udGV4dENvbnRlbnRcbiAgICAgICAgICAgICAgICBsZXQgc2VsZWN0U3RhcnRPZmZzZXQgPSB0aGlzLmdldFdpbmRvd1NlbGVjdGlvbigpLmdldFJhbmdlQXQoMCkuc3RhcnRPZmZzZXRcblxuICAgICAgICAgICAgICAgIGlmICh3b3JraW5nTm9kZUNvbnRlbnQgJiYgc2VsZWN0U3RhcnRPZmZzZXQgPj0gMCkge1xuICAgICAgICAgICAgICAgICAgICB0ZXh0ID0gd29ya2luZ05vZGVDb250ZW50LnN1YnN0cmluZygwLCBzZWxlY3RTdGFydE9mZnNldClcbiAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICB9XG4gICAgICAgIH1cblxuICAgICAgICByZXR1cm4gdGV4dFxuICAgIH1cblxuICAgIGdldFRyaWdnZXJJbmZvKG1lbnVBbHJlYWR5QWN0aXZlLCBoYXNUcmFpbGluZ1NwYWNlLCByZXF1aXJlTGVhZGluZ1NwYWNlLCBhbGxvd1NwYWNlcykge1xuICAgICAgICBsZXQgY3R4ID0gdGhpcy50cmlidXRlLmN1cnJlbnRcbiAgICAgICAgbGV0IHNlbGVjdGVkLCBwYXRoLCBvZmZzZXRcblxuICAgICAgICBpZiAoIXRoaXMuaXNDb250ZW50RWRpdGFibGUoY3R4LmVsZW1lbnQpKSB7XG4gICAgICAgICAgICBzZWxlY3RlZCA9IHRoaXMudHJpYnV0ZS5jdXJyZW50LmVsZW1lbnRcbiAgICAgICAgfSBlbHNlIHtcbiAgICAgICAgICAgIGxldCBzZWxlY3Rpb25JbmZvID0gdGhpcy5nZXRDb250ZW50RWRpdGFibGVTZWxlY3RlZFBhdGgoY3R4KVxuXG4gICAgICAgICAgICBpZiAoc2VsZWN0aW9uSW5mbykge1xuICAgICAgICAgICAgICAgIHNlbGVjdGVkID0gc2VsZWN0aW9uSW5mby5zZWxlY3RlZFxuICAgICAgICAgICAgICAgIHBhdGggPSBzZWxlY3Rpb25JbmZvLnBhdGhcbiAgICAgICAgICAgICAgICBvZmZzZXQgPSBzZWxlY3Rpb25JbmZvLm9mZnNldFxuICAgICAgICAgICAgfVxuICAgICAgICB9XG5cbiAgICAgICAgbGV0IGVmZmVjdGl2ZVJhbmdlID0gdGhpcy5nZXRUZXh0UHJlY2VkaW5nQ3VycmVudFNlbGVjdGlvbigpXG5cbiAgICAgICAgaWYgKGVmZmVjdGl2ZVJhbmdlICE9PSB1bmRlZmluZWQgJiYgZWZmZWN0aXZlUmFuZ2UgIT09IG51bGwpIHtcbiAgICAgICAgICAgIGxldCBtb3N0UmVjZW50VHJpZ2dlckNoYXJQb3MgPSAtMVxuICAgICAgICAgICAgbGV0IHRyaWdnZXJDaGFyXG5cbiAgICAgICAgICAgIHRoaXMudHJpYnV0ZS5jb2xsZWN0aW9uLmZvckVhY2goY29uZmlnID0+IHtcbiAgICAgICAgICAgICAgICBsZXQgYyA9IGNvbmZpZy50cmlnZ2VyXG4gICAgICAgICAgICAgICAgbGV0IGlkeCA9IGNvbmZpZy5yZXF1aXJlTGVhZGluZ1NwYWNlID9cbiAgICAgICAgICAgICAgICAgICAgdGhpcy5sYXN0SW5kZXhXaXRoTGVhZGluZ1NwYWNlKGVmZmVjdGl2ZVJhbmdlLCBjKSA6XG4gICAgICAgICAgICAgICAgICAgIGVmZmVjdGl2ZVJhbmdlLmxhc3RJbmRleE9mKGMpXG5cbiAgICAgICAgICAgICAgICBpZiAoaWR4ID4gbW9zdFJlY2VudFRyaWdnZXJDaGFyUG9zKSB7XG4gICAgICAgICAgICAgICAgICAgIG1vc3RSZWNlbnRUcmlnZ2VyQ2hhclBvcyA9IGlkeFxuICAgICAgICAgICAgICAgICAgICB0cmlnZ2VyQ2hhciA9IGNcbiAgICAgICAgICAgICAgICAgICAgcmVxdWlyZUxlYWRpbmdTcGFjZSA9IGNvbmZpZy5yZXF1aXJlTGVhZGluZ1NwYWNlXG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgfSlcblxuICAgICAgICAgICAgaWYgKG1vc3RSZWNlbnRUcmlnZ2VyQ2hhclBvcyA+PSAwICYmXG4gICAgICAgICAgICAgICAgKFxuICAgICAgICAgICAgICAgICAgICBtb3N0UmVjZW50VHJpZ2dlckNoYXJQb3MgPT09IDAgfHxcbiAgICAgICAgICAgICAgICAgICAgIXJlcXVpcmVMZWFkaW5nU3BhY2UgfHxcbiAgICAgICAgICAgICAgICAgICAgL1tcXHhBMFxcc10vZy50ZXN0KFxuICAgICAgICAgICAgICAgICAgICAgICAgZWZmZWN0aXZlUmFuZ2Uuc3Vic3RyaW5nKFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIG1vc3RSZWNlbnRUcmlnZ2VyQ2hhclBvcyAtIDEsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgbW9zdFJlY2VudFRyaWdnZXJDaGFyUG9zKVxuICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgKSB7XG4gICAgICAgICAgICAgICAgbGV0IGN1cnJlbnRUcmlnZ2VyU25pcHBldCA9IGVmZmVjdGl2ZVJhbmdlLnN1YnN0cmluZyhtb3N0UmVjZW50VHJpZ2dlckNoYXJQb3MgKyAxLFxuICAgICAgICAgICAgICAgICAgICBlZmZlY3RpdmVSYW5nZS5sZW5ndGgpXG5cbiAgICAgICAgICAgICAgICB0cmlnZ2VyQ2hhciA9IGVmZmVjdGl2ZVJhbmdlLnN1YnN0cmluZyhtb3N0UmVjZW50VHJpZ2dlckNoYXJQb3MsIG1vc3RSZWNlbnRUcmlnZ2VyQ2hhclBvcyArIDEpXG4gICAgICAgICAgICAgICAgbGV0IGZpcnN0U25pcHBldENoYXIgPSBjdXJyZW50VHJpZ2dlclNuaXBwZXQuc3Vic3RyaW5nKDAsIDEpXG4gICAgICAgICAgICAgICAgbGV0IGxlYWRpbmdTcGFjZSA9IGN1cnJlbnRUcmlnZ2VyU25pcHBldC5sZW5ndGggPiAwICYmXG4gICAgICAgICAgICAgICAgICAgIChcbiAgICAgICAgICAgICAgICAgICAgICAgIGZpcnN0U25pcHBldENoYXIgPT09ICcgJyB8fFxuICAgICAgICAgICAgICAgICAgICAgICAgZmlyc3RTbmlwcGV0Q2hhciA9PT0gJ1xceEEwJ1xuICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgaWYgKGhhc1RyYWlsaW5nU3BhY2UpIHtcbiAgICAgICAgICAgICAgICAgICAgY3VycmVudFRyaWdnZXJTbmlwcGV0ID0gY3VycmVudFRyaWdnZXJTbmlwcGV0LnRyaW0oKVxuICAgICAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgICAgIGxldCByZWdleCA9IGFsbG93U3BhY2VzID8gL1teXFxTIF0vZyA6IC9bXFx4QTBcXHNdL2c7XG5cbiAgICAgICAgICAgICAgICB0aGlzLnRyaWJ1dGUuaGFzVHJhaWxpbmdTcGFjZSA9IHJlZ2V4LnRlc3QoY3VycmVudFRyaWdnZXJTbmlwcGV0KTtcblxuICAgICAgICAgICAgICAgIGlmICghbGVhZGluZ1NwYWNlICYmIChtZW51QWxyZWFkeUFjdGl2ZSB8fCAhKHJlZ2V4LnRlc3QoY3VycmVudFRyaWdnZXJTbmlwcGV0KSkpKSB7XG4gICAgICAgICAgICAgICAgICAgIHJldHVybiB7XG4gICAgICAgICAgICAgICAgICAgICAgICBtZW50aW9uUG9zaXRpb246IG1vc3RSZWNlbnRUcmlnZ2VyQ2hhclBvcyxcbiAgICAgICAgICAgICAgICAgICAgICAgIG1lbnRpb25UZXh0OiBjdXJyZW50VHJpZ2dlclNuaXBwZXQsXG4gICAgICAgICAgICAgICAgICAgICAgICBtZW50aW9uU2VsZWN0ZWRFbGVtZW50OiBzZWxlY3RlZCxcbiAgICAgICAgICAgICAgICAgICAgICAgIG1lbnRpb25TZWxlY3RlZFBhdGg6IHBhdGgsXG4gICAgICAgICAgICAgICAgICAgICAgICBtZW50aW9uU2VsZWN0ZWRPZmZzZXQ6IG9mZnNldCxcbiAgICAgICAgICAgICAgICAgICAgICAgIG1lbnRpb25UcmlnZ2VyQ2hhcjogdHJpZ2dlckNoYXJcbiAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgIH1cbiAgICAgICAgfVxuICAgIH1cblxuICAgIGxhc3RJbmRleFdpdGhMZWFkaW5nU3BhY2UgKHN0ciwgY2hhcikge1xuICAgICAgICBsZXQgcmV2ZXJzZWRTdHIgPSBzdHIuc3BsaXQoJycpLnJldmVyc2UoKS5qb2luKCcnKVxuICAgICAgICBsZXQgaW5kZXggPSAtMVxuXG4gICAgICAgIGZvciAobGV0IGNpZHggPSAwLCBsZW4gPSBzdHIubGVuZ3RoOyBjaWR4IDwgbGVuOyBjaWR4KyspIHtcbiAgICAgICAgICAgIGxldCBmaXJzdENoYXIgPSBjaWR4ID09PSBzdHIubGVuZ3RoIC0gMVxuICAgICAgICAgICAgbGV0IGxlYWRpbmdTcGFjZSA9IC9cXHMvLnRlc3QocmV2ZXJzZWRTdHJbY2lkeCArIDFdKVxuICAgICAgICAgICAgbGV0IG1hdGNoID0gY2hhciA9PT0gcmV2ZXJzZWRTdHJbY2lkeF1cblxuICAgICAgICAgICAgaWYgKG1hdGNoICYmIChmaXJzdENoYXIgfHwgbGVhZGluZ1NwYWNlKSkge1xuICAgICAgICAgICAgICAgIGluZGV4ID0gc3RyLmxlbmd0aCAtIDEgLSBjaWR4XG4gICAgICAgICAgICAgICAgYnJlYWtcbiAgICAgICAgICAgIH1cbiAgICAgICAgfVxuXG4gICAgICAgIHJldHVybiBpbmRleFxuICAgIH1cblxuICAgIGlzQ29udGVudEVkaXRhYmxlKGVsZW1lbnQpIHtcbiAgICAgICAgcmV0dXJuIGVsZW1lbnQubm9kZU5hbWUgIT09ICdJTlBVVCcgJiYgZWxlbWVudC5ub2RlTmFtZSAhPT0gJ1RFWFRBUkVBJ1xuICAgIH1cblxuICAgIGlzTWVudU9mZlNjcmVlbihjb29yZGluYXRlcywgbWVudURpbWVuc2lvbnMpIHtcbiAgICAgICAgbGV0IHdpbmRvd1dpZHRoID0gd2luZG93LmlubmVyV2lkdGhcbiAgICAgICAgbGV0IHdpbmRvd0hlaWdodCA9IHdpbmRvdy5pbm5lckhlaWdodFxuICAgICAgICBsZXQgZG9jID0gZG9jdW1lbnQuZG9jdW1lbnRFbGVtZW50XG4gICAgICAgIGxldCB3aW5kb3dMZWZ0ID0gKHdpbmRvdy5wYWdlWE9mZnNldCB8fCBkb2Muc2Nyb2xsTGVmdCkgLSAoZG9jLmNsaWVudExlZnQgfHwgMClcbiAgICAgICAgbGV0IHdpbmRvd1RvcCA9ICh3aW5kb3cucGFnZVlPZmZzZXQgfHwgZG9jLnNjcm9sbFRvcCkgLSAoZG9jLmNsaWVudFRvcCB8fCAwKVxuXG4gICAgICAgIGxldCBtZW51VG9wID0gdHlwZW9mIGNvb3JkaW5hdGVzLnRvcCA9PT0gJ251bWJlcicgPyBjb29yZGluYXRlcy50b3AgOiB3aW5kb3dUb3AgKyB3aW5kb3dIZWlnaHQgLSBjb29yZGluYXRlcy5ib3R0b20gLSBtZW51RGltZW5zaW9ucy5oZWlnaHRcbiAgICAgICAgbGV0IG1lbnVSaWdodCA9IHR5cGVvZiBjb29yZGluYXRlcy5yaWdodCA9PT0gJ251bWJlcicgPyBjb29yZGluYXRlcy5yaWdodCA6IGNvb3JkaW5hdGVzLmxlZnQgKyBtZW51RGltZW5zaW9ucy53aWR0aFxuICAgICAgICBsZXQgbWVudUJvdHRvbSA9IHR5cGVvZiBjb29yZGluYXRlcy5ib3R0b20gPT09ICdudW1iZXInID8gY29vcmRpbmF0ZXMuYm90dG9tIDogY29vcmRpbmF0ZXMudG9wICsgbWVudURpbWVuc2lvbnMuaGVpZ2h0XG4gICAgICAgIGxldCBtZW51TGVmdCA9IHR5cGVvZiBjb29yZGluYXRlcy5sZWZ0ID09PSAnbnVtYmVyJyA/IGNvb3JkaW5hdGVzLmxlZnQgOiB3aW5kb3dMZWZ0ICsgd2luZG93V2lkdGggLSBjb29yZGluYXRlcy5yaWdodCAtIG1lbnVEaW1lbnNpb25zLndpZHRoXG5cbiAgICAgICAgcmV0dXJuIHtcbiAgICAgICAgICAgIHRvcDogbWVudVRvcCA8IE1hdGguZmxvb3Iod2luZG93VG9wKSxcbiAgICAgICAgICAgIHJpZ2h0OiBtZW51UmlnaHQgPiBNYXRoLmNlaWwod2luZG93TGVmdCArIHdpbmRvd1dpZHRoKSxcbiAgICAgICAgICAgIGJvdHRvbTogbWVudUJvdHRvbSA+IE1hdGguY2VpbCh3aW5kb3dUb3AgKyB3aW5kb3dIZWlnaHQpLFxuICAgICAgICAgICAgbGVmdDogbWVudUxlZnQgPCBNYXRoLmZsb29yKHdpbmRvd0xlZnQpXG4gICAgICAgIH1cbiAgICB9XG5cbiAgICBnZXRNZW51RGltZW5zaW9ucygpIHtcbiAgICAgICAgLy8gV2lkdGggb2YgdGhlIG1lbnUgZGVwZW5kcyBvZiBpdHMgY29udGVudHMgYW5kIHBvc2l0aW9uXG4gICAgICAgIC8vIFdlIG11c3QgY2hlY2sgd2hhdCBpdHMgd2lkdGggd291bGQgYmUgd2l0aG91dCBhbnkgb2JzdHJ1Y3Rpb25cbiAgICAgICAgLy8gVGhpcyB3YXksIHdlIGNhbiBhY2hpZXZlIGdvb2QgcG9zaXRpb25pbmcgZm9yIGZsaXBwaW5nIHRoZSBtZW51XG4gICAgICAgIGxldCBkaW1lbnNpb25zID0ge1xuICAgICAgICAgICAgd2lkdGg6IG51bGwsXG4gICAgICAgICAgICBoZWlnaHQ6IG51bGxcbiAgICAgICAgfVxuXG4gICAgICAgIHRoaXMudHJpYnV0ZS5tZW51LnN0eWxlLmNzc1RleHQgPSBgdG9wOiAwcHg7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsZWZ0OiAwcHg7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwb3NpdGlvbjogZml4ZWQ7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB6SW5kZXg6IDEwMDAwO1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZGlzcGxheTogYmxvY2s7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2aXNpYmlsaXR5OyBoaWRkZW47YFxuICAgICAgIGRpbWVuc2lvbnMud2lkdGggPSB0aGlzLnRyaWJ1dGUubWVudS5vZmZzZXRXaWR0aFxuICAgICAgIGRpbWVuc2lvbnMuaGVpZ2h0ID0gdGhpcy50cmlidXRlLm1lbnUub2Zmc2V0SGVpZ2h0XG5cbiAgICAgICB0aGlzLnRyaWJ1dGUubWVudS5zdHlsZS5jc3NUZXh0ID0gYGRpc3BsYXk6IG5vbmU7YFxuXG4gICAgICAgcmV0dXJuIGRpbWVuc2lvbnNcbiAgICB9XG5cbiAgICBnZXRUZXh0QXJlYU9ySW5wdXRVbmRlcmxpbmVQb3NpdGlvbihlbGVtZW50LCBwb3NpdGlvbiwgZmxpcHBlZCkge1xuICAgICAgICBsZXQgcHJvcGVydGllcyA9IFsnZGlyZWN0aW9uJywgJ2JveFNpemluZycsICd3aWR0aCcsICdoZWlnaHQnLCAnb3ZlcmZsb3dYJyxcbiAgICAgICAgICAgICdvdmVyZmxvd1knLCAnYm9yZGVyVG9wV2lkdGgnLCAnYm9yZGVyUmlnaHRXaWR0aCcsXG4gICAgICAgICAgICAnYm9yZGVyQm90dG9tV2lkdGgnLCAnYm9yZGVyTGVmdFdpZHRoJywgJ3BhZGRpbmdUb3AnLFxuICAgICAgICAgICAgJ3BhZGRpbmdSaWdodCcsICdwYWRkaW5nQm90dG9tJywgJ3BhZGRpbmdMZWZ0JyxcbiAgICAgICAgICAgICdmb250U3R5bGUnLCAnZm9udFZhcmlhbnQnLCAnZm9udFdlaWdodCcsICdmb250U3RyZXRjaCcsXG4gICAgICAgICAgICAnZm9udFNpemUnLCAnZm9udFNpemVBZGp1c3QnLCAnbGluZUhlaWdodCcsICdmb250RmFtaWx5JyxcbiAgICAgICAgICAgICd0ZXh0QWxpZ24nLCAndGV4dFRyYW5zZm9ybScsICd0ZXh0SW5kZW50JyxcbiAgICAgICAgICAgICd0ZXh0RGVjb3JhdGlvbicsICdsZXR0ZXJTcGFjaW5nJywgJ3dvcmRTcGFjaW5nJ1xuICAgICAgICBdXG5cbiAgICAgICAgbGV0IGlzRmlyZWZveCA9ICh3aW5kb3cubW96SW5uZXJTY3JlZW5YICE9PSBudWxsKVxuXG4gICAgICAgIGxldCBkaXYgPSB0aGlzLmdldERvY3VtZW50KCkuY3JlYXRlRWxlbWVudCgnZGl2JylcbiAgICAgICAgZGl2LmlkID0gJ2lucHV0LXRleHRhcmVhLWNhcmV0LXBvc2l0aW9uLW1pcnJvci1kaXYnXG4gICAgICAgIHRoaXMuZ2V0RG9jdW1lbnQoKS5ib2R5LmFwcGVuZENoaWxkKGRpdilcblxuICAgICAgICBsZXQgc3R5bGUgPSBkaXYuc3R5bGVcbiAgICAgICAgbGV0IGNvbXB1dGVkID0gd2luZG93LmdldENvbXB1dGVkU3R5bGUgPyBnZXRDb21wdXRlZFN0eWxlKGVsZW1lbnQpIDogZWxlbWVudC5jdXJyZW50U3R5bGVcblxuICAgICAgICBzdHlsZS53aGl0ZVNwYWNlID0gJ3ByZS13cmFwJ1xuICAgICAgICBpZiAoZWxlbWVudC5ub2RlTmFtZSAhPT0gJ0lOUFVUJykge1xuICAgICAgICAgICAgc3R5bGUud29yZFdyYXAgPSAnYnJlYWstd29yZCdcbiAgICAgICAgfVxuXG4gICAgICAgIC8vIHBvc2l0aW9uIG9mZi1zY3JlZW5cbiAgICAgICAgc3R5bGUucG9zaXRpb24gPSAnYWJzb2x1dGUnXG4gICAgICAgIHN0eWxlLnZpc2liaWxpdHkgPSAnaGlkZGVuJ1xuXG4gICAgICAgIC8vIHRyYW5zZmVyIHRoZSBlbGVtZW50J3MgcHJvcGVydGllcyB0byB0aGUgZGl2XG4gICAgICAgIHByb3BlcnRpZXMuZm9yRWFjaChwcm9wID0+IHtcbiAgICAgICAgICAgIHN0eWxlW3Byb3BdID0gY29tcHV0ZWRbcHJvcF1cbiAgICAgICAgfSlcblxuICAgICAgICBpZiAoaXNGaXJlZm94KSB7XG4gICAgICAgICAgICBzdHlsZS53aWR0aCA9IGAkeyhwYXJzZUludChjb21wdXRlZC53aWR0aCkgLSAyKX1weGBcbiAgICAgICAgICAgIGlmIChlbGVtZW50LnNjcm9sbEhlaWdodCA+IHBhcnNlSW50KGNvbXB1dGVkLmhlaWdodCkpXG4gICAgICAgICAgICAgICAgc3R5bGUub3ZlcmZsb3dZID0gJ3Njcm9sbCdcbiAgICAgICAgfSBlbHNlIHtcbiAgICAgICAgICAgIHN0eWxlLm92ZXJmbG93ID0gJ2hpZGRlbidcbiAgICAgICAgfVxuXG4gICAgICAgIGRpdi50ZXh0Q29udGVudCA9IGVsZW1lbnQudmFsdWUuc3Vic3RyaW5nKDAsIHBvc2l0aW9uKVxuXG4gICAgICAgIGlmIChlbGVtZW50Lm5vZGVOYW1lID09PSAnSU5QVVQnKSB7XG4gICAgICAgICAgICBkaXYudGV4dENvbnRlbnQgPSBkaXYudGV4dENvbnRlbnQucmVwbGFjZSgvXFxzL2csICfCoCcpXG4gICAgICAgIH1cblxuICAgICAgICBsZXQgc3BhbiA9IHRoaXMuZ2V0RG9jdW1lbnQoKS5jcmVhdGVFbGVtZW50KCdzcGFuJylcbiAgICAgICAgc3Bhbi50ZXh0Q29udGVudCA9IGVsZW1lbnQudmFsdWUuc3Vic3RyaW5nKHBvc2l0aW9uKSB8fCAnLidcbiAgICAgICAgZGl2LmFwcGVuZENoaWxkKHNwYW4pXG5cbiAgICAgICAgbGV0IHJlY3QgPSBlbGVtZW50LmdldEJvdW5kaW5nQ2xpZW50UmVjdCgpXG4gICAgICAgIGxldCBkb2MgPSBkb2N1bWVudC5kb2N1bWVudEVsZW1lbnRcbiAgICAgICAgbGV0IHdpbmRvd0xlZnQgPSAod2luZG93LnBhZ2VYT2Zmc2V0IHx8IGRvYy5zY3JvbGxMZWZ0KSAtIChkb2MuY2xpZW50TGVmdCB8fCAwKVxuICAgICAgICBsZXQgd2luZG93VG9wID0gKHdpbmRvdy5wYWdlWU9mZnNldCB8fCBkb2Muc2Nyb2xsVG9wKSAtIChkb2MuY2xpZW50VG9wIHx8IDApXG5cbiAgICAgICAgbGV0IGNvb3JkaW5hdGVzID0ge1xuICAgICAgICAgICAgdG9wOiByZWN0LnRvcCArIHdpbmRvd1RvcCArIHNwYW4ub2Zmc2V0VG9wICsgcGFyc2VJbnQoY29tcHV0ZWQuYm9yZGVyVG9wV2lkdGgpICsgcGFyc2VJbnQoY29tcHV0ZWQuZm9udFNpemUpIC0gZWxlbWVudC5zY3JvbGxUb3AsXG4gICAgICAgICAgICBsZWZ0OiByZWN0LmxlZnQgKyB3aW5kb3dMZWZ0ICsgc3Bhbi5vZmZzZXRMZWZ0ICsgcGFyc2VJbnQoY29tcHV0ZWQuYm9yZGVyTGVmdFdpZHRoKVxuICAgICAgICB9XG5cbiAgICAgICAgbGV0IHdpbmRvd1dpZHRoID0gd2luZG93LmlubmVyV2lkdGhcbiAgICAgICAgbGV0IHdpbmRvd0hlaWdodCA9IHdpbmRvdy5pbm5lckhlaWdodFxuXG4gICAgICAgIGxldCBtZW51RGltZW5zaW9ucyA9IHRoaXMuZ2V0TWVudURpbWVuc2lvbnMoKVxuICAgICAgICBsZXQgbWVudUlzT2ZmU2NyZWVuID0gdGhpcy5pc01lbnVPZmZTY3JlZW4oY29vcmRpbmF0ZXMsIG1lbnVEaW1lbnNpb25zKVxuXG4gICAgICAgIGlmIChtZW51SXNPZmZTY3JlZW4ucmlnaHQpIHtcbiAgICAgICAgICAgIGNvb3JkaW5hdGVzLnJpZ2h0ID0gd2luZG93V2lkdGggLSBjb29yZGluYXRlcy5sZWZ0XG4gICAgICAgICAgICBjb29yZGluYXRlcy5sZWZ0ID0gJ2F1dG8nXG4gICAgICAgIH1cblxuICAgICAgICBsZXQgcGFyZW50SGVpZ2h0ID0gdGhpcy50cmlidXRlLm1lbnVDb250YWluZXJcbiAgICAgICAgICAgID8gdGhpcy50cmlidXRlLm1lbnVDb250YWluZXIub2Zmc2V0SGVpZ2h0XG4gICAgICAgICAgICA6IHRoaXMuZ2V0RG9jdW1lbnQoKS5ib2R5Lm9mZnNldEhlaWdodFxuXG4gICAgICAgIGlmIChtZW51SXNPZmZTY3JlZW4uYm90dG9tKSB7XG4gICAgICAgICAgICBsZXQgcGFyZW50UmVjdCA9IHRoaXMudHJpYnV0ZS5tZW51Q29udGFpbmVyXG4gICAgICAgICAgICAgICAgPyB0aGlzLnRyaWJ1dGUubWVudUNvbnRhaW5lci5nZXRCb3VuZGluZ0NsaWVudFJlY3QoKVxuICAgICAgICAgICAgICAgIDogdGhpcy5nZXREb2N1bWVudCgpLmJvZHkuZ2V0Qm91bmRpbmdDbGllbnRSZWN0KClcbiAgICAgICAgICAgIGxldCBzY3JvbGxTdGlsbEF2YWlsYWJsZSA9IHBhcmVudEhlaWdodCAtICh3aW5kb3dIZWlnaHQgLSBwYXJlbnRSZWN0LnRvcClcblxuICAgICAgICAgICAgY29vcmRpbmF0ZXMuYm90dG9tID0gc2Nyb2xsU3RpbGxBdmFpbGFibGUgKyAod2luZG93SGVpZ2h0IC0gcmVjdC50b3AgLSBzcGFuLm9mZnNldFRvcClcbiAgICAgICAgICAgIGNvb3JkaW5hdGVzLnRvcCA9ICdhdXRvJ1xuICAgICAgICB9XG5cbiAgICAgICAgbWVudUlzT2ZmU2NyZWVuID0gdGhpcy5pc01lbnVPZmZTY3JlZW4oY29vcmRpbmF0ZXMsIG1lbnVEaW1lbnNpb25zKVxuICAgICAgICBpZiAobWVudUlzT2ZmU2NyZWVuLmxlZnQpIHtcbiAgICAgICAgICAgIGNvb3JkaW5hdGVzLmxlZnQgPSB3aW5kb3dXaWR0aCA+IG1lbnVEaW1lbnNpb25zLndpZHRoXG4gICAgICAgICAgICAgICAgPyB3aW5kb3dMZWZ0ICsgd2luZG93V2lkdGggLSBtZW51RGltZW5zaW9ucy53aWR0aFxuICAgICAgICAgICAgICAgIDogd2luZG93TGVmdFxuICAgICAgICAgICAgZGVsZXRlIGNvb3JkaW5hdGVzLnJpZ2h0XG4gICAgICAgIH1cbiAgICAgICAgaWYgKG1lbnVJc09mZlNjcmVlbi50b3ApIHtcbiAgICAgICAgICAgIGNvb3JkaW5hdGVzLnRvcCA9IHdpbmRvd0hlaWdodCA+IG1lbnVEaW1lbnNpb25zLmhlaWdodFxuICAgICAgICAgICAgICAgID8gd2luZG93VG9wICsgd2luZG93SGVpZ2h0IC0gbWVudURpbWVuc2lvbnMuaGVpZ2h0XG4gICAgICAgICAgICAgICAgOiB3aW5kb3dUb3BcbiAgICAgICAgICAgIGRlbGV0ZSBjb29yZGluYXRlcy5ib3R0b21cbiAgICAgICAgfVxuXG4gICAgICAgIHRoaXMuZ2V0RG9jdW1lbnQoKS5ib2R5LnJlbW92ZUNoaWxkKGRpdilcbiAgICAgICAgcmV0dXJuIGNvb3JkaW5hdGVzXG4gICAgfVxuXG4gICAgZ2V0Q29udGVudEVkaXRhYmxlQ2FyZXRQb3NpdGlvbihzZWxlY3RlZE5vZGVQb3NpdGlvbikge1xuICAgICAgICBsZXQgbWFya2VyVGV4dENoYXIgPSAn77u/J1xuICAgICAgICBsZXQgbWFya2VyRWwsIG1hcmtlcklkID0gYHNlbF8ke25ldyBEYXRlKCkuZ2V0VGltZSgpfV8ke01hdGgucmFuZG9tKCkudG9TdHJpbmcoKS5zdWJzdHIoMil9YFxuICAgICAgICBsZXQgcmFuZ2VcbiAgICAgICAgbGV0IHNlbCA9IHRoaXMuZ2V0V2luZG93U2VsZWN0aW9uKClcbiAgICAgICAgbGV0IHByZXZSYW5nZSA9IHNlbC5nZXRSYW5nZUF0KDApXG5cbiAgICAgICAgcmFuZ2UgPSB0aGlzLmdldERvY3VtZW50KCkuY3JlYXRlUmFuZ2UoKVxuICAgICAgICByYW5nZS5zZXRTdGFydChzZWwuYW5jaG9yTm9kZSwgc2VsZWN0ZWROb2RlUG9zaXRpb24pXG4gICAgICAgIHJhbmdlLnNldEVuZChzZWwuYW5jaG9yTm9kZSwgc2VsZWN0ZWROb2RlUG9zaXRpb24pXG5cbiAgICAgICAgcmFuZ2UuY29sbGFwc2UoZmFsc2UpXG5cbiAgICAgICAgLy8gQ3JlYXRlIHRoZSBtYXJrZXIgZWxlbWVudCBjb250YWluaW5nIGEgc2luZ2xlIGludmlzaWJsZSBjaGFyYWN0ZXIgdXNpbmcgRE9NIG1ldGhvZHMgYW5kIGluc2VydCBpdFxuICAgICAgICBtYXJrZXJFbCA9IHRoaXMuZ2V0RG9jdW1lbnQoKS5jcmVhdGVFbGVtZW50KCdzcGFuJylcbiAgICAgICAgbWFya2VyRWwuaWQgPSBtYXJrZXJJZFxuXG4gICAgICAgIG1hcmtlckVsLmFwcGVuZENoaWxkKHRoaXMuZ2V0RG9jdW1lbnQoKS5jcmVhdGVUZXh0Tm9kZShtYXJrZXJUZXh0Q2hhcikpXG4gICAgICAgIHJhbmdlLmluc2VydE5vZGUobWFya2VyRWwpXG4gICAgICAgIHNlbC5yZW1vdmVBbGxSYW5nZXMoKVxuICAgICAgICBzZWwuYWRkUmFuZ2UocHJldlJhbmdlKVxuXG4gICAgICAgIGxldCByZWN0ID0gbWFya2VyRWwuZ2V0Qm91bmRpbmdDbGllbnRSZWN0KClcbiAgICAgICAgbGV0IGRvYyA9IGRvY3VtZW50LmRvY3VtZW50RWxlbWVudFxuICAgICAgICBsZXQgd2luZG93TGVmdCA9ICh3aW5kb3cucGFnZVhPZmZzZXQgfHwgZG9jLnNjcm9sbExlZnQpIC0gKGRvYy5jbGllbnRMZWZ0IHx8IDApXG4gICAgICAgIGxldCB3aW5kb3dUb3AgPSAod2luZG93LnBhZ2VZT2Zmc2V0IHx8IGRvYy5zY3JvbGxUb3ApIC0gKGRvYy5jbGllbnRUb3AgfHwgMClcbiAgICAgICAgbGV0IGNvb3JkaW5hdGVzID0ge1xuICAgICAgICAgICAgbGVmdDogcmVjdC5sZWZ0ICsgd2luZG93TGVmdCxcbiAgICAgICAgICAgIHRvcDogcmVjdC50b3AgKyBtYXJrZXJFbC5vZmZzZXRIZWlnaHQgKyB3aW5kb3dUb3BcbiAgICAgICAgfVxuICAgICAgICBsZXQgd2luZG93V2lkdGggPSB3aW5kb3cuaW5uZXJXaWR0aFxuICAgICAgICBsZXQgd2luZG93SGVpZ2h0ID0gd2luZG93LmlubmVySGVpZ2h0XG5cbiAgICAgICAgbGV0IG1lbnVEaW1lbnNpb25zID0gdGhpcy5nZXRNZW51RGltZW5zaW9ucygpXG4gICAgICAgIGxldCBtZW51SXNPZmZTY3JlZW4gPSB0aGlzLmlzTWVudU9mZlNjcmVlbihjb29yZGluYXRlcywgbWVudURpbWVuc2lvbnMpXG5cbiAgICAgICAgaWYgKG1lbnVJc09mZlNjcmVlbi5yaWdodCkge1xuICAgICAgICAgICAgY29vcmRpbmF0ZXMubGVmdCA9ICdhdXRvJ1xuICAgICAgICAgICAgY29vcmRpbmF0ZXMucmlnaHQgPSB3aW5kb3dXaWR0aCAtIHJlY3QubGVmdCAtIHdpbmRvd0xlZnRcbiAgICAgICAgfVxuXG4gICAgICAgIGxldCBwYXJlbnRIZWlnaHQgPSB0aGlzLnRyaWJ1dGUubWVudUNvbnRhaW5lclxuICAgICAgICAgICAgPyB0aGlzLnRyaWJ1dGUubWVudUNvbnRhaW5lci5vZmZzZXRIZWlnaHRcbiAgICAgICAgICAgIDogdGhpcy5nZXREb2N1bWVudCgpLmJvZHkub2Zmc2V0SGVpZ2h0XG5cbiAgICAgICAgaWYgKG1lbnVJc09mZlNjcmVlbi5ib3R0b20pIHtcbiAgICAgICAgICAgIGxldCBwYXJlbnRSZWN0ID0gdGhpcy50cmlidXRlLm1lbnVDb250YWluZXJcbiAgICAgICAgICAgICAgICA/IHRoaXMudHJpYnV0ZS5tZW51Q29udGFpbmVyLmdldEJvdW5kaW5nQ2xpZW50UmVjdCgpXG4gICAgICAgICAgICAgICAgOiB0aGlzLmdldERvY3VtZW50KCkuYm9keS5nZXRCb3VuZGluZ0NsaWVudFJlY3QoKVxuICAgICAgICAgICAgbGV0IHNjcm9sbFN0aWxsQXZhaWxhYmxlID0gcGFyZW50SGVpZ2h0IC0gKHdpbmRvd0hlaWdodCAtIHBhcmVudFJlY3QudG9wKVxuXG4gICAgICAgICAgICBjb29yZGluYXRlcy50b3AgPSAnYXV0bydcbiAgICAgICAgICAgIGNvb3JkaW5hdGVzLmJvdHRvbSA9IHNjcm9sbFN0aWxsQXZhaWxhYmxlICsgKHdpbmRvd0hlaWdodCAtIHJlY3QudG9wKVxuICAgICAgICB9XG5cbiAgICAgICAgbWVudUlzT2ZmU2NyZWVuID0gdGhpcy5pc01lbnVPZmZTY3JlZW4oY29vcmRpbmF0ZXMsIG1lbnVEaW1lbnNpb25zKVxuICAgICAgICBpZiAobWVudUlzT2ZmU2NyZWVuLmxlZnQpIHtcbiAgICAgICAgICAgIGNvb3JkaW5hdGVzLmxlZnQgPSB3aW5kb3dXaWR0aCA+IG1lbnVEaW1lbnNpb25zLndpZHRoXG4gICAgICAgICAgICAgICAgPyB3aW5kb3dMZWZ0ICsgd2luZG93V2lkdGggLSBtZW51RGltZW5zaW9ucy53aWR0aFxuICAgICAgICAgICAgICAgIDogd2luZG93TGVmdFxuICAgICAgICAgICAgZGVsZXRlIGNvb3JkaW5hdGVzLnJpZ2h0XG4gICAgICAgIH1cbiAgICAgICAgaWYgKG1lbnVJc09mZlNjcmVlbi50b3ApIHtcbiAgICAgICAgICAgIGNvb3JkaW5hdGVzLnRvcCA9IHdpbmRvd0hlaWdodCA+IG1lbnVEaW1lbnNpb25zLmhlaWdodFxuICAgICAgICAgICAgICAgID8gd2luZG93VG9wICsgd2luZG93SGVpZ2h0IC0gbWVudURpbWVuc2lvbnMuaGVpZ2h0XG4gICAgICAgICAgICAgICAgOiB3aW5kb3dUb3BcbiAgICAgICAgICAgIGRlbGV0ZSBjb29yZGluYXRlcy5ib3R0b21cbiAgICAgICAgfVxuXG4gICAgICAgIG1hcmtlckVsLnBhcmVudE5vZGUucmVtb3ZlQ2hpbGQobWFya2VyRWwpXG4gICAgICAgIHJldHVybiBjb29yZGluYXRlc1xuICAgIH1cblxuICAgIHNjcm9sbEludG9WaWV3KGVsZW0pIHtcbiAgICAgICAgbGV0IHJlYXNvbmFibGVCdWZmZXIgPSAyMCxcbiAgICAgICAgICAgIGNsaWVudFJlY3RcbiAgICAgICAgbGV0IG1heFNjcm9sbERpc3BsYWNlbWVudCA9IDEwMFxuICAgICAgICBsZXQgZSA9IHRoaXMubWVudVxuXG4gICAgICAgIGlmICh0eXBlb2YgZSA9PT0gJ3VuZGVmaW5lZCcpIHJldHVybjtcblxuICAgICAgICB3aGlsZSAoY2xpZW50UmVjdCA9PT0gdW5kZWZpbmVkIHx8IGNsaWVudFJlY3QuaGVpZ2h0ID09PSAwKSB7XG4gICAgICAgICAgICBjbGllbnRSZWN0ID0gZS5nZXRCb3VuZGluZ0NsaWVudFJlY3QoKVxuXG4gICAgICAgICAgICBpZiAoY2xpZW50UmVjdC5oZWlnaHQgPT09IDApIHtcbiAgICAgICAgICAgICAgICBlID0gZS5jaGlsZE5vZGVzWzBdXG4gICAgICAgICAgICAgICAgaWYgKGUgPT09IHVuZGVmaW5lZCB8fCAhZS5nZXRCb3VuZGluZ0NsaWVudFJlY3QpIHtcbiAgICAgICAgICAgICAgICAgICAgcmV0dXJuXG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgfVxuICAgICAgICB9XG5cbiAgICAgICAgbGV0IGVsZW1Ub3AgPSBjbGllbnRSZWN0LnRvcFxuICAgICAgICBsZXQgZWxlbUJvdHRvbSA9IGVsZW1Ub3AgKyBjbGllbnRSZWN0LmhlaWdodFxuXG4gICAgICAgIGlmIChlbGVtVG9wIDwgMCkge1xuICAgICAgICAgICAgd2luZG93LnNjcm9sbFRvKDAsIHdpbmRvdy5wYWdlWU9mZnNldCArIGNsaWVudFJlY3QudG9wIC0gcmVhc29uYWJsZUJ1ZmZlcilcbiAgICAgICAgfSBlbHNlIGlmIChlbGVtQm90dG9tID4gd2luZG93LmlubmVySGVpZ2h0KSB7XG4gICAgICAgICAgICBsZXQgbWF4WSA9IHdpbmRvdy5wYWdlWU9mZnNldCArIGNsaWVudFJlY3QudG9wIC0gcmVhc29uYWJsZUJ1ZmZlclxuXG4gICAgICAgICAgICBpZiAobWF4WSAtIHdpbmRvdy5wYWdlWU9mZnNldCA+IG1heFNjcm9sbERpc3BsYWNlbWVudCkge1xuICAgICAgICAgICAgICAgIG1heFkgPSB3aW5kb3cucGFnZVlPZmZzZXQgKyBtYXhTY3JvbGxEaXNwbGFjZW1lbnRcbiAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgbGV0IHRhcmdldFkgPSB3aW5kb3cucGFnZVlPZmZzZXQgLSAod2luZG93LmlubmVySGVpZ2h0IC0gZWxlbUJvdHRvbSlcblxuICAgICAgICAgICAgaWYgKHRhcmdldFkgPiBtYXhZKSB7XG4gICAgICAgICAgICAgICAgdGFyZ2V0WSA9IG1heFlcbiAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgd2luZG93LnNjcm9sbFRvKDAsIHRhcmdldFkpXG4gICAgICAgIH1cbiAgICB9XG59XG5cblxuZXhwb3J0IGRlZmF1bHQgVHJpYnV0ZVJhbmdlO1xuIiwiLy8gVGhhbmtzIHRvIGh0dHBzOi8vZ2l0aHViLmNvbS9tYXR0eW9yay9mdXp6eVxuY2xhc3MgVHJpYnV0ZVNlYXJjaCB7XG4gICAgY29uc3RydWN0b3IodHJpYnV0ZSkge1xuICAgICAgICB0aGlzLnRyaWJ1dGUgPSB0cmlidXRlXG4gICAgICAgIHRoaXMudHJpYnV0ZS5zZWFyY2ggPSB0aGlzXG4gICAgfVxuXG4gICAgc2ltcGxlRmlsdGVyKHBhdHRlcm4sIGFycmF5KSB7XG4gICAgICAgIHJldHVybiBhcnJheS5maWx0ZXIoc3RyaW5nID0+IHtcbiAgICAgICAgICAgIHJldHVybiB0aGlzLnRlc3QocGF0dGVybiwgc3RyaW5nKVxuICAgICAgICB9KVxuICAgIH1cblxuICAgIHRlc3QocGF0dGVybiwgc3RyaW5nKSB7XG4gICAgICAgIHJldHVybiB0aGlzLm1hdGNoKHBhdHRlcm4sIHN0cmluZykgIT09IG51bGxcbiAgICB9XG5cbiAgICBtYXRjaChwYXR0ZXJuLCBzdHJpbmcsIG9wdHMpIHtcbiAgICAgICAgb3B0cyA9IG9wdHMgfHwge31cbiAgICAgICAgbGV0IHBhdHRlcm5JZHggPSAwLFxuICAgICAgICAgICAgcmVzdWx0ID0gW10sXG4gICAgICAgICAgICBsZW4gPSBzdHJpbmcubGVuZ3RoLFxuICAgICAgICAgICAgdG90YWxTY29yZSA9IDAsXG4gICAgICAgICAgICBjdXJyU2NvcmUgPSAwLFxuICAgICAgICAgICAgcHJlID0gb3B0cy5wcmUgfHwgJycsXG4gICAgICAgICAgICBwb3N0ID0gb3B0cy5wb3N0IHx8ICcnLFxuICAgICAgICAgICAgY29tcGFyZVN0cmluZyA9IG9wdHMuY2FzZVNlbnNpdGl2ZSAmJiBzdHJpbmcgfHwgc3RyaW5nLnRvTG93ZXJDYXNlKCksXG4gICAgICAgICAgICBjaCwgY29tcGFyZUNoYXJcblxuICAgICAgICBwYXR0ZXJuID0gb3B0cy5jYXNlU2Vuc2l0aXZlICYmIHBhdHRlcm4gfHwgcGF0dGVybi50b0xvd2VyQ2FzZSgpXG5cbiAgICAgICAgbGV0IHBhdHRlcm5DYWNoZSA9IHRoaXMudHJhdmVyc2UoY29tcGFyZVN0cmluZywgcGF0dGVybiwgMCwgMCwgW10pXG4gICAgICAgIGlmICghcGF0dGVybkNhY2hlKSB7XG4gICAgICAgICAgICByZXR1cm4gbnVsbFxuICAgICAgICB9XG5cbiAgICAgICAgcmV0dXJuIHtcbiAgICAgICAgICAgIHJlbmRlcmVkOiB0aGlzLnJlbmRlcihzdHJpbmcsIHBhdHRlcm5DYWNoZS5jYWNoZSwgcHJlLCBwb3N0KSxcbiAgICAgICAgICAgIHNjb3JlOiBwYXR0ZXJuQ2FjaGUuc2NvcmVcbiAgICAgICAgfVxuICAgIH1cblxuICAgIHRyYXZlcnNlKHN0cmluZywgcGF0dGVybiwgc3RyaW5nSW5kZXgsIHBhdHRlcm5JbmRleCwgcGF0dGVybkNhY2hlKSB7XG4gICAgICAgIC8vIGlmIHRoZSBwYXR0ZXJuIHNlYXJjaCBhdCBlbmRcbiAgICAgICAgaWYgKHBhdHRlcm4ubGVuZ3RoID09PSBwYXR0ZXJuSW5kZXgpIHtcblxuICAgICAgICAgICAgLy8gY2FsY3VsYXRlIHNjb3JlIGFuZCBjb3B5IHRoZSBjYWNoZSBjb250YWluaW5nIHRoZSBpbmRpY2VzIHdoZXJlIGl0J3MgZm91bmRcbiAgICAgICAgICAgIHJldHVybiB7XG4gICAgICAgICAgICAgICAgc2NvcmU6IHRoaXMuY2FsY3VsYXRlU2NvcmUocGF0dGVybkNhY2hlKSxcbiAgICAgICAgICAgICAgICBjYWNoZTogcGF0dGVybkNhY2hlLnNsaWNlKClcbiAgICAgICAgICAgIH1cbiAgICAgICAgfVxuXG4gICAgICAgIC8vIGlmIHN0cmluZyBhdCBlbmQgb3IgcmVtYWluaW5nIHBhdHRlcm4gPiByZW1haW5pbmcgc3RyaW5nXG4gICAgICAgIGlmIChzdHJpbmcubGVuZ3RoID09PSBzdHJpbmdJbmRleCB8fCBwYXR0ZXJuLmxlbmd0aCAtIHBhdHRlcm5JbmRleCA+IHN0cmluZy5sZW5ndGggLSBzdHJpbmdJbmRleCkge1xuICAgICAgICAgICAgcmV0dXJuIHVuZGVmaW5lZFxuICAgICAgICB9XG5cbiAgICAgICAgbGV0IGMgPSBwYXR0ZXJuW3BhdHRlcm5JbmRleF1cbiAgICAgICAgbGV0IGluZGV4ID0gc3RyaW5nLmluZGV4T2YoYywgc3RyaW5nSW5kZXgpXG4gICAgICAgIGxldCBiZXN0LCB0ZW1wXG5cbiAgICAgICAgd2hpbGUgKGluZGV4ID4gLTEpIHtcbiAgICAgICAgICAgIHBhdHRlcm5DYWNoZS5wdXNoKGluZGV4KVxuICAgICAgICAgICAgdGVtcCA9IHRoaXMudHJhdmVyc2Uoc3RyaW5nLCBwYXR0ZXJuLCBpbmRleCArIDEsIHBhdHRlcm5JbmRleCArIDEsIHBhdHRlcm5DYWNoZSlcbiAgICAgICAgICAgIHBhdHRlcm5DYWNoZS5wb3AoKVxuXG4gICAgICAgICAgICAvLyBpZiBkb3duc3RyZWFtIHRyYXZlcnNhbCBmYWlsZWQsIHJldHVybiBiZXN0IGFuc3dlciBzbyBmYXJcbiAgICAgICAgICAgIGlmICghdGVtcCkge1xuICAgICAgICAgICAgICAgIHJldHVybiBiZXN0XG4gICAgICAgICAgICB9XG5cbiAgICAgICAgICAgIGlmICghYmVzdCB8fCBiZXN0LnNjb3JlIDwgdGVtcC5zY29yZSkge1xuICAgICAgICAgICAgICAgIGJlc3QgPSB0ZW1wXG4gICAgICAgICAgICB9XG5cbiAgICAgICAgICAgIGluZGV4ID0gc3RyaW5nLmluZGV4T2YoYywgaW5kZXggKyAxKVxuICAgICAgICB9XG5cbiAgICAgICAgcmV0dXJuIGJlc3RcbiAgICB9XG5cbiAgICBjYWxjdWxhdGVTY29yZShwYXR0ZXJuQ2FjaGUpIHtcbiAgICAgICAgbGV0IHNjb3JlID0gMFxuICAgICAgICBsZXQgdGVtcCA9IDFcblxuICAgICAgICBwYXR0ZXJuQ2FjaGUuZm9yRWFjaCgoaW5kZXgsIGkpID0+IHtcbiAgICAgICAgICAgIGlmIChpID4gMCkge1xuICAgICAgICAgICAgICAgIGlmIChwYXR0ZXJuQ2FjaGVbaSAtIDFdICsgMSA9PT0gaW5kZXgpIHtcbiAgICAgICAgICAgICAgICAgICAgdGVtcCArPSB0ZW1wICsgMVxuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBlbHNlIHtcbiAgICAgICAgICAgICAgICAgICAgdGVtcCA9IDFcbiAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICB9XG5cbiAgICAgICAgICAgIHNjb3JlICs9IHRlbXBcbiAgICAgICAgfSlcblxuICAgICAgICByZXR1cm4gc2NvcmVcbiAgICB9XG5cbiAgICByZW5kZXIoc3RyaW5nLCBpbmRpY2VzLCBwcmUsIHBvc3QpIHtcbiAgICAgICAgdmFyIHJlbmRlcmVkID0gc3RyaW5nLnN1YnN0cmluZygwLCBpbmRpY2VzWzBdKVxuXG4gICAgICAgIGluZGljZXMuZm9yRWFjaCgoaW5kZXgsIGkpID0+IHtcbiAgICAgICAgICAgIHJlbmRlcmVkICs9IHByZSArIHN0cmluZ1tpbmRleF0gKyBwb3N0ICtcbiAgICAgICAgICAgICAgICBzdHJpbmcuc3Vic3RyaW5nKGluZGV4ICsgMSwgKGluZGljZXNbaSArIDFdKSA/IGluZGljZXNbaSArIDFdIDogc3RyaW5nLmxlbmd0aClcbiAgICAgICAgfSlcblxuICAgICAgICByZXR1cm4gcmVuZGVyZWRcbiAgICB9XG5cbiAgICBmaWx0ZXIocGF0dGVybiwgYXJyLCBvcHRzKSB7XG4gICAgICAgIG9wdHMgPSBvcHRzIHx8IHt9XG4gICAgICAgIHJldHVybiBhcnJcbiAgICAgICAgICAgIC5yZWR1Y2UoKHByZXYsIGVsZW1lbnQsIGlkeCwgYXJyKSA9PiB7XG4gICAgICAgICAgICAgICAgbGV0IHN0ciA9IGVsZW1lbnRcblxuICAgICAgICAgICAgICAgIGlmIChvcHRzLmV4dHJhY3QpIHtcbiAgICAgICAgICAgICAgICAgICAgc3RyID0gb3B0cy5leHRyYWN0KGVsZW1lbnQpXG5cbiAgICAgICAgICAgICAgICAgICAgaWYgKCFzdHIpIHsgLy8gdGFrZSBjYXJlIG9mIHVuZGVmaW5lZHMgLyBudWxscyAvIGV0Yy5cbiAgICAgICAgICAgICAgICAgICAgICAgIHN0ciA9ICcnXG4gICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICB9XG5cbiAgICAgICAgICAgICAgICBsZXQgcmVuZGVyZWQgPSB0aGlzLm1hdGNoKHBhdHRlcm4sIHN0ciwgb3B0cylcblxuICAgICAgICAgICAgICAgIGlmIChyZW5kZXJlZCAhPSBudWxsKSB7XG4gICAgICAgICAgICAgICAgICAgIHByZXZbcHJldi5sZW5ndGhdID0ge1xuICAgICAgICAgICAgICAgICAgICAgICAgc3RyaW5nOiByZW5kZXJlZC5yZW5kZXJlZCxcbiAgICAgICAgICAgICAgICAgICAgICAgIHNjb3JlOiByZW5kZXJlZC5zY29yZSxcbiAgICAgICAgICAgICAgICAgICAgICAgIGluZGV4OiBpZHgsXG4gICAgICAgICAgICAgICAgICAgICAgICBvcmlnaW5hbDogZWxlbWVudFxuICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgfVxuXG4gICAgICAgICAgICAgICAgcmV0dXJuIHByZXZcbiAgICAgICAgICAgIH0sIFtdKVxuXG4gICAgICAgIC5zb3J0KChhLCBiKSA9PiB7XG4gICAgICAgICAgICBsZXQgY29tcGFyZSA9IGIuc2NvcmUgLSBhLnNjb3JlXG4gICAgICAgICAgICBpZiAoY29tcGFyZSkgcmV0dXJuIGNvbXBhcmVcbiAgICAgICAgICAgIHJldHVybiBhLmluZGV4IC0gYi5pbmRleFxuICAgICAgICB9KVxuICAgIH1cbn1cblxuZXhwb3J0IGRlZmF1bHQgVHJpYnV0ZVNlYXJjaDtcbiIsIi8qKlxuKiBUcmlidXRlLmpzXG4qIE5hdGl2ZSBFUzYgSmF2YVNjcmlwdCBAbWVudGlvbiBQbHVnaW5cbioqL1xuXG5pbXBvcnQgVHJpYnV0ZSBmcm9tIFwiLi9UcmlidXRlXCI7XG5cbmV4cG9ydCBkZWZhdWx0IFRyaWJ1dGU7XG4iLCJpZiAoIUFycmF5LnByb3RvdHlwZS5maW5kKSB7XG4gICAgQXJyYXkucHJvdG90eXBlLmZpbmQgPSBmdW5jdGlvbihwcmVkaWNhdGUpIHtcbiAgICAgICAgaWYgKHRoaXMgPT09IG51bGwpIHtcbiAgICAgICAgICAgIHRocm93IG5ldyBUeXBlRXJyb3IoJ0FycmF5LnByb3RvdHlwZS5maW5kIGNhbGxlZCBvbiBudWxsIG9yIHVuZGVmaW5lZCcpXG4gICAgICAgIH1cbiAgICAgICAgaWYgKHR5cGVvZiBwcmVkaWNhdGUgIT09ICdmdW5jdGlvbicpIHtcbiAgICAgICAgICAgIHRocm93IG5ldyBUeXBlRXJyb3IoJ3ByZWRpY2F0ZSBtdXN0IGJlIGEgZnVuY3Rpb24nKVxuICAgICAgICB9XG4gICAgICAgIHZhciBsaXN0ID0gT2JqZWN0KHRoaXMpXG4gICAgICAgIHZhciBsZW5ndGggPSBsaXN0Lmxlbmd0aCA+Pj4gMFxuICAgICAgICB2YXIgdGhpc0FyZyA9IGFyZ3VtZW50c1sxXVxuICAgICAgICB2YXIgdmFsdWVcblxuICAgICAgICBmb3IgKHZhciBpID0gMDsgaSA8IGxlbmd0aDsgaSsrKSB7XG4gICAgICAgICAgICB2YWx1ZSA9IGxpc3RbaV1cbiAgICAgICAgICAgIGlmIChwcmVkaWNhdGUuY2FsbCh0aGlzQXJnLCB2YWx1ZSwgaSwgbGlzdCkpIHtcbiAgICAgICAgICAgICAgICByZXR1cm4gdmFsdWVcbiAgICAgICAgICAgIH1cbiAgICAgICAgfVxuICAgICAgICByZXR1cm4gdW5kZWZpbmVkXG4gICAgfVxufVxuXG5pZiAod2luZG93ICYmIHR5cGVvZiB3aW5kb3cuQ3VzdG9tRXZlbnQgIT09IFwiZnVuY3Rpb25cIikge1xuICBmdW5jdGlvbiBDdXN0b21FdmVudChldmVudCwgcGFyYW1zKSB7XG4gICAgcGFyYW1zID0gcGFyYW1zIHx8IHtcbiAgICAgIGJ1YmJsZXM6IGZhbHNlLFxuICAgICAgY2FuY2VsYWJsZTogZmFsc2UsXG4gICAgICBkZXRhaWw6IHVuZGVmaW5lZFxuICAgIH1cbiAgICB2YXIgZXZ0ID0gZG9jdW1lbnQuY3JlYXRlRXZlbnQoJ0N1c3RvbUV2ZW50JylcbiAgICBldnQuaW5pdEN1c3RvbUV2ZW50KGV2ZW50LCBwYXJhbXMuYnViYmxlcywgcGFyYW1zLmNhbmNlbGFibGUsIHBhcmFtcy5kZXRhaWwpXG4gICAgcmV0dXJuIGV2dFxuICB9XG5cbiBpZiAodHlwZW9mIHdpbmRvdy5FdmVudCAhPT0gJ3VuZGVmaW5lZCcpIHtcbiAgIEN1c3RvbUV2ZW50LnByb3RvdHlwZSA9IHdpbmRvdy5FdmVudC5wcm90b3R5cGVcbiB9XG5cbiAgd2luZG93LkN1c3RvbUV2ZW50ID0gQ3VzdG9tRXZlbnRcbn0iXX0=
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm5vZGVfbW9kdWxlcy9icm93c2VyLXBhY2svX3ByZWx1ZGUuanMiLCJzcmMvVHJpYnV0ZS5qcyIsInNyYy9UcmlidXRlRXZlbnRzLmpzIiwic3JjL1RyaWJ1dGVNZW51RXZlbnRzLmpzIiwic3JjL1RyaWJ1dGVSYW5nZS5qcyIsInNyYy9UcmlidXRlU2VhcmNoLmpzIiwic3JjL2luZGV4LmpzIiwic3JjL3V0aWxzLmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOzs7Ozs7Ozs7QUNBQTs7OztBQUNBOzs7O0FBQ0E7Ozs7QUFDQTs7OztBQUNBOzs7Ozs7OztJQUVNLE87QUFDRiwyQkFtQkc7QUFBQTs7QUFBQSwrQkFsQkMsTUFrQkQ7QUFBQSxZQWxCQyxNQWtCRCwrQkFsQlUsSUFrQlY7QUFBQSwrQkFqQkMsTUFpQkQ7QUFBQSxZQWpCQyxNQWlCRCwrQkFqQlUsSUFpQlY7QUFBQSxvQ0FoQkMsV0FnQkQ7QUFBQSxZQWhCQyxXQWdCRCxvQ0FoQmUsV0FnQmY7QUFBQSxnQ0FmQyxPQWVEO0FBQUEsWUFmQyxPQWVELGdDQWZXLEdBZVg7QUFBQSx5Q0FkQyxnQkFjRDtBQUFBLFlBZEMsZ0JBY0QseUNBZG9CLEtBY3BCO0FBQUEsdUNBYkMsY0FhRDtBQUFBLFlBYkMsY0FhRCx1Q0Fia0IsSUFhbEI7QUFBQSx5Q0FaQyxnQkFZRDtBQUFBLFlBWkMsZ0JBWUQseUNBWm9CLElBWXBCO0FBQUEsK0JBWEMsTUFXRDtBQUFBLFlBWEMsTUFXRCwrQkFYVSxLQVdWO0FBQUEsaUNBVkMsUUFVRDtBQUFBLFlBVkMsUUFVRCxpQ0FWWSxPQVVaO0FBQUEsbUNBVEMsVUFTRDtBQUFBLFlBVEMsVUFTRCxtQ0FUYyxJQVNkO0FBQUEsc0NBUkMsYUFRRDtBQUFBLFlBUkMsYUFRRCxzQ0FSaUIsSUFRakI7QUFBQSx3Q0FQQyxlQU9EO0FBQUEsWUFQQyxlQU9ELHdDQVBtQixJQU9uQjtBQUFBLHlDQU5DLG1CQU1EO0FBQUEsWUFOQyxtQkFNRCx5Q0FOdUIsSUFNdkI7QUFBQSxv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RWpCLHdCQUFZLEtBRks7QUFHakIsb0JBQVE7QUFIUyxTQUFuQjtBQUtBLFlBQUksTUFBTSxTQUFTLFdBQVQsQ0FBcUIsYUFBckIsQ0FBVjtBQUNBLFlBQUksZUFBSixDQUFvQixLQUFwQixFQUEyQixPQUFPLE9BQWxDLEVBQTJDLE9BQU8sVUFBbEQsRUFBOEQsT0FBTyxNQUFyRTtBQUNBLGVBQU8sR0FBUDtBQUNELEtBVnFEOztBQVl2RCxRQUFJLE9BQU8sT0FBTyxLQUFkLEtBQXdCLFdBQTVCLEVBQXlDO0FBQ3ZDLG9CQUFZLFNBQVosR0FBd0IsT0FBTyxLQUFQLENBQWEsU0FBckM7QUFDRDs7QUFFQSxXQUFPLFdBQVAsR0FBcUIsV0FBckI7QUFDRCIsImZpbGUiOiJnZW5lcmF0ZWQuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlc0NvbnRlbnQiOlsiKGZ1bmN0aW9uKCl7ZnVuY3Rpb24gcihlLG4sdCl7ZnVuY3Rpb24gbyhpLGYpe2lmKCFuW2ldKXtpZighZVtpXSl7dmFyIGM9XCJmdW5jdGlvblwiPT10eXBlb2YgcmVxdWlyZSYmcmVxdWlyZTtpZighZiYmYylyZXR1cm4gYyhpLCEwKTtpZih1KXJldHVybiB1KGksITApO3ZhciBhPW5ldyBFcnJvcihcIkNhbm5vdCBmaW5kIG1vZHVsZSAnXCIraStcIidcIik7dGhyb3cgYS5jb2RlPVwiTU9EVUxFX05PVF9GT1VORFwiLGF9dmFyIHA9bltpXT17ZXhwb3J0czp7fX07ZVtpXVswXS5jYWxsKHAuZXhwb3J0cyxmdW5jdGlvbihyKXt2YXIgbj1lW2ldWzFdW3JdO3JldHVybiBvKG58fHIpfSxwLHAuZXhwb3J0cyxyLGUsbix0KX1yZXR1cm4gbltpXS5leHBvcnRzfWZvcih2YXIgdT1cImZ1bmN0aW9uXCI9PXR5cGVvZiByZXF1aXJlJiZyZXF1aXJlLGk9MDtpPHQubGVuZ3RoO2krKylvKHRbaV0pO3JldHVybiBvfXJldHVybiByfSkoKSIsImltcG9ydCBUcmlidXRlVXRpbHMgZnJvbSBcIi4vdXRpbHNcIjtcbmltcG9ydCBUcmlidXRlRXZlbnRzIGZyb20gXCIuL1RyaWJ1dGVFdmVudHNcIjtcbmltcG9ydCBUcmlidXRlTWVudUV2ZW50cyBmcm9tIFwiLi9UcmlidXRlTWVudUV2ZW50c1wiO1xuaW1wb3J0IFRyaWJ1dGVSYW5nZSBmcm9tIFwiLi9UcmlidXRlUmFuZ2VcIjtcbmltcG9ydCBUcmlidXRlU2VhcmNoIGZyb20gXCIuL1RyaWJ1dGVTZWFyY2hcIjtcblxuY2xhc3MgVHJpYnV0ZSB7XG4gICAgY29uc3RydWN0b3Ioe1xuICAgICAgICB2YWx1ZXMgPSBudWxsLFxuICAgICAgICBpZnJhbWUgPSBudWxsLFxuICAgICAgICBzZWxlY3RDbGFzcyA9ICdoaWdobGlnaHQnLFxuICAgICAgICB0cmlnZ2VyID0gJ0AnLFxuICAgICAgICBhdXRvY29tcGxldGVNb2RlID0gZmFsc2UsXG4gICAgICAgIHNlbGVjdFRlbXBsYXRlID0gbnVsbCxcbiAgICAgICAgbWVudUl0ZW1UZW1wbGF0ZSA9IG51bGwsXG4gICAgICAgIGxvb2t1cCA9ICdrZXknLFxuICAgICAgICBmaWxsQXR0ciA9ICd2YWx1ZScsXG4gICAgICAgIGNvbGxlY3Rpb24gPSBudWxsLFxuICAgICAgICBtZW51Q29udGFpbmVyID0gbnVsbCxcbiAgICAgICAgbm9NYXRjaFRlbXBsYXRlID0gbnVsbCxcbiAgICAgICAgcmVxdWlyZUxlYWRpbmdTcGFjZSA9IHRydWUsXG4gICAgICAgIGFsbG93U3BhY2VzID0gZmFsc2UsXG4gICAgICAgIHJlcGxhY2VUZXh0U3VmZml4ID0gbnVsbCxcbiAgICAgICAgcG9zaXRpb25NZW51ID0gdHJ1ZSxcbiAgICAgICAgc3BhY2VTZWxlY3RzTWF0Y2ggPSBmYWxzZSxcbiAgICAgICAgc2VhcmNoT3B0cyA9IHt9LFxuICAgIH0pIHtcbiAgICAgICAgdGhpcy5hdXRvY29tcGxldGVNb2RlID0gYXV0b2NvbXBsZXRlTW9kZVxuICAgICAgICB0aGlzLm1lbnVTZWxlY3RlZCA9IDBcbiAgICAgICAgdGhpcy5jdXJyZW50ID0ge31cbiAgICAgICAgdGhpcy5pbnB1dEV2ZW50ID0gZmFsc2VcbiAgICAgICAgdGhpcy5pc0FjdGl2ZSA9IGZhbHNlXG4gICAgICAgIHRoaXMubWVudUNvbnRhaW5lciA9IG1lbnVDb250YWluZXJcbiAgICAgICAgdGhpcy5hbGxvd1NwYWNlcyA9IGFsbG93U3BhY2VzXG4gICAgICAgIHRoaXMucmVwbGFjZVRleHRTdWZmaXggPSByZXBsYWNlVGV4dFN1ZmZpeFxuICAgICAgICB0aGlzLnBvc2l0aW9uTWVudSA9IHBvc2l0aW9uTWVudVxuICAgICAgICB0aGlzLmhhc1RyYWlsaW5nU3BhY2UgPSBmYWxzZTtcbiAgICAgICAgdGhpcy5zcGFjZVNlbGVjdHNNYXRjaCA9IHNwYWNlU2VsZWN0c01hdGNoO1xuXG4gICAgICAgIGlmICh0aGlzLmF1dG9jb21wbGV0ZU1vZGUpIHtcbiAgICAgICAgICAgIHRyaWdnZXIgPSAnJ1xuICAgICAgICAgICAgYWxsb3dTcGFjZXMgPSBmYWxzZVxuICAgICAgICB9XG5cbiAgICAgICAgaWYgKHZhbHVlcykge1xuICAgICAgICAgICAgdGhpcy5jb2xsZWN0aW9uID0gW3tcbiAgICAgICAgICAgICAgICAvLyBzeW1ib2wgdGhhdCBzdGFydHMgdGhlIGxvb2t1cFxuICAgICAgICAgICAgICAgIHRyaWdnZXI6IHRyaWdnZXIsXG5cbiAgICAgICAgICAgICAgICAvLyBpcyBpdCB3cmFwcGVkIGluIGFuIGlmcmFtZVxuICAgICAgICAgICAgICAgIGlmcmFtZTogaWZyYW1lLFxuXG4gICAgICAgICAgICAgICAgLy8gY2xhc3MgYXBwbGllZCB0byBzZWxlY3RlZCBpdGVtXG4gICAgICAgICAgICAgICAgc2VsZWN0Q2xhc3M6IHNlbGVjdENsYXNzLFxuXG4gICAgICAgICAgICAgICAgLy8gZnVuY3Rpb24gY2FsbGVkIG9uIHNlbGVjdCB0aGF0IHJldHVucyB0aGUgY29udGVudCB0byBpbnNlcnRcbiAgICAgICAgICAgICAgICBzZWxlY3RUZW1wbGF0ZTogKHNlbGVjdFRlbXBsYXRlIHx8IFRyaWJ1dGUuZGVmYXVsdFNlbGVjdFRlbXBsYXRlKS5iaW5kKHRoaXMpLFxuXG4gICAgICAgICAgICAgICAgLy8gZnVuY3Rpb24gY2FsbGVkIHRoYXQgcmV0dXJucyBjb250ZW50IGZvciBhbiBpdGVtXG4gICAgICAgICAgICAgICAgbWVudUl0ZW1UZW1wbGF0ZTogKG1lbnVJdGVtVGVtcGxhdGUgfHwgVHJpYnV0ZS5kZWZhdWx0TWVudUl0ZW1UZW1wbGF0ZSkuYmluZCh0aGlzKSxcblxuICAgICAgICAgICAgICAgIC8vIGZ1bmN0aW9uIGNhbGxlZCB3aGVuIG1lbnUgaXMgZW1wdHksIGRpc2FibGVzIGhpZGluZyBvZiBtZW51LlxuICAgICAgICAgICAgICAgIG5vTWF0Y2hUZW1wbGF0ZTogKHQgPT4ge1xuICAgICAgICAgICAgICAgICAgICBpZiAodHlwZW9mIHQgPT09ICdmdW5jdGlvbicpIHtcbiAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiB0LmJpbmQodGhpcylcbiAgICAgICAgICAgICAgICAgICAgfVxuXG4gICAgICAgICAgICAgICAgICAgIHJldHVybiBub01hdGNoVGVtcGxhdGUgfHwgZnVuY3Rpb24gKCkge3JldHVybiAnJ30uYmluZCh0aGlzKVxuICAgICAgICAgICAgICAgIH0pKG5vTWF0Y2hUZW1wbGF0ZSksXG5cbiAgICAgICAgICAgICAgICAvLyBjb2x1bW4gdG8gc2VhcmNoIGFnYWluc3QgaW4gdGhlIG9iamVjdFxuICAgICAgICAgICAgICAgIGxvb2t1cDogbG9va3VwLFxuXG4gICAgICAgICAgICAgICAgLy8gY29sdW1uIHRoYXQgY29udGFpbnMgdGhlIGNvbnRlbnQgdG8gaW5zZXJ0IGJ5IGRlZmF1bHRcbiAgICAgICAgICAgICAgICBmaWxsQXR0cjogZmlsbEF0dHIsXG5cbiAgICAgICAgICAgICAgICAvLyBhcnJheSBvZiBvYmplY3RzIG9yIGEgZnVuY3Rpb24gcmV0dXJuaW5nIGFuIGFycmF5IG9mIG9iamVjdHNcbiAgICAgICAgICAgICAgICB2YWx1ZXM6IHZhbHVlcyxcblxuICAgICAgICAgICAgICAgIHJlcXVpcmVMZWFkaW5nU3BhY2U6IHJlcXVpcmVMZWFkaW5nU3BhY2UsXG5cbiAgICAgICAgICAgICAgICBzZWFyY2hPcHRzOiBzZWFyY2hPcHRzXG4gICAgICAgICAgICB9XVxuICAgICAgICB9XG4gICAgICAgIGVsc2UgaWYgKGNvbGxlY3Rpb24pIHtcbiAgICAgICAgICAgIGlmICh0aGlzLmF1dG9jb21wbGV0ZU1vZGUpXG4gICAgICAgICAgICAgICAgY29uc29sZS53YXJuKCdUcmlidXRlIGluIGF1dG9jb21wbGV0ZSBtb2RlIGRvZXMgbm90IHdvcmsgZm9yIGNvbGxlY3Rpb25zJylcbiAgICAgICAgICAgIHRoaXMuY29sbGVjdGlvbiA9IGNvbGxlY3Rpb24ubWFwKGl0ZW0gPT4ge1xuICAgICAgICAgICAgICAgIHJldHVybiB7XG4gICAgICAgICAgICAgICAgICAgIHRyaWdnZXI6IGl0ZW0udHJpZ2dlciB8fCB0cmlnZ2VyLFxuICAgICAgICAgICAgICAgICAgICBpZnJhbWU6IGl0ZW0uaWZyYW1lIHx8IGlmcmFtZSxcbiAgICAgICAgICAgICAgICAgICAgc2VsZWN0Q2xhc3M6IGl0ZW0uc2VsZWN0Q2xhc3MgfHwgc2VsZWN0Q2xhc3MsXG4gICAgICAgICAgICAgICAgICAgIHNlbGVjdFRlbXBsYXRlOiAoaXRlbS5zZWxlY3RUZW1wbGF0ZSB8fCBUcmlidXRlLmRlZmF1bHRTZWxlY3RUZW1wbGF0ZSkuYmluZCh0aGlzKSxcbiAgICAgICAgICAgICAgICAgICAgbWVudUl0ZW1UZW1wbGF0ZTogKGl0ZW0ubWVudUl0ZW1UZW1wbGF0ZSB8fCBUcmlidXRlLmRlZmF1bHRNZW51SXRlbVRlbXBsYXRlKS5iaW5kKHRoaXMpLFxuICAgICAgICAgICAgICAgICAgICAvLyBmdW5jdGlvbiBjYWxsZWQgd2hlbiBtZW51IGlzIGVtcHR5LCBkaXNhYmxlcyBoaWRpbmcgb2YgbWVudS5cbiAgICAgICAgICAgICAgICAgICAgbm9NYXRjaFRlbXBsYXRlOiAodCA9PiB7XG4gICAgICAgICAgICAgICAgICAgICAgICBpZiAodHlwZW9mIHQgPT09ICdmdW5jdGlvbicpIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gdC5iaW5kKHRoaXMpXG4gICAgICAgICAgICAgICAgICAgICAgICB9XG5cbiAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBudWxsXG4gICAgICAgICAgICAgICAgICAgIH0pKG5vTWF0Y2hUZW1wbGF0ZSksXG4gICAgICAgICAgICAgICAgICAgIGxvb2t1cDogaXRlbS5sb29rdXAgfHwgbG9va3VwLFxuICAgICAgICAgICAgICAgICAgICBmaWxsQXR0cjogaXRlbS5maWxsQXR0ciB8fCBmaWxsQXR0cixcbiAgICAgICAgICAgICAgICAgICAgdmFsdWVzOiBpdGVtLnZhbHVlcyxcbiAgICAgICAgICAgICAgICAgICAgcmVxdWlyZUxlYWRpbmdTcGFjZTogaXRlbS5yZXF1aXJlTGVhZGluZ1NwYWNlLFxuICAgICAgICAgICAgICAgICAgICBzZWFyY2hPcHRzOiBpdGVtLnNlYXJjaE9wdHMgfHwgc2VhcmNoT3B0c1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgIH0pXG4gICAgICAgIH1cbiAgICAgICAgZWxzZSB7XG4gICAgICAgICAgICB0aHJvdyBuZXcgRXJyb3IoJ1tUcmlidXRlXSBObyBjb2xsZWN0aW9uIHNwZWNpZmllZC4nKVxuICAgICAgICB9XG5cbiAgICAgICAgbmV3IFRyaWJ1dGVSYW5nZSh0aGlzKVxuICAgICAgICBuZXcgVHJpYnV0ZUV2ZW50cyh0aGlzKVxuICAgICAgICBuZXcgVHJpYnV0ZU1lbnVFdmVudHModGhpcylcbiAgICAgICAgbmV3IFRyaWJ1dGVTZWFyY2godGhpcylcbiAgICB9XG5cbiAgICBzdGF0aWMgZGVmYXVsdFNlbGVjdFRlbXBsYXRlKGl0ZW0pIHtcbiAgICAgIGlmICh0eXBlb2YgaXRlbSA9PT0gJ3VuZGVmaW5lZCcpIHJldHVybiBudWxsO1xuICAgICAgaWYgKHRoaXMucmFuZ2UuaXNDb250ZW50RWRpdGFibGUodGhpcy5jdXJyZW50LmVsZW1lbnQpKSB7XG4gICAgICAgICAgcmV0dXJuICc8c3BhbiBjbGFzcz1cInRyaWJ1dGUtbWVudGlvblwiPicgKyAodGhpcy5jdXJyZW50LmNvbGxlY3Rpb24udHJpZ2dlciArIGl0ZW0ub3JpZ2luYWxbdGhpcy5jdXJyZW50LmNvbGxlY3Rpb24uZmlsbEF0dHJdKSArICc8L3NwYW4+JztcbiAgICAgIH1cblxuICAgICAgcmV0dXJuIHRoaXMuY3VycmVudC5jb2xsZWN0aW9uLnRyaWdnZXIgKyBpdGVtLm9yaWdpbmFsW3RoaXMuY3VycmVudC5jb2xsZWN0aW9uLmZpbGxBdHRyXTtcbiAgICB9XG5cbiAgICBzdGF0aWMgZGVmYXVsdE1lbnVJdGVtVGVtcGxhdGUobWF0Y2hJdGVtKSB7XG4gICAgICAgIHJldHVybiBtYXRjaEl0ZW0uc3RyaW5nXG4gICAgfVxuXG4gICAgc3RhdGljIGlucHV0VHlwZXMoKSB7XG4gICAgICAgIHJldHVybiBbJ1RFWFRBUkVBJywgJ0lOUFVUJ11cbiAgICB9XG5cbiAgICB0cmlnZ2VycygpIHtcbiAgICAgICAgcmV0dXJuIHRoaXMuY29sbGVjdGlvbi5tYXAoY29uZmlnID0+IHtcbiAgICAgICAgICAgIHJldHVybiBjb25maWcudHJpZ2dlclxuICAgICAgICB9KVxuICAgIH1cblxuICAgIGF0dGFjaChlbCkge1xuICAgICAgICBpZiAoIWVsKSB7XG4gICAgICAgICAgICB0aHJvdyBuZXcgRXJyb3IoJ1tUcmlidXRlXSBNdXN0IHBhc3MgaW4gYSBET00gbm9kZSBvciBOb2RlTGlzdC4nKVxuICAgICAgICB9XG5cbiAgICAgICAgLy8gQ2hlY2sgaWYgaXQgaXMgYSBqUXVlcnkgY29sbGVjdGlvblxuICAgICAgICBpZiAodHlwZW9mIGpRdWVyeSAhPT0gJ3VuZGVmaW5lZCcgJiYgZWwgaW5zdGFuY2VvZiBqUXVlcnkpIHtcbiAgICAgICAgICAgIGVsID0gZWwuZ2V0KClcbiAgICAgICAgfVxuXG4gICAgICAgIC8vIElzIGVsIGFuIEFycmF5L0FycmF5LWxpa2Ugb2JqZWN0P1xuICAgICAgICBpZiAoZWwuY29uc3RydWN0b3IgPT09IE5vZGVMaXN0IHx8IGVsLmNvbnN0cnVjdG9yID09PSBIVE1MQ29sbGVjdGlvbiB8fCBlbC5jb25zdHJ1Y3RvciA9PT0gQXJyYXkpIHtcbiAgICAgICAgICAgIGxldCBsZW5ndGggPSBlbC5sZW5ndGhcbiAgICAgICAgICAgIGZvciAodmFyIGkgPSAwOyBpIDwgbGVuZ3RoOyArK2kpIHtcbiAgICAgICAgICAgICAgICB0aGlzLl9hdHRhY2goZWxbaV0pXG4gICAgICAgICAgICB9XG4gICAgICAgIH0gZWxzZSB7XG4gICAgICAgICAgICB0aGlzLl9hdHRhY2goZWwpXG4gICAgICAgIH1cbiAgICB9XG5cbiAgICBfYXR0YWNoKGVsKSB7XG4gICAgICAgIGlmIChlbC5oYXNBdHRyaWJ1dGUoJ2RhdGEtdHJpYnV0ZScpKSB7XG4gICAgICAgICAgICBjb25zb2xlLndhcm4oJ1RyaWJ1dGUgd2FzIGFscmVhZHkgYm91bmQgdG8gJyArIGVsLm5vZGVOYW1lKVxuICAgICAgICB9XG5cbiAgICAgICAgdGhpcy5lbnN1cmVFZGl0YWJsZShlbClcbiAgICAgICAgdGhpcy5ldmVudHMuYmluZChlbClcbiAgICAgICAgZWwuc2V0QXR0cmlidXRlKCdkYXRhLXRyaWJ1dGUnLCB0cnVlKVxuICAgIH1cblxuICAgIGVuc3VyZUVkaXRhYmxlKGVsZW1lbnQpIHtcbiAgICAgICAgaWYgKFRyaWJ1dGUuaW5wdXRUeXBlcygpLmluZGV4T2YoZWxlbWVudC5ub2RlTmFtZSkgPT09IC0xKSB7XG4gICAgICAgICAgICBpZiAoZWxlbWVudC5jb250ZW50RWRpdGFibGUpIHtcbiAgICAgICAgICAgICAgICBlbGVtZW50LmNvbnRlbnRFZGl0YWJsZSA9IHRydWVcbiAgICAgICAgICAgIH0gZWxzZSB7XG4gICAgICAgICAgICAgICAgdGhyb3cgbmV3IEVycm9yKCdbVHJpYnV0ZV0gQ2Fubm90IGJpbmQgdG8gJyArIGVsZW1lbnQubm9kZU5hbWUpXG4gICAgICAgICAgICB9XG4gICAgICAgIH1cbiAgICB9XG5cbiAgICBjcmVhdGVNZW51KCkge1xuICAgICAgICBsZXQgd3JhcHBlciA9IHRoaXMucmFuZ2UuZ2V0RG9jdW1lbnQoKS5jcmVhdGVFbGVtZW50KCdkaXYnKSxcbiAgICAgICAgICAgIHVsID0gdGhpcy5yYW5nZS5nZXREb2N1bWVudCgpLmNyZWF0ZUVsZW1lbnQoJ3VsJylcblxuICAgICAgICB3cmFwcGVyLmNsYXNzTmFtZSA9ICd0cmlidXRlLWNvbnRhaW5lcidcbiAgICAgICAgd3JhcHBlci5hcHBlbmRDaGlsZCh1bClcblxuICAgICAgICBpZiAodGhpcy5tZW51Q29udGFpbmVyKSB7XG4gICAgICAgICAgICByZXR1cm4gdGhpcy5tZW51Q29udGFpbmVyLmFwcGVuZENoaWxkKHdyYXBwZXIpXG4gICAgICAgIH1cblxuICAgICAgICByZXR1cm4gdGhpcy5yYW5nZS5nZXREb2N1bWVudCgpLmJvZHkuYXBwZW5kQ2hpbGQod3JhcHBlcilcbiAgICB9XG5cbiAgICBzaG93TWVudUZvcihlbGVtZW50LCBzY3JvbGxUbykge1xuICAgICAgICAvLyBPbmx5IHByb2NlZWQgaWYgbWVudSBpc24ndCBhbHJlYWR5IHNob3duIGZvciB0aGUgY3VycmVudCBlbGVtZW50ICYgbWVudGlvblRleHRcbiAgICAgICAgaWYgKHRoaXMuaXNBY3RpdmUgJiYgdGhpcy5jdXJyZW50LmVsZW1lbnQgPT09IGVsZW1lbnQgJiYgdGhpcy5jdXJyZW50Lm1lbnRpb25UZXh0ID09PSB0aGlzLmN1cnJlbnRNZW50aW9uVGV4dFNuYXBzaG90KSB7XG4gICAgICAgICAgcmV0dXJuXG4gICAgICAgIH1cbiAgICAgICAgdGhpcy5jdXJyZW50TWVudGlvblRleHRTbmFwc2hvdCA9IHRoaXMuY3VycmVudC5tZW50aW9uVGV4dFxuXG4gICAgICAgIC8vIGNyZWF0ZSB0aGUgbWVudSBpZiBpdCBkb2Vzbid0IGV4aXN0LlxuICAgICAgICBpZiAoIXRoaXMubWVudSkge1xuICAgICAgICAgICAgdGhpcy5tZW51ID0gdGhpcy5jcmVhdGVNZW51KClcbiAgICAgICAgICAgIGVsZW1lbnQudHJpYnV0ZU1lbnUgPSB0aGlzLm1lbnVcbiAgICAgICAgICAgIHRoaXMubWVudUV2ZW50cy5iaW5kKHRoaXMubWVudSlcbiAgICAgICAgfVxuXG4gICAgICAgIHRoaXMuaXNBY3RpdmUgPSB0cnVlXG4gICAgICAgIHRoaXMubWVudVNlbGVjdGVkID0gMFxuXG4gICAgICAgIGlmICghdGhpcy5jdXJyZW50Lm1lbnRpb25UZXh0KSB7XG4gICAgICAgICAgICB0aGlzLmN1cnJlbnQubWVudGlvblRleHQgPSAnJ1xuICAgICAgICB9XG5cbiAgICAgICAgY29uc3QgcHJvY2Vzc1ZhbHVlcyA9ICh2YWx1ZXMpID0+IHtcbiAgICAgICAgICAgIC8vIFRyaWJ1dGUgbWF5IG5vdCBiZSBhY3RpdmUgYW55IG1vcmUgYnkgdGhlIHRpbWUgdGhlIHZhbHVlIGNhbGxiYWNrIHJldHVybnNcbiAgICAgICAgICAgIGlmICghdGhpcy5pc0FjdGl2ZSkge1xuICAgICAgICAgICAgICAgIHJldHVyblxuICAgICAgICAgICAgfVxuXG4gICAgICAgICAgICBsZXQgaXRlbXMgPSB0aGlzLnNlYXJjaC5maWx0ZXIodGhpcy5jdXJyZW50Lm1lbnRpb25UZXh0LCB2YWx1ZXMsIHtcbiAgICAgICAgICAgICAgICBwcmU6IHRoaXMuY3VycmVudC5jb2xsZWN0aW9uLnNlYXJjaE9wdHMucHJlIHx8ICc8c3Bhbj4nLFxuICAgICAgICAgICAgICAgIHBvc3Q6IHRoaXMuY3VycmVudC5jb2xsZWN0aW9uLnNlYXJjaE9wdHMucG9zdCB8fCAnPC9zcGFuPicsXG4gICAgICAgICAgICAgICAgZXh0cmFjdDogKGVsKSA9PiB7XG4gICAgICAgICAgICAgICAgICAgIGlmICh0eXBlb2YgdGhpcy5jdXJyZW50LmNvbGxlY3Rpb24ubG9va3VwID09PSAnc3RyaW5nJykge1xuICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIGVsW3RoaXMuY3VycmVudC5jb2xsZWN0aW9uLmxvb2t1cF1cbiAgICAgICAgICAgICAgICAgICAgfSBlbHNlIGlmICh0eXBlb2YgdGhpcy5jdXJyZW50LmNvbGxlY3Rpb24ubG9va3VwID09PSAnZnVuY3Rpb24nKSB7XG4gICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gdGhpcy5jdXJyZW50LmNvbGxlY3Rpb24ubG9va3VwKGVsLCB0aGlzLmN1cnJlbnQubWVudGlvblRleHQpXG4gICAgICAgICAgICAgICAgICAgIH0gZWxzZSB7XG4gICAgICAgICAgICAgICAgICAgICAgICB0aHJvdyBuZXcgRXJyb3IoJ0ludmFsaWQgbG9va3VwIGF0dHJpYnV0ZSwgbG9va3VwIG11c3QgYmUgc3RyaW5nIG9yIGZ1bmN0aW9uLicpXG4gICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICB9KVxuXG4gICAgICAgICAgICB0aGlzLmN1cnJlbnQuZmlsdGVyZWRJdGVtcyA9IGl0ZW1zXG5cblxuICAgICAgICAgICAgbGV0IHVsID0gdGhpcy5tZW51LnF1ZXJ5U2VsZWN0b3IoJ3VsJylcblxuICAgICAgICAgICAgdGhpcy5yYW5nZS5wb3NpdGlvbk1lbnVBdENhcmV0KHNjcm9sbFRvKVxuXG4gICAgICAgICAgICBpZiAoIWl0ZW1zLmxlbmd0aCkge1xuICAgICAgICAgICAgICAgIGxldCBub01hdGNoRXZlbnQgPSBuZXcgQ3VzdG9tRXZlbnQoJ3RyaWJ1dGUtbm8tbWF0Y2gnLCB7IGRldGFpbDogdGhpcy5tZW51IH0pXG4gICAgICAgICAgICAgICAgdGhpcy5jdXJyZW50LmVsZW1lbnQuZGlzcGF0Y2hFdmVudChub01hdGNoRXZlbnQpXG4gICAgICAgICAgICAgICAgaWYgKCF0aGlzLmN1cnJlbnQuY29sbGVjdGlvbi5ub01hdGNoVGVtcGxhdGUpIHtcbiAgICAgICAgICAgICAgICAgICAgdGhpcy5oaWRlTWVudSgpXG4gICAgICAgICAgICAgICAgfSBlbHNlIHtcbiAgICAgICAgICAgICAgICAgICAgdWwuaW5uZXJIVE1MID0gdGhpcy5jdXJyZW50LmNvbGxlY3Rpb24ubm9NYXRjaFRlbXBsYXRlKClcbiAgICAgICAgICAgICAgICB9XG5cbiAgICAgICAgICAgICAgICByZXR1cm5cbiAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgdWwuaW5uZXJIVE1MID0gJydcblxuICAgICAgICAgICAgaXRlbXMuZm9yRWFjaCgoaXRlbSwgaW5kZXgpID0+IHtcbiAgICAgICAgICAgICAgICBsZXQgbGkgPSB0aGlzLnJhbmdlLmdldERvY3VtZW50KCkuY3JlYXRlRWxlbWVudCgnbGknKVxuICAgICAgICAgICAgICAgIGxpLnNldEF0dHJpYnV0ZSgnZGF0YS1pbmRleCcsIGluZGV4KVxuICAgICAgICAgICAgICAgIGxpLmFkZEV2ZW50TGlzdGVuZXIoJ21vdXNlZW50ZXInLCAoZSkgPT4ge1xuICAgICAgICAgICAgICAgICAgbGV0IGxpID0gZS50YXJnZXQ7XG4gICAgICAgICAgICAgICAgICBsZXQgaW5kZXggPSBsaS5nZXRBdHRyaWJ1dGUoJ2RhdGEtaW5kZXgnKVxuICAgICAgICAgICAgICAgICAgaWYgKGUubW92ZW1lbnRYICE9PSAwICYmIGUubW92ZW1lbnRZICE9PSAwKSB7XG4gICAgICAgICAgICAgICAgICAgIHRoaXMuZXZlbnRzLnNldEFjdGl2ZUxpKGluZGV4KVxuICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgIH0pXG4gICAgICAgICAgICAgICAgaWYgKHRoaXMubWVudVNlbGVjdGVkID09PSBpbmRleCkge1xuICAgICAgICAgICAgICAgICAgICBsaS5jbGFzc05hbWUgPSB0aGlzLmN1cnJlbnQuY29sbGVjdGlvbi5zZWxlY3RDbGFzc1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBsaS5pbm5lckhUTUwgPSB0aGlzLmN1cnJlbnQuY29sbGVjdGlvbi5tZW51SXRlbVRlbXBsYXRlKGl0ZW0pXG4gICAgICAgICAgICAgICAgdWwuYXBwZW5kQ2hpbGQobGkpXG4gICAgICAgICAgICB9KVxuICAgICAgICB9XG5cbiAgICAgICAgaWYgKHR5cGVvZiB0aGlzLmN1cnJlbnQuY29sbGVjdGlvbi52YWx1ZXMgPT09ICdmdW5jdGlvbicpIHtcbiAgICAgICAgICAgIHRoaXMuY3VycmVudC5jb2xsZWN0aW9uLnZhbHVlcyh0aGlzLmN1cnJlbnQubWVudGlvblRleHQsIHByb2Nlc3NWYWx1ZXMpXG4gICAgICAgIH0gZWxzZSB7XG4gICAgICAgICAgICBwcm9jZXNzVmFsdWVzKHRoaXMuY3VycmVudC5jb2xsZWN0aW9uLnZhbHVlcylcbiAgICAgICAgfVxuICAgIH1cblxuICAgIHNob3dNZW51Rm9yQ29sbGVjdGlvbihlbGVtZW50LCBjb2xsZWN0aW9uSW5kZXgpIHtcbiAgICAgICAgaWYgKGVsZW1lbnQgIT09IGRvY3VtZW50LmFjdGl2ZUVsZW1lbnQpIHtcbiAgICAgICAgICAgIHRoaXMucGxhY2VDYXJldEF0RW5kKGVsZW1lbnQpXG4gICAgICAgIH1cblxuICAgICAgICB0aGlzLmN1cnJlbnQuY29sbGVjdGlvbiA9IHRoaXMuY29sbGVjdGlvbltjb2xsZWN0aW9uSW5kZXggfHwgMF1cbiAgICAgICAgdGhpcy5jdXJyZW50LmV4dGVybmFsVHJpZ2dlciA9IHRydWVcbiAgICAgICAgdGhpcy5jdXJyZW50LmVsZW1lbnQgPSBlbGVtZW50XG5cbiAgICAgICAgaWYgKGVsZW1lbnQuaXNDb250ZW50RWRpdGFibGUpXG4gICAgICAgICAgICB0aGlzLmluc2VydFRleHRBdEN1cnNvcih0aGlzLmN1cnJlbnQuY29sbGVjdGlvbi50cmlnZ2VyKVxuICAgICAgICBlbHNlXG4gICAgICAgICAgICB0aGlzLmluc2VydEF0Q2FyZXQoZWxlbWVudCwgdGhpcy5jdXJyZW50LmNvbGxlY3Rpb24udHJpZ2dlcilcblxuICAgICAgICB0aGlzLnNob3dNZW51Rm9yKGVsZW1lbnQpXG4gICAgfVxuXG4gICAgLy8gVE9ETzogbWFrZSBzdXJlIHRoaXMgd29ya3MgZm9yIGlucHV0cy90ZXh0YXJlYXNcbiAgICBwbGFjZUNhcmV0QXRFbmQoZWwpIHtcbiAgICAgICAgZWwuZm9jdXMoKTtcbiAgICAgICAgaWYgKHR5cGVvZiB3aW5kb3cuZ2V0U2VsZWN0aW9uICE9IFwidW5kZWZpbmVkXCJcbiAgICAgICAgICAgICAgICAmJiB0eXBlb2YgZG9jdW1lbnQuY3JlYXRlUmFuZ2UgIT0gXCJ1bmRlZmluZWRcIikge1xuICAgICAgICAgICAgdmFyIHJhbmdlID0gZG9jdW1lbnQuY3JlYXRlUmFuZ2UoKTtcbiAgICAgICAgICAgIHJhbmdlLnNlbGVjdE5vZGVDb250ZW50cyhlbCk7XG4gICAgICAgICAgICByYW5nZS5jb2xsYXBzZShmYWxzZSk7XG4gICAgICAgICAgICB2YXIgc2VsID0gd2luZG93LmdldFNlbGVjdGlvbigpO1xuICAgICAgICAgICAgc2VsLnJlbW92ZUFsbFJhbmdlcygpO1xuICAgICAgICAgICAgc2VsLmFkZFJhbmdlKHJhbmdlKTtcbiAgICAgICAgfSBlbHNlIGlmICh0eXBlb2YgZG9jdW1lbnQuYm9keS5jcmVhdGVUZXh0UmFuZ2UgIT0gXCJ1bmRlZmluZWRcIikge1xuICAgICAgICAgICAgdmFyIHRleHRSYW5nZSA9IGRvY3VtZW50LmJvZHkuY3JlYXRlVGV4dFJhbmdlKCk7XG4gICAgICAgICAgICB0ZXh0UmFuZ2UubW92ZVRvRWxlbWVudFRleHQoZWwpO1xuICAgICAgICAgICAgdGV4dFJhbmdlLmNvbGxhcHNlKGZhbHNlKTtcbiAgICAgICAgICAgIHRleHRSYW5nZS5zZWxlY3QoKTtcbiAgICAgICAgfVxuICAgIH1cblxuICAgIC8vIGZvciBjb250ZW50ZWRpdGFibGVcbiAgICBpbnNlcnRUZXh0QXRDdXJzb3IodGV4dCkge1xuICAgICAgICB2YXIgc2VsLCByYW5nZSwgaHRtbDtcbiAgICAgICAgc2VsID0gd2luZG93LmdldFNlbGVjdGlvbigpO1xuICAgICAgICByYW5nZSA9IHNlbC5nZXRSYW5nZUF0KDApO1xuICAgICAgICByYW5nZS5kZWxldGVDb250ZW50cygpO1xuICAgICAgICB2YXIgdGV4dE5vZGUgPSBkb2N1bWVudC5jcmVhdGVUZXh0Tm9kZSh0ZXh0KTtcbiAgICAgICAgcmFuZ2UuaW5zZXJ0Tm9kZSh0ZXh0Tm9kZSk7XG4gICAgICAgIHJhbmdlLnNlbGVjdE5vZGVDb250ZW50cyh0ZXh0Tm9kZSlcbiAgICAgICAgcmFuZ2UuY29sbGFwc2UoZmFsc2UpXG4gICAgICAgIHNlbC5yZW1vdmVBbGxSYW5nZXMoKVxuICAgICAgICBzZWwuYWRkUmFuZ2UocmFuZ2UpXG4gICAgfVxuXG4gICAgLy8gZm9yIHJlZ3VsYXIgaW5wdXRzXG4gICAgaW5zZXJ0QXRDYXJldCh0ZXh0YXJlYSwgdGV4dCkge1xuICAgICAgICB2YXIgc2Nyb2xsUG9zID0gdGV4dGFyZWEuc2Nyb2xsVG9wO1xuICAgICAgICB2YXIgY2FyZXRQb3MgPSB0ZXh0YXJlYS5zZWxlY3Rpb25TdGFydDtcblxuICAgICAgICB2YXIgZnJvbnQgPSAodGV4dGFyZWEudmFsdWUpLnN1YnN0cmluZygwLCBjYXJldFBvcyk7XG4gICAgICAgIHZhciBiYWNrID0gKHRleHRhcmVhLnZhbHVlKS5zdWJzdHJpbmcodGV4dGFyZWEuc2VsZWN0aW9uRW5kLCB0ZXh0YXJlYS52YWx1ZS5sZW5ndGgpO1xuICAgICAgICB0ZXh0YXJlYS52YWx1ZSA9IGZyb250ICsgdGV4dCArIGJhY2s7XG4gICAgICAgIGNhcmV0UG9zID0gY2FyZXRQb3MgKyB0ZXh0Lmxlbmd0aDtcbiAgICAgICAgdGV4dGFyZWEuc2VsZWN0aW9uU3RhcnQgPSBjYXJldFBvcztcbiAgICAgICAgdGV4dGFyZWEuc2VsZWN0aW9uRW5kID0gY2FyZXRQb3M7XG4gICAgICAgIHRleHRhcmVhLmZvY3VzKCk7XG4gICAgICAgIHRleHRhcmVhLnNjcm9sbFRvcCA9IHNjcm9sbFBvcztcbiAgICB9XG5cbiAgICBoaWRlTWVudSgpIHtcbiAgICAgICAgaWYgKHRoaXMubWVudSkge1xuICAgICAgICAgICAgdGhpcy5tZW51LnN0eWxlLmNzc1RleHQgPSAnZGlzcGxheTogbm9uZTsnXG4gICAgICAgICAgICB0aGlzLmlzQWN0aXZlID0gZmFsc2VcbiAgICAgICAgICAgIHRoaXMubWVudVNlbGVjdGVkID0gMFxuICAgICAgICAgICAgdGhpcy5jdXJyZW50ID0ge31cbiAgICAgICAgfVxuICAgIH1cblxuICAgIHNlbGVjdEl0ZW1BdEluZGV4KGluZGV4LCBvcmlnaW5hbEV2ZW50KSB7XG4gICAgICAgIGluZGV4ID0gcGFyc2VJbnQoaW5kZXgpXG4gICAgICAgIGlmICh0eXBlb2YgaW5kZXggIT09ICdudW1iZXInIHx8IGlzTmFOKGluZGV4KSkgcmV0dXJuXG4gICAgICAgIGxldCBpdGVtID0gdGhpcy5jdXJyZW50LmZpbHRlcmVkSXRlbXNbaW5kZXhdXG4gICAgICAgIGxldCBjb250ZW50ID0gdGhpcy5jdXJyZW50LmNvbGxlY3Rpb24uc2VsZWN0VGVtcGxhdGUoaXRlbSlcbiAgICAgICAgaWYgKGNvbnRlbnQgIT09IG51bGwpIHRoaXMucmVwbGFjZVRleHQoY29udGVudCwgb3JpZ2luYWxFdmVudCwgaXRlbSlcbiAgICB9XG5cbiAgICByZXBsYWNlVGV4dChjb250ZW50LCBvcmlnaW5hbEV2ZW50LCBpdGVtKSB7XG4gICAgICAgIHRoaXMucmFuZ2UucmVwbGFjZVRyaWdnZXJUZXh0KGNvbnRlbnQsIHRydWUsIHRydWUsIG9yaWdpbmFsRXZlbnQsIGl0ZW0pXG4gICAgfVxuXG4gICAgX2FwcGVuZChjb2xsZWN0aW9uLCBuZXdWYWx1ZXMsIHJlcGxhY2UpIHtcbiAgICAgICAgaWYgKHR5cGVvZiBjb2xsZWN0aW9uLnZhbHVlcyA9PT0gJ2Z1bmN0aW9uJykge1xuICAgICAgICAgICAgdGhyb3cgbmV3IEVycm9yKCdVbmFibGUgdG8gYXBwZW5kIHRvIHZhbHVlcywgYXMgaXQgaXMgYSBmdW5jdGlvbi4nKVxuICAgICAgICB9IGVsc2UgaWYgKCFyZXBsYWNlKSB7XG4gICAgICAgICAgICBjb2xsZWN0aW9uLnZhbHVlcyA9IGNvbGxlY3Rpb24udmFsdWVzLmNvbmNhdChuZXdWYWx1ZXMpXG4gICAgICAgIH0gZWxzZSB7XG4gICAgICAgICAgICBjb2xsZWN0aW9uLnZhbHVlcyA9IG5ld1ZhbHVlc1xuICAgICAgICB9XG4gICAgfVxuXG4gICAgYXBwZW5kKGNvbGxlY3Rpb25JbmRleCwgbmV3VmFsdWVzLCByZXBsYWNlKSB7XG4gICAgICAgIGxldCBpbmRleCA9IHBhcnNlSW50KGNvbGxlY3Rpb25JbmRleClcbiAgICAgICAgaWYgKHR5cGVvZiBpbmRleCAhPT0gJ251bWJlcicpIHRocm93IG5ldyBFcnJvcigncGxlYXNlIHByb3ZpZGUgYW4gaW5kZXggZm9yIHRoZSBjb2xsZWN0aW9uIHRvIHVwZGF0ZS4nKVxuXG4gICAgICAgIGxldCBjb2xsZWN0aW9uID0gdGhpcy5jb2xsZWN0aW9uW2luZGV4XVxuXG4gICAgICAgIHRoaXMuX2FwcGVuZChjb2xsZWN0aW9uLCBuZXdWYWx1ZXMsIHJlcGxhY2UpXG4gICAgfVxuXG4gICAgYXBwZW5kQ3VycmVudChuZXdWYWx1ZXMsIHJlcGxhY2UpIHtcbiAgICAgICAgaWYgKHRoaXMuaXNBY3RpdmUpIHtcbiAgICAgICAgICAgIHRoaXMuX2FwcGVuZCh0aGlzLmN1cnJlbnQuY29sbGVjdGlvbiwgbmV3VmFsdWVzLCByZXBsYWNlKVxuICAgICAgICB9IGVsc2Uge1xuICAgICAgICAgICAgdGhyb3cgbmV3IEVycm9yKCdObyBhY3RpdmUgc3RhdGUuIFBsZWFzZSB1c2UgYXBwZW5kIGluc3RlYWQgYW5kIHBhc3MgYW4gaW5kZXguJylcbiAgICAgICAgfVxuICAgIH1cblxuICAgIGRldGFjaChlbCkge1xuICAgICAgICBpZiAoIWVsKSB7XG4gICAgICAgICAgICB0aHJvdyBuZXcgRXJyb3IoJ1tUcmlidXRlXSBNdXN0IHBhc3MgaW4gYSBET00gbm9kZSBvciBOb2RlTGlzdC4nKVxuICAgICAgICB9XG5cbiAgICAgICAgLy8gQ2hlY2sgaWYgaXQgaXMgYSBqUXVlcnkgY29sbGVjdGlvblxuICAgICAgICBpZiAodHlwZW9mIGpRdWVyeSAhPT0gJ3VuZGVmaW5lZCcgJiYgZWwgaW5zdGFuY2VvZiBqUXVlcnkpIHtcbiAgICAgICAgICAgIGVsID0gZWwuZ2V0KClcbiAgICAgICAgfVxuXG4gICAgICAgIC8vIElzIGVsIGFuIEFycmF5L0FycmF5LWxpa2Ugb2JqZWN0P1xuICAgICAgICBpZiAoZWwuY29uc3RydWN0b3IgPT09IE5vZGVMaXN0IHx8IGVsLmNvbnN0cnVjdG9yID09PSBIVE1MQ29sbGVjdGlvbiB8fCBlbC5jb25zdHJ1Y3RvciA9PT0gQXJyYXkpIHtcbiAgICAgICAgICAgIGxldCBsZW5ndGggPSBlbC5sZW5ndGhcbiAgICAgICAgICAgIGZvciAodmFyIGkgPSAwOyBpIDwgbGVuZ3RoOyArK2kpIHtcbiAgICAgICAgICAgICAgICB0aGlzLl9kZXRhY2goZWxbaV0pXG4gICAgICAgICAgICB9XG4gICAgICAgIH0gZWxzZSB7XG4gICAgICAgICAgICB0aGlzLl9kZXRhY2goZWwpXG4gICAgICAgIH1cbiAgICB9XG5cbiAgICBfZGV0YWNoKGVsKSB7XG4gICAgICAgIHRoaXMuZXZlbnRzLnVuYmluZChlbClcbiAgICAgICAgaWYgKGVsLnRyaWJ1dGVNZW51KSB7XG4gICAgICAgICAgICB0aGlzLm1lbnVFdmVudHMudW5iaW5kKGVsLnRyaWJ1dGVNZW51KVxuICAgICAgICB9XG5cbiAgICAgICAgc2V0VGltZW91dCgoKSA9PiB7XG4gICAgICAgICAgICBlbC5yZW1vdmVBdHRyaWJ1dGUoJ2RhdGEtdHJpYnV0ZScpXG4gICAgICAgICAgICB0aGlzLmlzQWN0aXZlID0gZmFsc2VcbiAgICAgICAgICAgIGlmIChlbC50cmlidXRlTWVudSkge1xuICAgICAgICAgICAgICAgIGVsLnRyaWJ1dGVNZW51LnJlbW92ZSgpXG4gICAgICAgICAgICB9XG4gICAgICAgIH0pXG4gICAgfVxufVxuXG5leHBvcnQgZGVmYXVsdCBUcmlidXRlO1xuIiwiY2xhc3MgVHJpYnV0ZUV2ZW50cyB7XG4gICAgY29uc3RydWN0b3IodHJpYnV0ZSkge1xuICAgICAgICB0aGlzLnRyaWJ1dGUgPSB0cmlidXRlXG4gICAgICAgIHRoaXMudHJpYnV0ZS5ldmVudHMgPSB0aGlzXG4gICAgfVxuXG4gICAgc3RhdGljIGtleXMoKSB7XG4gICAgICAgIHJldHVybiBbe1xuICAgICAgICAgICAga2V5OiA5LFxuICAgICAgICAgICAgdmFsdWU6ICdUQUInXG4gICAgICAgIH0sIHtcbiAgICAgICAgICAgIGtleTogOCxcbiAgICAgICAgICAgIHZhbHVlOiAnREVMRVRFJ1xuICAgICAgICB9LCB7XG4gICAgICAgICAgICBrZXk6IDEzLFxuICAgICAgICAgICAgdmFsdWU6ICdFTlRFUidcbiAgICAgICAgfSwge1xuICAgICAgICAgICAga2V5OiAyNyxcbiAgICAgICAgICAgIHZhbHVlOiAnRVNDQVBFJ1xuICAgICAgICB9LCB7XG4gICAgICAgICAgICBrZXk6IDMyLFxuICAgICAgICAgICAgdmFsdWU6ICdTUEFDRSdcbiAgICAgICAgfSwge1xuICAgICAgICAgICAga2V5OiAzOCxcbiAgICAgICAgICAgIHZhbHVlOiAnVVAnXG4gICAgICAgIH0sIHtcbiAgICAgICAgICAgIGtleTogNDAsXG4gICAgICAgICAgICB2YWx1ZTogJ0RPV04nXG4gICAgICAgIH1dXG4gICAgfVxuXG4gICAgYmluZChlbGVtZW50KSB7XG4gICAgICAgIGVsZW1lbnQuYm91bmRLZXlkb3duID0gdGhpcy5rZXlkb3duLmJpbmQoZWxlbWVudCwgdGhpcyk7XG4gICAgICAgIGVsZW1lbnQuYm91bmRLZXl1cCA9IHRoaXMua2V5dXAuYmluZChlbGVtZW50LCB0aGlzKTtcbiAgICAgICAgZWxlbWVudC5ib3VuZElucHV0ID0gdGhpcy5pbnB1dC5iaW5kKGVsZW1lbnQsIHRoaXMpO1xuXG4gICAgICAgIGVsZW1lbnQuYWRkRXZlbnRMaXN0ZW5lcigna2V5ZG93bicsXG4gICAgICAgICAgICBlbGVtZW50LmJvdW5kS2V5ZG93biwgZmFsc2UpXG4gICAgICAgIGVsZW1lbnQuYWRkRXZlbnRMaXN0ZW5lcigna2V5dXAnLFxuICAgICAgICAgICAgZWxlbWVudC5ib3VuZEtleXVwLCBmYWxzZSlcbiAgICAgICAgZWxlbWVudC5hZGRFdmVudExpc3RlbmVyKCdpbnB1dCcsXG4gICAgICAgICAgICBlbGVtZW50LmJvdW5kSW5wdXQsIGZhbHNlKVxuICAgIH1cblxuICAgIHVuYmluZChlbGVtZW50KSB7XG4gICAgICAgIGVsZW1lbnQucmVtb3ZlRXZlbnRMaXN0ZW5lcigna2V5ZG93bicsXG4gICAgICAgICAgICBlbGVtZW50LmJvdW5kS2V5ZG93biwgZmFsc2UpXG4gICAgICAgIGVsZW1lbnQucmVtb3ZlRXZlbnRMaXN0ZW5lcigna2V5dXAnLFxuICAgICAgICAgICAgZWxlbWVudC5ib3VuZEtleXVwLCBmYWxzZSlcbiAgICAgICAgZWxlbWVudC5yZW1vdmVFdmVudExpc3RlbmVyKCdpbnB1dCcsXG4gICAgICAgICAgICBlbGVtZW50LmJvdW5kSW5wdXQsIGZhbHNlKVxuXG4gICAgICAgIGRlbGV0ZSBlbGVtZW50LmJvdW5kS2V5ZG93blxuICAgICAgICBkZWxldGUgZWxlbWVudC5ib3VuZEtleXVwXG4gICAgICAgIGRlbGV0ZSBlbGVtZW50LmJvdW5kSW5wdXRcbiAgICB9XG5cbiAgICBrZXlkb3duKGluc3RhbmNlLCBldmVudCkge1xuICAgICAgICBpZiAoaW5zdGFuY2Uuc2hvdWxkRGVhY3RpdmF0ZShldmVudCkpIHtcbiAgICAgICAgICAgIGluc3RhbmNlLnRyaWJ1dGUuaXNBY3RpdmUgPSBmYWxzZVxuICAgICAgICAgICAgaW5zdGFuY2UudHJpYnV0ZS5oaWRlTWVudSgpXG4gICAgICAgIH1cblxuICAgICAgICBsZXQgZWxlbWVudCA9IHRoaXNcbiAgICAgICAgaW5zdGFuY2UuY29tbWFuZEV2ZW50ID0gZmFsc2VcblxuICAgICAgICBUcmlidXRlRXZlbnRzLmtleXMoKS5mb3JFYWNoKG8gPT4ge1xuICAgICAgICAgICAgaWYgKG8ua2V5ID09PSBldmVudC5rZXlDb2RlKSB7XG4gICAgICAgICAgICAgICAgaW5zdGFuY2UuY29tbWFuZEV2ZW50ID0gdHJ1ZVxuICAgICAgICAgICAgICAgIGluc3RhbmNlLmNhbGxiYWNrcygpW28udmFsdWUudG9Mb3dlckNhc2UoKV0oZXZlbnQsIGVsZW1lbnQpXG4gICAgICAgICAgICB9XG4gICAgICAgIH0pXG4gICAgfVxuXG4gICAgaW5wdXQoaW5zdGFuY2UsIGV2ZW50KSB7XG4gICAgICAgIGluc3RhbmNlLmlucHV0RXZlbnQgPSB0cnVlXG4gICAgICAgIGluc3RhbmNlLmtleXVwLmNhbGwodGhpcywgaW5zdGFuY2UsIGV2ZW50KVxuICAgIH1cblxuICAgIGNsaWNrKGluc3RhbmNlLCBldmVudCkge1xuICAgICAgICBsZXQgdHJpYnV0ZSA9IGluc3RhbmNlLnRyaWJ1dGVcbiAgICAgICAgaWYgKHRyaWJ1dGUubWVudSAmJiB0cmlidXRlLm1lbnUuY29udGFpbnMoZXZlbnQudGFyZ2V0KSkge1xuICAgICAgICAgICAgbGV0IGxpID0gZXZlbnQudGFyZ2V0XG4gICAgICAgICAgICBldmVudC5wcmV2ZW50RGVmYXVsdCgpXG4gICAgICAgICAgICBldmVudC5zdG9wUHJvcGFnYXRpb24oKVxuICAgICAgICAgICAgd2hpbGUgKGxpLm5vZGVOYW1lLnRvTG93ZXJDYXNlKCkgIT09ICdsaScpIHtcbiAgICAgICAgICAgICAgICBsaSA9IGxpLnBhcmVudE5vZGVcbiAgICAgICAgICAgICAgICBpZiAoIWxpIHx8IGxpID09PSB0cmlidXRlLm1lbnUpIHtcbiAgICAgICAgICAgICAgICAgICAgdGhyb3cgbmV3IEVycm9yKCdjYW5ub3QgZmluZCB0aGUgPGxpPiBjb250YWluZXIgZm9yIHRoZSBjbGljaycpXG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgfVxuICAgICAgICAgICAgdHJpYnV0ZS5zZWxlY3RJdGVtQXRJbmRleChsaS5nZXRBdHRyaWJ1dGUoJ2RhdGEtaW5kZXgnKSwgZXZlbnQpXG4gICAgICAgICAgICB0cmlidXRlLmhpZGVNZW51KClcblxuICAgICAgICAvLyBUT0RPOiBzaG91bGQgZmlyZSB3aXRoIGV4dGVybmFsVHJpZ2dlciBhbmQgdGFyZ2V0IGlzIG91dHNpZGUgb2YgbWVudVxuICAgICAgICB9IGVsc2UgaWYgKHRyaWJ1dGUuY3VycmVudC5lbGVtZW50ICYmICF0cmlidXRlLmN1cnJlbnQuZXh0ZXJuYWxUcmlnZ2VyKSB7XG4gICAgICAgICAgICB0cmlidXRlLmN1cnJlbnQuZXh0ZXJuYWxUcmlnZ2VyID0gZmFsc2VcbiAgICAgICAgICAgIHNldFRpbWVvdXQoKCkgPT4gdHJpYnV0ZS5oaWRlTWVudSgpKVxuICAgICAgICB9XG4gICAgfVxuXG4gICAga2V5dXAoaW5zdGFuY2UsIGV2ZW50KSB7XG4gICAgICAgIGlmIChpbnN0YW5jZS5pbnB1dEV2ZW50KSB7XG4gICAgICAgICAgICBpbnN0YW5jZS5pbnB1dEV2ZW50ID0gZmFsc2VcbiAgICAgICAgfVxuICAgICAgICBpbnN0YW5jZS51cGRhdGVTZWxlY3Rpb24odGhpcylcblxuICAgICAgICBpZiAoZXZlbnQua2V5Q29kZSA9PT0gMjcpIHJldHVyblxuXG4gICAgICAgIGlmICghaW5zdGFuY2UudHJpYnV0ZS5hbGxvd1NwYWNlcyAmJiBpbnN0YW5jZS50cmlidXRlLmhhc1RyYWlsaW5nU3BhY2UpIHtcbiAgICAgICAgICAgIGluc3RhbmNlLnRyaWJ1dGUuaGFzVHJhaWxpbmdTcGFjZSA9IGZhbHNlO1xuICAgICAgICAgICAgaW5zdGFuY2UuY29tbWFuZEV2ZW50ID0gdHJ1ZTtcbiAgICAgICAgICAgIGluc3RhbmNlLmNhbGxiYWNrcygpW1wic3BhY2VcIl0oZXZlbnQsIHRoaXMpO1xuICAgICAgICAgICAgcmV0dXJuXG4gICAgICAgIH1cblxuICAgICAgICBpZiAoIWluc3RhbmNlLnRyaWJ1dGUuaXNBY3RpdmUpIHtcbiAgICAgICAgICAgIGlmIChpbnN0YW5jZS50cmlidXRlLmF1dG9jb21wbGV0ZU1vZGUpIHtcbiAgICAgICAgICAgICAgICBpbnN0YW5jZS5jYWxsYmFja3MoKS50cmlnZ2VyQ2hhcihldmVudCwgdGhpcywgJycpXG4gICAgICAgICAgICB9IGVsc2Uge1xuICAgICAgICAgICAgICAgIGxldCBrZXlDb2RlID0gaW5zdGFuY2UuZ2V0S2V5Q29kZShpbnN0YW5jZSwgdGhpcywgZXZlbnQpXG4gICAgXG4gICAgICAgICAgICAgICAgaWYgKGlzTmFOKGtleUNvZGUpIHx8ICFrZXlDb2RlKSByZXR1cm5cbiAgICBcbiAgICAgICAgICAgICAgICBsZXQgdHJpZ2dlciA9IGluc3RhbmNlLnRyaWJ1dGUudHJpZ2dlcnMoKS5maW5kKHRyaWdnZXIgPT4ge1xuICAgICAgICAgICAgICAgICAgICByZXR1cm4gdHJpZ2dlci5jaGFyQ29kZUF0KDApID09PSBrZXlDb2RlXG4gICAgICAgICAgICAgICAgfSlcbiAgICBcbiAgICAgICAgICAgICAgICBpZiAodHlwZW9mIHRyaWdnZXIgIT09ICd1bmRlZmluZWQnKSB7XG4gICAgICAgICAgICAgICAgICAgIGluc3RhbmNlLmNhbGxiYWNrcygpLnRyaWdnZXJDaGFyKGV2ZW50LCB0aGlzLCB0cmlnZ2VyKVxuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgIH1cbiAgICAgICAgfVxuXG4gICAgICAgIGlmICgoaW5zdGFuY2UudHJpYnV0ZS5jdXJyZW50LnRyaWdnZXIgfHwgaW5zdGFuY2UudHJpYnV0ZS5hdXRvY29tcGxldGVNb2RlKVxuICAgICAgICAgICAgJiYgaW5zdGFuY2UuY29tbWFuZEV2ZW50ID09PSBmYWxzZVxuICAgICAgICAgICAgfHwgaW5zdGFuY2UudHJpYnV0ZS5pc0FjdGl2ZSAmJiBldmVudC5rZXlDb2RlID09PSA4KSB7XG4gICAgICAgICAgaW5zdGFuY2UudHJpYnV0ZS5zaG93TWVudUZvcih0aGlzLCB0cnVlKVxuICAgICAgICB9XG4gICAgfVxuXG4gICAgc2hvdWxkRGVhY3RpdmF0ZShldmVudCkge1xuICAgICAgICBpZiAoIXRoaXMudHJpYnV0ZS5pc0FjdGl2ZSkgcmV0dXJuIGZhbHNlXG5cbiAgICAgICAgaWYgKHRoaXMudHJpYnV0ZS5jdXJyZW50Lm1lbnRpb25UZXh0Lmxlbmd0aCA9PT0gMCkge1xuICAgICAgICAgICAgbGV0IGV2ZW50S2V5UHJlc3NlZCA9IGZhbHNlXG4gICAgICAgICAgICBUcmlidXRlRXZlbnRzLmtleXMoKS5mb3JFYWNoKG8gPT4ge1xuICAgICAgICAgICAgICAgIGlmIChldmVudC5rZXlDb2RlID09PSBvLmtleSkgZXZlbnRLZXlQcmVzc2VkID0gdHJ1ZVxuICAgICAgICAgICAgfSlcblxuICAgICAgICAgICAgcmV0dXJuICFldmVudEtleVByZXNzZWRcbiAgICAgICAgfVxuXG4gICAgICAgIHJldHVybiBmYWxzZVxuICAgIH1cblxuICAgIGdldEtleUNvZGUoaW5zdGFuY2UsIGVsLCBldmVudCkge1xuICAgICAgICBsZXQgY2hhclxuICAgICAgICBsZXQgdHJpYnV0ZSA9IGluc3RhbmNlLnRyaWJ1dGVcbiAgICAgICAgbGV0IGluZm8gPSB0cmlidXRlLnJhbmdlLmdldFRyaWdnZXJJbmZvKGZhbHNlLCB0cmlidXRlLmhhc1RyYWlsaW5nU3BhY2UsIHRydWUsIHRyaWJ1dGUuYWxsb3dTcGFjZXMsIHRyaWJ1dGUuYXV0b2NvbXBsZXRlTW9kZSlcblxuICAgICAgICBpZiAoaW5mbykge1xuICAgICAgICAgICAgcmV0dXJuIGluZm8ubWVudGlvblRyaWdnZXJDaGFyLmNoYXJDb2RlQXQoMClcbiAgICAgICAgfSBlbHNlIHtcbiAgICAgICAgICAgIHJldHVybiBmYWxzZVxuICAgICAgICB9XG4gICAgfVxuXG4gICAgdXBkYXRlU2VsZWN0aW9uKGVsKSB7XG4gICAgICAgIHRoaXMudHJpYnV0ZS5jdXJyZW50LmVsZW1lbnQgPSBlbFxuICAgICAgICBsZXQgaW5mbyA9IHRoaXMudHJpYnV0ZS5yYW5nZS5nZXRUcmlnZ2VySW5mbyhmYWxzZSwgdGhpcy50cmlidXRlLmhhc1RyYWlsaW5nU3BhY2UsIHRydWUsIHRoaXMudHJpYnV0ZS5hbGxvd1NwYWNlcywgdGhpcy50cmlidXRlLmF1dG9jb21wbGV0ZU1vZGUpXG5cbiAgICAgICAgaWYgKGluZm8pIHtcbiAgICAgICAgICAgIHRoaXMudHJpYnV0ZS5jdXJyZW50LnNlbGVjdGVkUGF0aCA9IGluZm8ubWVudGlvblNlbGVjdGVkUGF0aFxuICAgICAgICAgICAgdGhpcy50cmlidXRlLmN1cnJlbnQubWVudGlvblRleHQgPSBpbmZvLm1lbnRpb25UZXh0XG4gICAgICAgICAgICB0aGlzLnRyaWJ1dGUuY3VycmVudC5zZWxlY3RlZE9mZnNldCA9IGluZm8ubWVudGlvblNlbGVjdGVkT2Zmc2V0XG4gICAgICAgIH1cbiAgICB9XG5cbiAgICBjYWxsYmFja3MoKSB7XG4gICAgICAgIHJldHVybiB7XG4gICAgICAgICAgICB0cmlnZ2VyQ2hhcjogKGUsIGVsLCB0cmlnZ2VyKSA9PiB7XG4gICAgICAgICAgICAgICAgbGV0IHRyaWJ1dGUgPSB0aGlzLnRyaWJ1dGVcbiAgICAgICAgICAgICAgICB0cmlidXRlLmN1cnJlbnQudHJpZ2dlciA9IHRyaWdnZXJcblxuICAgICAgICAgICAgICAgIGxldCBjb2xsZWN0aW9uSXRlbSA9IHRyaWJ1dGUuY29sbGVjdGlvbi5maW5kKGl0ZW0gPT4ge1xuICAgICAgICAgICAgICAgICAgICByZXR1cm4gaXRlbS50cmlnZ2VyID09PSB0cmlnZ2VyXG4gICAgICAgICAgICAgICAgfSlcblxuICAgICAgICAgICAgICAgIHRyaWJ1dGUuY3VycmVudC5jb2xsZWN0aW9uID0gY29sbGVjdGlvbkl0ZW1cbiAgICAgICAgICAgICAgICBpZiAodHJpYnV0ZS5pbnB1dEV2ZW50KSB0cmlidXRlLnNob3dNZW51Rm9yKGVsLCB0cnVlKVxuICAgICAgICAgICAgfSxcbiAgICAgICAgICAgIGVudGVyOiAoZSwgZWwpID0+IHtcbiAgICAgICAgICAgICAgICAvLyBjaG9vc2Ugc2VsZWN0aW9uXG4gICAgICAgICAgICAgICAgaWYgKHRoaXMudHJpYnV0ZS5pc0FjdGl2ZSkge1xuICAgICAgICAgICAgICAgICAgICBlLnByZXZlbnREZWZhdWx0KClcbiAgICAgICAgICAgICAgICAgICAgZS5zdG9wUHJvcGFnYXRpb24oKVxuICAgICAgICAgICAgICAgICAgICBzZXRUaW1lb3V0KCgpID0+IHtcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMudHJpYnV0ZS5zZWxlY3RJdGVtQXRJbmRleCh0aGlzLnRyaWJ1dGUubWVudVNlbGVjdGVkLCBlKVxuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy50cmlidXRlLmhpZGVNZW51KClcbiAgICAgICAgICAgICAgICAgICAgfSwgMClcbiAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICB9LFxuICAgICAgICAgICAgZXNjYXBlOiAoZSwgZWwpID0+IHtcbiAgICAgICAgICAgICAgICBpZiAodGhpcy50cmlidXRlLmlzQWN0aXZlKSB7XG4gICAgICAgICAgICAgICAgICAgIGUucHJldmVudERlZmF1bHQoKVxuICAgICAgICAgICAgICAgICAgICBlLnN0b3BQcm9wYWdhdGlvbigpXG4gICAgICAgICAgICAgICAgICAgIHRoaXMudHJpYnV0ZS5pc0FjdGl2ZSA9IGZhbHNlXG4gICAgICAgICAgICAgICAgICAgIHRoaXMudHJpYnV0ZS5oaWRlTWVudSgpXG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgfSxcbiAgICAgICAgICAgIHRhYjogKGUsIGVsKSA9PiB7XG4gICAgICAgICAgICAgICAgLy8gY2hvb3NlIGZpcnN0IG1hdGNoXG4gICAgICAgICAgICAgICAgdGhpcy5jYWxsYmFja3MoKS5lbnRlcihlLCBlbClcbiAgICAgICAgICAgIH0sXG4gICAgICAgICAgICBzcGFjZTogKGUsIGVsKSA9PiB7XG4gICAgICAgICAgICAgICAgaWYgKHRoaXMudHJpYnV0ZS5pc0FjdGl2ZSkge1xuICAgICAgICAgICAgICAgICAgICBpZiAodGhpcy50cmlidXRlLnNwYWNlU2VsZWN0c01hdGNoKSB7XG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLmNhbGxiYWNrcygpLmVudGVyKGUsIGVsKVxuICAgICAgICAgICAgICAgICAgICB9IGVsc2UgaWYgKCF0aGlzLnRyaWJ1dGUuYWxsb3dTcGFjZXMpIHtcbiAgICAgICAgICAgICAgICAgICAgICAgIGUuc3RvcFByb3BhZ2F0aW9uKCk7XG4gICAgICAgICAgICAgICAgICAgICAgICBzZXRUaW1lb3V0KCgpID0+IHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRyaWJ1dGUuaGlkZU1lbnUoKTtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRyaWJ1dGUuaXNBY3RpdmUgPSBmYWxzZTtcbiAgICAgICAgICAgICAgICAgICAgICAgIH0sIDApO1xuICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgfSxcbiAgICAgICAgICAgIHVwOiAoZSwgZWwpID0+IHtcbiAgICAgICAgICAgICAgICAvLyBuYXZpZ2F0ZSB1cCB1bFxuICAgICAgICAgICAgICAgIGlmICh0aGlzLnRyaWJ1dGUuaXNBY3RpdmUpIHtcbiAgICAgICAgICAgICAgICAgICAgZS5wcmV2ZW50RGVmYXVsdCgpXG4gICAgICAgICAgICAgICAgICAgIGUuc3RvcFByb3BhZ2F0aW9uKClcbiAgICAgICAgICAgICAgICAgICAgbGV0IGNvdW50ID0gdGhpcy50cmlidXRlLmN1cnJlbnQuZmlsdGVyZWRJdGVtcy5sZW5ndGgsXG4gICAgICAgICAgICAgICAgICAgICAgICBzZWxlY3RlZCA9IHRoaXMudHJpYnV0ZS5tZW51U2VsZWN0ZWRcblxuICAgICAgICAgICAgICAgICAgICBpZiAoY291bnQgPiBzZWxlY3RlZCAmJiBzZWxlY3RlZCA+IDApIHtcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMudHJpYnV0ZS5tZW51U2VsZWN0ZWQtLVxuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy5zZXRBY3RpdmVMaSgpXG4gICAgICAgICAgICAgICAgICAgIH0gZWxzZSBpZiAoc2VsZWN0ZWQgPT09IDApIHtcbiAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRyaWJ1dGUubWVudVNlbGVjdGVkID0gY291bnQgLSAxXG4gICAgICAgICAgICAgICAgICAgICAgdGhpcy5zZXRBY3RpdmVMaSgpXG4gICAgICAgICAgICAgICAgICAgICAgdGhpcy50cmlidXRlLm1lbnUuc2Nyb2xsVG9wID0gdGhpcy50cmlidXRlLm1lbnUuc2Nyb2xsSGVpZ2h0XG4gICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICB9LFxuICAgICAgICAgICAgZG93bjogKGUsIGVsKSA9PiB7XG4gICAgICAgICAgICAgICAgLy8gbmF2aWdhdGUgZG93biB1bFxuICAgICAgICAgICAgICAgIGlmICh0aGlzLnRyaWJ1dGUuaXNBY3RpdmUpIHtcbiAgICAgICAgICAgICAgICAgICAgZS5wcmV2ZW50RGVmYXVsdCgpXG4gICAgICAgICAgICAgICAgICAgIGUuc3RvcFByb3BhZ2F0aW9uKClcbiAgICAgICAgICAgICAgICAgICAgbGV0IGNvdW50ID0gdGhpcy50cmlidXRlLmN1cnJlbnQuZmlsdGVyZWRJdGVtcy5sZW5ndGggLSAxLFxuICAgICAgICAgICAgICAgICAgICAgICAgc2VsZWN0ZWQgPSB0aGlzLnRyaWJ1dGUubWVudVNlbGVjdGVkXG5cbiAgICAgICAgICAgICAgICAgICAgaWYgKGNvdW50ID4gc2VsZWN0ZWQpIHtcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMudHJpYnV0ZS5tZW51U2VsZWN0ZWQrK1xuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy5zZXRBY3RpdmVMaSgpXG4gICAgICAgICAgICAgICAgICAgIH0gZWxzZSBpZiAoY291bnQgPT09IHNlbGVjdGVkKSB7XG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRyaWJ1dGUubWVudVNlbGVjdGVkID0gMFxuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy5zZXRBY3RpdmVMaSgpXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRyaWJ1dGUubWVudS5zY3JvbGxUb3AgPSAwXG4gICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICB9LFxuICAgICAgICAgICAgZGVsZXRlOiAoZSwgZWwpID0+IHtcbiAgICAgICAgICAgICAgICBpZiAodGhpcy50cmlidXRlLmlzQWN0aXZlICYmIHRoaXMudHJpYnV0ZS5jdXJyZW50Lm1lbnRpb25UZXh0Lmxlbmd0aCA8IDEpIHtcbiAgICAgICAgICAgICAgICAgICAgdGhpcy50cmlidXRlLmhpZGVNZW51KClcbiAgICAgICAgICAgICAgICB9IGVsc2UgaWYgKHRoaXMudHJpYnV0ZS5pc0FjdGl2ZSkge1xuICAgICAgICAgICAgICAgICAgICB0aGlzLnRyaWJ1dGUuc2hvd01lbnVGb3IoZWwpXG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgfVxuICAgICAgICB9XG4gICAgfVxuXG4gICAgc2V0QWN0aXZlTGkoaW5kZXgpIHtcbiAgICAgICAgbGV0IGxpcyA9IHRoaXMudHJpYnV0ZS5tZW51LnF1ZXJ5U2VsZWN0b3JBbGwoJ2xpJyksXG4gICAgICAgICAgICBsZW5ndGggPSBsaXMubGVuZ3RoID4+PiAwXG5cbiAgICAgICAgaWYgKGluZGV4KSB0aGlzLnRyaWJ1dGUubWVudVNlbGVjdGVkID0gcGFyc2VJbnQoaW5kZXgpO1xuXG4gICAgICAgIGZvciAobGV0IGkgPSAwOyBpIDwgbGVuZ3RoOyBpKyspIHtcbiAgICAgICAgICAgIGxldCBsaSA9IGxpc1tpXVxuICAgICAgICAgICAgaWYgKGkgPT09IHRoaXMudHJpYnV0ZS5tZW51U2VsZWN0ZWQpIHtcbiAgICAgICAgICAgICAgICBsaS5jbGFzc0xpc3QuYWRkKHRoaXMudHJpYnV0ZS5jdXJyZW50LmNvbGxlY3Rpb24uc2VsZWN0Q2xhc3MpO1xuXG4gICAgICAgICAgICAgICAgbGV0IGxpQ2xpZW50UmVjdCA9IGxpLmdldEJvdW5kaW5nQ2xpZW50UmVjdCgpO1xuICAgICAgICAgICAgICAgIGxldCBtZW51Q2xpZW50UmVjdCA9IHRoaXMudHJpYnV0ZS5tZW51LmdldEJvdW5kaW5nQ2xpZW50UmVjdCgpO1xuXG4gICAgICAgICAgICAgICAgaWYgKGxpQ2xpZW50UmVjdC5ib3R0b20gPiBtZW51Q2xpZW50UmVjdC5ib3R0b20pIHtcbiAgICAgICAgICAgICAgICAgICAgbGV0IHNjcm9sbERpc3RhbmNlID0gbGlDbGllbnRSZWN0LmJvdHRvbSAtIG1lbnVDbGllbnRSZWN0LmJvdHRvbTtcbiAgICAgICAgICAgICAgICAgICAgdGhpcy50cmlidXRlLm1lbnUuc2Nyb2xsVG9wICs9IHNjcm9sbERpc3RhbmNlXG4gICAgICAgICAgICAgICAgfSBlbHNlIGlmIChsaUNsaWVudFJlY3QudG9wIDwgbWVudUNsaWVudFJlY3QudG9wKSB7XG4gICAgICAgICAgICAgICAgICAgIGxldCBzY3JvbGxEaXN0YW5jZSA9IG1lbnVDbGllbnRSZWN0LnRvcCAtIGxpQ2xpZW50UmVjdC50b3A7XG4gICAgICAgICAgICAgICAgICAgIHRoaXMudHJpYnV0ZS5tZW51LnNjcm9sbFRvcCAtPSBzY3JvbGxEaXN0YW5jZVxuICAgICAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgfSBlbHNlIHtcbiAgICAgICAgICAgICAgICBsaS5jbGFzc0xpc3QucmVtb3ZlKHRoaXMudHJpYnV0ZS5jdXJyZW50LmNvbGxlY3Rpb24uc2VsZWN0Q2xhc3MpO1xuICAgICAgICAgICAgfVxuICAgICAgICB9XG4gICAgfVxuXG4gICAgZ2V0RnVsbEhlaWdodChlbGVtLCBpbmNsdWRlTWFyZ2luKSB7XG4gICAgICBsZXQgaGVpZ2h0ID0gZWxlbS5nZXRCb3VuZGluZ0NsaWVudFJlY3QoKS5oZWlnaHRcblxuICAgICAgaWYgKGluY2x1ZGVNYXJnaW4pIHtcbiAgICAgICAgbGV0IHN0eWxlID0gZWxlbS5jdXJyZW50U3R5bGUgfHwgd2luZG93LmdldENvbXB1dGVkU3R5bGUoZWxlbSlcbiAgICAgICAgcmV0dXJuIGhlaWdodCArIHBhcnNlRmxvYXQoc3R5bGUubWFyZ2luVG9wKSArIHBhcnNlRmxvYXQoc3R5bGUubWFyZ2luQm90dG9tKVxuICAgICAgfVxuXG4gICAgICByZXR1cm4gaGVpZ2h0XG4gICAgfVxuXG59XG5cbmV4cG9ydCBkZWZhdWx0IFRyaWJ1dGVFdmVudHM7XG4iLCJjbGFzcyBUcmlidXRlTWVudUV2ZW50cyB7XG4gICAgY29uc3RydWN0b3IodHJpYnV0ZSkge1xuICAgICAgICB0aGlzLnRyaWJ1dGUgPSB0cmlidXRlXG4gICAgICAgIHRoaXMudHJpYnV0ZS5tZW51RXZlbnRzID0gdGhpc1xuICAgICAgICB0aGlzLm1lbnUgPSB0aGlzLnRyaWJ1dGUubWVudVxuICAgIH1cblxuICAgIGJpbmQobWVudSkge1xuICAgICAgICB0aGlzLm1lbnVDbGlja0V2ZW50ID0gdGhpcy50cmlidXRlLmV2ZW50cy5jbGljay5iaW5kKG51bGwsIHRoaXMpXG4gICAgICAgIHRoaXMubWVudUNvbnRhaW5lclNjcm9sbEV2ZW50ID0gdGhpcy5kZWJvdW5jZSgoKSA9PiB7XG4gICAgICAgICAgICBpZiAodGhpcy50cmlidXRlLmlzQWN0aXZlKSB7XG4gICAgICAgICAgICAgICAgdGhpcy50cmlidXRlLnNob3dNZW51Rm9yKHRoaXMudHJpYnV0ZS5jdXJyZW50LmVsZW1lbnQsIGZhbHNlKVxuICAgICAgICAgICAgfVxuICAgICAgICB9LCAzMDAsIGZhbHNlKVxuICAgICAgICB0aGlzLndpbmRvd1Jlc2l6ZUV2ZW50ID0gdGhpcy5kZWJvdW5jZSgoKSA9PiB7XG4gICAgICAgICAgICBpZiAodGhpcy50cmlidXRlLmlzQWN0aXZlKSB7XG4gICAgICAgICAgICAgICAgdGhpcy50cmlidXRlLnJhbmdlLnBvc2l0aW9uTWVudUF0Q2FyZXQodHJ1ZSlcbiAgICAgICAgICAgIH1cbiAgICAgICAgfSwgMzAwLCBmYWxzZSlcblxuICAgICAgICAvLyBmaXhlcyBJRTExIGlzc3VlcyB3aXRoIG1vdXNlZG93blxuICAgICAgICB0aGlzLnRyaWJ1dGUucmFuZ2UuZ2V0RG9jdW1lbnQoKS5hZGRFdmVudExpc3RlbmVyKCdNU1BvaW50ZXJEb3duJyxcbiAgICAgICAgICAgIHRoaXMubWVudUNsaWNrRXZlbnQsIGZhbHNlKVxuICAgICAgICB0aGlzLnRyaWJ1dGUucmFuZ2UuZ2V0RG9jdW1lbnQoKS5hZGRFdmVudExpc3RlbmVyKCdtb3VzZWRvd24nLFxuICAgICAgICAgICAgdGhpcy5tZW51Q2xpY2tFdmVudCwgZmFsc2UpXG4gICAgICAgIHdpbmRvdy5hZGRFdmVudExpc3RlbmVyKCdyZXNpemUnLCB0aGlzLndpbmRvd1Jlc2l6ZUV2ZW50KVxuXG4gICAgICAgIGlmICh0aGlzLm1lbnVDb250YWluZXIpIHtcbiAgICAgICAgICAgIHRoaXMubWVudUNvbnRhaW5lci5hZGRFdmVudExpc3RlbmVyKCdzY3JvbGwnLCB0aGlzLm1lbnVDb250YWluZXJTY3JvbGxFdmVudCwgZmFsc2UpXG4gICAgICAgIH0gZWxzZSB7XG4gICAgICAgICAgICB3aW5kb3cuYWRkRXZlbnRMaXN0ZW5lcignc2Nyb2xsJywgdGhpcy5tZW51Q29udGFpbmVyU2Nyb2xsRXZlbnQpXG4gICAgICAgIH1cblxuICAgIH1cblxuICAgIHVuYmluZChtZW51KSB7XG4gICAgICAgIHRoaXMudHJpYnV0ZS5yYW5nZS5nZXREb2N1bWVudCgpLnJlbW92ZUV2ZW50TGlzdGVuZXIoJ21vdXNlZG93bicsXG4gICAgICAgICAgICB0aGlzLm1lbnVDbGlja0V2ZW50LCBmYWxzZSlcbiAgICAgICAgdGhpcy50cmlidXRlLnJhbmdlLmdldERvY3VtZW50KCkucmVtb3ZlRXZlbnRMaXN0ZW5lcignTVNQb2ludGVyRG93bicsXG4gICAgICAgICAgICB0aGlzLm1lbnVDbGlja0V2ZW50LCBmYWxzZSlcbiAgICAgICAgd2luZG93LnJlbW92ZUV2ZW50TGlzdGVuZXIoJ3Jlc2l6ZScsIHRoaXMud2luZG93UmVzaXplRXZlbnQpXG5cbiAgICAgICAgaWYgKHRoaXMubWVudUNvbnRhaW5lcikge1xuICAgICAgICAgICAgdGhpcy5tZW51Q29udGFpbmVyLnJlbW92ZUV2ZW50TGlzdGVuZXIoJ3Njcm9sbCcsIHRoaXMubWVudUNvbnRhaW5lclNjcm9sbEV2ZW50LCBmYWxzZSlcbiAgICAgICAgfSBlbHNlIHtcbiAgICAgICAgICAgIHdpbmRvdy5yZW1vdmVFdmVudExpc3RlbmVyKCdzY3JvbGwnLCB0aGlzLm1lbnVDb250YWluZXJTY3JvbGxFdmVudClcbiAgICAgICAgfVxuICAgIH1cblxuICAgIGRlYm91bmNlKGZ1bmMsIHdhaXQsIGltbWVkaWF0ZSkge1xuICAgICAgICB2YXIgdGltZW91dFxuICAgICAgICByZXR1cm4gKCkgPT4ge1xuICAgICAgICAgICAgdmFyIGNvbnRleHQgPSB0aGlzLFxuICAgICAgICAgICAgICAgIGFyZ3MgPSBhcmd1bWVudHNcbiAgICAgICAgICAgIHZhciBsYXRlciA9ICgpID0+IHtcbiAgICAgICAgICAgICAgICB0aW1lb3V0ID0gbnVsbFxuICAgICAgICAgICAgICAgIGlmICghaW1tZWRpYXRlKSBmdW5jLmFwcGx5KGNvbnRleHQsIGFyZ3MpXG4gICAgICAgICAgICB9XG4gICAgICAgICAgICB2YXIgY2FsbE5vdyA9IGltbWVkaWF0ZSAmJiAhdGltZW91dFxuICAgICAgICAgICAgY2xlYXJUaW1lb3V0KHRpbWVvdXQpXG4gICAgICAgICAgICB0aW1lb3V0ID0gc2V0VGltZW91dChsYXRlciwgd2FpdClcbiAgICAgICAgICAgIGlmIChjYWxsTm93KSBmdW5jLmFwcGx5KGNvbnRleHQsIGFyZ3MpXG4gICAgICAgIH1cbiAgICB9XG59XG5cblxuZXhwb3J0IGRlZmF1bHQgVHJpYnV0ZU1lbnVFdmVudHM7XG4iLCIvLyBUaGFua3MgdG8gaHR0cHM6Ly9naXRodWIuY29tL2plZmYtY29sbGlucy9tZW50LmlvXG5jbGFzcyBUcmlidXRlUmFuZ2Uge1xuICAgIGNvbnN0cnVjdG9yKHRyaWJ1dGUpIHtcbiAgICAgICAgdGhpcy50cmlidXRlID0gdHJpYnV0ZVxuICAgICAgICB0aGlzLnRyaWJ1dGUucmFuZ2UgPSB0aGlzXG4gICAgfVxuXG4gICAgZ2V0RG9jdW1lbnQoKSB7XG4gICAgICAgIGxldCBpZnJhbWVcbiAgICAgICAgaWYgKHRoaXMudHJpYnV0ZS5jdXJyZW50LmNvbGxlY3Rpb24pIHtcbiAgICAgICAgICAgIGlmcmFtZSA9IHRoaXMudHJpYnV0ZS5jdXJyZW50LmNvbGxlY3Rpb24uaWZyYW1lXG4gICAgICAgIH1cblxuICAgICAgICBpZiAoIWlmcmFtZSkge1xuICAgICAgICAgICAgcmV0dXJuIGRvY3VtZW50XG4gICAgICAgIH1cblxuICAgICAgICByZXR1cm4gaWZyYW1lLmNvbnRlbnRXaW5kb3cuZG9jdW1lbnRcbiAgICB9XG5cbiAgICBwb3NpdGlvbk1lbnVBdENhcmV0KHNjcm9sbFRvKSB7XG4gICAgICAgIGxldCBjb250ZXh0ID0gdGhpcy50cmlidXRlLmN1cnJlbnQsXG4gICAgICAgICAgICBjb29yZGluYXRlc1xuXG4gICAgICAgIGxldCBpbmZvID0gdGhpcy5nZXRUcmlnZ2VySW5mbyhmYWxzZSwgdGhpcy50cmlidXRlLmhhc1RyYWlsaW5nU3BhY2UsIHRydWUsIHRoaXMudHJpYnV0ZS5hbGxvd1NwYWNlcywgdGhpcy50cmlidXRlLmF1dG9jb21wbGV0ZU1vZGUpXG5cbiAgICAgICAgaWYgKHR5cGVvZiBpbmZvICE9PSAndW5kZWZpbmVkJykge1xuXG4gICAgICAgICAgICBpZighdGhpcy50cmlidXRlLnBvc2l0aW9uTWVudSl7XG4gICAgICAgICAgICAgICAgdGhpcy50cmlidXRlLm1lbnUuc3R5bGUuY3NzVGV4dCA9IGBkaXNwbGF5OiBibG9jaztgXG4gICAgICAgICAgICAgICAgcmV0dXJuXG4gICAgICAgICAgICB9XG5cbiAgICAgICAgICAgIGlmICghdGhpcy5pc0NvbnRlbnRFZGl0YWJsZShjb250ZXh0LmVsZW1lbnQpKSB7XG4gICAgICAgICAgICAgICAgY29vcmRpbmF0ZXMgPSB0aGlzLmdldFRleHRBcmVhT3JJbnB1dFVuZGVybGluZVBvc2l0aW9uKHRoaXMudHJpYnV0ZS5jdXJyZW50LmVsZW1lbnQsXG4gICAgICAgICAgICAgICAgICAgIGluZm8ubWVudGlvblBvc2l0aW9uKVxuICAgICAgICAgICAgfVxuICAgICAgICAgICAgZWxzZSB7XG4gICAgICAgICAgICAgICAgY29vcmRpbmF0ZXMgPSB0aGlzLmdldENvbnRlbnRFZGl0YWJsZUNhcmV0UG9zaXRpb24oaW5mby5tZW50aW9uUG9zaXRpb24pXG4gICAgICAgICAgICB9XG5cblxuICAgICAgICAgICAgdGhpcy50cmlidXRlLm1lbnUuc3R5bGUuY3NzVGV4dCA9IGB0b3A6ICR7Y29vcmRpbmF0ZXMudG9wfXB4O1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxlZnQ6ICR7Y29vcmRpbmF0ZXMubGVmdH1weDtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByaWdodDogJHtjb29yZGluYXRlcy5yaWdodH1weDtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBib3R0b206ICR7Y29vcmRpbmF0ZXMuYm90dG9tfXB4O1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB6SW5kZXg6IDEwMDAwO1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRpc3BsYXk6IGJsb2NrO2BcblxuICAgICAgICAgICAgaWYgKGNvb3JkaW5hdGVzLmxlZnQgPT09ICdhdXRvJykge1xuICAgICAgICAgICAgICAgIHRoaXMudHJpYnV0ZS5tZW51LnN0eWxlLmxlZnQgPSAnYXV0bydcbiAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgaWYgKGNvb3JkaW5hdGVzLnRvcCA9PT0gJ2F1dG8nKSB7XG4gICAgICAgICAgICAgICAgdGhpcy50cmlidXRlLm1lbnUuc3R5bGUudG9wID0gJ2F1dG8nXG4gICAgICAgICAgICB9XG5cbiAgICAgICAgICAgIGlmIChzY3JvbGxUbykgdGhpcy5zY3JvbGxJbnRvVmlldygpXG5cbiAgICAgICAgICAgIHdpbmRvdy5zZXRUaW1lb3V0KCgpID0+IHtcbiAgICAgICAgICAgICAgICBsZXQgbWVudURpbWVuc2lvbnMgPSB7XG4gICAgICAgICAgICAgICAgICAgd2lkdGg6IHRoaXMudHJpYnV0ZS5tZW51Lm9mZnNldFdpZHRoLFxuICAgICAgICAgICAgICAgICAgIGhlaWdodDogdGhpcy50cmlidXRlLm1lbnUub2Zmc2V0SGVpZ2h0XG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgIGxldCBtZW51SXNPZmZTY3JlZW4gPSB0aGlzLmlzTWVudU9mZlNjcmVlbihjb29yZGluYXRlcywgbWVudURpbWVuc2lvbnMpXG5cbiAgICAgICAgICAgICAgICBsZXQgbWVudUlzT2ZmU2NyZWVuSG9yaXpvbnRhbGx5ID0gd2luZG93LmlubmVyV2lkdGggPiBtZW51RGltZW5zaW9ucy53aWR0aCAmJiAobWVudUlzT2ZmU2NyZWVuLmxlZnQgfHwgbWVudUlzT2ZmU2NyZWVuLnJpZ2h0KVxuICAgICAgICAgICAgICAgIGxldCBtZW51SXNPZmZTY3JlZW5WZXJ0aWNhbGx5ID0gd2luZG93LmlubmVySGVpZ2h0ID4gbWVudURpbWVuc2lvbnMuaGVpZ2h0ICYmIChtZW51SXNPZmZTY3JlZW4udG9wIHx8IG1lbnVJc09mZlNjcmVlbi5ib3R0b20pXG4gICAgICAgICAgICAgICAgaWYgKG1lbnVJc09mZlNjcmVlbkhvcml6b250YWxseSB8fCBtZW51SXNPZmZTY3JlZW5WZXJ0aWNhbGx5KSB7XG4gICAgICAgICAgICAgICAgICAgIHRoaXMudHJpYnV0ZS5tZW51LnN0eWxlLmNzc1RleHQgPSAnZGlzcGxheTogbm9uZSdcbiAgICAgICAgICAgICAgICAgICAgdGhpcy5wb3NpdGlvbk1lbnVBdENhcmV0KHNjcm9sbFRvKVxuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgIH0sIDApXG5cbiAgICAgICAgfSBlbHNlIHtcbiAgICAgICAgICAgIHRoaXMudHJpYnV0ZS5tZW51LnN0eWxlLmNzc1RleHQgPSAnZGlzcGxheTogbm9uZSdcbiAgICAgICAgfVxuICAgIH1cblxuICAgIHNlbGVjdEVsZW1lbnQodGFyZ2V0RWxlbWVudCwgcGF0aCwgb2Zmc2V0KSB7XG4gICAgICAgIGxldCByYW5nZVxuICAgICAgICBsZXQgZWxlbSA9IHRhcmdldEVsZW1lbnRcblxuICAgICAgICBpZiAocGF0aCkge1xuICAgICAgICAgICAgZm9yICh2YXIgaSA9IDA7IGkgPCBwYXRoLmxlbmd0aDsgaSsrKSB7XG4gICAgICAgICAgICAgICAgZWxlbSA9IGVsZW0uY2hpbGROb2Rlc1twYXRoW2ldXVxuICAgICAgICAgICAgICAgIGlmIChlbGVtID09PSB1bmRlZmluZWQpIHtcbiAgICAgICAgICAgICAgICAgICAgcmV0dXJuXG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgIHdoaWxlIChlbGVtLmxlbmd0aCA8IG9mZnNldCkge1xuICAgICAgICAgICAgICAgICAgICBvZmZzZXQgLT0gZWxlbS5sZW5ndGhcbiAgICAgICAgICAgICAgICAgICAgZWxlbSA9IGVsZW0ubmV4dFNpYmxpbmdcbiAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgaWYgKGVsZW0uY2hpbGROb2Rlcy5sZW5ndGggPT09IDAgJiYgIWVsZW0ubGVuZ3RoKSB7XG4gICAgICAgICAgICAgICAgICAgIGVsZW0gPSBlbGVtLnByZXZpb3VzU2libGluZ1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgIH1cbiAgICAgICAgfVxuICAgICAgICBsZXQgc2VsID0gdGhpcy5nZXRXaW5kb3dTZWxlY3Rpb24oKVxuXG4gICAgICAgIHJhbmdlID0gdGhpcy5nZXREb2N1bWVudCgpLmNyZWF0ZVJhbmdlKClcbiAgICAgICAgcmFuZ2Uuc2V0U3RhcnQoZWxlbSwgb2Zmc2V0KVxuICAgICAgICByYW5nZS5zZXRFbmQoZWxlbSwgb2Zmc2V0KVxuICAgICAgICByYW5nZS5jb2xsYXBzZSh0cnVlKVxuXG4gICAgICAgIHRyeSB7XG4gICAgICAgICAgICBzZWwucmVtb3ZlQWxsUmFuZ2VzKClcbiAgICAgICAgfSBjYXRjaCAoZXJyb3IpIHt9XG5cbiAgICAgICAgc2VsLmFkZFJhbmdlKHJhbmdlKVxuICAgICAgICB0YXJnZXRFbGVtZW50LmZvY3VzKClcbiAgICB9XG5cbiAgICByZXBsYWNlVHJpZ2dlclRleHQodGV4dCwgcmVxdWlyZUxlYWRpbmdTcGFjZSwgaGFzVHJhaWxpbmdTcGFjZSwgb3JpZ2luYWxFdmVudCwgaXRlbSkge1xuICAgICAgICBsZXQgY29udGV4dCA9IHRoaXMudHJpYnV0ZS5jdXJyZW50XG4gICAgICAgIGxldCBpbmZvID0gdGhpcy5nZXRUcmlnZ2VySW5mbyh0cnVlLCBoYXNUcmFpbGluZ1NwYWNlLCByZXF1aXJlTGVhZGluZ1NwYWNlLCB0aGlzLnRyaWJ1dGUuYWxsb3dTcGFjZXMsIHRoaXMudHJpYnV0ZS5hdXRvY29tcGxldGVNb2RlKVxuXG4gICAgICAgIC8vIENyZWF0ZSB0aGUgZXZlbnRcbiAgICAgICAgbGV0IHJlcGxhY2VFdmVudCA9IG5ldyBDdXN0b21FdmVudCgndHJpYnV0ZS1yZXBsYWNlZCcsIHtcbiAgICAgICAgICAgIGRldGFpbDoge1xuICAgICAgICAgICAgICAgIGl0ZW06IGl0ZW0sXG4gICAgICAgICAgICAgICAgZXZlbnQ6IG9yaWdpbmFsRXZlbnRcbiAgICAgICAgICAgIH1cbiAgICAgICAgfSlcblxuICAgICAgICBpZiAoaW5mbyAhPT0gdW5kZWZpbmVkKSB7XG4gICAgICAgICAgICBpZiAoIXRoaXMuaXNDb250ZW50RWRpdGFibGUoY29udGV4dC5lbGVtZW50KSkge1xuICAgICAgICAgICAgICAgIGxldCBteUZpZWxkID0gdGhpcy50cmlidXRlLmN1cnJlbnQuZWxlbWVudFxuICAgICAgICAgICAgICAgIGxldCB0ZXh0U3VmZml4ID0gdHlwZW9mIHRoaXMudHJpYnV0ZS5yZXBsYWNlVGV4dFN1ZmZpeCA9PSAnc3RyaW5nJ1xuICAgICAgICAgICAgICAgICAgICA/IHRoaXMudHJpYnV0ZS5yZXBsYWNlVGV4dFN1ZmZpeFxuICAgICAgICAgICAgICAgICAgICA6ICcgJ1xuICAgICAgICAgICAgICAgIHRleHQgKz0gdGV4dFN1ZmZpeFxuICAgICAgICAgICAgICAgIGxldCBzdGFydFBvcyA9IGluZm8ubWVudGlvblBvc2l0aW9uXG4gICAgICAgICAgICAgICAgbGV0IGVuZFBvcyA9IGluZm8ubWVudGlvblBvc2l0aW9uICsgaW5mby5tZW50aW9uVGV4dC5sZW5ndGggKyB0ZXh0U3VmZml4Lmxlbmd0aFxuICAgICAgICAgICAgICAgIG15RmllbGQudmFsdWUgPSBteUZpZWxkLnZhbHVlLnN1YnN0cmluZygwLCBzdGFydFBvcykgKyB0ZXh0ICtcbiAgICAgICAgICAgICAgICAgICAgbXlGaWVsZC52YWx1ZS5zdWJzdHJpbmcoZW5kUG9zLCBteUZpZWxkLnZhbHVlLmxlbmd0aClcbiAgICAgICAgICAgICAgICBteUZpZWxkLnNlbGVjdGlvblN0YXJ0ID0gc3RhcnRQb3MgKyB0ZXh0Lmxlbmd0aFxuICAgICAgICAgICAgICAgIG15RmllbGQuc2VsZWN0aW9uRW5kID0gc3RhcnRQb3MgKyB0ZXh0Lmxlbmd0aFxuICAgICAgICAgICAgfSBlbHNlIHtcbiAgICAgICAgICAgICAgICAvLyBhZGQgYSBzcGFjZSB0byB0aGUgZW5kIG9mIHRoZSBwYXN0ZWQgdGV4dFxuICAgICAgICAgICAgICAgIGxldCB0ZXh0U3VmZml4ID0gdHlwZW9mIHRoaXMudHJpYnV0ZS5yZXBsYWNlVGV4dFN1ZmZpeCA9PSAnc3RyaW5nJ1xuICAgICAgICAgICAgICAgICAgICA/IHRoaXMudHJpYnV0ZS5yZXBsYWNlVGV4dFN1ZmZpeFxuICAgICAgICAgICAgICAgICAgICA6ICdcXHhBMCdcbiAgICAgICAgICAgICAgICB0ZXh0ICs9IHRleHRTdWZmaXhcbiAgICAgICAgICAgICAgICB0aGlzLnBhc3RlSHRtbCh0ZXh0LCBpbmZvLm1lbnRpb25Qb3NpdGlvbixcbiAgICAgICAgICAgICAgICAgICAgaW5mby5tZW50aW9uUG9zaXRpb24gKyBpbmZvLm1lbnRpb25UZXh0Lmxlbmd0aCArICF0aGlzLnRyaWJ1dGUuYXV0b2NvbXBsZXRlTW9kZSlcbiAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgY29udGV4dC5lbGVtZW50LmRpc3BhdGNoRXZlbnQocmVwbGFjZUV2ZW50KVxuICAgICAgICB9XG4gICAgfVxuXG4gICAgcGFzdGVIdG1sKGh0bWwsIHN0YXJ0UG9zLCBlbmRQb3MpIHtcbiAgICAgICAgbGV0IHJhbmdlLCBzZWxcbiAgICAgICAgc2VsID0gdGhpcy5nZXRXaW5kb3dTZWxlY3Rpb24oKVxuICAgICAgICByYW5nZSA9IHRoaXMuZ2V0RG9jdW1lbnQoKS5jcmVhdGVSYW5nZSgpXG4gICAgICAgIHJhbmdlLnNldFN0YXJ0KHNlbC5hbmNob3JOb2RlLCBzdGFydFBvcylcbiAgICAgICAgcmFuZ2Uuc2V0RW5kKHNlbC5hbmNob3JOb2RlLCBlbmRQb3MpXG4gICAgICAgIHJhbmdlLmRlbGV0ZUNvbnRlbnRzKClcblxuICAgICAgICBsZXQgZWwgPSB0aGlzLmdldERvY3VtZW50KCkuY3JlYXRlRWxlbWVudCgnZGl2JylcbiAgICAgICAgZWwuaW5uZXJIVE1MID0gaHRtbFxuICAgICAgICBsZXQgZnJhZyA9IHRoaXMuZ2V0RG9jdW1lbnQoKS5jcmVhdGVEb2N1bWVudEZyYWdtZW50KCksXG4gICAgICAgICAgICBub2RlLCBsYXN0Tm9kZVxuICAgICAgICB3aGlsZSAoKG5vZGUgPSBlbC5maXJzdENoaWxkKSkge1xuICAgICAgICAgICAgbGFzdE5vZGUgPSBmcmFnLmFwcGVuZENoaWxkKG5vZGUpXG4gICAgICAgIH1cbiAgICAgICAgcmFuZ2UuaW5zZXJ0Tm9kZShmcmFnKVxuXG4gICAgICAgIC8vIFByZXNlcnZlIHRoZSBzZWxlY3Rpb25cbiAgICAgICAgaWYgKGxhc3ROb2RlKSB7XG4gICAgICAgICAgICByYW5nZSA9IHJhbmdlLmNsb25lUmFuZ2UoKVxuICAgICAgICAgICAgcmFuZ2Uuc2V0U3RhcnRBZnRlcihsYXN0Tm9kZSlcbiAgICAgICAgICAgIHJhbmdlLmNvbGxhcHNlKHRydWUpXG4gICAgICAgICAgICBzZWwucmVtb3ZlQWxsUmFuZ2VzKClcbiAgICAgICAgICAgIHNlbC5hZGRSYW5nZShyYW5nZSlcbiAgICAgICAgfVxuICAgIH1cblxuICAgIGdldFdpbmRvd1NlbGVjdGlvbigpIHtcbiAgICAgICAgaWYgKHRoaXMudHJpYnV0ZS5jb2xsZWN0aW9uLmlmcmFtZSkge1xuICAgICAgICAgICAgcmV0dXJuIHRoaXMudHJpYnV0ZS5jb2xsZWN0aW9uLmlmcmFtZS5jb250ZW50V2luZG93LmdldFNlbGVjdGlvbigpXG4gICAgICAgIH1cblxuICAgICAgICByZXR1cm4gd2luZG93LmdldFNlbGVjdGlvbigpXG4gICAgfVxuXG4gICAgZ2V0Tm9kZVBvc2l0aW9uSW5QYXJlbnQoZWxlbWVudCkge1xuICAgICAgICBpZiAoZWxlbWVudC5wYXJlbnROb2RlID09PSBudWxsKSB7XG4gICAgICAgICAgICByZXR1cm4gMFxuICAgICAgICB9XG5cbiAgICAgICAgZm9yICh2YXIgaSA9IDA7IGkgPCBlbGVtZW50LnBhcmVudE5vZGUuY2hpbGROb2Rlcy5sZW5ndGg7IGkrKykge1xuICAgICAgICAgICAgbGV0IG5vZGUgPSBlbGVtZW50LnBhcmVudE5vZGUuY2hpbGROb2Rlc1tpXVxuXG4gICAgICAgICAgICBpZiAobm9kZSA9PT0gZWxlbWVudCkge1xuICAgICAgICAgICAgICAgIHJldHVybiBpXG4gICAgICAgICAgICB9XG4gICAgICAgIH1cbiAgICB9XG5cbiAgICBnZXRDb250ZW50RWRpdGFibGVTZWxlY3RlZFBhdGgoY3R4KSB7XG4gICAgICAgIGxldCBzZWwgPSB0aGlzLmdldFdpbmRvd1NlbGVjdGlvbigpXG4gICAgICAgIGxldCBzZWxlY3RlZCA9IHNlbC5hbmNob3JOb2RlXG4gICAgICAgIGxldCBwYXRoID0gW11cbiAgICAgICAgbGV0IG9mZnNldFxuXG4gICAgICAgIGlmIChzZWxlY3RlZCAhPSBudWxsKSB7XG4gICAgICAgICAgICBsZXQgaVxuICAgICAgICAgICAgbGV0IGNlID0gc2VsZWN0ZWQuY29udGVudEVkaXRhYmxlXG4gICAgICAgICAgICB3aGlsZSAoc2VsZWN0ZWQgIT09IG51bGwgJiYgY2UgIT09ICd0cnVlJykge1xuICAgICAgICAgICAgICAgIGkgPSB0aGlzLmdldE5vZGVQb3NpdGlvbkluUGFyZW50KHNlbGVjdGVkKVxuICAgICAgICAgICAgICAgIHBhdGgucHVzaChpKVxuICAgICAgICAgICAgICAgIHNlbGVjdGVkID0gc2VsZWN0ZWQucGFyZW50Tm9kZVxuICAgICAgICAgICAgICAgIGlmIChzZWxlY3RlZCAhPT0gbnVsbCkge1xuICAgICAgICAgICAgICAgICAgICBjZSA9IHNlbGVjdGVkLmNvbnRlbnRFZGl0YWJsZVxuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgIH1cbiAgICAgICAgICAgIHBhdGgucmV2ZXJzZSgpXG5cbiAgICAgICAgICAgIC8vIGdldFJhbmdlQXQgbWF5IG5vdCBleGlzdCwgbmVlZCBhbHRlcm5hdGl2ZVxuICAgICAgICAgICAgb2Zmc2V0ID0gc2VsLmdldFJhbmdlQXQoMCkuc3RhcnRPZmZzZXRcblxuICAgICAgICAgICAgcmV0dXJuIHtcbiAgICAgICAgICAgICAgICBzZWxlY3RlZDogc2VsZWN0ZWQsXG4gICAgICAgICAgICAgICAgcGF0aDogcGF0aCxcbiAgICAgICAgICAgICAgICBvZmZzZXQ6IG9mZnNldFxuICAgICAgICAgICAgfVxuICAgICAgICB9XG4gICAgfVxuXG4gICAgZ2V0VGV4dFByZWNlZGluZ0N1cnJlbnRTZWxlY3Rpb24oKSB7XG4gICAgICAgIGxldCBjb250ZXh0ID0gdGhpcy50cmlidXRlLmN1cnJlbnQsXG4gICAgICAgICAgICB0ZXh0ID0gJydcblxuICAgICAgICBpZiAoIXRoaXMuaXNDb250ZW50RWRpdGFibGUoY29udGV4dC5lbGVtZW50KSkge1xuICAgICAgICAgICAgbGV0IHRleHRDb21wb25lbnQgPSB0aGlzLnRyaWJ1dGUuY3VycmVudC5lbGVtZW50O1xuICAgICAgICAgICAgaWYgKHRleHRDb21wb25lbnQpIHtcbiAgICAgICAgICAgICAgICBsZXQgc3RhcnRQb3MgPSB0ZXh0Q29tcG9uZW50LnNlbGVjdGlvblN0YXJ0XG4gICAgICAgICAgICAgICAgaWYgKHRleHRDb21wb25lbnQudmFsdWUgJiYgc3RhcnRQb3MgPj0gMCkge1xuICAgICAgICAgICAgICAgICAgICB0ZXh0ID0gdGV4dENvbXBvbmVudC52YWx1ZS5zdWJzdHJpbmcoMCwgc3RhcnRQb3MpXG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgfVxuXG4gICAgICAgIH0gZWxzZSB7XG4gICAgICAgICAgICBsZXQgc2VsZWN0ZWRFbGVtID0gdGhpcy5nZXRXaW5kb3dTZWxlY3Rpb24oKS5hbmNob3JOb2RlXG5cbiAgICAgICAgICAgIGlmIChzZWxlY3RlZEVsZW0gIT0gbnVsbCkge1xuICAgICAgICAgICAgICAgIGxldCB3b3JraW5nTm9kZUNvbnRlbnQgPSBzZWxlY3RlZEVsZW0udGV4dENvbnRlbnRcbiAgICAgICAgICAgICAgICBsZXQgc2VsZWN0U3RhcnRPZmZzZXQgPSB0aGlzLmdldFdpbmRvd1NlbGVjdGlvbigpLmdldFJhbmdlQXQoMCkuc3RhcnRPZmZzZXRcblxuICAgICAgICAgICAgICAgIGlmICh3b3JraW5nTm9kZUNvbnRlbnQgJiYgc2VsZWN0U3RhcnRPZmZzZXQgPj0gMCkge1xuICAgICAgICAgICAgICAgICAgICB0ZXh0ID0gd29ya2luZ05vZGVDb250ZW50LnN1YnN0cmluZygwLCBzZWxlY3RTdGFydE9mZnNldClcbiAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICB9XG4gICAgICAgIH1cblxuICAgICAgICByZXR1cm4gdGV4dFxuICAgIH1cblxuICAgIGdldExhc3RXb3JkSW5UZXh0KHRleHQpIHtcbiAgICAgICAgdGV4dCA9IHRleHQucmVwbGFjZSgvXFx1MDBBMC9nLCAnICcpOyAvLyBodHRwczovL3N0YWNrb3ZlcmZsb3cuY29tL3F1ZXN0aW9ucy8yOTg1MDQwNy9ob3ctZG8taS1yZXBsYWNlLXVuaWNvZGUtY2hhcmFjdGVyLXUwMGEwLXdpdGgtYS1zcGFjZS1pbi1qYXZhc2NyaXB0XG4gICAgICAgIGxldCB3b3Jkc0FycmF5ID0gdGV4dC5zcGxpdCgnICcpXG4gICAgICAgIGxldCB3b3JsZHNDb3VudCA9IHdvcmRzQXJyYXkubGVuZ3RoIC0gMVxuICAgICAgICByZXR1cm4gd29yZHNBcnJheVt3b3JsZHNDb3VudF0udHJpbSgpXG4gICAgfVxuXG4gICAgZ2V0VHJpZ2dlckluZm8obWVudUFscmVhZHlBY3RpdmUsIGhhc1RyYWlsaW5nU3BhY2UsIHJlcXVpcmVMZWFkaW5nU3BhY2UsIGFsbG93U3BhY2VzLCBpc0F1dG9jb21wbGV0ZSkge1xuICAgICAgICBsZXQgY3R4ID0gdGhpcy50cmlidXRlLmN1cnJlbnRcbiAgICAgICAgbGV0IHNlbGVjdGVkLCBwYXRoLCBvZmZzZXRcblxuICAgICAgICBpZiAoIXRoaXMuaXNDb250ZW50RWRpdGFibGUoY3R4LmVsZW1lbnQpKSB7XG4gICAgICAgICAgICBzZWxlY3RlZCA9IHRoaXMudHJpYnV0ZS5jdXJyZW50LmVsZW1lbnRcbiAgICAgICAgfSBlbHNlIHtcbiAgICAgICAgICAgIGxldCBzZWxlY3Rpb25JbmZvID0gdGhpcy5nZXRDb250ZW50RWRpdGFibGVTZWxlY3RlZFBhdGgoY3R4KVxuXG4gICAgICAgICAgICBpZiAoc2VsZWN0aW9uSW5mbykge1xuICAgICAgICAgICAgICAgIHNlbGVjdGVkID0gc2VsZWN0aW9uSW5mby5zZWxlY3RlZFxuICAgICAgICAgICAgICAgIHBhdGggPSBzZWxlY3Rpb25JbmZvLnBhdGhcbiAgICAgICAgICAgICAgICBvZmZzZXQgPSBzZWxlY3Rpb25JbmZvLm9mZnNldFxuICAgICAgICAgICAgfVxuICAgICAgICB9XG5cbiAgICAgICAgbGV0IGVmZmVjdGl2ZVJhbmdlID0gdGhpcy5nZXRUZXh0UHJlY2VkaW5nQ3VycmVudFNlbGVjdGlvbigpXG4gICAgICAgIGxldCBsYXN0V29yZE9mRWZmZWN0aXZlUmFuZ2UgPSB0aGlzLmdldExhc3RXb3JkSW5UZXh0KGVmZmVjdGl2ZVJhbmdlKVxuXG4gICAgICAgIGlmIChpc0F1dG9jb21wbGV0ZSkge1xuICAgICAgICAgICAgcmV0dXJuIHtcbiAgICAgICAgICAgICAgICBtZW50aW9uUG9zaXRpb246IGVmZmVjdGl2ZVJhbmdlLmxlbmd0aCAtIGxhc3RXb3JkT2ZFZmZlY3RpdmVSYW5nZS5sZW5ndGgsXG4gICAgICAgICAgICAgICAgbWVudGlvblRleHQ6IGxhc3RXb3JkT2ZFZmZlY3RpdmVSYW5nZSxcbiAgICAgICAgICAgICAgICBtZW50aW9uU2VsZWN0ZWRFbGVtZW50OiBzZWxlY3RlZCxcbiAgICAgICAgICAgICAgICBtZW50aW9uU2VsZWN0ZWRQYXRoOiBwYXRoLFxuICAgICAgICAgICAgICAgIG1lbnRpb25TZWxlY3RlZE9mZnNldDogb2Zmc2V0XG4gICAgICAgICAgICB9XG4gICAgICAgIH1cblxuICAgICAgICBpZiAoZWZmZWN0aXZlUmFuZ2UgIT09IHVuZGVmaW5lZCAmJiBlZmZlY3RpdmVSYW5nZSAhPT0gbnVsbCkge1xuICAgICAgICAgICAgbGV0IG1vc3RSZWNlbnRUcmlnZ2VyQ2hhclBvcyA9IC0xXG4gICAgICAgICAgICBsZXQgdHJpZ2dlckNoYXJcblxuICAgICAgICAgICAgdGhpcy50cmlidXRlLmNvbGxlY3Rpb24uZm9yRWFjaChjb25maWcgPT4ge1xuICAgICAgICAgICAgICAgIGxldCBjID0gY29uZmlnLnRyaWdnZXJcbiAgICAgICAgICAgICAgICBsZXQgaWR4ID0gY29uZmlnLnJlcXVpcmVMZWFkaW5nU3BhY2UgP1xuICAgICAgICAgICAgICAgICAgICB0aGlzLmxhc3RJbmRleFdpdGhMZWFkaW5nU3BhY2UoZWZmZWN0aXZlUmFuZ2UsIGMpIDpcbiAgICAgICAgICAgICAgICAgICAgZWZmZWN0aXZlUmFuZ2UubGFzdEluZGV4T2YoYylcblxuICAgICAgICAgICAgICAgIGlmIChpZHggPiBtb3N0UmVjZW50VHJpZ2dlckNoYXJQb3MpIHtcbiAgICAgICAgICAgICAgICAgICAgbW9zdFJlY2VudFRyaWdnZXJDaGFyUG9zID0gaWR4XG4gICAgICAgICAgICAgICAgICAgIHRyaWdnZXJDaGFyID0gY1xuICAgICAgICAgICAgICAgICAgICByZXF1aXJlTGVhZGluZ1NwYWNlID0gY29uZmlnLnJlcXVpcmVMZWFkaW5nU3BhY2VcbiAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICB9KVxuXG4gICAgICAgICAgICBpZiAobW9zdFJlY2VudFRyaWdnZXJDaGFyUG9zID49IDAgJiZcbiAgICAgICAgICAgICAgICAoXG4gICAgICAgICAgICAgICAgICAgIG1vc3RSZWNlbnRUcmlnZ2VyQ2hhclBvcyA9PT0gMCB8fFxuICAgICAgICAgICAgICAgICAgICAhcmVxdWlyZUxlYWRpbmdTcGFjZSB8fFxuICAgICAgICAgICAgICAgICAgICAvW1xceEEwXFxzXS9nLnRlc3QoXG4gICAgICAgICAgICAgICAgICAgICAgICBlZmZlY3RpdmVSYW5nZS5zdWJzdHJpbmcoXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgbW9zdFJlY2VudFRyaWdnZXJDaGFyUG9zIC0gMSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBtb3N0UmVjZW50VHJpZ2dlckNoYXJQb3MpXG4gICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICApIHtcbiAgICAgICAgICAgICAgICBsZXQgY3VycmVudFRyaWdnZXJTbmlwcGV0ID0gZWZmZWN0aXZlUmFuZ2Uuc3Vic3RyaW5nKG1vc3RSZWNlbnRUcmlnZ2VyQ2hhclBvcyArIDEsXG4gICAgICAgICAgICAgICAgICAgIGVmZmVjdGl2ZVJhbmdlLmxlbmd0aClcblxuICAgICAgICAgICAgICAgIHRyaWdnZXJDaGFyID0gZWZmZWN0aXZlUmFuZ2Uuc3Vic3RyaW5nKG1vc3RSZWNlbnRUcmlnZ2VyQ2hhclBvcywgbW9zdFJlY2VudFRyaWdnZXJDaGFyUG9zICsgMSlcbiAgICAgICAgICAgICAgICBsZXQgZmlyc3RTbmlwcGV0Q2hhciA9IGN1cnJlbnRUcmlnZ2VyU25pcHBldC5zdWJzdHJpbmcoMCwgMSlcbiAgICAgICAgICAgICAgICBsZXQgbGVhZGluZ1NwYWNlID0gY3VycmVudFRyaWdnZXJTbmlwcGV0Lmxlbmd0aCA+IDAgJiZcbiAgICAgICAgICAgICAgICAgICAgKFxuICAgICAgICAgICAgICAgICAgICAgICAgZmlyc3RTbmlwcGV0Q2hhciA9PT0gJyAnIHx8XG4gICAgICAgICAgICAgICAgICAgICAgICBmaXJzdFNuaXBwZXRDaGFyID09PSAnXFx4QTAnXG4gICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICBpZiAoaGFzVHJhaWxpbmdTcGFjZSkge1xuICAgICAgICAgICAgICAgICAgICBjdXJyZW50VHJpZ2dlclNuaXBwZXQgPSBjdXJyZW50VHJpZ2dlclNuaXBwZXQudHJpbSgpXG4gICAgICAgICAgICAgICAgfVxuXG4gICAgICAgICAgICAgICAgbGV0IHJlZ2V4ID0gYWxsb3dTcGFjZXMgPyAvW15cXFMgXS9nIDogL1tcXHhBMFxcc10vZztcblxuICAgICAgICAgICAgICAgIHRoaXMudHJpYnV0ZS5oYXNUcmFpbGluZ1NwYWNlID0gcmVnZXgudGVzdChjdXJyZW50VHJpZ2dlclNuaXBwZXQpO1xuXG4gICAgICAgICAgICAgICAgaWYgKCFsZWFkaW5nU3BhY2UgJiYgKG1lbnVBbHJlYWR5QWN0aXZlIHx8ICEocmVnZXgudGVzdChjdXJyZW50VHJpZ2dlclNuaXBwZXQpKSkpIHtcbiAgICAgICAgICAgICAgICAgICAgcmV0dXJuIHtcbiAgICAgICAgICAgICAgICAgICAgICAgIG1lbnRpb25Qb3NpdGlvbjogbW9zdFJlY2VudFRyaWdnZXJDaGFyUG9zLFxuICAgICAgICAgICAgICAgICAgICAgICAgbWVudGlvblRleHQ6IGN1cnJlbnRUcmlnZ2VyU25pcHBldCxcbiAgICAgICAgICAgICAgICAgICAgICAgIG1lbnRpb25TZWxlY3RlZEVsZW1lbnQ6IHNlbGVjdGVkLFxuICAgICAgICAgICAgICAgICAgICAgICAgbWVudGlvblNlbGVjdGVkUGF0aDogcGF0aCxcbiAgICAgICAgICAgICAgICAgICAgICAgIG1lbnRpb25TZWxlY3RlZE9mZnNldDogb2Zmc2V0LFxuICAgICAgICAgICAgICAgICAgICAgICAgbWVudGlvblRyaWdnZXJDaGFyOiB0cmlnZ2VyQ2hhclxuICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgfVxuICAgICAgICB9XG4gICAgfVxuXG4gICAgbGFzdEluZGV4V2l0aExlYWRpbmdTcGFjZSAoc3RyLCBjaGFyKSB7XG4gICAgICAgIGxldCByZXZlcnNlZFN0ciA9IHN0ci5zcGxpdCgnJykucmV2ZXJzZSgpLmpvaW4oJycpXG4gICAgICAgIGxldCBpbmRleCA9IC0xXG5cbiAgICAgICAgZm9yIChsZXQgY2lkeCA9IDAsIGxlbiA9IHN0ci5sZW5ndGg7IGNpZHggPCBsZW47IGNpZHgrKykge1xuICAgICAgICAgICAgbGV0IGZpcnN0Q2hhciA9IGNpZHggPT09IHN0ci5sZW5ndGggLSAxXG4gICAgICAgICAgICBsZXQgbGVhZGluZ1NwYWNlID0gL1xccy8udGVzdChyZXZlcnNlZFN0cltjaWR4ICsgMV0pXG4gICAgICAgICAgICBsZXQgbWF0Y2ggPSBjaGFyID09PSByZXZlcnNlZFN0cltjaWR4XVxuXG4gICAgICAgICAgICBpZiAobWF0Y2ggJiYgKGZpcnN0Q2hhciB8fCBsZWFkaW5nU3BhY2UpKSB7XG4gICAgICAgICAgICAgICAgaW5kZXggPSBzdHIubGVuZ3RoIC0gMSAtIGNpZHhcbiAgICAgICAgICAgICAgICBicmVha1xuICAgICAgICAgICAgfVxuICAgICAgICB9XG5cbiAgICAgICAgcmV0dXJuIGluZGV4XG4gICAgfVxuXG4gICAgaXNDb250ZW50RWRpdGFibGUoZWxlbWVudCkge1xuICAgICAgICByZXR1cm4gZWxlbWVudC5ub2RlTmFtZSAhPT0gJ0lOUFVUJyAmJiBlbGVtZW50Lm5vZGVOYW1lICE9PSAnVEVYVEFSRUEnXG4gICAgfVxuXG4gICAgaXNNZW51T2ZmU2NyZWVuKGNvb3JkaW5hdGVzLCBtZW51RGltZW5zaW9ucykge1xuICAgICAgICBsZXQgd2luZG93V2lkdGggPSB3aW5kb3cuaW5uZXJXaWR0aFxuICAgICAgICBsZXQgd2luZG93SGVpZ2h0ID0gd2luZG93LmlubmVySGVpZ2h0XG4gICAgICAgIGxldCBkb2MgPSBkb2N1bWVudC5kb2N1bWVudEVsZW1lbnRcbiAgICAgICAgbGV0IHdpbmRvd0xlZnQgPSAod2luZG93LnBhZ2VYT2Zmc2V0IHx8IGRvYy5zY3JvbGxMZWZ0KSAtIChkb2MuY2xpZW50TGVmdCB8fCAwKVxuICAgICAgICBsZXQgd2luZG93VG9wID0gKHdpbmRvdy5wYWdlWU9mZnNldCB8fCBkb2Muc2Nyb2xsVG9wKSAtIChkb2MuY2xpZW50VG9wIHx8IDApXG5cbiAgICAgICAgbGV0IG1lbnVUb3AgPSB0eXBlb2YgY29vcmRpbmF0ZXMudG9wID09PSAnbnVtYmVyJyA/IGNvb3JkaW5hdGVzLnRvcCA6IHdpbmRvd1RvcCArIHdpbmRvd0hlaWdodCAtIGNvb3JkaW5hdGVzLmJvdHRvbSAtIG1lbnVEaW1lbnNpb25zLmhlaWdodFxuICAgICAgICBsZXQgbWVudVJpZ2h0ID0gdHlwZW9mIGNvb3JkaW5hdGVzLnJpZ2h0ID09PSAnbnVtYmVyJyA/IGNvb3JkaW5hdGVzLnJpZ2h0IDogY29vcmRpbmF0ZXMubGVmdCArIG1lbnVEaW1lbnNpb25zLndpZHRoXG4gICAgICAgIGxldCBtZW51Qm90dG9tID0gdHlwZW9mIGNvb3JkaW5hdGVzLmJvdHRvbSA9PT0gJ251bWJlcicgPyBjb29yZGluYXRlcy5ib3R0b20gOiBjb29yZGluYXRlcy50b3AgKyBtZW51RGltZW5zaW9ucy5oZWlnaHRcbiAgICAgICAgbGV0IG1lbnVMZWZ0ID0gdHlwZW9mIGNvb3JkaW5hdGVzLmxlZnQgPT09ICdudW1iZXInID8gY29vcmRpbmF0ZXMubGVmdCA6IHdpbmRvd0xlZnQgKyB3aW5kb3dXaWR0aCAtIGNvb3JkaW5hdGVzLnJpZ2h0IC0gbWVudURpbWVuc2lvbnMud2lkdGhcblxuICAgICAgICByZXR1cm4ge1xuICAgICAgICAgICAgdG9wOiBtZW51VG9wIDwgTWF0aC5mbG9vcih3aW5kb3dUb3ApLFxuICAgICAgICAgICAgcmlnaHQ6IG1lbnVSaWdodCA+IE1hdGguY2VpbCh3aW5kb3dMZWZ0ICsgd2luZG93V2lkdGgpLFxuICAgICAgICAgICAgYm90dG9tOiBtZW51Qm90dG9tID4gTWF0aC5jZWlsKHdpbmRvd1RvcCArIHdpbmRvd0hlaWdodCksXG4gICAgICAgICAgICBsZWZ0OiBtZW51TGVmdCA8IE1hdGguZmxvb3Iod2luZG93TGVmdClcbiAgICAgICAgfVxuICAgIH1cblxuICAgIGdldE1lbnVEaW1lbnNpb25zKCkge1xuICAgICAgICAvLyBXaWR0aCBvZiB0aGUgbWVudSBkZXBlbmRzIG9mIGl0cyBjb250ZW50cyBhbmQgcG9zaXRpb25cbiAgICAgICAgLy8gV2UgbXVzdCBjaGVjayB3aGF0IGl0cyB3aWR0aCB3b3VsZCBiZSB3aXRob3V0IGFueSBvYnN0cnVjdGlvblxuICAgICAgICAvLyBUaGlzIHdheSwgd2UgY2FuIGFjaGlldmUgZ29vZCBwb3NpdGlvbmluZyBmb3IgZmxpcHBpbmcgdGhlIG1lbnVcbiAgICAgICAgbGV0IGRpbWVuc2lvbnMgPSB7XG4gICAgICAgICAgICB3aWR0aDogbnVsbCxcbiAgICAgICAgICAgIGhlaWdodDogbnVsbFxuICAgICAgICB9XG5cbiAgICAgICAgdGhpcy50cmlidXRlLm1lbnUuc3R5bGUuY3NzVGV4dCA9IGB0b3A6IDBweDtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxlZnQ6IDBweDtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHpJbmRleDogMTAwMDA7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkaXNwbGF5OiBibG9jaztcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZpc2liaWxpdHk7IGhpZGRlbjtgXG4gICAgICAgZGltZW5zaW9ucy53aWR0aCA9IHRoaXMudHJpYnV0ZS5tZW51Lm9mZnNldFdpZHRoXG4gICAgICAgZGltZW5zaW9ucy5oZWlnaHQgPSB0aGlzLnRyaWJ1dGUubWVudS5vZmZzZXRIZWlnaHRcblxuICAgICAgIHRoaXMudHJpYnV0ZS5tZW51LnN0eWxlLmNzc1RleHQgPSBgZGlzcGxheTogbm9uZTtgXG5cbiAgICAgICByZXR1cm4gZGltZW5zaW9uc1xuICAgIH1cblxuICAgIGdldFRleHRBcmVhT3JJbnB1dFVuZGVybGluZVBvc2l0aW9uKGVsZW1lbnQsIHBvc2l0aW9uLCBmbGlwcGVkKSB7XG4gICAgICAgIGxldCBwcm9wZXJ0aWVzID0gWydkaXJlY3Rpb24nLCAnYm94U2l6aW5nJywgJ3dpZHRoJywgJ2hlaWdodCcsICdvdmVyZmxvd1gnLFxuICAgICAgICAgICAgJ292ZXJmbG93WScsICdib3JkZXJUb3BXaWR0aCcsICdib3JkZXJSaWdodFdpZHRoJyxcbiAgICAgICAgICAgICdib3JkZXJCb3R0b21XaWR0aCcsICdib3JkZXJMZWZ0V2lkdGgnLCAncGFkZGluZ1RvcCcsXG4gICAgICAgICAgICAncGFkZGluZ1JpZ2h0JywgJ3BhZGRpbmdCb3R0b20nLCAncGFkZGluZ0xlZnQnLFxuICAgICAgICAgICAgJ2ZvbnRTdHlsZScsICdmb250VmFyaWFudCcsICdmb250V2VpZ2h0JywgJ2ZvbnRTdHJldGNoJyxcbiAgICAgICAgICAgICdmb250U2l6ZScsICdmb250U2l6ZUFkanVzdCcsICdsaW5lSGVpZ2h0JywgJ2ZvbnRGYW1pbHknLFxuICAgICAgICAgICAgJ3RleHRBbGlnbicsICd0ZXh0VHJhbnNmb3JtJywgJ3RleHRJbmRlbnQnLFxuICAgICAgICAgICAgJ3RleHREZWNvcmF0aW9uJywgJ2xldHRlclNwYWNpbmcnLCAnd29yZFNwYWNpbmcnXG4gICAgICAgIF1cblxuICAgICAgICBsZXQgaXNGaXJlZm94ID0gKHdpbmRvdy5tb3pJbm5lclNjcmVlblggIT09IG51bGwpXG5cbiAgICAgICAgbGV0IGRpdiA9IHRoaXMuZ2V0RG9jdW1lbnQoKS5jcmVhdGVFbGVtZW50KCdkaXYnKVxuICAgICAgICBkaXYuaWQgPSAnaW5wdXQtdGV4dGFyZWEtY2FyZXQtcG9zaXRpb24tbWlycm9yLWRpdidcbiAgICAgICAgdGhpcy5nZXREb2N1bWVudCgpLmJvZHkuYXBwZW5kQ2hpbGQoZGl2KVxuXG4gICAgICAgIGxldCBzdHlsZSA9IGRpdi5zdHlsZVxuICAgICAgICBsZXQgY29tcHV0ZWQgPSB3aW5kb3cuZ2V0Q29tcHV0ZWRTdHlsZSA/IGdldENvbXB1dGVkU3R5bGUoZWxlbWVudCkgOiBlbGVtZW50LmN1cnJlbnRTdHlsZVxuXG4gICAgICAgIHN0eWxlLndoaXRlU3BhY2UgPSAncHJlLXdyYXAnXG4gICAgICAgIGlmIChlbGVtZW50Lm5vZGVOYW1lICE9PSAnSU5QVVQnKSB7XG4gICAgICAgICAgICBzdHlsZS53b3JkV3JhcCA9ICdicmVhay13b3JkJ1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gcG9zaXRpb24gb2ZmLXNjcmVlblxuICAgICAgICBzdHlsZS5wb3NpdGlvbiA9ICdhYnNvbHV0ZSdcbiAgICAgICAgc3R5bGUudmlzaWJpbGl0eSA9ICdoaWRkZW4nXG5cbiAgICAgICAgLy8gdHJhbnNmZXIgdGhlIGVsZW1lbnQncyBwcm9wZXJ0aWVzIHRvIHRoZSBkaXZcbiAgICAgICAgcHJvcGVydGllcy5mb3JFYWNoKHByb3AgPT4ge1xuICAgICAgICAgICAgc3R5bGVbcHJvcF0gPSBjb21wdXRlZFtwcm9wXVxuICAgICAgICB9KVxuXG4gICAgICAgIGlmIChpc0ZpcmVmb3gpIHtcbiAgICAgICAgICAgIHN0eWxlLndpZHRoID0gYCR7KHBhcnNlSW50KGNvbXB1dGVkLndpZHRoKSAtIDIpfXB4YFxuICAgICAgICAgICAgaWYgKGVsZW1lbnQuc2Nyb2xsSGVpZ2h0ID4gcGFyc2VJbnQoY29tcHV0ZWQuaGVpZ2h0KSlcbiAgICAgICAgICAgICAgICBzdHlsZS5vdmVyZmxvd1kgPSAnc2Nyb2xsJ1xuICAgICAgICB9IGVsc2Uge1xuICAgICAgICAgICAgc3R5bGUub3ZlcmZsb3cgPSAnaGlkZGVuJ1xuICAgICAgICB9XG5cbiAgICAgICAgZGl2LnRleHRDb250ZW50ID0gZWxlbWVudC52YWx1ZS5zdWJzdHJpbmcoMCwgcG9zaXRpb24pXG5cbiAgICAgICAgaWYgKGVsZW1lbnQubm9kZU5hbWUgPT09ICdJTlBVVCcpIHtcbiAgICAgICAgICAgIGRpdi50ZXh0Q29udGVudCA9IGRpdi50ZXh0Q29udGVudC5yZXBsYWNlKC9cXHMvZywgJ8KgJylcbiAgICAgICAgfVxuXG4gICAgICAgIGxldCBzcGFuID0gdGhpcy5nZXREb2N1bWVudCgpLmNyZWF0ZUVsZW1lbnQoJ3NwYW4nKVxuICAgICAgICBzcGFuLnRleHRDb250ZW50ID0gZWxlbWVudC52YWx1ZS5zdWJzdHJpbmcocG9zaXRpb24pIHx8ICcuJ1xuICAgICAgICBkaXYuYXBwZW5kQ2hpbGQoc3BhbilcblxuICAgICAgICBsZXQgcmVjdCA9IGVsZW1lbnQuZ2V0Qm91bmRpbmdDbGllbnRSZWN0KClcbiAgICAgICAgbGV0IGRvYyA9IGRvY3VtZW50LmRvY3VtZW50RWxlbWVudFxuICAgICAgICBsZXQgd2luZG93TGVmdCA9ICh3aW5kb3cucGFnZVhPZmZzZXQgfHwgZG9jLnNjcm9sbExlZnQpIC0gKGRvYy5jbGllbnRMZWZ0IHx8IDApXG4gICAgICAgIGxldCB3aW5kb3dUb3AgPSAod2luZG93LnBhZ2VZT2Zmc2V0IHx8IGRvYy5zY3JvbGxUb3ApIC0gKGRvYy5jbGllbnRUb3AgfHwgMClcblxuICAgICAgICBsZXQgY29vcmRpbmF0ZXMgPSB7XG4gICAgICAgICAgICB0b3A6IHJlY3QudG9wICsgd2luZG93VG9wICsgc3Bhbi5vZmZzZXRUb3AgKyBwYXJzZUludChjb21wdXRlZC5ib3JkZXJUb3BXaWR0aCkgKyBwYXJzZUludChjb21wdXRlZC5mb250U2l6ZSkgLSBlbGVtZW50LnNjcm9sbFRvcCxcbiAgICAgICAgICAgIGxlZnQ6IHJlY3QubGVmdCArIHdpbmRvd0xlZnQgKyBzcGFuLm9mZnNldExlZnQgKyBwYXJzZUludChjb21wdXRlZC5ib3JkZXJMZWZ0V2lkdGgpXG4gICAgICAgIH1cblxuICAgICAgICBsZXQgd2luZG93V2lkdGggPSB3aW5kb3cuaW5uZXJXaWR0aFxuICAgICAgICBsZXQgd2luZG93SGVpZ2h0ID0gd2luZG93LmlubmVySGVpZ2h0XG5cbiAgICAgICAgbGV0IG1lbnVEaW1lbnNpb25zID0gdGhpcy5nZXRNZW51RGltZW5zaW9ucygpXG4gICAgICAgIGxldCBtZW51SXNPZmZTY3JlZW4gPSB0aGlzLmlzTWVudU9mZlNjcmVlbihjb29yZGluYXRlcywgbWVudURpbWVuc2lvbnMpXG5cbiAgICAgICAgaWYgKG1lbnVJc09mZlNjcmVlbi5yaWdodCkge1xuICAgICAgICAgICAgY29vcmRpbmF0ZXMucmlnaHQgPSB3aW5kb3dXaWR0aCAtIGNvb3JkaW5hdGVzLmxlZnRcbiAgICAgICAgICAgIGNvb3JkaW5hdGVzLmxlZnQgPSAnYXV0bydcbiAgICAgICAgfVxuXG4gICAgICAgIGxldCBwYXJlbnRIZWlnaHQgPSB0aGlzLnRyaWJ1dGUubWVudUNvbnRhaW5lclxuICAgICAgICAgICAgPyB0aGlzLnRyaWJ1dGUubWVudUNvbnRhaW5lci5vZmZzZXRIZWlnaHRcbiAgICAgICAgICAgIDogdGhpcy5nZXREb2N1bWVudCgpLmJvZHkub2Zmc2V0SGVpZ2h0XG5cbiAgICAgICAgaWYgKG1lbnVJc09mZlNjcmVlbi5ib3R0b20pIHtcbiAgICAgICAgICAgIGxldCBwYXJlbnRSZWN0ID0gdGhpcy50cmlidXRlLm1lbnVDb250YWluZXJcbiAgICAgICAgICAgICAgICA/IHRoaXMudHJpYnV0ZS5tZW51Q29udGFpbmVyLmdldEJvdW5kaW5nQ2xpZW50UmVjdCgpXG4gICAgICAgICAgICAgICAgOiB0aGlzLmdldERvY3VtZW50KCkuYm9keS5nZXRCb3VuZGluZ0NsaWVudFJlY3QoKVxuICAgICAgICAgICAgbGV0IHNjcm9sbFN0aWxsQXZhaWxhYmxlID0gcGFyZW50SGVpZ2h0IC0gKHdpbmRvd0hlaWdodCAtIHBhcmVudFJlY3QudG9wKVxuXG4gICAgICAgICAgICBjb29yZGluYXRlcy5ib3R0b20gPSBzY3JvbGxTdGlsbEF2YWlsYWJsZSArICh3aW5kb3dIZWlnaHQgLSByZWN0LnRvcCAtIHNwYW4ub2Zmc2V0VG9wKVxuICAgICAgICAgICAgY29vcmRpbmF0ZXMudG9wID0gJ2F1dG8nXG4gICAgICAgIH1cblxuICAgICAgICBtZW51SXNPZmZTY3JlZW4gPSB0aGlzLmlzTWVudU9mZlNjcmVlbihjb29yZGluYXRlcywgbWVudURpbWVuc2lvbnMpXG4gICAgICAgIGlmIChtZW51SXNPZmZTY3JlZW4ubGVmdCkge1xuICAgICAgICAgICAgY29vcmRpbmF0ZXMubGVmdCA9IHdpbmRvd1dpZHRoID4gbWVudURpbWVuc2lvbnMud2lkdGhcbiAgICAgICAgICAgICAgICA/IHdpbmRvd0xlZnQgKyB3aW5kb3dXaWR0aCAtIG1lbnVEaW1lbnNpb25zLndpZHRoXG4gICAgICAgICAgICAgICAgOiB3aW5kb3dMZWZ0XG4gICAgICAgICAgICBkZWxldGUgY29vcmRpbmF0ZXMucmlnaHRcbiAgICAgICAgfVxuICAgICAgICBpZiAobWVudUlzT2ZmU2NyZWVuLnRvcCkge1xuICAgICAgICAgICAgY29vcmRpbmF0ZXMudG9wID0gd2luZG93SGVpZ2h0ID4gbWVudURpbWVuc2lvbnMuaGVpZ2h0XG4gICAgICAgICAgICAgICAgPyB3aW5kb3dUb3AgKyB3aW5kb3dIZWlnaHQgLSBtZW51RGltZW5zaW9ucy5oZWlnaHRcbiAgICAgICAgICAgICAgICA6IHdpbmRvd1RvcFxuICAgICAgICAgICAgZGVsZXRlIGNvb3JkaW5hdGVzLmJvdHRvbVxuICAgICAgICB9XG5cbiAgICAgICAgdGhpcy5nZXREb2N1bWVudCgpLmJvZHkucmVtb3ZlQ2hpbGQoZGl2KVxuICAgICAgICByZXR1cm4gY29vcmRpbmF0ZXNcbiAgICB9XG5cbiAgICBnZXRDb250ZW50RWRpdGFibGVDYXJldFBvc2l0aW9uKHNlbGVjdGVkTm9kZVBvc2l0aW9uKSB7XG4gICAgICAgIGxldCBtYXJrZXJUZXh0Q2hhciA9ICfvu78nXG4gICAgICAgIGxldCBtYXJrZXJFbCwgbWFya2VySWQgPSBgc2VsXyR7bmV3IERhdGUoKS5nZXRUaW1lKCl9XyR7TWF0aC5yYW5kb20oKS50b1N0cmluZygpLnN1YnN0cigyKX1gXG4gICAgICAgIGxldCByYW5nZVxuICAgICAgICBsZXQgc2VsID0gdGhpcy5nZXRXaW5kb3dTZWxlY3Rpb24oKVxuICAgICAgICBsZXQgcHJldlJhbmdlID0gc2VsLmdldFJhbmdlQXQoMClcblxuICAgICAgICByYW5nZSA9IHRoaXMuZ2V0RG9jdW1lbnQoKS5jcmVhdGVSYW5nZSgpXG4gICAgICAgIHJhbmdlLnNldFN0YXJ0KHNlbC5hbmNob3JOb2RlLCBzZWxlY3RlZE5vZGVQb3NpdGlvbilcbiAgICAgICAgcmFuZ2Uuc2V0RW5kKHNlbC5hbmNob3JOb2RlLCBzZWxlY3RlZE5vZGVQb3NpdGlvbilcblxuICAgICAgICByYW5nZS5jb2xsYXBzZShmYWxzZSlcblxuICAgICAgICAvLyBDcmVhdGUgdGhlIG1hcmtlciBlbGVtZW50IGNvbnRhaW5pbmcgYSBzaW5nbGUgaW52aXNpYmxlIGNoYXJhY3RlciB1c2luZyBET00gbWV0aG9kcyBhbmQgaW5zZXJ0IGl0XG4gICAgICAgIG1hcmtlckVsID0gdGhpcy5nZXREb2N1bWVudCgpLmNyZWF0ZUVsZW1lbnQoJ3NwYW4nKVxuICAgICAgICBtYXJrZXJFbC5pZCA9IG1hcmtlcklkXG5cbiAgICAgICAgbWFya2VyRWwuYXBwZW5kQ2hpbGQodGhpcy5nZXREb2N1bWVudCgpLmNyZWF0ZVRleHROb2RlKG1hcmtlclRleHRDaGFyKSlcbiAgICAgICAgcmFuZ2UuaW5zZXJ0Tm9kZShtYXJrZXJFbClcbiAgICAgICAgc2VsLnJlbW92ZUFsbFJhbmdlcygpXG4gICAgICAgIHNlbC5hZGRSYW5nZShwcmV2UmFuZ2UpXG5cbiAgICAgICAgbGV0IHJlY3QgPSBtYXJrZXJFbC5nZXRCb3VuZGluZ0NsaWVudFJlY3QoKVxuICAgICAgICBsZXQgZG9jID0gZG9jdW1lbnQuZG9jdW1lbnRFbGVtZW50XG4gICAgICAgIGxldCB3aW5kb3dMZWZ0ID0gKHdpbmRvdy5wYWdlWE9mZnNldCB8fCBkb2Muc2Nyb2xsTGVmdCkgLSAoZG9jLmNsaWVudExlZnQgfHwgMClcbiAgICAgICAgbGV0IHdpbmRvd1RvcCA9ICh3aW5kb3cucGFnZVlPZmZzZXQgfHwgZG9jLnNjcm9sbFRvcCkgLSAoZG9jLmNsaWVudFRvcCB8fCAwKVxuICAgICAgICBsZXQgY29vcmRpbmF0ZXMgPSB7XG4gICAgICAgICAgICBsZWZ0OiByZWN0LmxlZnQgKyB3aW5kb3dMZWZ0LFxuICAgICAgICAgICAgdG9wOiByZWN0LnRvcCArIG1hcmtlckVsLm9mZnNldEhlaWdodCArIHdpbmRvd1RvcFxuICAgICAgICB9XG4gICAgICAgIGxldCB3aW5kb3dXaWR0aCA9IHdpbmRvdy5pbm5lcldpZHRoXG4gICAgICAgIGxldCB3aW5kb3dIZWlnaHQgPSB3aW5kb3cuaW5uZXJIZWlnaHRcblxuICAgICAgICBsZXQgbWVudURpbWVuc2lvbnMgPSB0aGlzLmdldE1lbnVEaW1lbnNpb25zKClcbiAgICAgICAgbGV0IG1lbnVJc09mZlNjcmVlbiA9IHRoaXMuaXNNZW51T2ZmU2NyZWVuKGNvb3JkaW5hdGVzLCBtZW51RGltZW5zaW9ucylcblxuICAgICAgICBpZiAobWVudUlzT2ZmU2NyZWVuLnJpZ2h0KSB7XG4gICAgICAgICAgICBjb29yZGluYXRlcy5sZWZ0ID0gJ2F1dG8nXG4gICAgICAgICAgICBjb29yZGluYXRlcy5yaWdodCA9IHdpbmRvd1dpZHRoIC0gcmVjdC5sZWZ0IC0gd2luZG93TGVmdFxuICAgICAgICB9XG5cbiAgICAgICAgbGV0IHBhcmVudEhlaWdodCA9IHRoaXMudHJpYnV0ZS5tZW51Q29udGFpbmVyXG4gICAgICAgICAgICA/IHRoaXMudHJpYnV0ZS5tZW51Q29udGFpbmVyLm9mZnNldEhlaWdodFxuICAgICAgICAgICAgOiB0aGlzLmdldERvY3VtZW50KCkuYm9keS5vZmZzZXRIZWlnaHRcblxuICAgICAgICBpZiAobWVudUlzT2ZmU2NyZWVuLmJvdHRvbSkge1xuICAgICAgICAgICAgbGV0IHBhcmVudFJlY3QgPSB0aGlzLnRyaWJ1dGUubWVudUNvbnRhaW5lclxuICAgICAgICAgICAgICAgID8gdGhpcy50cmlidXRlLm1lbnVDb250YWluZXIuZ2V0Qm91bmRpbmdDbGllbnRSZWN0KClcbiAgICAgICAgICAgICAgICA6IHRoaXMuZ2V0RG9jdW1lbnQoKS5ib2R5LmdldEJvdW5kaW5nQ2xpZW50UmVjdCgpXG4gICAgICAgICAgICBsZXQgc2Nyb2xsU3RpbGxBdmFpbGFibGUgPSBwYXJlbnRIZWlnaHQgLSAod2luZG93SGVpZ2h0IC0gcGFyZW50UmVjdC50b3ApXG5cbiAgICAgICAgICAgIGNvb3JkaW5hdGVzLnRvcCA9ICdhdXRvJ1xuICAgICAgICAgICAgY29vcmRpbmF0ZXMuYm90dG9tID0gc2Nyb2xsU3RpbGxBdmFpbGFibGUgKyAod2luZG93SGVpZ2h0IC0gcmVjdC50b3ApXG4gICAgICAgIH1cblxuICAgICAgICBtZW51SXNPZmZTY3JlZW4gPSB0aGlzLmlzTWVudU9mZlNjcmVlbihjb29yZGluYXRlcywgbWVudURpbWVuc2lvbnMpXG4gICAgICAgIGlmIChtZW51SXNPZmZTY3JlZW4ubGVmdCkge1xuICAgICAgICAgICAgY29vcmRpbmF0ZXMubGVmdCA9IHdpbmRvd1dpZHRoID4gbWVudURpbWVuc2lvbnMud2lkdGhcbiAgICAgICAgICAgICAgICA/IHdpbmRvd0xlZnQgKyB3aW5kb3dXaWR0aCAtIG1lbnVEaW1lbnNpb25zLndpZHRoXG4gICAgICAgICAgICAgICAgOiB3aW5kb3dMZWZ0XG4gICAgICAgICAgICBkZWxldGUgY29vcmRpbmF0ZXMucmlnaHRcbiAgICAgICAgfVxuICAgICAgICBpZiAobWVudUlzT2ZmU2NyZWVuLnRvcCkge1xuICAgICAgICAgICAgY29vcmRpbmF0ZXMudG9wID0gd2luZG93SGVpZ2h0ID4gbWVudURpbWVuc2lvbnMuaGVpZ2h0XG4gICAgICAgICAgICAgICAgPyB3aW5kb3dUb3AgKyB3aW5kb3dIZWlnaHQgLSBtZW51RGltZW5zaW9ucy5oZWlnaHRcbiAgICAgICAgICAgICAgICA6IHdpbmRvd1RvcFxuICAgICAgICAgICAgZGVsZXRlIGNvb3JkaW5hdGVzLmJvdHRvbVxuICAgICAgICB9XG5cbiAgICAgICAgbWFya2VyRWwucGFyZW50Tm9kZS5yZW1vdmVDaGlsZChtYXJrZXJFbClcbiAgICAgICAgcmV0dXJuIGNvb3JkaW5hdGVzXG4gICAgfVxuXG4gICAgc2Nyb2xsSW50b1ZpZXcoZWxlbSkge1xuICAgICAgICBsZXQgcmVhc29uYWJsZUJ1ZmZlciA9IDIwLFxuICAgICAgICAgICAgY2xpZW50UmVjdFxuICAgICAgICBsZXQgbWF4U2Nyb2xsRGlzcGxhY2VtZW50ID0gMTAwXG4gICAgICAgIGxldCBlID0gdGhpcy5tZW51XG5cbiAgICAgICAgaWYgKHR5cGVvZiBlID09PSAndW5kZWZpbmVkJykgcmV0dXJuO1xuXG4gICAgICAgIHdoaWxlIChjbGllbnRSZWN0ID09PSB1bmRlZmluZWQgfHwgY2xpZW50UmVjdC5oZWlnaHQgPT09IDApIHtcbiAgICAgICAgICAgIGNsaWVudFJlY3QgPSBlLmdldEJvdW5kaW5nQ2xpZW50UmVjdCgpXG5cbiAgICAgICAgICAgIGlmIChjbGllbnRSZWN0LmhlaWdodCA9PT0gMCkge1xuICAgICAgICAgICAgICAgIGUgPSBlLmNoaWxkTm9kZXNbMF1cbiAgICAgICAgICAgICAgICBpZiAoZSA9PT0gdW5kZWZpbmVkIHx8ICFlLmdldEJvdW5kaW5nQ2xpZW50UmVjdCkge1xuICAgICAgICAgICAgICAgICAgICByZXR1cm5cbiAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICB9XG4gICAgICAgIH1cblxuICAgICAgICBsZXQgZWxlbVRvcCA9IGNsaWVudFJlY3QudG9wXG4gICAgICAgIGxldCBlbGVtQm90dG9tID0gZWxlbVRvcCArIGNsaWVudFJlY3QuaGVpZ2h0XG5cbiAgICAgICAgaWYgKGVsZW1Ub3AgPCAwKSB7XG4gICAgICAgICAgICB3aW5kb3cuc2Nyb2xsVG8oMCwgd2luZG93LnBhZ2VZT2Zmc2V0ICsgY2xpZW50UmVjdC50b3AgLSByZWFzb25hYmxlQnVmZmVyKVxuICAgICAgICB9IGVsc2UgaWYgKGVsZW1Cb3R0b20gPiB3aW5kb3cuaW5uZXJIZWlnaHQpIHtcbiAgICAgICAgICAgIGxldCBtYXhZID0gd2luZG93LnBhZ2VZT2Zmc2V0ICsgY2xpZW50UmVjdC50b3AgLSByZWFzb25hYmxlQnVmZmVyXG5cbiAgICAgICAgICAgIGlmIChtYXhZIC0gd2luZG93LnBhZ2VZT2Zmc2V0ID4gbWF4U2Nyb2xsRGlzcGxhY2VtZW50KSB7XG4gICAgICAgICAgICAgICAgbWF4WSA9IHdpbmRvdy5wYWdlWU9mZnNldCArIG1heFNjcm9sbERpc3BsYWNlbWVudFxuICAgICAgICAgICAgfVxuXG4gICAgICAgICAgICBsZXQgdGFyZ2V0WSA9IHdpbmRvdy5wYWdlWU9mZnNldCAtICh3aW5kb3cuaW5uZXJIZWlnaHQgLSBlbGVtQm90dG9tKVxuXG4gICAgICAgICAgICBpZiAodGFyZ2V0WSA+IG1heFkpIHtcbiAgICAgICAgICAgICAgICB0YXJnZXRZID0gbWF4WVxuICAgICAgICAgICAgfVxuXG4gICAgICAgICAgICB3aW5kb3cuc2Nyb2xsVG8oMCwgdGFyZ2V0WSlcbiAgICAgICAgfVxuICAgIH1cbn1cblxuXG5leHBvcnQgZGVmYXVsdCBUcmlidXRlUmFuZ2U7XG4iLCIvLyBUaGFua3MgdG8gaHR0cHM6Ly9naXRodWIuY29tL21hdHR5b3JrL2Z1enp5XG5jbGFzcyBUcmlidXRlU2VhcmNoIHtcbiAgICBjb25zdHJ1Y3Rvcih0cmlidXRlKSB7XG4gICAgICAgIHRoaXMudHJpYnV0ZSA9IHRyaWJ1dGVcbiAgICAgICAgdGhpcy50cmlidXRlLnNlYXJjaCA9IHRoaXNcbiAgICB9XG5cbiAgICBzaW1wbGVGaWx0ZXIocGF0dGVybiwgYXJyYXkpIHtcbiAgICAgICAgcmV0dXJuIGFycmF5LmZpbHRlcihzdHJpbmcgPT4ge1xuICAgICAgICAgICAgcmV0dXJuIHRoaXMudGVzdChwYXR0ZXJuLCBzdHJpbmcpXG4gICAgICAgIH0pXG4gICAgfVxuXG4gICAgdGVzdChwYXR0ZXJuLCBzdHJpbmcpIHtcbiAgICAgICAgcmV0dXJuIHRoaXMubWF0Y2gocGF0dGVybiwgc3RyaW5nKSAhPT0gbnVsbFxuICAgIH1cblxuICAgIG1hdGNoKHBhdHRlcm4sIHN0cmluZywgb3B0cykge1xuICAgICAgICBvcHRzID0gb3B0cyB8fCB7fVxuICAgICAgICBsZXQgcGF0dGVybklkeCA9IDAsXG4gICAgICAgICAgICByZXN1bHQgPSBbXSxcbiAgICAgICAgICAgIGxlbiA9IHN0cmluZy5sZW5ndGgsXG4gICAgICAgICAgICB0b3RhbFNjb3JlID0gMCxcbiAgICAgICAgICAgIGN1cnJTY29yZSA9IDAsXG4gICAgICAgICAgICBwcmUgPSBvcHRzLnByZSB8fCAnJyxcbiAgICAgICAgICAgIHBvc3QgPSBvcHRzLnBvc3QgfHwgJycsXG4gICAgICAgICAgICBjb21wYXJlU3RyaW5nID0gb3B0cy5jYXNlU2Vuc2l0aXZlICYmIHN0cmluZyB8fCBzdHJpbmcudG9Mb3dlckNhc2UoKSxcbiAgICAgICAgICAgIGNoLCBjb21wYXJlQ2hhclxuXG4gICAgICAgIHBhdHRlcm4gPSBvcHRzLmNhc2VTZW5zaXRpdmUgJiYgcGF0dGVybiB8fCBwYXR0ZXJuLnRvTG93ZXJDYXNlKClcblxuICAgICAgICBsZXQgcGF0dGVybkNhY2hlID0gdGhpcy50cmF2ZXJzZShjb21wYXJlU3RyaW5nLCBwYXR0ZXJuLCAwLCAwLCBbXSlcbiAgICAgICAgaWYgKCFwYXR0ZXJuQ2FjaGUpIHtcbiAgICAgICAgICAgIHJldHVybiBudWxsXG4gICAgICAgIH1cblxuICAgICAgICByZXR1cm4ge1xuICAgICAgICAgICAgcmVuZGVyZWQ6IHRoaXMucmVuZGVyKHN0cmluZywgcGF0dGVybkNhY2hlLmNhY2hlLCBwcmUsIHBvc3QpLFxuICAgICAgICAgICAgc2NvcmU6IHBhdHRlcm5DYWNoZS5zY29yZVxuICAgICAgICB9XG4gICAgfVxuXG4gICAgdHJhdmVyc2Uoc3RyaW5nLCBwYXR0ZXJuLCBzdHJpbmdJbmRleCwgcGF0dGVybkluZGV4LCBwYXR0ZXJuQ2FjaGUpIHtcbiAgICAgICAgLy8gaWYgdGhlIHBhdHRlcm4gc2VhcmNoIGF0IGVuZFxuICAgICAgICBpZiAocGF0dGVybi5sZW5ndGggPT09IHBhdHRlcm5JbmRleCkge1xuXG4gICAgICAgICAgICAvLyBjYWxjdWxhdGUgc2NvcmUgYW5kIGNvcHkgdGhlIGNhY2hlIGNvbnRhaW5pbmcgdGhlIGluZGljZXMgd2hlcmUgaXQncyBmb3VuZFxuICAgICAgICAgICAgcmV0dXJuIHtcbiAgICAgICAgICAgICAgICBzY29yZTogdGhpcy5jYWxjdWxhdGVTY29yZShwYXR0ZXJuQ2FjaGUpLFxuICAgICAgICAgICAgICAgIGNhY2hlOiBwYXR0ZXJuQ2FjaGUuc2xpY2UoKVxuICAgICAgICAgICAgfVxuICAgICAgICB9XG5cbiAgICAgICAgLy8gaWYgc3RyaW5nIGF0IGVuZCBvciByZW1haW5pbmcgcGF0dGVybiA+IHJlbWFpbmluZyBzdHJpbmdcbiAgICAgICAgaWYgKHN0cmluZy5sZW5ndGggPT09IHN0cmluZ0luZGV4IHx8IHBhdHRlcm4ubGVuZ3RoIC0gcGF0dGVybkluZGV4ID4gc3RyaW5nLmxlbmd0aCAtIHN0cmluZ0luZGV4KSB7XG4gICAgICAgICAgICByZXR1cm4gdW5kZWZpbmVkXG4gICAgICAgIH1cblxuICAgICAgICBsZXQgYyA9IHBhdHRlcm5bcGF0dGVybkluZGV4XVxuICAgICAgICBsZXQgaW5kZXggPSBzdHJpbmcuaW5kZXhPZihjLCBzdHJpbmdJbmRleClcbiAgICAgICAgbGV0IGJlc3QsIHRlbXBcblxuICAgICAgICB3aGlsZSAoaW5kZXggPiAtMSkge1xuICAgICAgICAgICAgcGF0dGVybkNhY2hlLnB1c2goaW5kZXgpXG4gICAgICAgICAgICB0ZW1wID0gdGhpcy50cmF2ZXJzZShzdHJpbmcsIHBhdHRlcm4sIGluZGV4ICsgMSwgcGF0dGVybkluZGV4ICsgMSwgcGF0dGVybkNhY2hlKVxuICAgICAgICAgICAgcGF0dGVybkNhY2hlLnBvcCgpXG5cbiAgICAgICAgICAgIC8vIGlmIGRvd25zdHJlYW0gdHJhdmVyc2FsIGZhaWxlZCwgcmV0dXJuIGJlc3QgYW5zd2VyIHNvIGZhclxuICAgICAgICAgICAgaWYgKCF0ZW1wKSB7XG4gICAgICAgICAgICAgICAgcmV0dXJuIGJlc3RcbiAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgaWYgKCFiZXN0IHx8IGJlc3Quc2NvcmUgPCB0ZW1wLnNjb3JlKSB7XG4gICAgICAgICAgICAgICAgYmVzdCA9IHRlbXBcbiAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgaW5kZXggPSBzdHJpbmcuaW5kZXhPZihjLCBpbmRleCArIDEpXG4gICAgICAgIH1cblxuICAgICAgICByZXR1cm4gYmVzdFxuICAgIH1cblxuICAgIGNhbGN1bGF0ZVNjb3JlKHBhdHRlcm5DYWNoZSkge1xuICAgICAgICBsZXQgc2NvcmUgPSAwXG4gICAgICAgIGxldCB0ZW1wID0gMVxuXG4gICAgICAgIHBhdHRlcm5DYWNoZS5mb3JFYWNoKChpbmRleCwgaSkgPT4ge1xuICAgICAgICAgICAgaWYgKGkgPiAwKSB7XG4gICAgICAgICAgICAgICAgaWYgKHBhdHRlcm5DYWNoZVtpIC0gMV0gKyAxID09PSBpbmRleCkge1xuICAgICAgICAgICAgICAgICAgICB0ZW1wICs9IHRlbXAgKyAxXG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgIGVsc2Uge1xuICAgICAgICAgICAgICAgICAgICB0ZW1wID0gMVxuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgc2NvcmUgKz0gdGVtcFxuICAgICAgICB9KVxuXG4gICAgICAgIHJldHVybiBzY29yZVxuICAgIH1cblxuICAgIHJlbmRlcihzdHJpbmcsIGluZGljZXMsIHByZSwgcG9zdCkge1xuICAgICAgICB2YXIgcmVuZGVyZWQgPSBzdHJpbmcuc3Vic3RyaW5nKDAsIGluZGljZXNbMF0pXG5cbiAgICAgICAgaW5kaWNlcy5mb3JFYWNoKChpbmRleCwgaSkgPT4ge1xuICAgICAgICAgICAgcmVuZGVyZWQgKz0gcHJlICsgc3RyaW5nW2luZGV4XSArIHBvc3QgK1xuICAgICAgICAgICAgICAgIHN0cmluZy5zdWJzdHJpbmcoaW5kZXggKyAxLCAoaW5kaWNlc1tpICsgMV0pID8gaW5kaWNlc1tpICsgMV0gOiBzdHJpbmcubGVuZ3RoKVxuICAgICAgICB9KVxuXG4gICAgICAgIHJldHVybiByZW5kZXJlZFxuICAgIH1cblxuICAgIGZpbHRlcihwYXR0ZXJuLCBhcnIsIG9wdHMpIHtcbiAgICAgICAgb3B0cyA9IG9wdHMgfHwge31cbiAgICAgICAgcmV0dXJuIGFyclxuICAgICAgICAgICAgLnJlZHVjZSgocHJldiwgZWxlbWVudCwgaWR4LCBhcnIpID0+IHtcbiAgICAgICAgICAgICAgICBsZXQgc3RyID0gZWxlbWVudFxuXG4gICAgICAgICAgICAgICAgaWYgKG9wdHMuZXh0cmFjdCkge1xuICAgICAgICAgICAgICAgICAgICBzdHIgPSBvcHRzLmV4dHJhY3QoZWxlbWVudClcblxuICAgICAgICAgICAgICAgICAgICBpZiAoIXN0cikgeyAvLyB0YWtlIGNhcmUgb2YgdW5kZWZpbmVkcyAvIG51bGxzIC8gZXRjLlxuICAgICAgICAgICAgICAgICAgICAgICAgc3RyID0gJydcbiAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgICAgIGxldCByZW5kZXJlZCA9IHRoaXMubWF0Y2gocGF0dGVybiwgc3RyLCBvcHRzKVxuXG4gICAgICAgICAgICAgICAgaWYgKHJlbmRlcmVkICE9IG51bGwpIHtcbiAgICAgICAgICAgICAgICAgICAgcHJldltwcmV2Lmxlbmd0aF0gPSB7XG4gICAgICAgICAgICAgICAgICAgICAgICBzdHJpbmc6IHJlbmRlcmVkLnJlbmRlcmVkLFxuICAgICAgICAgICAgICAgICAgICAgICAgc2NvcmU6IHJlbmRlcmVkLnNjb3JlLFxuICAgICAgICAgICAgICAgICAgICAgICAgaW5kZXg6IGlkeCxcbiAgICAgICAgICAgICAgICAgICAgICAgIG9yaWdpbmFsOiBlbGVtZW50XG4gICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICB9XG5cbiAgICAgICAgICAgICAgICByZXR1cm4gcHJldlxuICAgICAgICAgICAgfSwgW10pXG5cbiAgICAgICAgLnNvcnQoKGEsIGIpID0+IHtcbiAgICAgICAgICAgIGxldCBjb21wYXJlID0gYi5zY29yZSAtIGEuc2NvcmVcbiAgICAgICAgICAgIGlmIChjb21wYXJlKSByZXR1cm4gY29tcGFyZVxuICAgICAgICAgICAgcmV0dXJuIGEuaW5kZXggLSBiLmluZGV4XG4gICAgICAgIH0pXG4gICAgfVxufVxuXG5leHBvcnQgZGVmYXVsdCBUcmlidXRlU2VhcmNoO1xuIiwiLyoqXG4qIFRyaWJ1dGUuanNcbiogTmF0aXZlIEVTNiBKYXZhU2NyaXB0IEBtZW50aW9uIFBsdWdpblxuKiovXG5cbmltcG9ydCBUcmlidXRlIGZyb20gXCIuL1RyaWJ1dGVcIjtcblxuZXhwb3J0IGRlZmF1bHQgVHJpYnV0ZTtcbiIsImlmICghQXJyYXkucHJvdG90eXBlLmZpbmQpIHtcbiAgICBBcnJheS5wcm90b3R5cGUuZmluZCA9IGZ1bmN0aW9uKHByZWRpY2F0ZSkge1xuICAgICAgICBpZiAodGhpcyA9PT0gbnVsbCkge1xuICAgICAgICAgICAgdGhyb3cgbmV3IFR5cGVFcnJvcignQXJyYXkucHJvdG90eXBlLmZpbmQgY2FsbGVkIG9uIG51bGwgb3IgdW5kZWZpbmVkJylcbiAgICAgICAgfVxuICAgICAgICBpZiAodHlwZW9mIHByZWRpY2F0ZSAhPT0gJ2Z1bmN0aW9uJykge1xuICAgICAgICAgICAgdGhyb3cgbmV3IFR5cGVFcnJvcigncHJlZGljYXRlIG11c3QgYmUgYSBmdW5jdGlvbicpXG4gICAgICAgIH1cbiAgICAgICAgdmFyIGxpc3QgPSBPYmplY3QodGhpcylcbiAgICAgICAgdmFyIGxlbmd0aCA9IGxpc3QubGVuZ3RoID4+PiAwXG4gICAgICAgIHZhciB0aGlzQXJnID0gYXJndW1lbnRzWzFdXG4gICAgICAgIHZhciB2YWx1ZVxuXG4gICAgICAgIGZvciAodmFyIGkgPSAwOyBpIDwgbGVuZ3RoOyBpKyspIHtcbiAgICAgICAgICAgIHZhbHVlID0gbGlzdFtpXVxuICAgICAgICAgICAgaWYgKHByZWRpY2F0ZS5jYWxsKHRoaXNBcmcsIHZhbHVlLCBpLCBsaXN0KSkge1xuICAgICAgICAgICAgICAgIHJldHVybiB2YWx1ZVxuICAgICAgICAgICAgfVxuICAgICAgICB9XG4gICAgICAgIHJldHVybiB1bmRlZmluZWRcbiAgICB9XG59XG5cbmlmICh3aW5kb3cgJiYgdHlwZW9mIHdpbmRvdy5DdXN0b21FdmVudCAhPT0gXCJmdW5jdGlvblwiKSB7XG4gIGZ1bmN0aW9uIEN1c3RvbUV2ZW50KGV2ZW50LCBwYXJhbXMpIHtcbiAgICBwYXJhbXMgPSBwYXJhbXMgfHwge1xuICAgICAgYnViYmxlczogZmFsc2UsXG4gICAgICBjYW5jZWxhYmxlOiBmYWxzZSxcbiAgICAgIGRldGFpbDogdW5kZWZpbmVkXG4gICAgfVxuICAgIHZhciBldnQgPSBkb2N1bWVudC5jcmVhdGVFdmVudCgnQ3VzdG9tRXZlbnQnKVxuICAgIGV2dC5pbml0Q3VzdG9tRXZlbnQoZXZlbnQsIHBhcmFtcy5idWJibGVzLCBwYXJhbXMuY2FuY2VsYWJsZSwgcGFyYW1zLmRldGFpbClcbiAgICByZXR1cm4gZXZ0XG4gIH1cblxuIGlmICh0eXBlb2Ygd2luZG93LkV2ZW50ICE9PSAndW5kZWZpbmVkJykge1xuICAgQ3VzdG9tRXZlbnQucHJvdG90eXBlID0gd2luZG93LkV2ZW50LnByb3RvdHlwZVxuIH1cblxuICB3aW5kb3cuQ3VzdG9tRXZlbnQgPSBDdXN0b21FdmVudFxufSJdfQ==
 
 
 /***/ }),
@@ -86929,18 +83252,16 @@ __webpack_require__(/*! flatpickr */ "./node_modules/flatpickr/dist/flatpickr.js
 if (lang == 'es') {
   __webpack_require__(/*! bootstrap-select/dist/js/i18n/defaults-es_ES.js */ "./node_modules/bootstrap-select/dist/js/i18n/defaults-es_ES.js");
 
-  __webpack_require__(/*! flatpickr/dist/l10n/es.js */ "./node_modules/flatpickr/dist/l10n/es.js").default.es;
+  __webpack_require__(/*! flatpickr/dist/l10n/es.js */ "./node_modules/flatpickr/dist/l10n/es.js")["default"].es;
 } else if (lang == 'ca') {
-  __webpack_require__(/*! flatpickr/dist/l10n/es.js */ "./node_modules/flatpickr/dist/l10n/es.js").default.es; //require("bootstrap-select/dist/js/i18n/defaults-ca.js");
+  __webpack_require__(/*! flatpickr/dist/l10n/es.js */ "./node_modules/flatpickr/dist/l10n/es.js")["default"].es; //require("bootstrap-select/dist/js/i18n/defaults-ca.js");
   //require("flatpickr/dist/l10n/cat.js").default.cat;
 }
 
 __webpack_require__(/*! bootstrap-confirmation2 */ "./node_modules/bootstrap-confirmation2/dist/bootstrap-confirmation.js"); //fileinput
 
 
-__webpack_require__(/*! bootstrap-fileinput */ "./node_modules/bootstrap-fileinput/js/fileinput.js");
-
-__webpack_require__(/*! bootstrap-fileinput/themes/fa/theme.js */ "./node_modules/bootstrap-fileinput/themes/fa/theme.js"); //import 'bootstrap-fileinput/js/locales/'+lang+'.js';
+__webpack_require__(/*! bs-custom-file-input */ "./node_modules/bs-custom-file-input/dist/bs-custom-file-input.js"); //import 'bootstrap-fileinput/js/locales/'+lang+'.js';
 //touchspin
 
 
@@ -86985,6 +83306,8 @@ __webpack_require__(/*! ./toolbar */ "./src/resources/assets/js/toolbar.js");
 __webpack_require__(/*! ./sidebar */ "./src/resources/assets/js/sidebar.js");
 
 __webpack_require__(/*! ./modals */ "./src/resources/assets/js/modals.js");
+
+__webpack_require__(/*! ./files */ "./src/resources/assets/js/files.js");
 
 __webpack_require__(/*! ./tables */ "./src/resources/assets/js/tables.js");
 
@@ -87450,6 +83773,55 @@ if (token) {
 
 /***/ }),
 
+/***/ "./src/resources/assets/js/files.js":
+/*!******************************************!*\
+  !*** ./src/resources/assets/js/files.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// import bsCustomFileInput from 'bs-custom-file-input';
+// initFileInputs = function(){
+// 	bsCustomFileInput.init();
+// }
+
+/*$.fn.initFileInput = function(){
+   return this.each(function(){
+      var $input=$(this);
+      al("initFileInput");
+      var defaults={
+        browseClass : 'btn btn-sm btn-light',
+        removeClass : 'btn btn-sm btn-light',
+        uploadClass : 'btn btn-sm btn-light'
+      };  
+          
+
+      defaults = $.extend({}, defaults, $input.data()); 
+
+      $input.fileinput(defaults);
+
+      //al("initFileInput");
+      if($input.closest('.file-input-container').find('.clear-button').length>0){
+        var $btn=$input.closest('.file-input-container').find(".clear-button");
+
+        $btn.initConfirm();
+        $btn.on("click",function(){
+          //al("CLICK");
+          $(this).closest('.preview-container').remove();
+
+          // $(this).closest('.input-wrapper').children('input[type=hidden]').val('');
+          // $(this).closest('td').children('input[type=hidden]').val('');
+          // $(this).closest('.input-wrapper').find('.file-caption-name').val('');
+          // $(this).closest('td').find('.file-caption-name').val('');
+          // $(this).parent().remove();
+        });
+    }
+
+   });
+}*/
+
+/***/ }),
+
 /***/ "./src/resources/assets/js/flash.js":
 /*!******************************************!*\
   !*** ./src/resources/assets/js/flash.js ***!
@@ -87636,32 +84008,6 @@ $.fn.initInputMask = function () {
         translation: {
           placeholder: $input.data("mascara")
         }
-      });
-    }
-  });
-};
-
-$.fn.initFileInput = function () {
-  return this.each(function () {
-    var $input = $(this);
-    var defaults = {
-      browseClass: 'btn btn-sm btn-light',
-      removeClass: 'btn btn-sm btn-light',
-      uploadClass: 'btn btn-sm btn-light'
-    };
-    defaults = $.extend({}, defaults, $input.data());
-    $input.fileinput(defaults); //al("initFileInput");
-
-    if ($input.closest('.file-input-container').find('.clear-button').length > 0) {
-      var $btn = $input.closest('.file-input-container').find(".clear-button");
-      $btn.initConfirm();
-      $btn.on("click", function () {
-        //al("CLICK");
-        $(this).closest('.preview-container').remove(); // $(this).closest('.input-wrapper').children('input[type=hidden]').val('');
-        // $(this).closest('td').children('input[type=hidden]').val('');
-        // $(this).closest('.input-wrapper').find('.file-caption-name').val('');
-        // $(this).closest('td').find('.file-caption-name').val('');
-        // $(this).parent().remove();
       });
     }
   });
@@ -88700,9 +85046,13 @@ buildUrl = function buildUrl(url, params) {
 /*!*****************************************!*\
   !*** ./src/resources/assets/js/main.js ***!
   \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var bs_custom_file_input__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bs-custom-file-input */ "./node_modules/bs-custom-file-input/dist/bs-custom-file-input.js");
+/* harmony import */ var bs_custom_file_input__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(bs_custom_file_input__WEBPACK_IMPORTED_MODULE_0__);
 $.fn.tgnInitAll = function () {
   al('tgnInitAll');
   this.find(".tgn-modal-opener").tgnModal();
@@ -88717,8 +85067,8 @@ $.fn.tgnInitAll = function () {
   this.find('[data-toggle="tooltip"]').tooltip({
     boundary: 'window'
   });
-  this.find('[data-mascara]').initInputMask();
-  this.find('input[type=file]').initFileInput();
+  this.find('[data-mascara]').initInputMask(); //this.find('input[type=file]').initFileInput();
+
   this.find('input[type=icon]').initIconPicker();
   this.find('input.colorinput').initColorPicker();
   this.find('.google-map').tgnMap();
@@ -88742,10 +85092,13 @@ $(window).on('load', function () {
   $('body').tgnInitAll();
   $('html').stopLoading();
 });
+
 $(document).ready(function () {
   initSidebar();
   initToolbar();
-  initFlashMessages();
+  initFlashMessages(); //initFileInputs();
+
+  bs_custom_file_input__WEBPACK_IMPORTED_MODULE_0___default.a.init();
 });
 
 /***/ }),

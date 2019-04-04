@@ -14,7 +14,7 @@ $.fn.tgnInitAll = function( ){
   
   this.find('[data-toggle="tooltip"]').tooltip({boundary:'window'});
   this.find('[data-mascara]').initInputMask();
-  this.find('input[type=file]').initFileInput();
+  //this.find('input[type=file]').initFileInput();
   this.find('input[type=icon]').initIconPicker();
   this.find('input.colorinput').initColorPicker();
   this.find('.google-map').tgnMap();
@@ -48,8 +48,14 @@ $(window).on('load',function(){
 
 
 
+import bsCustomFileInput from 'bs-custom-file-input';
+
 $(document).ready(function(){
 	initSidebar();
 	initToolbar();
 	initFlashMessages();
+  //initFileInputs();
+
+  bsCustomFileInput.init();
+
 });

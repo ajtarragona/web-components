@@ -146,7 +146,7 @@ class Icon Extends WebComponent
 		if($options["position"] == "top" || $options["position"] == "bottom") $ret.="<div class='text-center'>";
 		if($options["position"] == "left" || $options["position"] == "top") $ret.=$iconcode." ";
 		
-		if($text) $ret.=' <span class="button-text nav-text">'.$text.'</span> ';
+		if($text) $ret.='<span class="button-text nav-text">'.$text.'</span>';
 
 		if($options["position"] == "right" || $options["position"] == "bottom") $ret.=" ".$iconcode;
 		if($options["position"] == "top" || $options["position"] == "bottom") $ret.="</div>";

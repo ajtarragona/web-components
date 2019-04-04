@@ -1,3 +1,4 @@
+@checkbox(['name'=>'check-default-nolabel', 'value'=>123,'checked'=>true]) 
 @checkbox(['name'=>'check-default', 'label'=>'Label checkbox','value'=>123,'checked'=>true]) 
 @checkbox(['name'=>'check-secondary', 'label'=>'Secondary','value'=>123,'color'=>'secondary','checked'=>true]) 
 @checkbox(['name'=>'check-success', 'label'=>'Success','value'=>123,'color'=>'success','checked'=>true]) 

@@ -27,7 +27,7 @@
 
 
 // Bootstrap file inputs
-@import "~bootstrap-fileinput/scss/fileinput";
+//@import "~bs-custom-file-input";
 //@import "~bootstrap-fileinput/scss/themes/fileinput";
 
 
@@ -76,6 +76,7 @@
 @import "selects";
 @import "datepicker";
 @import "tables";
+@import "files";
 @import "maps";
 @import "prettyprint";
 @import "quill";

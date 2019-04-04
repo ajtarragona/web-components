@@ -31,8 +31,7 @@ if(lang=='es'){
 require('bootstrap-confirmation2');
 
 //fileinput
-require('bootstrap-fileinput');
-require('bootstrap-fileinput/themes/fa/theme.js');
+require('bs-custom-file-input');
 //import 'bootstrap-fileinput/js/locales/'+lang+'.js';
 
 
@@ -78,6 +77,7 @@ require('./flash');
 require('./toolbar');
 require('./sidebar');
 require('./modals');
+require('./files');
 require('./tables');
 require('./autocomplete');
 require('./selects');
