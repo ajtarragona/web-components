@@ -1,5 +1,6 @@
 .custom-file-label{
 	overflow-y: hidden;
+	line-height: 2em;
 	&::after{
 		height:auto;
 		background-color:$light;

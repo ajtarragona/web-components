@@ -31,6 +31,8 @@ $.fn.tgnInitAll = function( ){
   
   this.initSessionTriggers();
   
+  bsCustomFileInput.init();
+
   //initNavs(this);
   return this;
 };
@@ -56,6 +58,5 @@ $(document).ready(function(){
 	initFlashMessages();
   //initFileInputs();
 
-  bsCustomFileInput.init();
-
+  
 });

@@ -17322,6 +17322,14 @@ hr.big {
   text-overflow: ellipsis;
 }
 
+.breadcrumb > .breadcrumb-item {
+  text-decoration: none;
+}
+
+.breadcrumb > .breadcrumb-item:last-child {
+  color: #919aa1;
+}
+
 @media (min-width: 992px) {
   .modal-xl {
     max-width: 1180px;
@@ -19720,6 +19728,7 @@ th {
 
 .custom-file-label {
   overflow-y: hidden;
+  line-height: 2em;
 }
 
 .custom-file-label::after {

@@ -416,3 +416,15 @@ hr.big{
   overflow-x: hidden;
   text-overflow: ellipsis;
 }
+
+
+.breadcrumb{
+    > .breadcrumb-item{
+      
+      text-decoration: none;
+
+      &:last-child{
+        color:$gray-600;
+      }
+    }
+  }

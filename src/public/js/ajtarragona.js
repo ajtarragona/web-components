@@ -85082,7 +85082,8 @@ $.fn.tgnInitAll = function () {
   this.find('pre.prettyprint').initPrettyprint();
   this.find('.text-editor').initTextEditor();
   this.find('.anim').initAnimation();
-  this.initSessionTriggers(); //initNavs(this);
+  this.initSessionTriggers();
+  bs_custom_file_input__WEBPACK_IMPORTED_MODULE_0___default.a.init(); //initNavs(this);
 
   return this;
 };
@@ -85097,8 +85098,6 @@ $(document).ready(function () {
   initSidebar();
   initToolbar();
   initFlashMessages(); //initFileInputs();
-
-  bs_custom_file_input__WEBPACK_IMPORTED_MODULE_0___default.a.init();
 });
 
 /***/ }),

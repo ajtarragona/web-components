@@ -249,3 +249,21 @@ if (! function_exists('includeSrc')) {
 }
 
 
+
+if (! function_exists('makeLinks')) {
+	function makeLinks($str, $linkname=False,$attributes=[]) {
+		$hostRegex = "([a-z\d][-a-z\d]*[a-z\d]\.)*[a-z][-a-z\d]*[a-z]";
+	    $portRegex = "(:\d{1,})?";
+	    $pathRegex = "(\/[^?<>#\"\s]+)?";
+	    $queryRegex = "(\?[^<>#\"\s]+)?";
+
+	    $urlRegex = "/(?:(?<=^)|(?<=\s))((ht|f)tps?:\/\/" . $hostRegex . $portRegex . $pathRegex . $queryRegex . ")/";
+	   	
+	   	if($linkname){
+	    	return preg_replace($urlRegex, "<a ".renderAttributes($attributes)." href=\"\\1\">".$linkname."</a>", $str);
+	    }else{
+	    	return preg_replace($urlRegex, "<a ".renderAttributes($attributes)." href=\"\\1\">\\1</a>", $str);
+	    }
+	    
+	}
+}
