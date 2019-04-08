@@ -31,7 +31,12 @@ class AjtarragonaWebComponentsDemo extends Migration
             $table->foreign('type_id')->references('id')->on('{{ $types_table }}')->onUpdate('cascade')->onDelete('cascade');
         });
 
-       
+        // Add users username
+        if(!Schema::hasColumn('users', 'username')){
+            Schema::table('users', function (Blueprint $table) {
+                $table->string('username',191)->unique()->nullable();
+            });
+        }
 
       
     }
@@ -45,6 +50,11 @@ class AjtarragonaWebComponentsDemo extends Migration
     {
         Schema::dropIfExists('{{ $items_table  }}');
         Schema::dropIfExists('{{ $types_table  }}');
-       
+        
+        if(Schema::hasColumn('users', 'username')){
+            Schema::table('users', function ($table) {
+                $table->dropColumn('username');
+            });
+        }
     }
 }

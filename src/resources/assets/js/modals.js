@@ -159,13 +159,17 @@ TgnModal = function(options){
 
 			//para multiples modales, manejo el zindex
 			o.$dialog.on('show.bs.modal', function(event) {
-			    var idx = $('.modal:visible').length;
-			    $(this).css('z-index', 1040 + (10 * idx));
+				$(this).data('modal-index',$('.modal:visible').length);
 			});
 
 			o.$dialog.on('shown.bs.modal', function(event) {
-			    var idx = ($('.modal:visible').length) -1; // raise backdrop after animation.
-			    $('.modal-backdrop').not('.stacked').css('z-index', 1039 + (10 * idx));
+			    var idx = $(this).data('modal-index');
+			    var zindex=1040 + (10 * idx);
+
+			    $(this).css('z-index', zindex);
+
+			    //var idx = ($('.modal:visible').length) -1; // raise backdrop after animation.
+			    $('.modal-backdrop').not('.stacked').css('z-index', (zindex-1));
 			    $('.modal-backdrop').not('.stacked').addClass('stacked');
 
 			    o.initAutofocus();
@@ -193,7 +197,7 @@ TgnModal = function(options){
 		var o=this;
 		o.$dialog.toggleClass("modal-maximized");
 		$('body').toggleClass("modal-maximized");
-		o.$dialog.find('button.maximize i').toggleClass('fa-window-maximize').toggleClass('fa-window-minimize');
+		o.$dialog.find('button.maximize i').toggleClass('fa-window-maximize').toggleClass('fa-window-restore');
 	}
 
 	this.render = function(){

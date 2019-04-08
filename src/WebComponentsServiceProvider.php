@@ -27,6 +27,13 @@ class WebComponentsServiceProvider extends ServiceProvider
         //vistas   
         $this->loadViewsFrom(__DIR__.'/resources/views', 'ajtarragona-web-components');
         
+        //idiomas
+        $this->loadTranslationsFrom(__DIR__.'/resources/lang', 'tgn');
+
+        $this->publishes([
+            __DIR__.'/resources/lang' => resource_path('lang/vendor/ajtarragona-web-components'),
+        ], 'ajtarragona-web-components-translations');
+
         //publico vistas
         if ($this->app->runningInConsole()) {
             $this->publishes([

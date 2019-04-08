@@ -1,5 +1,18 @@
 <?php
 
+//authentication routes
+Route::group(['middleware' => ['web','language']], function () {
+	//TODO
+	Route::get('/login', 'Ajtarragona\WebComponents\Controllers\Auth\SessionController@index')->name('login');
+	Route::post('/login', 'Ajtarragona\WebComponents\Controllers\Auth\SessionController@start')->name('tgn.dologin');
+	
+});
+
+Route::group(['middleware' => ['web','language','auth']], function () {
+	Route::post('/logout', 'Ajtarragona\WebComponents\Controllers\Auth\SessionController@destroy')->name('tgn.logout');
+});
+
+
 Route::group(['prefix' => 'ajtarragona/webcomponents','middleware' => ['web']], function () {
 	
 
@@ -18,7 +31,7 @@ Route::group(['prefix' => 'ajtarragona/webcomponents','middleware' => ['web']], 
 	
 
 	//rutas de Demo
-	Route::group(['prefix' => 'demo','middleware' => ['language']], function () {
+	Route::group(['prefix' => 'demo','middleware' => ['auth','language']], function () {
 
 		Route::get('/', 'Ajtarragona\WebComponents\Controllers\DemoController@demo')->name('webcomponents.demo');
 		

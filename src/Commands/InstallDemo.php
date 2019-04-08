@@ -77,6 +77,10 @@ class InstallDemo extends Command
 
 	        //$this->line('');
 
+            
+
+            $this->createAdminUser();
+
 	        $this->line("Creating migration...");
 
 	        if ($this->createMigration()) {
@@ -144,6 +148,27 @@ class InstallDemo extends Command
 
         }
 	}
+
+    protected function createAdminUser(){
+
+        if(!$this->alreadyExistingUser()){
+            
+            $this->line("Creating demo user...");
+
+            if(Schema::hasTable('users')){
+
+                DB::table('users')->insert([
+                    'username' => 'demo', 
+                    'email' => 'demo@tarragona.cat', 
+                    'name' => 'Demo user',
+                    'password' => bcrypt('demo'),
+                    'created_at' => _now(),
+                    'updated_at' => _now()
+                ]);
+            }
+
+        }
+    }
 
     /**
      * Create the migration.
@@ -304,6 +329,14 @@ class InstallDemo extends Command
         return array_map(function ($path) {
             return basename($path);
         }, $matchingFiles);
+    }
+
+    protected function alreadyExistingUser()
+    {
+        if(Schema::hasTable('users')){
+           return DB::table('users')->where('username', 'demo')->count() > 0;
+        }
+        return false;
     }
 
     protected function alreadyExistingTables()

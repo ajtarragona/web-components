@@ -84058,22 +84058,27 @@ $.fn.initIconPicker = function () {
 
     $input.after($(addon));
     var defaults = {
-      hideOnSelect: true
+      hideOnSelect: true,
+      inputSearch: true
     };
     defaults = $.extend({}, defaults, $input.data()); //al(defaults);
 
     setIcon($input);
-    $input.iconpicker(defaults); //events
+    $input.iconpicker(defaults);
+    if (!$input.val()) $input.parent().find('.deselect-btn').prop('hidden', true); //events
 
     $input.parent().find('.deselect-btn').on('click', function (e) {
       e.preventDefault();
       e.stopPropagation();
       $input.val('');
       setIcon($input);
+      $(this).prop('hidden', true);
     });
     $input.on('iconpickerSelected', function (event) {
       al("Icon selected");
-      setIcon($(event.currentTarget));
+      var input = $(event.currentTarget);
+      input.parent().find('.deselect-btn').prop('hidden', false);
+      setIcon(input);
     });
   });
 };
@@ -84094,7 +84099,20 @@ $.fn.initColorPicker = function () {
 
     $input.after($(addon));
     var defaults = {};
-    defaults = $.extend({}, defaults, $input.data()); //       al(defaults);
+    defaults = $.extend({}, defaults, $input.data());
+
+    if (defaults.swatches) {
+      defaults.extensions = [{
+        name: 'swatches',
+        // extension name to load
+        options: {
+          // extension options
+          colors: defaults.swatches,
+          namesAsValues: true
+        }
+      }];
+    } //       al(defaults);
+
 
     $input.parent().find('.deselect-btn').on('click', function (e) {
       e.preventDefault();
@@ -85748,13 +85766,14 @@ TgnModal = function TgnModal(options) {
       }); //para multiples modales, manejo el zindex
 
       o.$dialog.on('show.bs.modal', function (event) {
-        var idx = $('.modal:visible').length;
-        $(this).css('z-index', 1040 + 10 * idx);
+        $(this).data('modal-index', $('.modal:visible').length);
       });
       o.$dialog.on('shown.bs.modal', function (event) {
-        var idx = $('.modal:visible').length - 1; // raise backdrop after animation.
+        var idx = $(this).data('modal-index');
+        var zindex = 1040 + 10 * idx;
+        $(this).css('z-index', zindex); //var idx = ($('.modal:visible').length) -1; // raise backdrop after animation.
 
-        $('.modal-backdrop').not('.stacked').css('z-index', 1039 + 10 * idx);
+        $('.modal-backdrop').not('.stacked').css('z-index', zindex - 1);
         $('.modal-backdrop').not('.stacked').addClass('stacked');
         o.initAutofocus();
       });
@@ -85780,7 +85799,7 @@ TgnModal = function TgnModal(options) {
     var o = this;
     o.$dialog.toggleClass("modal-maximized");
     $('body').toggleClass("modal-maximized");
-    o.$dialog.find('button.maximize i').toggleClass('fa-window-maximize').toggleClass('fa-window-minimize');
+    o.$dialog.find('button.maximize i').toggleClass('fa-window-maximize').toggleClass('fa-window-restore');
   };
 
   this.render = function () {

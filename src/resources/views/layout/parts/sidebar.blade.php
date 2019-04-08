@@ -10,7 +10,7 @@
 
 		<div class="mt-auto mb-4">
 			@include('ajtarragona-web-components::layout.parts.lang')
-			@include('ajtarragona-web-components::layout.parts.userwidget')
+			@include('ajtarragona-web-components::layout.auth.widget')
 		</div>
 	</div>
 </div>

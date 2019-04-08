@@ -1,9 +1,9 @@
 <div class="modal-container" id="@yield('id') ">
   <div class="modal-title">@yield('title')</div>
   <div class="modal-body">@yield('body')</div>
-  @hasSection('actions')
+  @hasSection('footer')
     <div class="modal-footer">
-      @yield('actions')
+      @yield('footer')
     </div>
   @endif
   

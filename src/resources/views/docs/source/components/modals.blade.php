@@ -42,5 +42,18 @@
 	@endslot
 	
 	Modal local
+	
+	@slot('footer')
+		@modalopener([
+			'href'=>route('webcomponents.docs.modal'),
+			'class' =>'btn btn-primary btn-sm',
+			'halign' => 'right',
+			'valign' => 'center'
+		])
+			Segunda modal
+		@endmodalopener	
+	@endslot
+	
+	
 @endmodal
 

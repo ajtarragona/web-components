@@ -92,7 +92,7 @@ class WebComponent
     	return true;
     }
 
-    public static function html_attributes($array=false, $prefix=false,$excluded=[]) {
+    public static function html_attributes($array=false, $prefix=false, $excluded=[]) {
 		
 		if(!$array) return;
 
@@ -101,8 +101,8 @@ class WebComponent
 		
 		foreach ($array as $k => $v)
 		{	
-			
-			if(!in_array($k, $excluded) && (!$prefix && $v)){
+			//los data los pongo todos, los attributes solo los que tengan valor
+			if(!in_array($k, $excluded) && ($prefix || $v) ){
 				
 
 				$ret.=" ".($prefix?($prefix."-"):"").$k."=";

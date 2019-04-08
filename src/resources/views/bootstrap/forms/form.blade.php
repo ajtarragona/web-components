@@ -15,8 +15,9 @@
 	@isset($autofocus) data-autofocus="{{$autofocus}}" @endisset 
 	@istrue($confirm) data-confirm="{{$confirm}}" @endistrue 
 	
-	{!! html_attributes(isset($attributes)?$attributes:false) !!}
-   		{!! html_attributes(isset($data)?$data:false,'data') !!}
+	
+	{!! renderAttributes(isset($attributes)?$attributes:false) !!}
+   	{!! renderData(isset($data)?$data:false,'data') !!}
 
 	>
 	

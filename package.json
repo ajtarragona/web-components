@@ -30,7 +30,6 @@
     "vue-template-compiler": "^2.6.10"
   },
   "dependencies": {
-    "@claviska/jquery-minicolors": "github:claviska/jquery-minicolors",
     "@fortawesome/fontawesome-free": "^5.8.1",
     "autosize": "^4.0.2",
     "bloodhound-js": "^1.2.3",

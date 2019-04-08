@@ -13,8 +13,12 @@ if (! function_exists('_date')) {
 	function _date($date=false){
 		if(!$date) return _now();
 
-		$date=explode("/", $date);
-		$carbon = Carbon::createFromDate($date[2], $date[1], $date[0]);
+		if(str_contains($date,"/")){
+			$date=explode("/", $date);
+			$carbon = Carbon::createFromDate($date[2], $date[1], $date[0]);
+		}else{
+			$carbon = new Carbon($date);
+		}
 	 	return $carbon; 
 	}
 }
@@ -22,8 +26,12 @@ if (! function_exists('_date')) {
 if (! function_exists('_time')) {
 	function _time($time=false){
 	 	if(!$time) return _now();
-		$time=explode(":", $time);
-		$carbon =  Carbon::createFromTime($time[0], isset($time[1])?$time[1]:0, isset($time[2])?$time[2]:0);
+		if(str_contains($date,":")){
+			$time=explode(":", $time);
+			$carbon =  Carbon::createFromTime($time[0], isset($time[1])?$time[1]:0, isset($time[2])?$time[2]:0);
+		}else{
+			$carbon = new Carbon($date);
+		}
 	 	return $carbon; 
 	}
 }

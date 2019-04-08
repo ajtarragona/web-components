@@ -220,7 +220,8 @@ $sidelabel-size : 160px;
 	&.bg-info{
 		input,
 		textarea,
-		.input-icon{
+		.input-icon,
+		.input-group-append .input-group-text{
 			color: $white;
 			&::placeholder{
 				color: rgba($white,0.5);

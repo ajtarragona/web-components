@@ -120,7 +120,6 @@ $.fn.initNumberInput = function (){
     });
   }
 
-
 $.fn.initIconPicker = function (){
 
 
@@ -156,7 +155,8 @@ $.fn.initIconPicker = function (){
 
        
         var defaults={
-          hideOnSelect: true
+          hideOnSelect: true,
+          inputSearch : true
  
         };  
         defaults = $.extend({}, defaults, $input.data()); 
@@ -168,25 +168,29 @@ $.fn.initIconPicker = function (){
         setIcon($input);
         $input.iconpicker(defaults);
 
-
+        if(!$input.val()) $input.parent().find('.deselect-btn').prop('hidden',true);
+        
         //events
         $input.parent().find('.deselect-btn').on('click',function(e){
             e.preventDefault();
             e.stopPropagation();
             $input.val('');
             setIcon($input);
+            $(this).prop('hidden',true);
         });
 
 
         $input.on('iconpickerSelected', function(event){
            al("Icon selected");
-           
-           setIcon($(event.currentTarget));
+           var input=$(event.currentTarget);
+           input.parent().find('.deselect-btn').prop('hidden',false);
+           setIcon(input);
            
         });
        
     });
   }
+
 
 $.fn.initColorPicker = function (){
     return this.each(function(){
@@ -210,11 +214,21 @@ $.fn.initColorPicker = function (){
 
          
           
-        var defaults={
-         
-        }; 
+        var defaults={}; 
+        
         defaults = $.extend({}, defaults, $input.data()); 
         
+        if(defaults.swatches){
+          defaults.extensions= [
+            {
+              name: 'swatches', // extension name to load
+              options: { // extension options
+                colors: defaults.swatches,
+                namesAsValues: true
+              }
+            }
+          ];
+        }
  //       al(defaults);
         $input.parent().find('.deselect-btn').on('click',function(e){
             e.preventDefault();
