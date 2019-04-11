@@ -16,8 +16,8 @@ class DocsController extends Controller
 
   public function docsModal(Request $request, Faker $faker)
   {
-       
-       return $this->view('docs.source.layout.modal', compact('faker'));
+      $request=$request->except(['_token','_method']);
+      return $this->view('docs.source.layout.modal', compact('faker','request'));
   }
  
   public function docsHandle($page='start.introduction',Request $request)
@@ -32,6 +32,11 @@ class DocsController extends Controller
      
   }
 
+  public function docsShowRequest(Request $request)
+  {   
+      return $this->view('docs.source.layout.showrequest', ["request"=>$request->except(['_token','_method'])]);
+       
+  }
 
   private function getTestOptions($num=10, $combo=false){
       $faker = FakerFactory::create();

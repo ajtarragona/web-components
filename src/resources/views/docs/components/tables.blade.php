@@ -6,7 +6,7 @@
 
 <hr class="big"/>
 
-<h2>Tablas ordenables</h2>
+<h2>Taules ordenables</h2>
 <p><code><a href="https://github.com/Kyslik/column-sortable" target="_blanl">kyslik/column-sortable</a></code></p>
 
 
@@ -25,7 +25,25 @@ php artisan vendor:publish --provider="Kyslik\ColumnSortable\ColumnSortableServi
 <hr class="big"/>
 
 
-<h2>Tablas ajax</h2>
+<h2>Taules seleccionables</h2>
+@row
+	@col(['size'=>6])
+		@includeIf('ajtarragona-web-components::docs.source.components.table-selectable')
+
+	@endcol
+
+	@col(['size'=>6])
+
+
+		@code(['lang'=>'java'])
+			@includeSrc('ajtarragona-web-components::docs.source.components.table-selectable')
+		@endcode
+		
+	@endcol
+@endrow
+
+
+<h2>Taules ajax</h2>
 
 {{-- <section id="kitchen-tables" class="py-5">
 	<hr />

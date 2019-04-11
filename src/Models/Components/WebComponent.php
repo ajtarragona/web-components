@@ -22,7 +22,7 @@ class WebComponent
 	}
 
 	protected function viewPath($view){
-		return "ajtarragona-web-components::".config("webcomponents.theme").".".$view;
+		return "ajtarragona-web-components::components.".config("webcomponents.theme").".".$view;
 	}
 	
 

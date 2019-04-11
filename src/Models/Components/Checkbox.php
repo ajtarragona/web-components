@@ -29,8 +29,10 @@ class Checkbox extends WebComponent
 	];
 
 
+	
 	protected $hiddenattributes = ["containerclass",'container','label','outlined','size','sidelabel','renderhelper'];
 	
+
 	protected $view = 'forms.checkbox';
 
 	
@@ -51,52 +53,4 @@ class Checkbox extends WebComponent
 	}
 
 
-	// public function render($args=[]){
- //    	if(!$this->isVisible()) return;
-
-
- //    	$args=array_merge($args,['attributes'=>$this->attributes,'hiddenattributes'=>$this->hiddenattributes,'data'=>$this->data]);
- //    	$args=array_merge($args,$this->attributes);
- //    	//dump($args);
- //    	//dump($this->attributes);
- //    	if(isset($this->attributes["options"])){
- //    		return $this->renderView('forms.checkboxes', $args);
- //    	}else{
- //    		return $this->renderView($this->view, $args);
- //    	}
-	// }
-
-	
-	public static function checkboxes($args=false){
-		
-		$defaults=[
-			'name'=>'unnamed',
-			'checked'=>[],
-			'options'=>[],
-			'horizontal'=>false,
-			'size'=>'md',
-			'id'=>'',
-			'class'=>'custom-control custom-checkbox',
-			'container'=>true,
-			'containerclass'=>'',
-			'disabled'=>false,
-			'readonly'=>false,
-			'required'=>false,
-			'outlined'=>false,
-			'sidelabel'=>false,
-			
-			
-		];
-
-		if(isset($args['class'])) $args['class'].=" ".$defaults['class'];
-		$args=array_merge($defaults,$args);
-
-		if(!$args['id']) $args['id']='checkboxes_'.$args['name'];//.'_'.kebab_case($args['value']);
-
-		if(!ends_with($args['name'],"[]")) $args['name'].="[]";
-
-		if(isset($args['style'])) $args['class'].=" ".$args['style'];
-
-		return view('components.bootstrap.forms.checkboxes', $args);
-	}
 }

@@ -23,7 +23,7 @@
 	[
 		'type'=>'color', 
 		'name'=>'campo_color3', 
-		'label'=>'Valor per defecte', 
+		'label'=>'Valor per defecte',
 		'value' =>'rgb(48, 90, 162)',
 		'placeholder'=>'Choose color...'
 	]
@@ -35,6 +35,7 @@
 		'name'=>'campo_color4', 
 		'containerclass'=>'bg-warning',
 		'label'=>'Mostres', 
+		'sidelabel'=>true, 
 		'value' =>'primary',
 		'placeholder'=>'Choose color...'
 	],

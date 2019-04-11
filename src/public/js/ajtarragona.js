@@ -84493,6 +84493,7 @@ function tgnFormClass(obj, options) {
     validateOnStart: false,
     validateOnChange: false,
     autofocus: false,
+    autoselect: false,
     target: false
   };
   this.$element = obj;
@@ -84514,25 +84515,38 @@ function tgnFormClass(obj, options) {
     al("Submitting form...");
 
     if (o.settings.target) {
-      if ($(o.settings.target).length > 0) {
-        var $target = $(o.settings.target);
-        var data = $form.serializeArray();
+      var url = $form.attr('action');
+      var method = $form.find('[name=_method]').val();
+      var params = $form.serializeControls();
+
+      if (o.settings.target == "modal") {
         $form.startLoading();
+        TgnModal.open(url, method, params, {
+          onsuccess: function onsuccess(modal) {
+            $form.stopLoading();
+          },
+          size: 'lg'
+        });
+      } else if ($(o.settings.target).length > 0) {
+        var $target = $(o.settings.target);
+        al(url);
+        al(method);
+        al(params); //$form.startLoading();
+
         $target.startLoading(); //data._token= csrfToken();
 
         $.ajax({
-          url: $form.attr('action'),
-          type: $form.find('[name=_method]').val(),
-          data: $.param(data),
+          url: url,
+          type: method,
+          data: params,
           dataType: 'html',
           success: function success(data) {
-            $target.html(data).tgnInitAll().stopLoading();
-            $form.stopLoading();
+            al(data);
+            $target.html(data).tgnInitAll().stopLoading(); //$form.stopLoading();
           },
           error: function error(xhr) {
-            $form.stopLoading();
-            $target.html('').stopLoading();
-            console.log(xhr.status);
+            //$form.stopLoading();
+            $target.html('').stopLoading(); //console.log(xhr.status);
           }
         });
       }
@@ -84565,6 +84579,17 @@ function tgnFormClass(obj, options) {
         }
 
         if ($input.length > 0) $input.get(0).focus();
+        $input.closest('.form-group').addClass('focused');
+      }
+
+      if (this.settings.autoselect) {
+        if (this.settings.autoselect === true || this.settings.autoselect === "true" || this.settings.autoselect === 1) {
+          $input = $form.find('input:enabled:visible:first');
+        } else {
+          $input = $form.find("[name=" + this.settings.autoselect + "]");
+        }
+
+        if ($input.length > 0) $input.get(0).select();
         $input.closest('.form-group').addClass('focused');
       }
 
@@ -86596,32 +86621,26 @@ initSidebar = function initSidebar() {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-var TABLES = [];
-var tgntabledefaults = {};
+$.widget("ajtarragona.tgnTable", {
+  options: {
+    selectable: false,
+    clickable: false,
+    selectSingle: false,
+    selectStyle: 'default'
+  },
+  isInit: false,
+  _create: function _create() {
+    var o = this;
+    al("creating tgnTable");
+    this.options = $.extend({}, this.options, this.element.data());
+    this.rows = this.element.find("tbody tr");
 
-TgnTable = function TgnTable(obj, options) {
-  this.$element = obj;
-  this.settings = tgntabledefaults;
-  if (options) this.settings = $.extend(true, {}, this.settings, options);
-
-  this.init = function () {
-    al("init() tgnTable");
-    var o = this; //al(this);
-
-    if (o.$element.is(".table-selectable")) {
+    if (this.options.selectable) {
       //al("is selectable");
-      o.$element.on("click", "tbody tr", function (e) {
-        //al("click");
-        if ($(e.target).is('td') || e.target == e.currentTarget) {
-          var check = $(this).find('input[type=checkbox], input[type=radio]');
-          if (check.prop('disabled')) return;
-          check.prop('checked', !check.prop('checked'));
-        } //$(this).toggleClass('table-active');
-
-      });
+      this._initSelectable();
     }
 
-    if (o.$element.is(".table-clickable")) {
+    if (this.options.clickable) {
       //al("is clickable");
       var ev = o.$element.data("clicktype") ? o.$element.data("clicktype") : "dblclick";
       o.$element.on(ev, "tbody tr", function (e) {
@@ -86633,20 +86652,101 @@ TgnTable = function TgnTable(obj, options) {
         if (url) window.location.href = url;
       });
     }
-  };
-};
 
-(function ($) {
-  $.fn.tgnTable = function (options) {
-    return this.each(function () {
-      var table = $(this);
-      var settings = {};
-      if (table.data()) settings = $.extend(true, {}, settings, table.data());
-      var table = new TgnTable(table, settings);
-      table.init();
+    o.element.trigger("tgntable:ready");
+  },
+  _initSelectable: function _initSelectable() {
+    var o = this;
+    this.rows.each(function (i) {
+      var tr = $(this);
+      var check = tr.find('input[type=checkbox], input[type=radio]');
+
+      if (check.length > 0) {
+        tr.find('.custom-control-label').on("click", function (e) {
+          e.preventDefault();
+        });
+        check.on("click", function (e) {
+          e.preventDefault();
+        });
+      }
+
+      tr.on("click", function (e) {
+        if ($(e.target).is('.custom-control-label') || $(e.target).is('td') || e.target == e.currentTarget) {
+          o.toggleRow($(this));
+        }
+      });
     });
-  };
-})(jQuery);
+  },
+  _rowDisabled: function _rowDisabled(tr) {
+    var check = tr.find('input[type=checkbox], input[type=radio]');
+    return tr.is(".disabled") || check.length > 0 && check.prop('disabled');
+  },
+  toggleRow: function toggleRow(tr) {
+    if (tr.is('.active')) {
+      this.deselectRow(tr);
+    } else {
+      this.selectRow(tr);
+    }
+  },
+  selectAll: function selectAll() {
+    var o = this;
+
+    if (!this.options.selectSingle) {
+      this.rows.each(function (i) {
+        o.selectRow($(this));
+      });
+    }
+  },
+  deselectAll: function deselectAll() {
+    var o = this;
+    this.rows.each(function (i) {
+      o.deselectRow($(this));
+    });
+  },
+  getSelectStyle: function getSelectStyle() {
+    return this.options.selectStyle == "default" ? "table-active" : "table-" + this.options.selectStyle;
+  },
+  selectRow: function selectRow(tr) {
+    if (this.options.selectSingle) {
+      this.deselectAll();
+    }
+
+    var check = tr.find('input[type=checkbox], input[type=radio]');
+    if (this._rowDisabled(tr)) return;
+    tr.addClass("active").addClass(this.getSelectStyle());
+    tr.trigger('selected', {
+      element: tr
+    });
+
+    if (check.length > 0) {
+      check.prop('checked', true);
+      check.trigger('change');
+    }
+  },
+  deselectRow: function deselectRow(tr) {
+    var check = tr.find('input[type=checkbox], input[type=radio]');
+    if (this._rowDisabled(tr)) return;
+    tr.removeClass("active").removeClass(this.getSelectStyle());
+    tr.trigger('deselected', {
+      element: tr
+    });
+
+    if (check.length > 0) {
+      check.prop('checked', false);
+      check.trigger('change');
+    }
+  },
+  getSelected: function getSelected() {
+    return this.rows.filter(".active");
+  },
+  hasSelected: function hasSelected() {
+    return this.getSelected().length > 0;
+  },
+  allSelected: function allSelected() {
+    return this.getSelected().length == this.rows.length;
+  },
+  refresh: function refresh() {}
+});
 
 $.fn.tgnAjaxTable = function () {
   return this.each(function () {

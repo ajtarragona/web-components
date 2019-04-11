@@ -16,7 +16,8 @@ class Table extends WebComponent
 		$args=array_merge($defaults,$args);
 
 		//dd($args);
-		return view('components.bootstrap.tablecount', $args);
+		$theme=config("webcomponents.theme");
+		return view('components.'.$theme.'.tablecount', $args);
 
 	}
 }

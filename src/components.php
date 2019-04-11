@@ -1,29 +1,31 @@
 <?php
 
+$theme=config('webcomponents.theme');
+
 return [
-	'container' => 'ajtarragona-web-components::bootstrap.container',
-	'row' => 'ajtarragona-web-components::bootstrap.row',
-	'col' => 'ajtarragona-web-components::bootstrap.col',
-	'alert' => 'ajtarragona-web-components::bootstrap.alert',
-	'badge' => 'ajtarragona-web-components::bootstrap.badge',
-	'card' => 'ajtarragona-web-components::bootstrap.card',
-	'listgroup' => 'ajtarragona-web-components::bootstrap.listgroup',
-	'table' => 'ajtarragona-web-components::bootstrap.table',
-	'tabs' => 'ajtarragona-web-components::bootstrap.tabs',
-	'tab' => 'ajtarragona-web-components::bootstrap.tab',
-	'tabcontent' => 'ajtarragona-web-components::bootstrap.tabcontent',
-	'tabpane' => 'ajtarragona-web-components::bootstrap.tabpane',
-	'list' => 'ajtarragona-web-components::bootstrap.list',
-	'li' => 'ajtarragona-web-components::bootstrap.listitem',
-	'form' => 'ajtarragona-web-components::bootstrap.forms.form',
-	'button' => 'ajtarragona-web-components::bootstrap.forms.button',
-	'formgroup' => 'ajtarragona-web-components::bootstrap.forms.formgroup',
-	'inputgroup' => 'ajtarragona-web-components::bootstrap.forms.inputgroup',
-	'buttongroup' => 'ajtarragona-web-components::bootstrap.forms.buttongroup',
-	'code' => 'ajtarragona-web-components::bootstrap.code',
-	'block' => 'ajtarragona-web-components::bootstrap.block',
-	'modal' => 'ajtarragona-web-components::bootstrap.modal',
-	'modalopener' => 'ajtarragona-web-components::bootstrap.modalopener'
+	'container' => 'ajtarragona-web-components::components.'.$theme.'.container',
+	'row' => 'ajtarragona-web-components::components.'.$theme.'.row',
+	'col' => 'ajtarragona-web-components::components.'.$theme.'.col',
+	'alert' => 'ajtarragona-web-components::components.'.$theme.'.alert',
+	'badge' => 'ajtarragona-web-components::components.'.$theme.'.badge',
+	'card' => 'ajtarragona-web-components::components.'.$theme.'.card',
+	'listgroup' => 'ajtarragona-web-components::components.'.$theme.'.listgroup',
+	'table' => 'ajtarragona-web-components::components.'.$theme.'.table',
+	'tabs' => 'ajtarragona-web-components::components.'.$theme.'.tabs',
+	'tab' => 'ajtarragona-web-components::components.'.$theme.'.tab',
+	'tabcontent' => 'ajtarragona-web-components::components.'.$theme.'.tabcontent',
+	'tabpane' => 'ajtarragona-web-components::components.'.$theme.'.tabpane',
+	'list' => 'ajtarragona-web-components::components.'.$theme.'.list',
+	'li' => 'ajtarragona-web-components::components.'.$theme.'.listitem',
+	'form' => 'ajtarragona-web-components::components.'.$theme.'.forms.form',
+	'button' => 'ajtarragona-web-components::components.'.$theme.'.forms.button',
+	'formgroup' => 'ajtarragona-web-components::components.'.$theme.'.forms.formgroup',
+	'inputgroup' => 'ajtarragona-web-components::components.'.$theme.'.forms.inputgroup',
+	'buttongroup' => 'ajtarragona-web-components::components.'.$theme.'.forms.buttongroup',
+	'code' => 'ajtarragona-web-components::components.'.$theme.'.code',
+	'block' => 'ajtarragona-web-components::components.'.$theme.'.block',
+	'modal' => 'ajtarragona-web-components::components.'.$theme.'.modal',
+	'modalopener' => 'ajtarragona-web-components::components.'.$theme.'.modalopener'
 ];
 
 		

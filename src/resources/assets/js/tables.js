@@ -1,41 +1,33 @@
-var TABLES=[];
 
 
 
-var tgntabledefaults = {
-	
-};
+$.widget( "ajtarragona.tgnTable", {
 
-TgnTable = function(obj,options){
+    options: {
+       selectable:false,
+       clickable:false,
+       selectSingle:false,
+       selectStyle: 'default'
+    },
 
-	this.$element=obj;
-	
-	
-	this.settings=tgntabledefaults;
-	if(options) this.settings = $.extend(true, {}, this.settings, options); 
-	
-	
-	
-	
-	this.init = function(){
-		al("init() tgnTable");
+    isInit: false,
 
-		var o=this;
-		//al(this);
-		if(o.$element.is(".table-selectable")){
+    _create: function() {
+        var o=this;
+        al("creating tgnTable");
+        
+        this.options = $.extend({}, this.options, this.element.data()); 
+        this.rows=this.element.find("tbody tr");
+
+		
+		if(this.options.selectable){
 			//al("is selectable");
-			o.$element.on("click","tbody tr",function(e){
-				//al("click");
-				if( $(e.target).is('td') || e.target==e.currentTarget ){
-					var check=$(this).find('input[type=checkbox], input[type=radio]');
-					if(check.prop('disabled')) return;
-					check.prop('checked', !check.prop('checked')  ); 
-				}
-				//$(this).toggleClass('table-active');
-			});
+			this._initSelectable();
+			
+			
 		}
 
-		if(o.$element.is(".table-clickable")){
+		if(this.options.clickable){
 			//al("is clickable");
 			var ev=o.$element.data("clicktype")?o.$element.data("clicktype"):"dblclick";
 
@@ -49,32 +41,127 @@ TgnTable = function(obj,options){
 				if(url) window.location.href=url;
 			});
 		}
+
+
+		o.element.trigger("tgntable:ready" ); 
+
 		
-	};
-
-
 	
+    },
 
    
-};
+    _initSelectable: function( ) {
+    	var o=this;
+        
+        this.rows.each(function(i){
+			var tr=$(this);
+			var check=tr.find('input[type=checkbox], input[type=radio]');
 
+			if(check.length>0){
+				tr.find('.custom-control-label').on("click",function(e){
+					e.preventDefault();
+				});
+				check.on("click",function(e){
+					e.preventDefault();
+				});
+			}
 
+			tr.on("click",function(e){
+				if( $(e.target).is('.custom-control-label') || $(e.target).is('td') || e.target==e.currentTarget ){
+					o.toggleRow($(this));
+				}
+			});
 
-
-(function ( $ ) {
-	
-	$.fn.tgnTable = function( options ){
-		return this.each(function(){
-			var table=$(this);
-			var settings={};
-			if(table.data()) settings = $.extend(true, {}, settings, table.data()); 
-			var table=new TgnTable(table,settings);
-			table.init();
-
+				
 		});
-	};
+    },
 
-}( jQuery ));
+    _rowDisabled : function (tr){
+    	var check=tr.find('input[type=checkbox], input[type=radio]');
+     	return (tr.is(".disabled") || (check.length>0 && check.prop('disabled')));
+    },
+
+    toggleRow: function( tr ) {
+    	
+		if(tr.is('.active')){
+			this.deselectRow(tr);
+		}else{
+			this.selectRow(tr);
+			
+		}
+	
+    },  
+
+    selectAll: function(  ) {
+    	var o=this;
+		if(!this.options.selectSingle){
+    		this.rows.each(function(i){
+    			o.selectRow($(this));
+    		});
+    	}
+    },
+
+    deselectAll: function(  ) {
+		var o=this;
+		this.rows.each(function(i){
+			o.deselectRow($(this));
+		});
+    },
+
+    getSelectStyle : function(){
+    	return this.options.selectStyle=="default"?"table-active":"table-"+this.options.selectStyle;
+
+    },
+
+    selectRow: function( tr ) {
+     	if(this.options.selectSingle){
+			this.deselectAll();
+		}
+
+     	var check=tr.find('input[type=checkbox], input[type=radio]');
+     	if(this._rowDisabled(tr)) return;
+
+     	
+		tr.addClass("active").addClass(this.getSelectStyle());
+		tr.trigger('selected',{element:tr});
+		if(check.length>0){
+			check.prop('checked', true); 
+			check.trigger('change');
+		}
+
+
+    },
+
+    deselectRow: function( tr ) {
+      	var check=tr.find('input[type=checkbox], input[type=radio]');
+
+		if(this._rowDisabled(tr)) return;
+
+		tr.removeClass("active").removeClass(this.getSelectStyle());
+		tr.trigger('deselected',{element:tr});
+		if(check.length>0){
+			check.prop('checked', false); 
+			check.trigger('change');
+		}
+    },
+
+    getSelected : function(){
+    	return this.rows.filter(".active");
+	},
+	 
+	hasSelected : function(){
+	 	return this.getSelected().length>0;
+	},
+
+	allSelected : function(){
+	 	return this.getSelected().length == this.rows.length;
+	},
+
+    refresh: function( ) {
+        
+    },
+
+});
 
 
 

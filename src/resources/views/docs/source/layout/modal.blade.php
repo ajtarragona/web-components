@@ -7,4 +7,7 @@
 	
 	{{ $faker->paragraph() }}
 	
+	@if(isset($request))
+		@include('ajtarragona-web-components::docs.source.layout.showrequest')
+	@endif
 @endsection

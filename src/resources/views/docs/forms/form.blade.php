@@ -128,3 +128,24 @@
 		@endcode
 	@endcol
 @endrow
+
+
+<hr class="big"/>
+
+
+<h2>Formulari AJAX que retorna una vista</h2>
+@row
+	
+	@col(['size'=>6])
+		<p>Podem crear formularis que facin el submit via Ajax i es carreguin a la mateixa pàgina o bé en una finestra modal.</p>
+		<p>Per fer-ho cal passar el paràmetre <code>target</code> indicant o bé el selector CSS de l'element sobre el que volem que es carregui el resultat o bé l'string <code>modal</code>. 
+		@includeIf('ajtarragona-web-components::docs.source.forms.form_ajax')
+	@endcol
+
+	@col(['size'=>6])
+
+		@code(['lang'=>'java'])
+			@includeSrc('ajtarragona-web-components::docs.source.forms.form_ajax')
+		@endcode
+	@endcol
+@endrow

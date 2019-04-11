@@ -11,6 +11,7 @@ function tgnFormClass(obj,options){
 		validateOnStart: false,
 		validateOnChange: false,
 		autofocus:false,
+		autoselect:false,
 		target: false,
 	};
 
@@ -40,27 +41,44 @@ function tgnFormClass(obj,options){
         al("Submitting form...");
 
         if(o.settings.target){
-        	if($(o.settings.target).length>0){
-        		var $target=$(o.settings.target);
-        		var data = $form.serializeArray();
+        	var url = $form.attr('action');
+        	var method = $form.find('[name=_method]').val();
+        	var params =  $form.serializeControls();
+			
+
+        	if(o.settings.target=="modal"){
         		$form.startLoading();
+
+        		TgnModal.open(url,method,params,{
+					onsuccess: function(modal){
+						$form.stopLoading();
+					},
+					size:'lg'
+				});
+
+        	}else if($(o.settings.target).length>0){
+        		var $target=$(o.settings.target);
+        		 al(url);
+        		 al(method);
+        		 al(params);
+        		//$form.startLoading();
         		$target.startLoading();
 				//data._token= csrfToken();
-        		 $.ajax({
-		            url: $form.attr('action'),
-		            type: $form.find('[name=_method]').val(),
-		            data: $.param(data),
+        		$.ajax({
+		            url: url,
+		            type: method,
+		            data: params,
 		            dataType: 'html',
 		            success: function(data){
+		            	al(data);
 		            	$target.html(data).tgnInitAll().stopLoading();
-
-		            	$form.stopLoading();
+		            	//$form.stopLoading();
 		        			
 		            },
 		            error: function(xhr){
-		                $form.stopLoading();
+		                //$form.stopLoading();
 		        		$target.html('').stopLoading();
-						console.log(xhr.status);
+						//console.log(xhr.status);
 		            }
 		        });
         	}
@@ -103,6 +121,16 @@ function tgnFormClass(obj,options){
 	    			$input=$form.find("[name="+this.settings.autofocus+"]");
 	    		}
 	           if($input.length>0) $input.get(0).focus();
+	           $input.closest('.form-group').addClass('focused');
+	        }
+
+	        if (this.settings.autoselect) {
+	    		if(this.settings.autoselect===true || this.settings.autoselect==="true"|| this.settings.autoselect===1){
+	    			$input=$form.find('input:enabled:visible:first');
+	    		}else{
+	    			$input=$form.find("[name="+this.settings.autoselect+"]");
+	    		}
+	           if($input.length>0) $input.get(0).select();
 	           $input.closest('.form-group').addClass('focused');
 	        }
 	        
