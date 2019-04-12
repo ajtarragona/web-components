@@ -22,7 +22,7 @@ class BaseController extends Controller
 		}
 	}
 	
-	protected function view($view, $args=[]){
+	public function view($view, $args=[]){
 		return view("ajtarragona-web-components::".$view, $args);
 	}
 

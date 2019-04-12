@@ -178,3 +178,9 @@
 @code
 	@includeSrc('ajtarragona-web-components::docs.source.layout.includeassets')
 @endcode
+
+<p>També podem incloure les variables de l'aplicació (que inclouen les de bootstrap) per fer servir als nostres arxius sass:</p>
+
+@code
+	@import "../../../vendor/ajtarragona/web-components/src/resources/assets/sass/_variables";
+@endcode
