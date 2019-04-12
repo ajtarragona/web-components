@@ -86642,12 +86642,12 @@ $.widget("ajtarragona.tgnTable", {
 
     if (this.options.clickable) {
       //al("is clickable");
-      var ev = o.$element.data("clicktype") ? o.$element.data("clicktype") : "dblclick";
-      o.$element.on(ev, "tbody tr", function (e) {
+      var ev = this.element.data("clicktype") ? o.$element.data("clicktype") : "dblclick";
+      this.element.on(ev, "tbody tr", function (e) {
         var url = $(this).data("url");
         if (url) window.location.href = url;
       });
-      o.$element.on("touchend", "tbody tr", function (e) {
+      this.element.on("touchend", "tbody tr", function (e) {
         var url = $(this).data("url");
         if (url) window.location.href = url;
       });

@@ -43,6 +43,24 @@ php artisan vendor:publish --provider="Kyslik\ColumnSortable\ColumnSortableServi
 @endrow
 
 
+<h2>Taules clicables</h2>
+@row
+	@col(['size'=>6])
+		@includeIf('ajtarragona-web-components::docs.source.components.table-clickable')
+
+	@endcol
+
+	@col(['size'=>6])
+
+
+		@code(['lang'=>'java'])
+			@includeSrc('ajtarragona-web-components::docs.source.components.table-clickable')
+		@endcode
+		
+	@endcol
+@endrow
+
+
 <h2>Taules ajax</h2>
 
 {{-- <section id="kitchen-tables" class="py-5">
