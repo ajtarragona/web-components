@@ -30,6 +30,7 @@
 		@isset($size) btn-{{$size}} @endisset
 
 		"
+		
 		{!! html_attributes(isset($attributes)?$attributes:false) !!}
    		{!! html_attributes(isset($data)?$data:false,'data') !!}
 	>

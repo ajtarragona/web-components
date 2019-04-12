@@ -17,10 +17,8 @@
 	@istrue($confirm) data-confirm="{{$confirm}}" @endistrue 
 	@isset($target) data-target="{{$target}}" @endisset 
 	
-	
-	{!! renderAttributes(isset($attributes)?$attributes:false) !!}
-   	{!! renderData(isset($data)?$data:false,'data') !!}
-
+	{!! html_attributes(isset($attributes)?$attributes:false) !!}
+   	{!! html_attributes(isset($data)?$data:false,'data') !!}
 	>
 	
 	@csrf
