@@ -184,5 +184,6 @@ $custom-file-text: (
 );
 
 // Bootstrap
-@import "~bootstrap/scss/bootstrap";
+@import "~bootstrap/scss/_functions";
+@import "~bootstrap/scss/_variables";
 
