@@ -18647,7 +18647,7 @@ form.validating {
   color: #d9534f;
 }
 
-.form-group .bootstrap-touchspin .bootstrap-touchspin-postfix .input-group-text {
+.form-group .bootstrap-touchspin .bootstrap-touchspin-postfix .input-group-append .input-group-text {
   padding-right: 2.3rem;
   font-size: 0.9em;
   color: #adb5bd;
@@ -18711,26 +18711,32 @@ form.validating {
 .form-group.outlined.bg-success input,
 .form-group.outlined.bg-success textarea,
 .form-group.outlined.bg-success .input-icon,
+.form-group.outlined.bg-success .input-group-prepend .input-group-text,
 .form-group.outlined.bg-success .input-group-append .input-group-text,
 .form-group.outlined.bg-danger input,
 .form-group.outlined.bg-danger textarea,
 .form-group.outlined.bg-danger .input-icon,
+.form-group.outlined.bg-danger .input-group-prepend .input-group-text,
 .form-group.outlined.bg-danger .input-group-append .input-group-text,
 .form-group.outlined.bg-dark input,
 .form-group.outlined.bg-dark textarea,
 .form-group.outlined.bg-dark .input-icon,
+.form-group.outlined.bg-dark .input-group-prepend .input-group-text,
 .form-group.outlined.bg-dark .input-group-append .input-group-text,
 .form-group.outlined.bg-primary input,
 .form-group.outlined.bg-primary textarea,
 .form-group.outlined.bg-primary .input-icon,
+.form-group.outlined.bg-primary .input-group-prepend .input-group-text,
 .form-group.outlined.bg-primary .input-group-append .input-group-text,
 .form-group.outlined.bg-secondary input,
 .form-group.outlined.bg-secondary textarea,
 .form-group.outlined.bg-secondary .input-icon,
+.form-group.outlined.bg-secondary .input-group-prepend .input-group-text,
 .form-group.outlined.bg-secondary .input-group-append .input-group-text,
 .form-group.outlined.bg-info input,
 .form-group.outlined.bg-info textarea,
 .form-group.outlined.bg-info .input-icon,
+.form-group.outlined.bg-info .input-group-prepend .input-group-text,
 .form-group.outlined.bg-info .input-group-append .input-group-text {
   color: #fff;
 }
@@ -18738,26 +18744,32 @@ form.validating {
 .form-group.outlined.bg-success input::-webkit-input-placeholder,
 .form-group.outlined.bg-success textarea::-webkit-input-placeholder,
 .form-group.outlined.bg-success .input-icon::-webkit-input-placeholder,
+.form-group.outlined.bg-success .input-group-prepend .input-group-text::-webkit-input-placeholder,
 .form-group.outlined.bg-success .input-group-append .input-group-text::-webkit-input-placeholder,
 .form-group.outlined.bg-danger input::-webkit-input-placeholder,
 .form-group.outlined.bg-danger textarea::-webkit-input-placeholder,
 .form-group.outlined.bg-danger .input-icon::-webkit-input-placeholder,
+.form-group.outlined.bg-danger .input-group-prepend .input-group-text::-webkit-input-placeholder,
 .form-group.outlined.bg-danger .input-group-append .input-group-text::-webkit-input-placeholder,
 .form-group.outlined.bg-dark input::-webkit-input-placeholder,
 .form-group.outlined.bg-dark textarea::-webkit-input-placeholder,
 .form-group.outlined.bg-dark .input-icon::-webkit-input-placeholder,
+.form-group.outlined.bg-dark .input-group-prepend .input-group-text::-webkit-input-placeholder,
 .form-group.outlined.bg-dark .input-group-append .input-group-text::-webkit-input-placeholder,
 .form-group.outlined.bg-primary input::-webkit-input-placeholder,
 .form-group.outlined.bg-primary textarea::-webkit-input-placeholder,
 .form-group.outlined.bg-primary .input-icon::-webkit-input-placeholder,
+.form-group.outlined.bg-primary .input-group-prepend .input-group-text::-webkit-input-placeholder,
 .form-group.outlined.bg-primary .input-group-append .input-group-text::-webkit-input-placeholder,
 .form-group.outlined.bg-secondary input::-webkit-input-placeholder,
 .form-group.outlined.bg-secondary textarea::-webkit-input-placeholder,
 .form-group.outlined.bg-secondary .input-icon::-webkit-input-placeholder,
+.form-group.outlined.bg-secondary .input-group-prepend .input-group-text::-webkit-input-placeholder,
 .form-group.outlined.bg-secondary .input-group-append .input-group-text::-webkit-input-placeholder,
 .form-group.outlined.bg-info input::-webkit-input-placeholder,
 .form-group.outlined.bg-info textarea::-webkit-input-placeholder,
 .form-group.outlined.bg-info .input-icon::-webkit-input-placeholder,
+.form-group.outlined.bg-info .input-group-prepend .input-group-text::-webkit-input-placeholder,
 .form-group.outlined.bg-info .input-group-append .input-group-text::-webkit-input-placeholder {
   color: rgba(255, 255, 255, 0.5);
 }
@@ -18765,26 +18777,32 @@ form.validating {
 .form-group.outlined.bg-success input:-ms-input-placeholder,
 .form-group.outlined.bg-success textarea:-ms-input-placeholder,
 .form-group.outlined.bg-success .input-icon:-ms-input-placeholder,
+.form-group.outlined.bg-success .input-group-prepend .input-group-text:-ms-input-placeholder,
 .form-group.outlined.bg-success .input-group-append .input-group-text:-ms-input-placeholder,
 .form-group.outlined.bg-danger input:-ms-input-placeholder,
 .form-group.outlined.bg-danger textarea:-ms-input-placeholder,
 .form-group.outlined.bg-danger .input-icon:-ms-input-placeholder,
+.form-group.outlined.bg-danger .input-group-prepend .input-group-text:-ms-input-placeholder,
 .form-group.outlined.bg-danger .input-group-append .input-group-text:-ms-input-placeholder,
 .form-group.outlined.bg-dark input:-ms-input-placeholder,
 .form-group.outlined.bg-dark textarea:-ms-input-placeholder,
 .form-group.outlined.bg-dark .input-icon:-ms-input-placeholder,
+.form-group.outlined.bg-dark .input-group-prepend .input-group-text:-ms-input-placeholder,
 .form-group.outlined.bg-dark .input-group-append .input-group-text:-ms-input-placeholder,
 .form-group.outlined.bg-primary input:-ms-input-placeholder,
 .form-group.outlined.bg-primary textarea:-ms-input-placeholder,
 .form-group.outlined.bg-primary .input-icon:-ms-input-placeholder,
+.form-group.outlined.bg-primary .input-group-prepend .input-group-text:-ms-input-placeholder,
 .form-group.outlined.bg-primary .input-group-append .input-group-text:-ms-input-placeholder,
 .form-group.outlined.bg-secondary input:-ms-input-placeholder,
 .form-group.outlined.bg-secondary textarea:-ms-input-placeholder,
 .form-group.outlined.bg-secondary .input-icon:-ms-input-placeholder,
+.form-group.outlined.bg-secondary .input-group-prepend .input-group-text:-ms-input-placeholder,
 .form-group.outlined.bg-secondary .input-group-append .input-group-text:-ms-input-placeholder,
 .form-group.outlined.bg-info input:-ms-input-placeholder,
 .form-group.outlined.bg-info textarea:-ms-input-placeholder,
 .form-group.outlined.bg-info .input-icon:-ms-input-placeholder,
+.form-group.outlined.bg-info .input-group-prepend .input-group-text:-ms-input-placeholder,
 .form-group.outlined.bg-info .input-group-append .input-group-text:-ms-input-placeholder {
   color: rgba(255, 255, 255, 0.5);
 }
@@ -18792,26 +18810,32 @@ form.validating {
 .form-group.outlined.bg-success input::-ms-input-placeholder,
 .form-group.outlined.bg-success textarea::-ms-input-placeholder,
 .form-group.outlined.bg-success .input-icon::-ms-input-placeholder,
+.form-group.outlined.bg-success .input-group-prepend .input-group-text::-ms-input-placeholder,
 .form-group.outlined.bg-success .input-group-append .input-group-text::-ms-input-placeholder,
 .form-group.outlined.bg-danger input::-ms-input-placeholder,
 .form-group.outlined.bg-danger textarea::-ms-input-placeholder,
 .form-group.outlined.bg-danger .input-icon::-ms-input-placeholder,
+.form-group.outlined.bg-danger .input-group-prepend .input-group-text::-ms-input-placeholder,
 .form-group.outlined.bg-danger .input-group-append .input-group-text::-ms-input-placeholder,
 .form-group.outlined.bg-dark input::-ms-input-placeholder,
 .form-group.outlined.bg-dark textarea::-ms-input-placeholder,
 .form-group.outlined.bg-dark .input-icon::-ms-input-placeholder,
+.form-group.outlined.bg-dark .input-group-prepend .input-group-text::-ms-input-placeholder,
 .form-group.outlined.bg-dark .input-group-append .input-group-text::-ms-input-placeholder,
 .form-group.outlined.bg-primary input::-ms-input-placeholder,
 .form-group.outlined.bg-primary textarea::-ms-input-placeholder,
 .form-group.outlined.bg-primary .input-icon::-ms-input-placeholder,
+.form-group.outlined.bg-primary .input-group-prepend .input-group-text::-ms-input-placeholder,
 .form-group.outlined.bg-primary .input-group-append .input-group-text::-ms-input-placeholder,
 .form-group.outlined.bg-secondary input::-ms-input-placeholder,
 .form-group.outlined.bg-secondary textarea::-ms-input-placeholder,
 .form-group.outlined.bg-secondary .input-icon::-ms-input-placeholder,
+.form-group.outlined.bg-secondary .input-group-prepend .input-group-text::-ms-input-placeholder,
 .form-group.outlined.bg-secondary .input-group-append .input-group-text::-ms-input-placeholder,
 .form-group.outlined.bg-info input::-ms-input-placeholder,
 .form-group.outlined.bg-info textarea::-ms-input-placeholder,
 .form-group.outlined.bg-info .input-icon::-ms-input-placeholder,
+.form-group.outlined.bg-info .input-group-prepend .input-group-text::-ms-input-placeholder,
 .form-group.outlined.bg-info .input-group-append .input-group-text::-ms-input-placeholder {
   color: rgba(255, 255, 255, 0.5);
 }
@@ -18819,28 +18843,45 @@ form.validating {
 .form-group.outlined.bg-success input::placeholder,
 .form-group.outlined.bg-success textarea::placeholder,
 .form-group.outlined.bg-success .input-icon::placeholder,
+.form-group.outlined.bg-success .input-group-prepend .input-group-text::placeholder,
 .form-group.outlined.bg-success .input-group-append .input-group-text::placeholder,
 .form-group.outlined.bg-danger input::placeholder,
 .form-group.outlined.bg-danger textarea::placeholder,
 .form-group.outlined.bg-danger .input-icon::placeholder,
+.form-group.outlined.bg-danger .input-group-prepend .input-group-text::placeholder,
 .form-group.outlined.bg-danger .input-group-append .input-group-text::placeholder,
 .form-group.outlined.bg-dark input::placeholder,
 .form-group.outlined.bg-dark textarea::placeholder,
 .form-group.outlined.bg-dark .input-icon::placeholder,
+.form-group.outlined.bg-dark .input-group-prepend .input-group-text::placeholder,
 .form-group.outlined.bg-dark .input-group-append .input-group-text::placeholder,
 .form-group.outlined.bg-primary input::placeholder,
 .form-group.outlined.bg-primary textarea::placeholder,
 .form-group.outlined.bg-primary .input-icon::placeholder,
+.form-group.outlined.bg-primary .input-group-prepend .input-group-text::placeholder,
 .form-group.outlined.bg-primary .input-group-append .input-group-text::placeholder,
 .form-group.outlined.bg-secondary input::placeholder,
 .form-group.outlined.bg-secondary textarea::placeholder,
 .form-group.outlined.bg-secondary .input-icon::placeholder,
+.form-group.outlined.bg-secondary .input-group-prepend .input-group-text::placeholder,
 .form-group.outlined.bg-secondary .input-group-append .input-group-text::placeholder,
 .form-group.outlined.bg-info input::placeholder,
 .form-group.outlined.bg-info textarea::placeholder,
 .form-group.outlined.bg-info .input-icon::placeholder,
+.form-group.outlined.bg-info .input-group-prepend .input-group-text::placeholder,
 .form-group.outlined.bg-info .input-group-append .input-group-text::placeholder {
   color: rgba(255, 255, 255, 0.5);
+}
+
+.form-group.outlined.bg-success .input-group-btn-vertical .btn,
+.form-group.outlined.bg-danger .input-group-btn-vertical .btn,
+.form-group.outlined.bg-dark .input-group-btn-vertical .btn,
+.form-group.outlined.bg-primary .input-group-btn-vertical .btn,
+.form-group.outlined.bg-secondary .input-group-btn-vertical .btn,
+.form-group.outlined.bg-info .input-group-btn-vertical .btn {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: transparent;
 }
 
 .form-group.outlined.bg-success > label,
@@ -18850,6 +18891,56 @@ form.validating {
 .form-group.outlined.bg-secondary > label,
 .form-group.outlined.bg-info > label {
   color: rgba(255, 255, 255, 0.9);
+}
+
+.form-group.outlined.bg-warning input,
+.form-group.outlined.bg-warning textarea,
+.form-group.outlined.bg-warning .input-icon,
+.form-group.outlined.bg-warning .input-group-prepend .input-group-text,
+.form-group.outlined.bg-warning .input-group-append .input-group-text {
+  color: #343a40;
+}
+
+.form-group.outlined.bg-warning input::-webkit-input-placeholder,
+.form-group.outlined.bg-warning textarea::-webkit-input-placeholder,
+.form-group.outlined.bg-warning .input-icon::-webkit-input-placeholder,
+.form-group.outlined.bg-warning .input-group-prepend .input-group-text::-webkit-input-placeholder,
+.form-group.outlined.bg-warning .input-group-append .input-group-text::-webkit-input-placeholder {
+  color: rgba(52, 58, 64, 0.5);
+}
+
+.form-group.outlined.bg-warning input:-ms-input-placeholder,
+.form-group.outlined.bg-warning textarea:-ms-input-placeholder,
+.form-group.outlined.bg-warning .input-icon:-ms-input-placeholder,
+.form-group.outlined.bg-warning .input-group-prepend .input-group-text:-ms-input-placeholder,
+.form-group.outlined.bg-warning .input-group-append .input-group-text:-ms-input-placeholder {
+  color: rgba(52, 58, 64, 0.5);
+}
+
+.form-group.outlined.bg-warning input::-ms-input-placeholder,
+.form-group.outlined.bg-warning textarea::-ms-input-placeholder,
+.form-group.outlined.bg-warning .input-icon::-ms-input-placeholder,
+.form-group.outlined.bg-warning .input-group-prepend .input-group-text::-ms-input-placeholder,
+.form-group.outlined.bg-warning .input-group-append .input-group-text::-ms-input-placeholder {
+  color: rgba(52, 58, 64, 0.5);
+}
+
+.form-group.outlined.bg-warning input::placeholder,
+.form-group.outlined.bg-warning textarea::placeholder,
+.form-group.outlined.bg-warning .input-icon::placeholder,
+.form-group.outlined.bg-warning .input-group-prepend .input-group-text::placeholder,
+.form-group.outlined.bg-warning .input-group-append .input-group-text::placeholder {
+  color: rgba(52, 58, 64, 0.5);
+}
+
+.form-group.outlined.bg-warning .input-group-btn-vertical .btn {
+  color: #343a40;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: transparent;
+}
+
+.form-group.outlined.bg-warning > label {
+  color: rgba(52, 58, 64, 0.9);
 }
 
 .form-group.outlined .custom-select {
@@ -18973,7 +19064,7 @@ form.validating {
   box-shadow: none;
 }
 
-.form-group.outlined .bootstrap-touchspin .input-group-text {
+.form-group.outlined .bootstrap-touchspin .input-group-append .input-group-text {
   line-height: 1.5;
   padding: 0.4rem 1rem;
   padding-right: 2.3rem;
@@ -19015,41 +19106,41 @@ form.validating {
   line-height: 1.2em;
 }
 
-.form-group.outlined.sidelabel > input,
-.form-group.outlined.sidelabel > .input-group,
-.form-group.outlined.sidelabel > textarea {
+.form-group.outlined.sidelabel > label ~ input,
+.form-group.outlined.sidelabel > label ~ .input-group,
+.form-group.outlined.sidelabel > label ~ textarea {
   width: calc(100% - 160px );
   padding-left: 0em;
 }
 
-.form-group.outlined.sidelabel > .selectpicker-wrapper,
-.form-group.outlined.sidelabel > .date-container,
-.form-group.outlined.sidelabel > .mentions-container,
-.form-group.outlined.sidelabel > .form-control-container,
-.form-group.outlined.sidelabel > .bootstrap-tagsinput,
-.form-group.outlined.sidelabel > .custom-file {
+.form-group.outlined.sidelabel > label ~ .selectpicker-wrapper,
+.form-group.outlined.sidelabel > label ~ .date-container,
+.form-group.outlined.sidelabel > label ~ .mentions-container,
+.form-group.outlined.sidelabel > label ~ .form-control-container,
+.form-group.outlined.sidelabel > label ~ .bootstrap-tagsinput,
+.form-group.outlined.sidelabel > label ~ .custom-file {
   width: calc(100% - 160px );
   float: left;
 }
 
-.form-group.outlined.sidelabel > .selectpicker-wrapper > .bootstrap-select .filter-option,
-.form-group.outlined.sidelabel > .date-container > .bootstrap-select .filter-option,
-.form-group.outlined.sidelabel > .mentions-container > .bootstrap-select .filter-option,
-.form-group.outlined.sidelabel > .form-control-container > .bootstrap-select .filter-option,
-.form-group.outlined.sidelabel > .bootstrap-tagsinput > .bootstrap-select .filter-option,
-.form-group.outlined.sidelabel > .custom-file > .bootstrap-select .filter-option {
+.form-group.outlined.sidelabel > label ~ .selectpicker-wrapper > .bootstrap-select .filter-option,
+.form-group.outlined.sidelabel > label ~ .date-container > .bootstrap-select .filter-option,
+.form-group.outlined.sidelabel > label ~ .mentions-container > .bootstrap-select .filter-option,
+.form-group.outlined.sidelabel > label ~ .form-control-container > .bootstrap-select .filter-option,
+.form-group.outlined.sidelabel > label ~ .bootstrap-tagsinput > .bootstrap-select .filter-option,
+.form-group.outlined.sidelabel > label ~ .custom-file > .bootstrap-select .filter-option {
   padding-left: 0em;
 }
 
-.form-group.outlined.sidelabel > .mentions-container,
-.form-group.outlined.sidelabel > .file-input .file-caption {
+.form-group.outlined.sidelabel > label ~ .mentions-container,
+.form-group.outlined.sidelabel > label ~ .file-input .file-caption {
   padding-left: 0;
 }
 
-.form-group.outlined.sidelabel > .bootstrap-touchspin .form-control,
-.form-group.outlined.sidelabel > .bootstrap-touchspin .form-control,
-.form-group.outlined.sidelabel > .date-container .form-control,
-.form-group.outlined.sidelabel > .form-row .form-control {
+.form-group.outlined.sidelabel > label ~ .bootstrap-touchspin .form-control,
+.form-group.outlined.sidelabel > label ~ .bootstrap-touchspin .form-control,
+.form-group.outlined.sidelabel > label ~ .date-container .form-control,
+.form-group.outlined.sidelabel > label ~ .form-row .form-control {
   padding-left: 0;
 }
 

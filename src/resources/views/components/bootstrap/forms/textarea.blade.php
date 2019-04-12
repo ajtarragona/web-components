@@ -12,7 +12,7 @@
 	'outlined'=> $outlined, 
 	'id'=> $id, 
 	'size'=> $size, 
-	'class'=>$containerclass,
+	'class'=>$containerclass. ' form-group-textarea',
 	'hasfeedback' => (isset($helptext) && $helptext)
 ])
 

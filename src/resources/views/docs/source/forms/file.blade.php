@@ -11,7 +11,7 @@
 	'label'=>"Arxius",
 	'multiple'=>true,
 	'placeholder'=>"Triar arxius...",
-	'icon' =>'file'
+	'icon' =>'archive'
 ])
 
 @fileinput([

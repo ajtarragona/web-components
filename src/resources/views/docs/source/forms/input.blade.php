@@ -22,6 +22,6 @@
 
 @input(['name'=>'camp_nom5', 'label'=>'Info', 'icon'=>'star', 'value'=>'','containerclass'=>'bg-info'])
 
-@input(['name'=>'camp_nom6', 'label'=>'Warning', 'value'=>'','containerclass'=>'bg-warning'])
+@input(['name'=>'camp_nom6', 'label'=>'Warning', 'icon'=>'star','value'=>'','containerclass'=>'bg-warning'])
 
-@input(['name'=>'camp_nom7', 'label'=>'Dark', 'value'=>'','containerclass'=>'bg-dark'])
+@input(['name'=>'camp_nom7', 'label'=>'Dark', 'icon'=>'star','value'=>'','containerclass'=>'bg-dark'])

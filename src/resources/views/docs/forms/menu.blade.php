@@ -5,6 +5,7 @@
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'forms.inputgroup','title'=>'Inputgroup'])
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'forms.textarea','title'=>'Textarea'])
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'forms.texteditor','title'=>'Text Editor'])
+	@include('ajtarragona-web-components::docs.menuitem',['route'=>'forms.number','title'=>'Number'])
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'forms.select','title'=>'Select'])
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'forms.autocomplete','title'=>'Autocomplete'])
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'forms.checkbox','title'=>'Checkbox'])

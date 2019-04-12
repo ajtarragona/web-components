@@ -139,7 +139,7 @@ form.validating{
 
 	.bootstrap-touchspin{
 
-		.bootstrap-touchspin-postfix .input-group-text{
+		.bootstrap-touchspin-postfix .input-group-append .input-group-text{
 			padding-right:2.3rem;
 			font-size:.9em;
 			color:$gray-500;
@@ -221,16 +221,42 @@ $sidelabel-size : 160px;
 		input,
 		textarea,
 		.input-icon,
+		.input-group-prepend .input-group-text,
 		.input-group-append .input-group-text{
 			color: $white;
 			&::placeholder{
 				color: rgba($white,0.5);
 			}
 		}
+		.input-group-btn-vertical .btn{
+			color: $white;
+			background-color:rgba(255,255,255,0.1);
+			border-color:transparent;
+		}
 		> label{
 			color: rgba($white,0.9);
 		}
 
+	}
+	&.bg-warning{
+		input,
+		textarea,
+		.input-icon,
+		.input-group-prepend .input-group-text,
+		.input-group-append .input-group-text{
+			color: $dark;
+			&::placeholder{
+				color: rgba($dark,0.5);
+			}
+		}
+		.input-group-btn-vertical .btn{
+			color: $dark;
+			background-color:rgba(255,255,255,0.1);
+			border-color:transparent;
+		}
+		> label{
+			color: rgba($dark,0.9);
+		}
 	}
 
 	.custom-select {
@@ -369,7 +395,7 @@ $sidelabel-size : 160px;
 				box-shadow: none;
 			}
 		}
-		.input-group-text{
+		.input-group-append .input-group-text{
 			line-height:$input-line-height;
 			padding: $input-padding-y $input-padding-x ;
 			padding-right:2.3rem;
@@ -410,46 +436,47 @@ $sidelabel-size : 160px;
 			float:left;
 			padding-bottom:2*$input-padding-y;
 			line-height: 1.2em;
-		}
-		> input,
-		> .input-group,
-		> textarea{
-			width:calc(100% - #{$sidelabel-size} );
-			padding-left:0em;
-		}
-
-		> .selectpicker-wrapper,
-		> .date-container,
-		> .mentions-container,
-		> .form-control-container,
-		> .bootstrap-tagsinput,
-		> .custom-file{
-			width:calc(100% -  #{$sidelabel-size} ) ;
-			float:left;
-			>.bootstrap-select .filter-option{
+			~ input,
+			~ .input-group,
+			~ textarea{
+				width:calc(100% - #{$sidelabel-size} );
 				padding-left:0em;
+			}
+
+			~ .selectpicker-wrapper,
+			~ .date-container,
+			~ .mentions-container,
+			~ .form-control-container,
+			~ .bootstrap-tagsinput,
+			~ .custom-file{
+				width:calc(100% -  #{$sidelabel-size} ) ;
+				float:left;
+				>.bootstrap-select .filter-option{
+					padding-left:0em;
+				}
+			}
+
+			~ .mentions-container,
+			~ .file-input .file-caption{
+				padding-left:0;
+			}
+			
+			~ .bootstrap-touchspin .form-control,
+			~ .bootstrap-touchspin .form-control,
+			~ .date-container .form-control,
+			~ .form-row .form-control{
+				padding-left:0;
+			
 			}
 		}
 
-		> .mentions-container,
-		>.file-input .file-caption{
-			padding-left:0;
-		}
 		
-		>.bootstrap-touchspin .form-control,
-		>.bootstrap-touchspin .form-control,
-		>.date-container .form-control,
-		>.form-row .form-control{
-			padding-left:0;
+
 		
-		}
 
 		>.form-row
 		{
 			padding: 0;
-			
-
-		
 		}
 
 		
