@@ -6,7 +6,7 @@
 				$color=html2rgb($color);
 			}
 
-			if(count($color)>=3){
+			if($color && is_array($color) && count($color)>=3){
 				return $color[0]>125 && $color[1]>125 && $color[2]>125;
 			}
 
@@ -45,6 +45,7 @@
 				return $colorcomps;
 
 			}
+			else return false;
 
 
 		}
