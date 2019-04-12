@@ -18264,7 +18264,7 @@ body.modal-maximized.modal-open .modal {
 }
 
 .with-sidebar.with-toolbar #main-container {
-  padding-top: 6.5em;
+  padding-top: 72px;
 }
 
 .with-sidebar .sidebar {
