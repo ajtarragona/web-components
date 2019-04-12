@@ -4,10 +4,10 @@
 
 @section('body')
 
-<div class="bg-dark vw-100 vh-100 fixed-top d-flex justify-content-center align-items-center overflow-auto" style="z-index:1">
+<div class="bg-dark vw-100 vh-100 fixed-top d-flex justify-content-center align-items-start overflow-auto" style="z-index:1">
 	
 	<div class="col-lg-4 col-md-6 col-sm-8">
-		<div class="card " >
+		<div class="card mt-5" >
 			<div class="card-body">				
 				<h4 class="card-title">{{ config('app.name')}}</h4>
 				<h6 class="card-subtitle mb-4">@lang('tgn::auth.login-form')</h6>

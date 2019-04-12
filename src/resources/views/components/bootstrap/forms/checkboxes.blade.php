@@ -1,5 +1,5 @@
 @php
-	if($errors->has($name)) $containerclass.=' is-invalid ';
+	if($errors->has($name)) $containerclass.=' with-feedback  is-invalid ';
 @endphp
 
 @formgroup([

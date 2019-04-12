@@ -4,6 +4,7 @@ namespace Ajtarragona\WebComponents\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use Ajtarragona\WebComponents\Controllers\BaseController as Controller;
+use Ajtarragona\WebComponents\Requests\AuthValidate;
 
 class SessionController extends Controller
 {
@@ -18,7 +19,7 @@ class SessionController extends Controller
 		return $this->view("layout.auth.login");
 	}
 
-	public function start(Request $request)
+	public function start(AuthValidate $request)
 	{
 		//dd(request());
 		//attempt authenticate the user
