@@ -6,6 +6,8 @@
             <a class="sidebar-toggle ml-auto " href="#" data-session-setting="sidebar" data-session-toggle="true" data-session-value="{{ session('sidebar') }}" >@icon('bars')</a>
         </header>
 
+        @includeIf('layout.menu')
+        
 		@yield('menu')
 
 		<div class="mt-auto mb-4">
