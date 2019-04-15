@@ -26,7 +26,7 @@ select.loading{
 	font-size: $font-size-base;
 	font-family: $font-family-base;
 	font-weight: $font-weight-normal;
-	
+	padding-right: 2em;
 	// &.btn-light,
 	// &:not([class*='btn-']){
 	// 	background-color:transparent;
@@ -82,7 +82,7 @@ select.loading{
 
 
 .form-group .input-icon.icon-right + .selectpicker-wrapper   .deselect-btn{
-	right:3.5em;
+	right:4em;
 }
 
 .bootstrap-select select[required=required] + .deselect-btn{

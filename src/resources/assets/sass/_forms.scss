@@ -641,7 +641,7 @@ label + .input-icon{
 .form-group  .input-icon.icon-right + .bootstrap-touchspin > .form-control,
 .input-icon.icon-right + .bootstrap-tagsinput > .twitter-typeahead > input{
 	padding-left:$input-padding-x;
-	padding-right:2.5*$input-padding-x;
+	padding-right:3.5 * $input-padding-x;
 }
 
 .form-group.focused .input-icon{

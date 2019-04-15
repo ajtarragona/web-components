@@ -19288,7 +19288,7 @@ label.btn {
 .form-group .input-icon.icon-right + .bootstrap-touchspin > .form-control,
 .input-icon.icon-right + .bootstrap-tagsinput > .twitter-typeahead > input {
   padding-left: 1rem;
-  padding-right: 2.5rem;
+  padding-right: 3.5rem;
 }
 
 .form-group.focused .input-icon {
@@ -19603,6 +19603,7 @@ select.loading {
   font-size: 0.875rem;
   font-family: "Nunito Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-weight: 400;
+  padding-right: 2em;
 }
 
 .bootstrap-select > .dropdown-toggle:active,
@@ -19656,7 +19657,7 @@ select.loading {
 }
 
 .form-group .input-icon.icon-right + .selectpicker-wrapper .deselect-btn {
-  right: 3.5em;
+  right: 4em;
 }
 
 .bootstrap-select select[required=required] + .deselect-btn {
