@@ -133,7 +133,7 @@ TgnModal = function(options){
 			'<div class="modal" tabindex="-1" role="dialog" >'+
 			'	<div class="modal-dialog">'+
 			'		<div class="modal-content ">'+
-			'			<div class="modal-header  "><h5 class="modal-title "></h5><span class="modal-buttons"></span></div>'+
+			'			<div class="modal-header  "><h5 class="modal-title text-truncate"></h5><span class="modal-buttons"></span></div>'+
 			'		</div>'+
 			'	</div>'+
 			'</div>';

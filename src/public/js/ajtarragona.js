@@ -86037,7 +86037,7 @@ TgnModal = function TgnModal(options) {
       //al("construct local");
       o.$dialog = $(o.settings.target); //al(o.$dialog);
     } else {
-      var dialoghtml = '<div class="modal" tabindex="-1" role="dialog" >' + '	<div class="modal-dialog">' + '		<div class="modal-content ">' + '			<div class="modal-header  "><h5 class="modal-title "></h5><span class="modal-buttons"></span></div>' + '		</div>' + '	</div>' + '</div>';
+      var dialoghtml = '<div class="modal" tabindex="-1" role="dialog" >' + '	<div class="modal-dialog">' + '		<div class="modal-content ">' + '			<div class="modal-header  "><h5 class="modal-title text-truncate"></h5><span class="modal-buttons"></span></div>' + '		</div>' + '	</div>' + '</div>';
       o.$dialog = $(dialoghtml);
       o.$dialog.prependTo('body');
     }
