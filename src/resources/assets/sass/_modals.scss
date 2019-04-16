@@ -80,6 +80,10 @@ body.modal-maximized.modal-open .modal{
   margin: 1.75rem 1.75rem auto auto;
 }
 
+.modal-buttons{
+  min-width: 60px;
+}
+
 .bg-success .modal-buttons button,
 .bg-danger .modal-buttons button,
 .bg-dark .modal-buttons button,
