@@ -2,7 +2,7 @@
 
 @section('id','modal-type')
 
-@section('title', ( !$type->id ? __('record.add') : ( __('Type') . " " . $type->name ) ) )
+@section('title', ( !$type->id ? __('tgn::demo.Add type') : ( __('tgn::demo.Type') . " " . $type->name ) ) )
 
 
 @section('body')

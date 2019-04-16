@@ -320,7 +320,7 @@ function tgnFormClass(obj,options){
                             
                         }
                     });
-                    TgnFlash.warning(__("Hi ha errors de validació al formulari"));
+                    TgnFlash.warning(___("strings.Form validation errors"));
 					
 					//scroll to element			
 					$('html, body').scrollToElement($form);

@@ -49,7 +49,7 @@ $.fn.initPrettyprint = function(options){
 
 			//creo el boton
 			var uuid=_UUID();
-			button.addClass('prettycopy btn btn-sm btn-light').html(_icon("copy")+ __("Copiar")).attr('id',uuid);
+			button.addClass('prettycopy btn btn-sm btn-light').html(_icon("copy")+ ___("strings.copy")).attr('id',uuid);
 			button.data("clipboard-target", "#"+uuidhidden );
 			
 
@@ -75,7 +75,7 @@ $.fn.initPrettyprint = function(options){
 
 			/*client.on( 'aftercopy', function(event) {
 			  //al('Text copied to clipboard: ' + event.data['text/plain']);
-			  msg(__("text-copied-to-clipboard"));
+			  msg(___("text-copied-to-clipboard"));
 			} );*/
 			
 		}

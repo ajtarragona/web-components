@@ -1,7 +1,7 @@
 @input([
 	'required'=>true,
 	'name'=>'name', 
-	'label'=>__('Name'),
+	'label'=>__('tgn::demo.Name'),
 	'value'=>$item->name
 ]) 
 
@@ -10,7 +10,7 @@
 	'rows'=>5,
 	'required'=>false,
 	'name'=>'description', 
-	'label'=>__('Description'),
+	'label'=>__('tgn::demo.Description'),
 	'value'=>$item->description
 ]) 
 
@@ -18,7 +18,7 @@
 	'required'=>true,
 	'type' =>'number',
 	'name'=>'number', 
-	'label'=>__('Number'),
+	'label'=>__('tgn::demo.Number'),
 	'value'=>$item->number
 ]) 
 
@@ -26,7 +26,7 @@
 	'name'=>'type_id', 
 	'required'=>true,
 	'show-deselector'=>true,
-	'label'=>__('Type'),
+	'label'=>__('tgn::demo.Type'),
 	'options'=>$types,
 	'selected'=>$item->type_id,
 	'live-search'=>true

@@ -3,7 +3,7 @@
     @guest
         {{-- <a href="{{ route('register') }}" class="btn btn-primary">REGISTER</a> --}}
         <a href="{{ route('login') }}" class="btn btn-primary">
-          @lang('Login') 
+          @lang('tgn::auth.login') 
           @icon("sign-in-alt")
         </a>
     @else

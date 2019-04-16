@@ -14,6 +14,26 @@
 		
 	]
 ) 
+		
+@select(
+	[
+		'label'=>'Sidelabel', 
+		'sidelabel'=>true,
+		'name'=>'campo_select_side',
+		'placeholder'=>'Choose item...',
+		'options'=>$selectoptions, 
+	]
+) 
+		
+@select(
+	[
+		'label'=>'', 
+		'sidelabel'=>true,
+		'name'=>'campo_select_no_label',
+		'placeholder'=>'Choose item...',
+		'options'=>$selectoptions, 
+	]
+) 
 						
 					
 @select(

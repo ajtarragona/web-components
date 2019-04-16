@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
 use Ajtarragona\WebComponents\DirectivesRepository;
 use Ajtarragona\WebComponents\Commands\InstallDemo;
+use Ajtarragona\WebComponents\Commands\PrepareJs;
 
 
 class WebComponentsServiceProvider extends ServiceProvider
@@ -116,7 +117,7 @@ class WebComponentsServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 InstallDemo::class,
-                
+                PrepareJs::class,
             ]);
         }
     }

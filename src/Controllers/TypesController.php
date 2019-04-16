@@ -55,9 +55,9 @@ class TypesController extends Controller
          try{
             $type=Type::create($request->all());
             
-            $body=__('record.created',['id'=>$type->id]);
+            $body=__('tgn::demo.Type <strong>:id</strong> created',['id'=>$type->id]);
             
-            $body.=" <a href='". route('webcomponents.demo.types.show',[$type->id])."' class='btn btn-success btn-xs'>".__("Access")." ".icon('arrow-right')."</a>";
+            $body.=" <a href='". route('webcomponents.demo.types.show',[$type->id])."' class='btn btn-success btn-xs'>".__("tgn::demo.Access")." ".icon('arrow-right')."</a>";
 
             return redirect()
                     ->route('webcomponents.demo.types.index')
@@ -67,7 +67,7 @@ class TypesController extends Controller
              // dd($e);
              return redirect()
                 ->route('webcomponents.demo.types.index')
-                ->with(['error'=>__('record.saveerror')]); 
+                ->with(['error'=>__('tgn::demo.Error saving type')]); 
         }     
     }
 
@@ -108,13 +108,13 @@ class TypesController extends Controller
             $type->update($request->all());
             return redirect()
                     ->route('webcomponents.demo.types.show',[$type->id])
-                    ->with(['success'=>__('record.updated',['id'=>$type->id])]);
+                    ->with(['success'=>__('tgn::demo.Type <strong>:id</strong> updated',['id'=>$type->id])]);
             
         }catch(Exception $e){
         	 
              return redirect()
                  ->route('webcomponents.demo.types.index')
-                ->with(['error'=>__('record.saveerror')]); 
+                ->with(['error'=>__('tgn::demo.Error saving type')]); 
         }       
         
     }
@@ -130,10 +130,10 @@ class TypesController extends Controller
         //borra la categoria
         try{
             $type->delete();
-            return redirect()->route('webcomponents.demo.types.index')->with(['success'=>__('record.removed')]); 
+            return redirect()->route('webcomponents.demo.types.index')->with(['success'=>__('tgn::demo.Type <strong>:id</strong> removed')]); 
          }catch(Exception $e){
              
-             return redirect()->route('webcomponents.demo.types.index')->with(['error'=>__('record.removeerror')]); 
+             return redirect()->route('webcomponents.demo.types.index')->with(['error'=>__('tgn::demo.Error removing type')]); 
         }
     }
 

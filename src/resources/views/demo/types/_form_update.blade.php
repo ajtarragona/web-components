@@ -15,7 +15,7 @@
 	
 	@buttongroup
 		@button(['id'=>'type-form-submit-btn','type'=>'submit','value'=>'submit','name'=>'submitaction','hidden'=>true])
-			@icon('save') @lang('Save')
+			@icon('save') @lang('tgn::demo.Save')
 		@endbutton
 	@endbuttongroup
 

@@ -15,7 +15,7 @@
 	
 	@buttongroup
 		@button(['type'=>'submit'])
-			@icon('plus') @lang('Create')
+			@icon('plus') @lang('tgn::demo.Create')
 		@endbutton
 	@endbuttongroup
 

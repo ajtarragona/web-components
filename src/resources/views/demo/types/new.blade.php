@@ -1,10 +1,10 @@
 @extends('ajtarragona-web-components::layout/master-sidebar')
 
-@section('title',__('Add type'))
+@section('title',__('tgn::demo.Add type'))
 
 
 @section('body')
-
+<div class="mt-3">
 	
 
 	<div class="row">
@@ -19,7 +19,7 @@
 
 	</div>
 
-	
+</div>
 	
 @endsection
 

@@ -3,12 +3,13 @@
 		
 		@if($collection instanceof Illuminate\Pagination\LengthAwarePaginator)
 			@if(isset($filter) && $filter->hasFilters())
-				Filtered: {{ $collection->total() }}
+			
+				@lang("tgn::strings.Filtered: :count",["count"=>$collection->total()])
 			@else
-				Count: {{  $collection->total() }} 
+				@lang("tgn::strings.Count: :count",["count"=>$collection->total()])
 			@endif
 		@else
-			Count: {{ $collection->count() }}
+			@lang("tgn::strings.Count: :count",["count"=>$collection->count()])
 		@endif
 	</small>
 </div>

@@ -17,13 +17,13 @@ var tgnmodaldefaults = {
 	style:'default',
 	padding: true,
 	strings:{
-		loading : __('Loading'),
-		error : __('Error'),
-		cancel : __('Cancel'),
-		confirmation : __('Confirmation'),
-		confirm : __('Confirm'),
-		loaderror : __('Load error'),
-		loaderrormessage : __('Page could not be loaded!')
+		loading : ___('strings.loading'),
+		error : ___('strings.error'),
+		cancel : ___('strings.cancel'),
+		confirmation : ___('strings.confirmation'),
+		confirm : ___('strings.confirm'),
+		loaderror : ___('strings.loaderror'),
+		loaderrormessage : ___('strings.loaderrormessage')
 	},
 	onsuccess : false
 
@@ -374,7 +374,12 @@ TgnModal.confirm = function(body, callback, options){
 	var modal = new TgnModal(options);
 	modal.construct();
 	if(!options.title) modal.setTitle(options.strings.confirmation);
-	modal.setBody(body);
+	
+	if(body==true || body=="true" || body=="1" || body==1){
+		modal.setBody(___('strings.Are you sure?'));
+	}else{
+		modal.setBody(body);
+	}
 	modal.setFooter('<button data-action="cancel" type="button" class="btn btn-light btn-sm cancel-button">'+options.strings.cancel+'</button>'+
 		'<button data-action="confirm" type="button" class="btn btn-secondary btn-sm confirm-button">'+options.strings.confirm+'</button></div>');
 

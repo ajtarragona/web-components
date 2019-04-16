@@ -1,12 +1,12 @@
 @extends('ajtarragona-web-components::layout/master-sidebar')
 
-@section('title',__('Add item'))
+@section('title',__('tgn::demo.Add item'))
 
 
 @section('body')
 
 	
-
+<div class="mt-3">
 	<div class="row">
 		<div class="col-sm-4">
 			<div class="card ">
@@ -18,7 +18,7 @@
 	
 
 	</div>
-
+</div>
 	
 	
 @endsection

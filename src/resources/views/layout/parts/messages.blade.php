@@ -8,7 +8,7 @@
 
 	@if (session('success'))
 		
-		@alert(['type'=>'success','title'=> icon("check")." Genial!" ,'dismissible'=>true,'autohide'=>true])
+		@alert(['type'=>'success','title'=> icon("check")." ".__("tgn::strings.Cool!") ,'dismissible'=>true,'autohide'=>true])
 		   @if(is_array(session('success')) || is_object(session('success')))
 		   	<pre>{{ var_dump(session('success')) }}</pre>
 		   @else
@@ -21,7 +21,7 @@
 
 
 	@if (session('error'))
-		@alert(['type'=>'danger','title'=> icon("exclamation-circle")." Error!" ,'dismissible'=>true,'autohide'=>true])
+		@alert(['type'=>'danger','title'=> icon("exclamation-circle")." ".__("tgn::strings.Error") ,'dismissible'=>true,'autohide'=>true])
 		   @if(is_array(session('error')) || is_object(session('error')))
 		   		<pre>{{ var_dump(session('error')) }}</pre>
 		   @else
@@ -35,7 +35,7 @@
 
 
 	@if (session('info'))
-		@alert(['type'=>'info','title'=> icon("info-circle")." Info" ,'dismissible'=>true,'autohide'=>true])
+		@alert(['type'=>'info','title'=> icon("info-circle")." ".__("tgn::strings.Info") ,'dismissible'=>true,'autohide'=>true])
 		   @if(is_array(session('info')) || is_object(session('info')))
 		   		<pre>{{ var_dump(session('info')) }}</pre>
 		   @else

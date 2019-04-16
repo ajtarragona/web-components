@@ -15,6 +15,7 @@ class BaseController extends Controller
 
 	protected function publishPackageAssets(){
 	  	if(config("webcomponents.autopublish")){
+	  	  //Artisan::call('ajtarragona:prepare');
 		  Artisan::call('vendor:publish', [
 		      '--tag' => 'ajtarragona-web-components-assets', 
 		      '--force' => 1

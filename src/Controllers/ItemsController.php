@@ -59,9 +59,9 @@ class ItemsController extends Controller
          try{
             $item=Item::create($request->all());
             
-            $body=__('record.created',['id'=>$item->id]);
+            $body=__('tgn::demo.Item <strong>:id</strong> created',['id'=>$item->id]);
             
-            $body.=" <a href='". route('webcomponents.demo.items.show',[$item->id])."' class='btn btn-success btn-xs'>".__("Access")." ".icon('arrow-right')."</a>";
+            $body.=" <a href='". route('webcomponents.demo.items.show',[$item->id])."' class='btn btn-success btn-xs'>".__("tgn::demo.Access")." ".icon('arrow-right')."</a>";
 
             return redirect()
                     ->route('webcomponents.demo.items.index')
@@ -71,7 +71,7 @@ class ItemsController extends Controller
              // dd($e);
              return redirect()
                 ->route('webcomponents.demo.items.index')
-                ->with(['error'=>__('record.saveerror')]); 
+                ->with(['error'=>__('tgn::demo.Error saving item')]); 
         }     
     }
 
@@ -113,12 +113,12 @@ class ItemsController extends Controller
             $item->update($request->all());
             return redirect()
                     ->route('webcomponents.demo.items.show',[$item->id])
-                    ->with(['success'=>__('record.updated',['id'=>$item->id])]);
+                    ->with(['success'=>__('tgn::demo.Item <strong>:id</strong> updated',['id'=>$item->id])]);
             
         }catch(Exception $e){
              return redirect()
                  ->route('webcomponents.demo.items.index')
-                ->with(['error'=>__('record.saveerror')]); 
+                ->with(['error'=>__('tgn::demo.Error saving item')]); 
         }       
         
     }
@@ -133,11 +133,13 @@ class ItemsController extends Controller
     {
         //borra la categoria
         try{
+            $id=$item->id;
+
             $item->delete();
-            return redirect()->route('webcomponents.demo.items.index')->with(['success'=>__('record.removed')]); 
+            return redirect()->route('webcomponents.demo.items.index')->with(['success'=>__('tgn::demo.Item <strong>:id</strong> removed',["id"=>$id])]); 
          }catch(Exception $e){
              
-             return redirect()->route('webcomponents.demo.items.index')->with(['error'=>__('record.removeerror')]); 
+             return redirect()->route('webcomponents.demo.items.index')->with(['error'=>__('tgn::demo.Error removing item')]); 
         }
     }
 

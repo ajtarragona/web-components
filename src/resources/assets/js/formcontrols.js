@@ -6,13 +6,13 @@ $.fn.initConfirm = function(options){
      var $element=$(this);
 
       var defaults={
-        title: __("Segur?") ,
+        title: ___("strings.Are you sure?") ,
         rootSelector: '.btn-remove' ,
         //placement:'left',
         popout:true,
         singleton:true,
-        btnOkLabel:'&nbsp;'+__('Si'),
-        btnCancelLabel:'&nbsp;'+__('No'),
+        btnOkLabel:'&nbsp;'+___('strings.Si'),
+        btnCancelLabel:'&nbsp;'+___('strings.No'),
         btnOkIconClass:'fa fa-check',
         btnCancelIconClass:'fa fa-times'
       };  

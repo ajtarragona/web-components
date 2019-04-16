@@ -2,7 +2,7 @@
 
 @section('id','modal-item')
 
-@section('title', ( !$item->id ? __('record.add') : ( __('Item') . " " . $item->name ) ) )
+@section('title', ( !$item->id ? __('tgn::demo.Add item') : ( __('tgn::demo.Item') . " " . $item->name ) ) )
 
 
 @section('body')

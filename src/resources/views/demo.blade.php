@@ -22,8 +22,10 @@
 
 @section('body')
 	
+	<div class="mt-3">
 	
 	<h1>Welcome to the Demo</h1>
+	</div>
 	
 
 	

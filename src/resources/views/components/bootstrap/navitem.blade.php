@@ -44,7 +44,7 @@
 			@elseif($navigation=="drilldown")
 
 				<ul id='sub{{$id}}'>
-					<li><a href='#' class='back'>@icon('arrow-left') {{ __("Back") }}</a></li>
+					<li><a href='#' class='back'>@icon('arrow-left') {{ __("tgn::strings.Back") }}</a></li>
 			@else
 				{{-- <span class='caret'></span> --}}
 				<div href='#' class='toggler' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false' href='#sub{{$id}}'>@icon('angle-up')</div>

@@ -1,7 +1,7 @@
 
 @extends('ajtarragona-web-components::layout/master-sidebar')
 
-@section('title', __('Demo').': '.$item->name)
+@section('title', __('tgn::demo.Demo').': '.$item->name)
 
 
 @section('menu')
@@ -13,8 +13,8 @@
 @section('breadcrumb')
     @breadcrumb([
    		'items' =>[
-   			['name'=>__("Demo"),"url"=>route('webcomponents.demo'),'icon'=>'home'],
-   			['name'=>__("Items"),"url"=>route('webcomponents.demo.items.index')],
+   			['name'=>__("tgn::demo.Demo"),"url"=>route('webcomponents.demo'),'icon'=>'home'],
+   			['name'=>__("tgn::demo.Items"),"url"=>route('webcomponents.demo.items.index')],
    			['name'=>$item->name],
    		]
    ])
@@ -23,23 +23,23 @@
             
 @section('actions')
 	<label for="item-form-submit-btn" role="button" class="btn btn-primary btn-sm" tabindex="0">
-	  @icon('save') @lang('Save')
+	  @icon('save') @lang('tgn::demo.Save')
 	</label>
 	
 
 
-	<form method="post" action="{{ route('webcomponents.demo.items.destroy',[$item->id]) }}" data-confirm="@lang("Are you sure?")" class="tgn-form d-inline-block">
+	<form method="post" action="{{ route('webcomponents.demo.items.destroy',[$item->id]) }}" data-confirm="true" class="tgn-form d-inline-block">
 		{{ csrf_field() }}
 		<input type="hidden" name="_method" value="DELETE">
 
-			<button class="btn btn-danger btn-sm" type="submit"> @icon('trash') @lang("record.remove")</button>
+			<button class="btn btn-danger btn-sm" type="submit"> @icon('trash') @lang("tgn::demo.Remove")</button>
 	</form>
 @endsection
 
 @section('body')
 
 	
-
+<div class="mt-3">
 	<div class="row">
 		<div class="col-sm-6">
 			{{-- <div class="card ">
@@ -52,7 +52,7 @@
 
 		
 	</div>
-	
+</div>	
 	
 @endsection
 

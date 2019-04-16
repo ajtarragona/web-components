@@ -1,17 +1,17 @@
 @nav([
 	'items' => [	
 		[
-			"title" => __('Home'),
+			"title" => __('tgn::demo.Home'),
 			"route" => 'webcomponents.demo',
 			'icon' => 'home'
 		],
 		[
-			"title" => __('Items'),
+			"title" => __('tgn::demo.Items'),
 			"route" => 'webcomponents.demo.items.index',
 			'icon' => 'box'
 		],
 		[
-			"title" => __('Types'),
+			"title" => __('tgn::demo.Types'),
 			"route" => 'webcomponents.demo.types.index',
 			'icon' =>'cog'
 		]

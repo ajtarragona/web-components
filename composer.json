@@ -18,7 +18,8 @@
         "kyslik/column-sortable": "5.6.*",
         "laraveles/spanish": "^1.0",
         "akaunting/language": "^1.0.5",
-        "imliam/laravel-env-set-command": "^1.0.0"
+        "imliam/laravel-env-set-command": "^1.0.0",
+        "mariuzzo/laravel-js-localization": "dev-master"
     },
     "autoload": {
         "psr-4": {

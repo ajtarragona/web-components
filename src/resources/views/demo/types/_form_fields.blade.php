@@ -1,7 +1,7 @@
 @input([
 	'required'=>true,
 	'name'=>'name', 
-	'label'=>__('Name'),
+	'label'=>__('tgn::demo.Name'),
 	'value'=>$type->name
 ]) 
 
@@ -10,6 +10,6 @@
 	'rows'=>5,
 	'required'=>false,
 	'name'=>'description', 
-	'label'=>__('Description'),
+	'label'=>__('tgn::demo.Description'),
 	'value'=>$type->description
 ]) 

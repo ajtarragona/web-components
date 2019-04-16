@@ -2,10 +2,21 @@ al = function (msg){
 	console.log(msg);
 }
 
-__ = function( text ){
-  return text;
+__ = function( text, params ){
+  if(Lang){
+    return Lang.get(text,params)
+  }else{
+    return text;
+  }
 }
 
+___ = function( text, params ){
+  if(Lang){
+    return Lang.get('ajtarragona-web-components::'+text,params)
+  }else{
+    return text;
+  }
+}
 _icon = function( text ){
   return "<i class='fa fa-"+text+"'></i>";
 }

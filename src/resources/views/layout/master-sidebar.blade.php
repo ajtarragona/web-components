@@ -40,7 +40,8 @@
 	</div>
 
 	
-	<script src="{{ asset('js/laroute.js')}}" language="JavaScript"></script>
+	<script src="{{ asset('vendor/ajtarragona/js/routes.js')}}" language="JavaScript"></script>
+	<script src="{{ asset('vendor/ajtarragona/js/messages.js')}}" language="JavaScript"></script>
 	<script src="{{ asset('vendor/ajtarragona/js/ajtarragona.js')}}" language="JavaScript"></script>
 	
     @yield('js')

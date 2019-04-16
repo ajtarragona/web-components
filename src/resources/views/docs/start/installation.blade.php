@@ -22,8 +22,10 @@
 
 
 @block
+	<p>Disposem d'una comanda artisan que realitza tota la feina.</p>
+
 	@code(['lang'=>'bsh'])
-		php artisan vendor:publish --tag=ajtarragona-web-components-assets --force
+		php artisan ajtarragona:prepare
 	@endcode
 
 	<p><mark><strong>Nota:</strong> Això copiarà els scripts i estils a la carpeta <code>public\vendor\ajtarragona</code> del nostre projecte.</mark></p>
@@ -31,10 +33,14 @@
 @endblock
 
 
-<p>3. Publicar rutes (necessari per alguns dels plugins javascript):</p>
+<hr/>
+
+<h4>Configuració de les rutes</h4>
+	
 
 @block
-	<p>Primer afegim el Provider <a href="https://github.com/aaronlord/laroute" target="_blank">Laroute</a> a l'arxiu <code>config/app.php</code></p>
+	<p>El paquet incorpora un paquet per que les rutes estiguin accessibles via Javascript. Per que funcioni cal realitzar el següent previament a publicar els recursos.</p>
+	{{-- <p>Primer afegim el Provider <a href="https://github.com/aaronlord/laroute" target="_blank">Laroute</a> a l'arxiu <code>config/app.php</code></p>
 
 	@code(['lang'=>'bsh'])
 	 'providers' => [
@@ -42,28 +48,26 @@
 	 	Lord\Laroute\LarouteServiceProvider::class,
 	 ]
 	@endcode
-
+ --}}
 	<p>Publiquem la configuració del paquet Laroute:</p>
 	@code(['lang'=>'bsh'])
 	php artisan vendor:publish --provider='Lord\Laroute\LarouteServiceProvider'
 	@endcode
 
 	<p>Modifiquem les següents línies de l'arxiu <code>app/config/laroute.php</code>:</p>
-@code(['lang'=>'php'])
+	
+	@code(['lang'=>'php'])
 
-'path' => base_path('public/js'),
-...
-'absolute' => true,
-...
-'template' => base_path('vendor/lord/laroute/src/templates/laroute.js'),
+	'path' => base_path('public/js'),
+	...
+	'absolute' => true,
+	...
+	'template' => base_path('vendor/lord/laroute/src/templates/laroute.js'),
 
-@endcode
+	@endcode
 
 	<p>Configurar correctament la ruta de l'aplicació <code>APP_URL</code> a l'arxiu <code>.env</code>
-	<p>Publiquem els scripts Laroute:</p>
-	@code(['lang'=>'bsh'])
-	php artisan laroute:generate
-	@endcode
+	
 
 	{{-- 
 
@@ -71,5 +75,5 @@
 		@includeSrc('ajtarragona-web-components::docs.source.test')
 	@endcode
 	 --}}
-	<p><mark><strong>Nota:</strong> Cal republicar els scripts laroute cada vegada que canviem una ruta</mark></p>
+	<p><mark><strong>Nota:</strong> Un cop fet això tornem a executar la comanda <code>ajtarragona:prepare</code></mark></p>
 @endblock

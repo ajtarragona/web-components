@@ -58,5 +58,7 @@ $(document).ready(function(){
 	initFlashMessages();
   //initFileInputs();
 
-  
+  // al(__('ajtarragona-web-components::strings.confirmation'));
+  // al(__('ajtarragona-web-components::auth.throttle',{seconds:2}));
+
 });
