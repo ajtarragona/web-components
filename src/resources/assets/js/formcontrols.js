@@ -11,7 +11,7 @@ $.fn.initConfirm = function(options){
         //placement:'left',
         popout:true,
         singleton:true,
-        btnOkLabel:'&nbsp;'+___('strings.Si'),
+        btnOkLabel:'&nbsp;'+___('strings.Yes'),
         btnCancelLabel:'&nbsp;'+___('strings.No'),
         btnOkIconClass:'fa fa-check',
         btnCancelIconClass:'fa fa-times'
