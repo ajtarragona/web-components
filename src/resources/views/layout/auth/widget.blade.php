@@ -8,7 +8,7 @@
         </a>
     @else
         
-         <span class="auth-user text-truncate">@circleicon('user') {{ Auth::user()->name }}</span>
+         <span class="auth-user text-truncate" title="{{ Auth::user()->name }} ({{ Auth::user()->username }})">@circleicon('user') {{ Auth::user()->name }}</span>
          @form(['id'=>"logout-form",'action'=> route('tgn.logout') , 'method'=>"POST", 'class'=>"d-inline-block"])
               @button(['type'=>'submit','style'=>'link']) 
                 @icon("sign-out-alt")
