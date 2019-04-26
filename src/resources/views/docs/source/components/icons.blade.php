@@ -5,6 +5,7 @@
 @icon('star',['class'=>'beat','color'=>'warning']) 
 @icon('star',['class'=>'bounce','color'=>'success']) 
 @icon('star',['class'=>'blink','color'=>'#ff00ff']) 
+@icon('fab fa-app-store') 
 
 <hr/>
 @circleicon('check',['size'=>'xs']) 

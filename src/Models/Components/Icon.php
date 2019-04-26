@@ -14,7 +14,7 @@ class Icon Extends WebComponent
 		'color'=>false,
 		'bg-color'=>false,
 		'circle'=>false,
-		'type' =>'fas'
+		'type' =>''
 	];
 
 	protected $defaultdata=[];
