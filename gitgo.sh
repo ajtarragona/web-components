@@ -3,7 +3,7 @@
 git add .
 
 msg="no message set"
-echo "$#"
+
 if [ "$#" -gt 0 ]; then
 	msg=$1
 fi
@@ -22,6 +22,7 @@ fi
 if [ "$newversion" != "$current" ]; then
      git tag -a "$newversion" -m "`git log -1 --format=%s`"
      echo "Created a new tag, $newversion"
+	 git push && git push --tags
+else
+	git push
 fi
-
-git push && git push --tags
