@@ -10,7 +10,7 @@ if [ ! "$#" -gt 0 ]; then
 
 fi
 
-if [ "$msg" = "" ]; then
+if [  -z "$msg" ]; then
 	echo "Message is required"
 	exit
 fi
