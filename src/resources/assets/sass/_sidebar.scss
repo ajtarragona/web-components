@@ -29,7 +29,10 @@
     margin-left: -($sidebarwidth - $sidebarwidthclosed);
     
     
-
+    #main-menu{
+      max-height: 80vh;
+      overflow-y: auto;
+    }
 
     header{
        /*background-color:rgba($light,0.3);*/
@@ -248,6 +251,7 @@
 
   /*main menu*/
   @media (min-width: 768px) {
+
   	&:not(.sidebar-open){
 
   		#main-menu{
