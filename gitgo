@@ -5,9 +5,9 @@ git add .
 msg="no message set"
 
 if [ ! "$#" -gt 0 ]; then
-	# msg=$1
 	read -p 'Enter the commit message: ' msg
-
+else
+	msg=$1
 fi
 
 if [  -z "$msg" ]; then
