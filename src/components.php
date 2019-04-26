@@ -27,4 +27,5 @@ return [
 	'modal' => 'ajtarragona-web-components::components.'.$theme.'.modal',
 	'modalopener' => 'ajtarragona-web-components::components.'.$theme.'.modalopener'
 ];
+
 		
