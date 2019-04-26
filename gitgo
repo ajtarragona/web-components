@@ -4,8 +4,15 @@ git add .
 
 msg="no message set"
 
-if [ "$#" -gt 0 ]; then
-	msg=$1
+if [ ! "$#" -gt 0 ]; then
+	# msg=$1
+	read -p 'Enter the commit message: ' msg
+
+fi
+
+if [ "$msg" eq "" ]; then
+	echo "Message is required"
+	exit
 fi
 
 
