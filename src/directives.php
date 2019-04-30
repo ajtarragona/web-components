@@ -375,6 +375,9 @@ return [
     }, 
     'includeSrc' => function($expression) {
         return "<?php echo includeSrc({$expression}); ?>";
+    },
+    'appVersion' => function($expression) {
+        return "<?php echo appVersion({$expression}); ?>";
     },  
 ];
         

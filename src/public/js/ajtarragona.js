@@ -84181,6 +84181,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var autosize__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(autosize__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var quill__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! quill */ "./node_modules/quill/dist/quill.js");
 /* harmony import */ var quill__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(quill__WEBPACK_IMPORTED_MODULE_2__);
+$.fn.initPopover = function (options) {
+  return this.each(function () {
+    var $element = $(this);
+    $element.popover({
+      html: true
+    });
+  });
+};
+
 $.fn.initConfirm = function (options) {
   return this.each(function () {
     var $element = $(this);
@@ -85384,6 +85393,7 @@ $.fn.tgnInitAll = function () {
   this.find('pre.prettyprint').initPrettyprint();
   this.find('.text-editor').initTextEditor();
   this.find('.anim').initAnimation();
+  this.find('[data-toggle="popover"]').initPopover();
   this.initSessionTriggers();
   bs_custom_file_input__WEBPACK_IMPORTED_MODULE_0___default.a.init(); //initNavs(this);
 

@@ -18,5 +18,6 @@ return [
 	"Info" => "Info",
 	"Filtered: :count" => "Filtrats: :count",
 	"Count: :count" => "Total: :count",
-	"Back" => "Tornar"
+	"Back" => "Tornar",
+	"save" => "Guardar"
 ];

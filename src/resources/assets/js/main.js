@@ -28,6 +28,7 @@ $.fn.tgnInitAll = function( ){
   this.find('pre.prettyprint').initPrettyprint();
   this.find('.text-editor').initTextEditor();
   this.find('.anim').initAnimation();
+  this.find('[data-toggle="popover"]').initPopover();
   
   this.initSessionTriggers();
   

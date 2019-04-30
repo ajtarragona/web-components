@@ -12,6 +12,7 @@
 
 		<div class="mt-auto mb-4">
 			@include('ajtarragona-web-components::layout.parts.lang')
+			@include('ajtarragona-web-components::layout.auth.acl')
 			@include('ajtarragona-web-components::layout.auth.widget')
 		</div>
 	</div>

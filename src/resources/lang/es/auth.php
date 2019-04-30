@@ -30,5 +30,10 @@ return [
     "noresults" => "Cap usuari trobat",
     "username" => "Nombre de usuario",
     "password" => "Contraseña",
+    "roles" => "Roles",
+    "role" => "Rol",
+    "user" => "Usuario",
+    "users" => "Usuarios",
+    "and_n_more" => "y :count más...",
 
 ];

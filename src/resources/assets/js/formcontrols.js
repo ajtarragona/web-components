@@ -1,3 +1,15 @@
+$.fn.initPopover = function(options){
+
+   return this.each(function(){
+     var $element=$(this);
+
+      $element.popover({
+        html: true
+      })
+
+
+   });
+ }
 
 
 $.fn.initConfirm = function(options){

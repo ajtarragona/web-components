@@ -15,6 +15,12 @@
 	padding:1em;
 	display:block;
 	border-bottom:1px solid $gray-400;
+	color:$gray-700;
+	text-decoration: none;
+}
+#meta-footer a.foot-item:hover{
+	background-color:$gray-400;
+	color:$gray-800;
 }
 
 @media (min-width: 576px){

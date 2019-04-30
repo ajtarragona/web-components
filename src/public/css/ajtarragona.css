@@ -17526,6 +17526,13 @@ body.modal-maximized.modal-open .modal {
   padding: 1em;
   display: block;
   border-bottom: 1px solid #ced4da;
+  color: #55595c;
+  text-decoration: none;
+}
+
+#meta-footer a.foot-item:hover {
+  background-color: #ced4da;
+  color: #343a40;
 }
 
 @media (min-width: 576px) {

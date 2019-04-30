@@ -267,3 +267,10 @@ if (! function_exists('makeLinks')) {
 	    
 	}
 }
+
+
+if (! function_exists('appVersion')) {
+	function appVersion($param=false) {
+		return \Tremby\LaravelGitVersion\GitVersionHelper::getNameAndVersion();
+	}
+}
