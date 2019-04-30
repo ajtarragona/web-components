@@ -8,7 +8,6 @@
 				"title" => __('acl::auth.authorizations') ,
 				"icon" => 'users-cog',
 				"route" => 'acl.dashboard',
-				"activeroute" => 'users.*',
 				"children" => [
 					[
 						"title" => __('acl::auth.Users') ,
