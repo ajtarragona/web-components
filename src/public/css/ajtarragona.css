@@ -20082,14 +20082,14 @@ th {
   color: #1F9BCF;
 }
 
-.docs-menu li.active > a {
-  color: #000;
-  font-weight: bold;
-}
-
-.docs-menu li li.active > a {
+.docs-sidebar .docs-menu li li.active > a {
   border-right: 1px solid #1F9BCF;
   position: relative;
   right: -1px;
+}
+
+.docs-menu li.active > a {
+  color: #000;
+  font-weight: bold;
 }
 

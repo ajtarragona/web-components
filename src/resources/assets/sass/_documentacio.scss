@@ -66,6 +66,12 @@
       color:$info;
     }
 
+    li li.active > a{ 
+      border-right:1px solid $info;
+      position:relative;
+      right:-1px;
+    }
+
   }
 }
 
@@ -76,9 +82,5 @@
       font-weight: bold;
 
     }
-    li li.active > a{ 
-      border-right:1px solid $info;
-      position:relative;
-      right:-1px;
-    }
+
 }
