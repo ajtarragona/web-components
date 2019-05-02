@@ -17191,6 +17191,92 @@ h6 {
   border-color: #55595c;
 }
 
+.btn-blue {
+  background-color: #007bff !important;
+  color: white;
+}
+
+.btn-indigo {
+  background-color: #6610f2 !important;
+  color: white;
+}
+
+.btn-purple {
+  background-color: #6f42c1 !important;
+  color: white;
+}
+
+.btn-pink {
+  background-color: #e83e8c !important;
+  color: white;
+}
+
+.btn-red {
+  background-color: #d9534f !important;
+  color: white;
+}
+
+.btn-orange {
+  background-color: #fd7e14 !important;
+  color: white;
+}
+
+.btn-yellow {
+  background-color: #f0ad4e !important;
+  color: white;
+}
+
+.btn-green {
+  background-color: #4BBF73 !important;
+  color: white;
+}
+
+.btn-teal {
+  background-color: #20c997 !important;
+  color: white;
+}
+
+.btn-cyan {
+  background-color: #1F9BCF !important;
+  color: white;
+}
+
+.btn-gray-100 {
+  background-color: #f8f9fa !important;
+}
+
+.btn-gray-200 {
+  background-color: #f7f7f9 !important;
+}
+
+.btn-gray-300 {
+  background-color: #eceeef !important;
+}
+
+.btn-gray-400 {
+  background-color: #ced4da !important;
+}
+
+.btn-gray-500 {
+  background-color: #adb5bd !important;
+  color: white;
+}
+
+.btn-gray-600 {
+  background-color: #919aa1 !important;
+  color: white;
+}
+
+.btn-gray-700 {
+  background-color: #55595c !important;
+  color: white;
+}
+
+.btn-gray-800 {
+  background-color: #343a40 !important;
+  color: white;
+}
+
 .list-group-item h1,
 .list-group-item h2,
 .list-group-item h3,
@@ -18730,6 +18816,11 @@ form.validating {
 .form-group.outlined.bg-gray-500 .input-icon,
 .form-group.outlined.bg-gray-500 .input-group-prepend .input-group-text,
 .form-group.outlined.bg-gray-500 .input-group-append .input-group-text,
+.form-group.outlined.bg-orange input,
+.form-group.outlined.bg-orange textarea,
+.form-group.outlined.bg-orange .input-icon,
+.form-group.outlined.bg-orange .input-group-prepend .input-group-text,
+.form-group.outlined.bg-orange .input-group-append .input-group-text,
 .form-group.outlined.bg-purple input,
 .form-group.outlined.bg-purple textarea,
 .form-group.outlined.bg-purple .input-icon,
@@ -18740,6 +18831,16 @@ form.validating {
 .form-group.outlined.bg-teal .input-icon,
 .form-group.outlined.bg-teal .input-group-prepend .input-group-text,
 .form-group.outlined.bg-teal .input-group-append .input-group-text,
+.form-group.outlined.bg-green input,
+.form-group.outlined.bg-green textarea,
+.form-group.outlined.bg-green .input-icon,
+.form-group.outlined.bg-green .input-group-prepend .input-group-text,
+.form-group.outlined.bg-green .input-group-append .input-group-text,
+.form-group.outlined.bg-cyan input,
+.form-group.outlined.bg-cyan textarea,
+.form-group.outlined.bg-cyan .input-icon,
+.form-group.outlined.bg-cyan .input-group-prepend .input-group-text,
+.form-group.outlined.bg-cyan .input-group-append .input-group-text,
 .form-group.outlined.bg-pink input,
 .form-group.outlined.bg-pink textarea,
 .form-group.outlined.bg-pink .input-icon,
@@ -18818,6 +18919,11 @@ form.validating {
 .form-group.outlined.bg-gray-500 .input-icon::-webkit-input-placeholder,
 .form-group.outlined.bg-gray-500 .input-group-prepend .input-group-text::-webkit-input-placeholder,
 .form-group.outlined.bg-gray-500 .input-group-append .input-group-text::-webkit-input-placeholder,
+.form-group.outlined.bg-orange input::-webkit-input-placeholder,
+.form-group.outlined.bg-orange textarea::-webkit-input-placeholder,
+.form-group.outlined.bg-orange .input-icon::-webkit-input-placeholder,
+.form-group.outlined.bg-orange .input-group-prepend .input-group-text::-webkit-input-placeholder,
+.form-group.outlined.bg-orange .input-group-append .input-group-text::-webkit-input-placeholder,
 .form-group.outlined.bg-purple input::-webkit-input-placeholder,
 .form-group.outlined.bg-purple textarea::-webkit-input-placeholder,
 .form-group.outlined.bg-purple .input-icon::-webkit-input-placeholder,
@@ -18828,6 +18934,16 @@ form.validating {
 .form-group.outlined.bg-teal .input-icon::-webkit-input-placeholder,
 .form-group.outlined.bg-teal .input-group-prepend .input-group-text::-webkit-input-placeholder,
 .form-group.outlined.bg-teal .input-group-append .input-group-text::-webkit-input-placeholder,
+.form-group.outlined.bg-green input::-webkit-input-placeholder,
+.form-group.outlined.bg-green textarea::-webkit-input-placeholder,
+.form-group.outlined.bg-green .input-icon::-webkit-input-placeholder,
+.form-group.outlined.bg-green .input-group-prepend .input-group-text::-webkit-input-placeholder,
+.form-group.outlined.bg-green .input-group-append .input-group-text::-webkit-input-placeholder,
+.form-group.outlined.bg-cyan input::-webkit-input-placeholder,
+.form-group.outlined.bg-cyan textarea::-webkit-input-placeholder,
+.form-group.outlined.bg-cyan .input-icon::-webkit-input-placeholder,
+.form-group.outlined.bg-cyan .input-group-prepend .input-group-text::-webkit-input-placeholder,
+.form-group.outlined.bg-cyan .input-group-append .input-group-text::-webkit-input-placeholder,
 .form-group.outlined.bg-pink input::-webkit-input-placeholder,
 .form-group.outlined.bg-pink textarea::-webkit-input-placeholder,
 .form-group.outlined.bg-pink .input-icon::-webkit-input-placeholder,
@@ -18906,6 +19022,11 @@ form.validating {
 .form-group.outlined.bg-gray-500 .input-icon:-ms-input-placeholder,
 .form-group.outlined.bg-gray-500 .input-group-prepend .input-group-text:-ms-input-placeholder,
 .form-group.outlined.bg-gray-500 .input-group-append .input-group-text:-ms-input-placeholder,
+.form-group.outlined.bg-orange input:-ms-input-placeholder,
+.form-group.outlined.bg-orange textarea:-ms-input-placeholder,
+.form-group.outlined.bg-orange .input-icon:-ms-input-placeholder,
+.form-group.outlined.bg-orange .input-group-prepend .input-group-text:-ms-input-placeholder,
+.form-group.outlined.bg-orange .input-group-append .input-group-text:-ms-input-placeholder,
 .form-group.outlined.bg-purple input:-ms-input-placeholder,
 .form-group.outlined.bg-purple textarea:-ms-input-placeholder,
 .form-group.outlined.bg-purple .input-icon:-ms-input-placeholder,
@@ -18916,6 +19037,16 @@ form.validating {
 .form-group.outlined.bg-teal .input-icon:-ms-input-placeholder,
 .form-group.outlined.bg-teal .input-group-prepend .input-group-text:-ms-input-placeholder,
 .form-group.outlined.bg-teal .input-group-append .input-group-text:-ms-input-placeholder,
+.form-group.outlined.bg-green input:-ms-input-placeholder,
+.form-group.outlined.bg-green textarea:-ms-input-placeholder,
+.form-group.outlined.bg-green .input-icon:-ms-input-placeholder,
+.form-group.outlined.bg-green .input-group-prepend .input-group-text:-ms-input-placeholder,
+.form-group.outlined.bg-green .input-group-append .input-group-text:-ms-input-placeholder,
+.form-group.outlined.bg-cyan input:-ms-input-placeholder,
+.form-group.outlined.bg-cyan textarea:-ms-input-placeholder,
+.form-group.outlined.bg-cyan .input-icon:-ms-input-placeholder,
+.form-group.outlined.bg-cyan .input-group-prepend .input-group-text:-ms-input-placeholder,
+.form-group.outlined.bg-cyan .input-group-append .input-group-text:-ms-input-placeholder,
 .form-group.outlined.bg-pink input:-ms-input-placeholder,
 .form-group.outlined.bg-pink textarea:-ms-input-placeholder,
 .form-group.outlined.bg-pink .input-icon:-ms-input-placeholder,
@@ -18994,6 +19125,11 @@ form.validating {
 .form-group.outlined.bg-gray-500 .input-icon::-ms-input-placeholder,
 .form-group.outlined.bg-gray-500 .input-group-prepend .input-group-text::-ms-input-placeholder,
 .form-group.outlined.bg-gray-500 .input-group-append .input-group-text::-ms-input-placeholder,
+.form-group.outlined.bg-orange input::-ms-input-placeholder,
+.form-group.outlined.bg-orange textarea::-ms-input-placeholder,
+.form-group.outlined.bg-orange .input-icon::-ms-input-placeholder,
+.form-group.outlined.bg-orange .input-group-prepend .input-group-text::-ms-input-placeholder,
+.form-group.outlined.bg-orange .input-group-append .input-group-text::-ms-input-placeholder,
 .form-group.outlined.bg-purple input::-ms-input-placeholder,
 .form-group.outlined.bg-purple textarea::-ms-input-placeholder,
 .form-group.outlined.bg-purple .input-icon::-ms-input-placeholder,
@@ -19004,6 +19140,16 @@ form.validating {
 .form-group.outlined.bg-teal .input-icon::-ms-input-placeholder,
 .form-group.outlined.bg-teal .input-group-prepend .input-group-text::-ms-input-placeholder,
 .form-group.outlined.bg-teal .input-group-append .input-group-text::-ms-input-placeholder,
+.form-group.outlined.bg-green input::-ms-input-placeholder,
+.form-group.outlined.bg-green textarea::-ms-input-placeholder,
+.form-group.outlined.bg-green .input-icon::-ms-input-placeholder,
+.form-group.outlined.bg-green .input-group-prepend .input-group-text::-ms-input-placeholder,
+.form-group.outlined.bg-green .input-group-append .input-group-text::-ms-input-placeholder,
+.form-group.outlined.bg-cyan input::-ms-input-placeholder,
+.form-group.outlined.bg-cyan textarea::-ms-input-placeholder,
+.form-group.outlined.bg-cyan .input-icon::-ms-input-placeholder,
+.form-group.outlined.bg-cyan .input-group-prepend .input-group-text::-ms-input-placeholder,
+.form-group.outlined.bg-cyan .input-group-append .input-group-text::-ms-input-placeholder,
 .form-group.outlined.bg-pink input::-ms-input-placeholder,
 .form-group.outlined.bg-pink textarea::-ms-input-placeholder,
 .form-group.outlined.bg-pink .input-icon::-ms-input-placeholder,
@@ -19082,6 +19228,11 @@ form.validating {
 .form-group.outlined.bg-gray-500 .input-icon::placeholder,
 .form-group.outlined.bg-gray-500 .input-group-prepend .input-group-text::placeholder,
 .form-group.outlined.bg-gray-500 .input-group-append .input-group-text::placeholder,
+.form-group.outlined.bg-orange input::placeholder,
+.form-group.outlined.bg-orange textarea::placeholder,
+.form-group.outlined.bg-orange .input-icon::placeholder,
+.form-group.outlined.bg-orange .input-group-prepend .input-group-text::placeholder,
+.form-group.outlined.bg-orange .input-group-append .input-group-text::placeholder,
 .form-group.outlined.bg-purple input::placeholder,
 .form-group.outlined.bg-purple textarea::placeholder,
 .form-group.outlined.bg-purple .input-icon::placeholder,
@@ -19092,6 +19243,16 @@ form.validating {
 .form-group.outlined.bg-teal .input-icon::placeholder,
 .form-group.outlined.bg-teal .input-group-prepend .input-group-text::placeholder,
 .form-group.outlined.bg-teal .input-group-append .input-group-text::placeholder,
+.form-group.outlined.bg-green input::placeholder,
+.form-group.outlined.bg-green textarea::placeholder,
+.form-group.outlined.bg-green .input-icon::placeholder,
+.form-group.outlined.bg-green .input-group-prepend .input-group-text::placeholder,
+.form-group.outlined.bg-green .input-group-append .input-group-text::placeholder,
+.form-group.outlined.bg-cyan input::placeholder,
+.form-group.outlined.bg-cyan textarea::placeholder,
+.form-group.outlined.bg-cyan .input-icon::placeholder,
+.form-group.outlined.bg-cyan .input-group-prepend .input-group-text::placeholder,
+.form-group.outlined.bg-cyan .input-group-append .input-group-text::placeholder,
 .form-group.outlined.bg-pink input::placeholder,
 .form-group.outlined.bg-pink textarea::placeholder,
 .form-group.outlined.bg-pink .input-icon::placeholder,
@@ -19150,8 +19311,11 @@ form.validating {
 .form-group.outlined.bg-gray-700 .input-group-btn-vertical .btn,
 .form-group.outlined.bg-gray-600 .input-group-btn-vertical .btn,
 .form-group.outlined.bg-gray-500 .input-group-btn-vertical .btn,
+.form-group.outlined.bg-orange .input-group-btn-vertical .btn,
 .form-group.outlined.bg-purple .input-group-btn-vertical .btn,
 .form-group.outlined.bg-teal .input-group-btn-vertical .btn,
+.form-group.outlined.bg-green .input-group-btn-vertical .btn,
+.form-group.outlined.bg-cyan .input-group-btn-vertical .btn,
 .form-group.outlined.bg-pink .input-group-btn-vertical .btn,
 .form-group.outlined.bg-indigo .input-group-btn-vertical .btn,
 .form-group.outlined.bg-blue .input-group-btn-vertical .btn,
@@ -19172,8 +19336,11 @@ form.validating {
 .form-group.outlined.bg-gray-700 > label,
 .form-group.outlined.bg-gray-600 > label,
 .form-group.outlined.bg-gray-500 > label,
+.form-group.outlined.bg-orange > label,
 .form-group.outlined.bg-purple > label,
 .form-group.outlined.bg-teal > label,
+.form-group.outlined.bg-green > label,
+.form-group.outlined.bg-cyan > label,
 .form-group.outlined.bg-pink > label,
 .form-group.outlined.bg-indigo > label,
 .form-group.outlined.bg-blue > label,
@@ -19192,8 +19359,11 @@ form.validating {
 .form-group.outlined.bg-gray-700:before,
 .form-group.outlined.bg-gray-600:before,
 .form-group.outlined.bg-gray-500:before,
+.form-group.outlined.bg-orange:before,
 .form-group.outlined.bg-purple:before,
 .form-group.outlined.bg-teal:before,
+.form-group.outlined.bg-green:before,
+.form-group.outlined.bg-cyan:before,
 .form-group.outlined.bg-pink:before,
 .form-group.outlined.bg-indigo:before,
 .form-group.outlined.bg-blue:before,

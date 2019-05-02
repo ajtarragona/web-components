@@ -277,6 +277,27 @@ h1, h2, h3, h4, h5, h6 {
 
 
 
+.btn-blue { background-color: $blue  !important; color:white;}
+.btn-indigo { background-color: $indigo   !important; color:white;}
+.btn-purple { background-color: $purple !important; color:white;}
+.btn-pink { background-color: $pink !important; color:white; }
+.btn-red { background-color: $red !important; color:white; }
+.btn-orange { background-color: $orange !important; color:white; }
+.btn-yellow { background-color: $yellow !important; color:white; }
+.btn-green { background-color: $green !important; color:white; }
+.btn-teal { background-color: $teal !important; color:white;}
+.btn-cyan { background-color: $cyan !important; color:white; }
+.btn-gray-100{  background-color:$gray-100 !important; }
+.btn-gray-200{  background-color:$gray-200 !important; }
+.btn-gray-300{  background-color:$gray-300 !important; }
+.btn-gray-400{  background-color:$gray-400 !important; }
+.btn-gray-500{  background-color:$gray-500 !important; color:white; }
+.btn-gray-600{  background-color:$gray-600 !important; color:white; }
+.btn-gray-700{  background-color:$gray-700 !important; color:white; }
+.btn-gray-800{  background-color:$gray-800 !important; color:white; }
+
+
+
 // Containers ==================================================================
 
 .list-group-item {
