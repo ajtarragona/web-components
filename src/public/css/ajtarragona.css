@@ -19386,7 +19386,7 @@ label.btn {
 }
 
 .bootstrap-touchspin .input-group-btn-vertical {
-  z-index: 3;
+  z-index: 1;
 }
 
 .ui-widget.ui-widget-content {
