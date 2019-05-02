@@ -14,6 +14,7 @@
     
   padding-top:2em;
   padding-bottom:2em;
+  padding-right:0em;
 
   .docs-menu{
     margin:0;
@@ -58,6 +59,7 @@
     
     li.active > a{
       color: $black;
+     
     }
 
     >li.active > a{
@@ -72,5 +74,11 @@
     li.active > a{
       color: $black;
       font-weight: bold;
+
+    }
+    li li.active > a{ 
+      border-right:1px solid $info;
+      position:relative;
+      right:-1px;
     }
 }

@@ -20031,6 +20031,7 @@ th {
   border-bottom: 1px solid #eceeef;
   padding-top: 2em;
   padding-bottom: 2em;
+  padding-right: 0em;
 }
 
 .docs-sidebar .docs-menu {
@@ -20084,5 +20085,11 @@ th {
 .docs-menu li.active > a {
   color: #000;
   font-weight: bold;
+}
+
+.docs-menu li li.active > a {
+  border-right: 1px solid #1F9BCF;
+  position: relative;
+  right: -1px;
 }
 
