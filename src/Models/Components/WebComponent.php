@@ -42,7 +42,8 @@ class WebComponent
 		$path=$this->viewPath($view);
 		$ret="";
 		if(view()->exists($path) ){	
-			$ret=str_replace(array("\n", "\r","\t"), '', view($path,$attributes)->render()); 
+			//$ret=str_replace(array("\n", "\r","\t"), '', view($path,$attributes)->render()); 
+			$ret=view($path,$attributes)->render(); 
 		}
 		return $ret;
 	}
