@@ -247,6 +247,9 @@ $sidelabel-size : 160px;
 		> label{
 			color: rgba($white,0.9);
 		}
+		&:before{
+			color: rgba($white,0.9);
+		}
 
 	}
 	&.bg-warning{

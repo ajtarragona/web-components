@@ -19187,6 +19187,26 @@ form.validating {
   color: rgba(255, 255, 255, 0.9);
 }
 
+.form-group.outlined.bg-black:before,
+.form-group.outlined.bg-gray-800:before,
+.form-group.outlined.bg-gray-700:before,
+.form-group.outlined.bg-gray-600:before,
+.form-group.outlined.bg-gray-500:before,
+.form-group.outlined.bg-purple:before,
+.form-group.outlined.bg-teal:before,
+.form-group.outlined.bg-pink:before,
+.form-group.outlined.bg-indigo:before,
+.form-group.outlined.bg-blue:before,
+.form-group.outlined.bg-red:before,
+.form-group.outlined.bg-success:before,
+.form-group.outlined.bg-danger:before,
+.form-group.outlined.bg-dark:before,
+.form-group.outlined.bg-primary:before,
+.form-group.outlined.bg-secondary:before,
+.form-group.outlined.bg-info:before {
+  color: rgba(255, 255, 255, 0.9);
+}
+
 .form-group.outlined.bg-warning input,
 .form-group.outlined.bg-warning textarea,
 .form-group.outlined.bg-warning .input-icon,
