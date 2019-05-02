@@ -19074,6 +19074,7 @@ form.validating {
   padding-right: 1rem;
   padding-top: 0.4rem;
   padding-bottom: 0.4rem;
+  z-index: 0;
 }
 
 .form-group.outlined .bootstrap-touchspin .form-control:focus {
