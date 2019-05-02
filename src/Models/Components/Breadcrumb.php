@@ -8,7 +8,7 @@ class Breadcrumb extends WebComponent
 	
 	protected $defaultattributes=[
 		'id'=>'',
-		'class'=>'breadcrumb mb-0 py-4 px-0',
+		'class'=>'breadcrumb mb-0 py-4 px-0 text-truncate',
 		'items' => [],
 	];
 

@@ -419,7 +419,10 @@ hr.big{
 
 
 .breadcrumb{
+    display: block;
     > .breadcrumb-item{
+      
+      display: inline-block;
       
       text-decoration: none;
 

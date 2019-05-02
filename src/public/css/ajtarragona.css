@@ -17338,7 +17338,12 @@ hr.big {
   text-overflow: ellipsis;
 }
 
+.breadcrumb {
+  display: block;
+}
+
 .breadcrumb > .breadcrumb-item {
+  display: inline-block;
   text-decoration: none;
 }
 
