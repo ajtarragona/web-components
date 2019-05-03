@@ -1,5 +1,12 @@
 <?php 
 
+if (! function_exists('language_flag')) {
+	function language_flag($attributes=[]){
+
+		return '<img src="'.asset('vendor/ajtarragona/img/flags/'.language()->getCode().'.png').'" title="'.language()->getName().'" '.renderAttributes($attributes).'/>';
+
+	}	
+}
 if (! function_exists('language_items')) {
 	function language_items(){
 		if(!function_exists('language')) return [];
