@@ -19,5 +19,7 @@ return [
 	"Filtered: :count" => "Filtrados: :count",
 	"Count: :count" => "Total: :count",
 	"Back" => "Volver",
-	"save" => "Guardar"
+	"save" => "Guardar",
+	"language" => "Idioma",
+	"language :code" => "Idioma (:code)"
 ];

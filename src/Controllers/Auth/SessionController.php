@@ -42,7 +42,7 @@ class SessionController extends Controller
 		
 		auth()->logout();
 		
-		return redirect()->home();
+		return redirect()->back();
 	}
 
 

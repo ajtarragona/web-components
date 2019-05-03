@@ -18360,7 +18360,7 @@ body.modal-maximized.modal-open .modal {
 }
 
 .with-sidebar .sidebar #main-menu {
-  max-height: 80vh;
+  max-height: 100%;
   overflow-y: auto;
 }
 
@@ -18407,6 +18407,10 @@ body.modal-maximized.modal-open .modal {
   /*overflow-x: hidden; */
 }
 
+.with-sidebar .sidebar #secondary-menu {
+  border-top: 1px solid rgba(248, 249, 250, 0.2);
+}
+
 .with-sidebar .sidebar #auth-widget {
   display: flex;
   align-items: center;
@@ -18429,10 +18433,6 @@ body.modal-maximized.modal-open .modal {
 
 .with-sidebar .sidebar #auth-widget button:hover {
   background-color: rgba(52, 58, 64, 0.1);
-}
-
-.with-sidebar .sidebar #lang-selector {
-  display: none;
 }
 
 .with-sidebar .sidebar .nav-item .nav-link {

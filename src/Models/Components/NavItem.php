@@ -67,17 +67,19 @@ class NavItem extends WebComponent
      	//dump($this->attributes);
      	if($this->attributes["children"]) $this->attributes["class"].=" has-submenu ";
 
-	 	//dump($activeroute);
-     	if($activematch){
-     		$this->attributes['active'] = isActiveMatch($activematch);
-	 	}else if($activeroute){
-	 		//dump(isActiveRoute($activeroute));
-     		$this->attributes['active'] = isActiveRoute($activeroute);
-     	}else if($activeurl){
-     		$this->attributes['active'] = isActiveURL($activeurl);
-     	}
+	 	if(!isset($this->attributes['active'])){
+		 	if($activematch){
+	     		$this->attributes['active'] = isActiveMatch($activematch);
+		 	}else if($activeroute){
+		 		//dump(isActiveRoute($activeroute));
+	     		$this->attributes['active'] = isActiveRoute($activeroute);
+	     	}else if($activeurl){
+	     		$this->attributes['active'] = isActiveURL($activeurl);
+	     	}
+	    }
 		if($this->attributes['active']) $this->attributes["class"].=' active ';
 
+		
 		//dump($this->attributes['active']);
 
 		$linkclasses=['nav-link'];

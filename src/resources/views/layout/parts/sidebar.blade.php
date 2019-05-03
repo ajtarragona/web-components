@@ -6,13 +6,16 @@
             <a class="sidebar-toggle ml-auto " href="#" data-session-setting="sidebar" data-session-toggle="true" data-session-value="{{ session('sidebar') }}" >@icon('bars')</a>
         </header>
 
-        @includeIf('layout.menu')
-        
-		@yield('menu')
+        <div id="main-menu">
+	        @includeIf('layout.menu')
+	        
+			@yield('menu')
+		</div>
 
-		<div class="mt-auto mb-4">
+		<div class="mt-auto mb-4 " id="secondary-menu">
 			@include('ajtarragona-web-components::layout.parts.lang')
-			@include('ajtarragona-web-components::layout.auth.acl')
+			@includeIf('acl::teams._teamselector')
+			@includeIf('acl::_menu')
 			@include('ajtarragona-web-components::layout.auth.widget')
 		</div>
 	</div>
