@@ -9,8 +9,9 @@
 				'fullwidth'=>true,
 				"items"=> [
 					[
-						"title" => language_flag(['class'=>'mr-2','style'=>'width:20px'])." ".__('tgn::strings.language :code',['code'=>language()->getCode()]) ,
+						"title" => __('tgn::strings.language :code',['code'=>language()->getCode()]) ,
 						"url" => '',
+						'icon' => language_flag(['class'=>'','style'=>'width:20px']),
 						"children" => $items
 					]
 				]

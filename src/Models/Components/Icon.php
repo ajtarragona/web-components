@@ -23,11 +23,20 @@ class Icon Extends WebComponent
 	
 	protected $view ='icon';
 
+	protected $isImage=false;
+
 
 	public function __construct($iconname,$attributes=[],$data=[]){
 		$this->iconname=$iconname;
+
+		
 		parent::__construct($attributes,$data);
 
+
+		if(starts_with(ltrim(strtolower($this->iconname)),"<img")){
+			$this->isImage=true;
+			return;
+		}
 
 
 		$classes=[];
@@ -155,6 +164,11 @@ class Icon Extends WebComponent
 
 	}
 
+	public function render($args=[]){
+		if($this->isImage) return $this->iconname;
+		else return parent::render($args);
+
+	}
 
 
 }
