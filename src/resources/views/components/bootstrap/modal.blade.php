@@ -1,6 +1,6 @@
 <div
-    class="modal {{ $class or '' }}"
-    id="{{ $id or 'modal' }}"
+    class="modal {{ isset($class)?$class:'' }}"
+    id="{{ isset($id)?$id:'modal' }}"
     {!! renderAttributes(isset($attributes)?$attributes:false) !!}
     {!! renderData(isset($data)?$data:false) !!}
 
@@ -9,7 +9,7 @@
         <div class="modal-content">
                 <div class="modal-header">
                     
-                    <h5 class="modal-title">{!! $title or '&nbsp;' !!}</h5>
+                    <h5 class="modal-title">{!! isset($title)?$title:'&nbsp;' !!}</h5>
                     <span class="modal-buttons"></span>
                 </div>
 

@@ -32,7 +32,7 @@
 		{!! renderAttributes($attributes, $hiddenattributes) !!} 
 		{!! renderData($data) !!}
 
-	>{{ $value or old($name) }}</textarea>
+	>{{ isset($value)?$value:old($name) }}</textarea>
 	
 	@include('ajtarragona-web-components::components.'.config("webcomponents.theme").'.forms.helptext')
 

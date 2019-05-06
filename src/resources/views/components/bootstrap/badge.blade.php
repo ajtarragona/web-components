@@ -6,8 +6,8 @@
     
     class="
         badge
-        badge-{{ $type or 'primary'}}
-        {{ $class or '' }}
+        badge-{{ isset($type)?$type:'primary'}}
+        {{ isset($class)?$class:'' }}
         @istrue($pill, 'badge-pill')
     "
 

@@ -30,7 +30,7 @@
 		{!! renderAttributes($attributes, $hiddenattributes) !!} 
 		{!! renderData($data) !!}
 		>
-		{!! $value or old($name) !!}
+		{!! isset($value)?$value:old($name) !!}
 	</div>
 
 	

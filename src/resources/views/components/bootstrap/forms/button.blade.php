@@ -1,6 +1,6 @@
 
 @isset($dropdown)
-<div class="btn-group drop{{ $dropdirection or ''}}">
+<div class="btn-group drop{{ isset($dropdirection)?$dropdirection:'' }}">
 @endisset
 
 <{{ isset($href)?'a':'button' }} 
@@ -15,7 +15,7 @@
 	@istrue($hidden ,'style="display:none"')
 		
 	@if(!isset($href)) 
-		type="{{ $type or 'button'}}" 
+		type="{{  isset($type)?$type:'button'}}" 
 	@else 
 		href="{{ $href }}"
 	@endif
@@ -23,8 +23,8 @@
 	
 	class="
 		btn 
-		btn-@istrue($outline, 'outline-'){{ $style or 'primary' }}  
-		{{ $class or '' }} 
+		btn-@istrue($outline, 'outline-'){{  isset($style)?$style:'primary' }}  
+		{{  isset($class)?$class:''  }} 
 		@istrue($pill, 'btn-pill')
 		@isset($dropdown) dropdown-toggle @endisset
 		@isset($size) btn-{{$size}} @endisset

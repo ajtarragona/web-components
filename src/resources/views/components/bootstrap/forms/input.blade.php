@@ -30,7 +30,7 @@
 	    type="{{ $type }}" 
 		name="{{ $name }}" 
 		class="{{ $class  }} " 
-		value="{{ $value or old($name) }}" 
+		value="{{ isset($value)?$value:old($name) }}" 
 		@istrue($required ,'required="required"')
 		@istrue($disabled ,'disabled="true"')
 		@istrue($readonly ,'readonly="true"')

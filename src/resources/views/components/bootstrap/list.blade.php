@@ -3,7 +3,7 @@
 	class="
 		list-group 
 		@istrue($flush) list-group-flush @endistrue
-		{{ $class or '' }}    
+		{{ isset($class)?$class:'' }}    
 	"
 	{!! renderAttributes(isset($attributes)?$attributes:false) !!}
     {!! renderData(isset($data)?$data:false) !!}

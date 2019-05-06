@@ -1,5 +1,5 @@
 <ul 
-	class="nav nav-{{ (isset($pill) && $pill)?'pills':'tabs' }} {{ $class or '' }} 
+	class="nav nav-{{ (isset($pill) && $pill)?'pills':'tabs' }} {{ isset($class)?$class:'' }} 
 		@istrue($justify,'nav-justified') 
 		@istrue($vertical,'flex-column')  
 		@istrue($responsive,'responsive')

@@ -9,13 +9,13 @@
 
 <li 
 	@isset($id) id="{{$id}}" @endisset 
-	class="nav-item {{ $class or '' }}" 
+	class="nav-item {{ isset($class)?$class:'' }}" 
 	role="tablist"
 	{!! renderAttributes(isset($attributes)?$attributes:false) !!}
     {!! renderData(isset($data)?$data:false) !!}
 
 >
-	<a class="nav-link @istrue($active,'active')" href="{{ $href or '#'}}" data-toggle="tab" role="tab" 
+	<a class="nav-link @istrue($active,'active')" href="{{ isset($href)?$href:'#'}}" data-toggle="tab" role="tab" 
 		@if(isset($persist)) data-session-setting="{{$persist}}" data-session-value="{{ str_replace_first('#','',$persistvalue) }}" @endif
 	>
 		  @include('ajtarragona-web-components::components.'.config("webcomponents.theme").'.parts.icontext')

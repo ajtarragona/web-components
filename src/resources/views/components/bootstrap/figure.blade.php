@@ -1,6 +1,6 @@
 <figure 
 	@isset($id) id="{{$id}}" @endif
-    class="figure {{ $class or '' }}"
+    class="figure {{ isset($class)?$class:'' }}"
     {!! renderAttributes(isset($attributes)?$attributes:false) !!}
     {!! renderData(isset($data)?$data:false) !!}
 

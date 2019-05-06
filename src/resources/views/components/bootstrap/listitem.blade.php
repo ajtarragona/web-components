@@ -9,7 +9,7 @@
         @isset($style) 
 	    	list-group-item-{{$style}}
 	    @endif
-        {{ $class or '' }}
+        {{ isset($class)?$class:'' }}
         @istrue($active) active @endistrue
         @istrue($disabled) disabled @endistrue
     	@isset($href) 

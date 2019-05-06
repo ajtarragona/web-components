@@ -14,7 +14,7 @@
 @if(!isset($container) || (isset($container) && $container))
 <div 
 	class="form-group 
-		{{ $class or '' }} 
+		{{ isset($class)?$class:'' }} 
 		@if(!isset($outlined) || (isset($outlined) && $outlined===true)) outlined @endif 
 		@istrue($sidelabel ,'sidelabel') 
 		@istrue($disabled ,'disabled') 
@@ -27,7 +27,7 @@
 @endif
 	
 	@if(!empty($label))
-    	<label for="{{ $id or ''}}" class="col-form-label col-form-label-{{ $size or 'md' }}  ">{{ $label }}</label>
+    	<label for="{{ isset($id)?$id:'' }}" class="col-form-label col-form-label-{{ isset($size)?$size:'md' }}  ">{{ $label }}</label>
 	@endif
 
 	{{ $slot }}

@@ -1,8 +1,8 @@
 <div
     @isset($id) id="{{$id}}" @endif
     class="
-        {{ $class or '' }}
-        alert alert-{{ $type or 'info'}}
+        {{ isset($class)?$class:'' }}
+        alert alert-{{ isset($type)?$type:'info'}}
         @istrue($autohide, 'alert-autohide')
         @istrue($dismissible, 'alert-dismissible')
         @istrue($animate, 'fade show')

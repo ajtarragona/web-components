@@ -1,7 +1,7 @@
 <div
     @isset($id) id="{{$id}}" @endif
 
-    class="card  @if(isset($type)) bg-{{$type}} text-white @endif {{ $class or '' }}"
+    class="card  @if(isset($type)) bg-{{$type}} text-white @endif {{ isset($class)?$class:'' }}"
      {!! renderAttributes(isset($attributes)?$attributes:false) !!}
     {!! renderData(isset($data)?$data:false) !!}
 

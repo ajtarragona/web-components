@@ -1,10 +1,10 @@
 <div 
 	@isset($id) id="{{$id}}" @endif
-	class="row {{ $class or '' }}" 
+	class="row {{ isset($class)?$class:'' }}" 
  	{!! renderAttributes(isset($attributes)?$attributes:false) !!}
     {!! renderData(isset($data)?$data:false) !!}
 
-	style="{{ $style or '' }}" 
+	style="{{ isset($style)?$style:'' }}" 
 >
 	{{ $slot }}
 </div>

@@ -7,8 +7,8 @@
 <form 
 	@isset($id) id="{{$id}}" @endif
 	method="{{ $formmethod }}" 
-	action="{{ $action or ''}}" 
-	class="{{ $class or '' }} tgn-form @istrue($inline) form-inline @endistrue @istrue($validator) validate @endistrue " 
+	action="{{ isset($action)?$action:'' }}" 
+	class="{{ isset($class)?$class:'' }} tgn-form @istrue($inline) form-inline @endistrue @istrue($validator) validate @endistrue " 
 	@istrue($validator) data-validateurl="{{ route('webcomponents.formvalidator') }}" data-validator="{{$validator}}" data-validate-on-submit="true" @endistrue 
 	@istrue($validateonstart) data-validate-on-start="true" @endistrue 
 	@istrue($validateonchange) data-validate-on-change="true" @endistrue 

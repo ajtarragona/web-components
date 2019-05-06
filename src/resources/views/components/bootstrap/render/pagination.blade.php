@@ -3,7 +3,7 @@
         $paginator = $paginator->toArray();
     @endphp
 
-    <ul class="pagination {{ $class or '' }}">
+    <ul class="pagination {{ isset($class)?$class:'' }}">
         @istrue($arrows)
             <li class="page-item">
                 <a class="page-link" href="{{ $paginator['prev_page_url'] }}" aria-label="Previous">

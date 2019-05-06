@@ -1,5 +1,5 @@
 	<a 
-		class="tgn-modal-opener {{ $class or '' }}"
+		class="tgn-modal-opener {{ isset($class)?$class:'' }}"
 
 		@if(isset($href))
 			href="{{ $href }}" 
@@ -12,16 +12,16 @@
 			@endif
 		@endif
 
-		data-animate="{{ $animate or 'true'}}" 
-		data-style="{{ $style or 'default'}}" 
-		data-size="{{ $size or ''}}" 
-		data-valign="{{ $valign or 'top'}}"
-		data-halign="{{ $halign or 'center'}}"
-		data-maximizable = "{{ $maximizable or 'true'}}"
-		data-closable = "{{ $closable or 'true'}}"
-		data-draggable = "{{ $draggable or 'true'}}"
-		data-padding = "{{ $padding or 'true'}}"
-		data-method = "{{ $method or 'get'}}"
+		data-animate="{{ isset($animate)?$animate:'true'}}" 
+		data-style="{{ isset($style)?$style:'default'}}" 
+		data-size="{{ isset($size)?$size:'' }}" 
+		data-valign="{{ isset($valign)?$valign:'top'}}"
+		data-halign="{{ isset($halign)?$halign:'center'}}"
+		data-maximizable = "{{ isset($maximizable)?$maximizable:'true'}}"
+		data-closable = "{{ isset($closable)?$closable:'true'}}"
+		data-draggable = "{{ isset($draggable)?$draggable:'true'}}"
+		data-padding = "{{ isset($padding)?$padding:'true'}}"
+		data-method = "{{ isset($method)?$method:'get'}}"
 
 	>
 	    @include('ajtarragona-web-components::components.'.config("webcomponents.theme").'.parts.icontext')

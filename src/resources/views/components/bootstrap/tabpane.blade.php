@@ -7,8 +7,8 @@
 @endphp
 
 <div 
-	id="{{ $id or ''}}"
-	class="tab-pane @istrue($fade,'fade')  @istrue($active,'show active') {{ $class or ''}} " 
+	id="{{ isset($id)?$id:'' }}"
+	class="tab-pane @istrue($fade,'fade')  @istrue($active,'show active') {{ isset($class)?$class:'' }} " 
 	role="tabpanel" 
 	{!! renderAttributes(isset($attributes)?$attributes:false) !!}
     {!! renderData(isset($data)?$data:false) !!}
