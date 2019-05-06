@@ -14,6 +14,7 @@
         	php artisan ajtarragona:installdemo
         @endcode
         
+        <p>Once installed, you can access the demo using user <code>demo</code> and password <code>demo</code>.</p>
         
 
     </div>

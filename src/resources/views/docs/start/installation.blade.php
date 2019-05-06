@@ -11,7 +11,7 @@
 @block
 
 	@code(['lang'=>'bsh'])
-		composer require ajtarragona/web-components:"@dev"
+		composer require ajtarragona/web-components:"dev-master"
 	@endcode
 
 @endblock
@@ -33,22 +33,15 @@
 @endblock
 
 
-<hr/>
+{{-- <hr/> --}}
 
-<h4>Configuració de les rutes</h4>
+{{-- <h4>Configuració de les rutes</h4> --}}
 	
 
-@block
+{{-- @block
 	<p>El paquet incorpora un paquet per que les rutes estiguin accessibles via Javascript. Per que funcioni cal realitzar el següent previament a publicar els recursos.</p>
-	{{-- <p>Primer afegim el Provider <a href="https://github.com/aaronlord/laroute" target="_blank">Laroute</a> a l'arxiu <code>config/app.php</code></p>
 
-	@code(['lang'=>'bsh'])
-	 'providers' => [
-	 	...
-	 	Lord\Laroute\LarouteServiceProvider::class,
-	 ]
-	@endcode
- --}}
+
 	<p>Publiquem la configuració del paquet Laroute:</p>
 	@code(['lang'=>'bsh'])
 	php artisan vendor:publish --provider='Lord\Laroute\LarouteServiceProvider'
@@ -69,11 +62,7 @@
 	<p>Configurar correctament la ruta de l'aplicació <code>APP_URL</code> a l'arxiu <code>.env</code>
 	
 
-	{{-- 
 
-	@code(['lang'=>'java'])
-		@includeSrc('ajtarragona-web-components::docs.source.test')
-	@endcode
-	 --}}
 	<p><mark><strong>Nota:</strong> Un cop fet això tornem a executar la comanda <code>ajtarragona:prepare</code></mark></p>
 @endblock
+ --}}

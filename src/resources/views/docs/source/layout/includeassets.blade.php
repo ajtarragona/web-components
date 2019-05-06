@@ -7,7 +7,7 @@
 
 		...
 
-		<script src="{{ asset('js/laroute.js')}}" language="JavaScript"></script>
+		@routes
 		<script src="{{ asset('vendor/ajtarragona/js/ajtarragona.js')}}" language="JavaScript"></script>
 	</body>
 </html>
