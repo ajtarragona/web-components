@@ -3,12 +3,9 @@
 
 @section('title', __('tgn::demo.Demo').': '.$item->name)
 
-
 @section('menu')
-	@include('ajtarragona-web-components::demo._menu')
+	 @include('ajtarragona-web-components::demo._menu')
 @endsection
-
-	
 
 @section('breadcrumb')
     @breadcrumb([

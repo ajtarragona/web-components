@@ -3,13 +3,12 @@
 @section('title')
 	 @lang('tgn::demo.Types')
 @endsection
-
+	
 @section('menu')
-	@include('ajtarragona-web-components::demo._menu')
+	 @include('ajtarragona-web-components::demo._menu')
 @endsection
 
 	
-
 @section('breadcrumb')
     @breadcrumb([
    		'items' =>[

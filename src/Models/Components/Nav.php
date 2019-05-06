@@ -13,6 +13,7 @@ class Nav extends WebComponent
 		'navigation' => 'drilldown',
 		'disposition' => 'vertical',
 		'fullwidth' => false,
+		'accordion' => false,
 		'items' => [],
 	];
 
@@ -25,7 +26,7 @@ class Nav extends WebComponent
 		
 	];
 
-	protected $hiddenattributes = ["navigation",'fullwidth','disposition','items'];
+	protected $hiddenattributes = ["navigation",'fullwidth','disposition','items','accordion'];
 	
 	protected $view = 'nav';
 
@@ -36,6 +37,7 @@ class Nav extends WebComponent
 			foreach($items as $i=>$item){
 
 				$items[$i]["navigation"] = $this->attributes["navigation"];
+				$items[$i]["accordion"] = $this->attributes["accordion"];
 				$items[$i]["disposition"] = $this->attributes["disposition"];
 				if(isset($item["children"])){
 					$items[$i]["children"] = $this->setItemsAttributes($item["children"]);

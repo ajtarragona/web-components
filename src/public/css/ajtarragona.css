@@ -18080,7 +18080,7 @@ body.modal-maximized.modal-open .modal {
 
 .tgn-nav-collapse li.open {
   outline: 1px solid rgba(0, 0, 0, 0.2);
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 .tgn-nav-collapse.navbar-primary li.open,

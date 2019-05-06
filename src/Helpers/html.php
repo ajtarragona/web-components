@@ -14,6 +14,7 @@ use Ajtarragona\WebComponents\Models\Components\Breadcrumb;
 use Ajtarragona\WebComponents\Models\Components\Crumb;
 use Ajtarragona\WebComponents\Models\Components\Pagination;
 use Ajtarragona\WebComponents\Models\Components\Tablecount;
+use Ajtarragona\WebComponents\Facades\MainMenu;
 
 use \InvalidArgumentException as InvalidArgumentException;
 
@@ -274,3 +275,4 @@ if (! function_exists('appVersion')) {
 		return \Tremby\LaravelGitVersion\GitVersionHelper::getNameAndVersion();
 	}
 }
+

@@ -1,4 +1,3 @@
-
 <ul 
 	id="{{ $id }}"
 	class="{{ $class  }} " 
