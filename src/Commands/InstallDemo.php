@@ -79,13 +79,13 @@ class InstallDemo extends Command
 
             
 
-            $this->createAdminUser();
-
+            
 	        $this->line("Creating migration...");
 
 	        if ($this->createMigration()) {
 	            $this->info("Migration created successfully.");
 	            
+
 	            if ($this->confirm("Do you want to create the database?", !$this->alreadyExistingTables() )) {
 	            	if($this->createDatabase()){
 	            		$this->info("Database created!");
@@ -93,6 +93,10 @@ class InstallDemo extends Command
         	    		$this->error("Demo tables already exist.");
         	    	}
 	            }
+
+
+                $this->createAdminUser();
+
 
 	            if ($this->confirm("Do you want to seed the database?", $this->alreadyExistingTables())) {
 		        	if($this->seedDatabase()){
@@ -111,6 +115,8 @@ class InstallDemo extends Command
 	        }
 
 	        $this->line('');
+
+
            
 
         }catch(Exception $e){
