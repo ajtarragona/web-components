@@ -52,9 +52,12 @@ class PrepareJs extends Command
     {
         //
         $resources_path = public_path('vendor/ajtarragona/js');
+        //$routes_path = public_path('assets/js/routes.js');
+       //dd($routes_path);
+       	//$this->line("Exporting routes ...");
+        // Artisan::call('laroute:generate',['-p'=>$resources_path,'-f'=>$this->routes_filename]);
+        //Artisan::call('ziggy:generate',['path'=>$resources_path."/".$this->routes_filename.".js"]);
         
-       	$this->line("Exporting routes ...");
-        Artisan::call('laroute:generate',['-p'=>$resources_path,'-f'=>$this->routes_filename]);
         
 
         $this->line("Exporting localization strings ...");

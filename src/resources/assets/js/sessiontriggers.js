@@ -13,7 +13,7 @@ $.fn.initSessionTriggers = function(){
 			if($(this).data("session-toggle")) value=((value==1)?0:1);
 			
 			var url = route('webcomponents.setting.set',{name:setting});
-			
+			//al(url);
 			$.ajax({
 				url: url,
 	            type: 'put',

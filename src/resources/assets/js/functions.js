@@ -62,9 +62,10 @@ rhtmlspecialchars = function(str) {
  return str;
 }
 
-route = function( name, params ){
-  return laroute.route(name,params);
-}
+// route = function( name, params ){
+//   al(Ziggy);
+//   //return laroute.route(name,params);
+// }
 
 csrfToken = function( ){
  return $('meta[name="csrf-token"]').attr('content');

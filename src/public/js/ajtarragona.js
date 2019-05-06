@@ -85114,11 +85114,11 @@ rhtmlspecialchars = function rhtmlspecialchars(str) {
   }
 
   return str;
-};
+}; // route = function( name, params ){
+//   al(Ziggy);
+//   //return laroute.route(name,params);
+// }
 
-route = function route(name, params) {
-  return laroute.route(name, params);
-};
 
 csrfToken = function csrfToken() {
   return $('meta[name="csrf-token"]').attr('content');
@@ -86840,7 +86840,8 @@ $.fn.initSessionTriggers = function () {
       if ($(this).data("session-toggle")) value = value == 1 ? 0 : 1;
       var url = route('webcomponents.setting.set', {
         name: setting
-      });
+      }); //al(url);
+
       $.ajax({
         url: url,
         type: 'put',
