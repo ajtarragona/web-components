@@ -32,7 +32,7 @@
 		@if(count($items)>1)
 			@nav([
 				'id'=>'lang-selector',
-				"navigation"=> 'collapse',
+				"navigation"=> 'dropdown',
 				'class'=>'nav-dark',
 				'fullwidth'=>true,
 				"items"=> [
@@ -45,7 +45,7 @@
 				]
 				
 				
-			])
+			],['dropdown-vertical-direction' => 'top'])
 		@endif
 	@endif
 

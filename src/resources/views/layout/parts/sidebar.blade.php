@@ -12,8 +12,7 @@
 			@yield('menu')
 		</div>
 
-		<div class="mt-auto mb-4 "   id="secondary-menu"> 
-
+		<div class="mt-auto mb-4 " id="secondary-menu">
 			@include('ajtarragona-web-components::layout.parts.lang')
 			@includeIf('acl::teams._teamselector')
 			@includeIf('acl::_menu')

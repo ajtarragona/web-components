@@ -15,7 +15,7 @@ if (! function_exists('language_items')) {
 		foreach (language()->allowed() as $code => $name){
 	       $items[]=
 	       [
-	       		"title" => $name ,
+	       		"title" => ((language()->getCode()==$code)?icon('check').' ':'') . $name ,
 	       		"active" => language()->getCode()==$code,
 	       		"url" => language()->back($code)
 	       ];
