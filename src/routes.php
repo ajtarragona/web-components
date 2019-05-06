@@ -33,9 +33,12 @@ Route::group(['prefix' => 'ajtarragona/webcomponents','middleware' => ['web']], 
 	
 
 	//rutas de Demo
-	Route::group(['prefix' => 'demo','middleware' => ['auth','language']], function () {
-
+	Route::group(['prefix' => 'demo','middleware' => ['language']], function () {
 		Route::get('/', 'Ajtarragona\WebComponents\Controllers\DemoController@demo')->name('webcomponents.demo');
+	});
+
+	
+	Route::group(['prefix' => 'demo','middleware' => ['auth','language']], function () {
 		
 		//items 
 		Route::group(['prefix' => 'items'], function () {
