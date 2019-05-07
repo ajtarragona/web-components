@@ -280,9 +280,9 @@ $sidelabel-size : 160px;
 		border-color:transparent;
 	}
 
-	>.custom-file{
-		// margin-right:.5em;
-	}
+	// >.custom-file{
+	// 	 margin-right:.5em;
+	// }
 	
 	.form-control.is-invalid{
 		background-image:none;
@@ -292,7 +292,7 @@ $sidelabel-size : 160px;
 	> input,
 	> textarea,
 	>.mentions-container,
-	>.date-container .form-control,
+	>.date-container .form-control
 	{
 		border-color:transparent;
 		/*padding-left:0;
@@ -610,7 +610,7 @@ label.btn{
 
 .input-icon{
 	display:inline-block;
-	position:absolute;
+	position: absolute;
 	bottom:0px;
 	left:0;
 	line-height:1.5rem;//$input-line-height;
@@ -630,10 +630,10 @@ label.btn{
 	right:0;
 }
 
-label + .input-icon{
-	//padding: $input-padding-y $input-padding-x;
-	// margin-top: $input-padding-y+$input-line-height;
-}
+// label + .input-icon{
+// 	//padding: $input-padding-y $input-padding-x;
+// 	// margin-top: $input-padding-y+$input-line-height;
+// }
 
 .input-icon + input.form-control,
 .input-icon + textarea.form-control,

@@ -16,13 +16,15 @@ class DocsController extends Controller
 
   public function docsModal(Request $request, Faker $faker)
   {
-      $request=$request->except(['_token','_method']);
+    
+    $request=$request->except(['_token','_method']);
       return $this->view('docs.source.layout.modal', compact('faker','request'));
   }
  
   public function docsHandle($page='start.introduction',Request $request)
   {
-     $params=$request->all();
+   
+    $params=$request->all();
      //dd($params);
      //dd($request->uploaded_file);
      

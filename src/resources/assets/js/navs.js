@@ -38,7 +38,7 @@ TgnNav = function(obj,options){
 		var o=this;
 		var $nav=this.$element;
 
-		al("init() tgnNav");
+		console.group("TgnNav");
 		//al(o.settings);
 		
 		if(!$nav.is(".init")){
@@ -54,14 +54,14 @@ TgnNav = function(obj,options){
 
 			$nav.addClass("init");
 		}
-		
+		console.groupEnd();
 	};
 
 
 
 
 	this.initCollapsableNav=function(){
-		al('initCollapsableNav');
+		al('CollapsableNav');
 		var o=this;
 		var $nav=this.$element;
 
@@ -81,7 +81,7 @@ TgnNav = function(obj,options){
 
 
 	this.initDropdownNav=function(){
-		al('initDropdownNav');
+		al('DropdownNav');
 		var o=this;
 		var $nav=this.$element;
 
@@ -156,7 +156,7 @@ TgnNav = function(obj,options){
 
 
 	this.initDrilldownNav=function(){
-	 	al('initDrilldownNav');
+	 	al('DrilldownNav');
 		var o=this;
 		var $nav=this.$element;
 

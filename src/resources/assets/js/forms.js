@@ -97,7 +97,8 @@ function tgnFormClass(obj,options){
 		var $form=this.$element;
 
 		
-		al("init() tgnForm");
+		console.group("TgnForm");
+		al($form);
 		//al(this.settings);
 
 		if(!$form.is(".forminit")){
@@ -215,7 +216,7 @@ function tgnFormClass(obj,options){
 			
 
 		}
-
+		console.groupEnd();
 
 	};
 

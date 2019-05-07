@@ -84816,7 +84816,8 @@ function tgnFormClass(obj, options) {
   this.init = function () {
     var o = this;
     var $form = this.$element;
-    al("init() tgnForm"); //al(this.settings);
+    console.group("TgnForm");
+    al($form); //al(this.settings);
 
     if (!$form.is(".forminit")) {
       $form.find(':input').each(function () {
@@ -84920,6 +84921,8 @@ function tgnFormClass(obj, options) {
         if (!group.is(".disabled")) group.removeClass('focused');
       });
     }
+
+    console.groupEnd();
   };
 
   this.validate = function () {
@@ -86310,7 +86313,7 @@ TgnNav = function TgnNav(obj, options) {
   this.init = function (btn) {
     var o = this;
     var $nav = this.$element;
-    al("init() tgnNav"); //al(o.settings);
+    console.group("TgnNav"); //al(o.settings);
 
     if (!$nav.is(".init")) {
       if (o.settings.navigation == 'drilldown') {
@@ -86324,10 +86327,12 @@ TgnNav = function TgnNav(obj, options) {
 
       $nav.addClass("init");
     }
+
+    console.groupEnd();
   };
 
   this.initCollapsableNav = function () {
-    al('initCollapsableNav');
+    al('CollapsableNav');
     var o = this;
     var $nav = this.$element;
     $nav.find('.has-submenu > .toggler').on("click", function (e) {
@@ -86342,7 +86347,7 @@ TgnNav = function TgnNav(obj, options) {
   };
 
   this.initDropdownNav = function () {
-    al('initDropdownNav');
+    al('DropdownNav');
     var o = this;
     var $nav = this.$element;
 
@@ -86400,7 +86405,7 @@ TgnNav = function TgnNav(obj, options) {
   };
 
   this.initDrilldownNav = function () {
-    al('initDrilldownNav');
+    al('DrilldownNav');
     var o = this;
     var $nav = this.$element;
     var wrapper = $("<div class='drilldown-wrap'/>");
@@ -90001,8 +90006,8 @@ initToolbar = function initToolbar() {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\tmedrano\DEVELOP\xampp\htdocs\laravel\packages\ajtarragona\web-components\src\resources\assets\js\ajtarragona.js */"./src/resources/assets/js/ajtarragona.js");
-module.exports = __webpack_require__(/*! C:\Users\tmedrano\DEVELOP\xampp\htdocs\laravel\packages\ajtarragona\web-components\src\resources\assets\sass\ajtarragona.scss */"./src/resources/assets/sass/ajtarragona.scss");
+__webpack_require__(/*! c:\Users\tmedrano\DEVELOP\xampp\htdocs\laravel\packages\ajtarragona\web-components\src\resources\assets\js\ajtarragona.js */"./src/resources/assets/js/ajtarragona.js");
+module.exports = __webpack_require__(/*! c:\Users\tmedrano\DEVELOP\xampp\htdocs\laravel\packages\ajtarragona\web-components\src\resources\assets\sass\ajtarragona.scss */"./src/resources/assets/sass/ajtarragona.scss");
 
 
 /***/ }),
