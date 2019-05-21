@@ -26,11 +26,11 @@ if (! function_exists('_date')) {
 if (! function_exists('_time')) {
 	function _time($time=false){
 	 	if(!$time) return _now();
-		if(str_contains($date,":")){
+		if(str_contains($time,":")){
 			$time=explode(":", $time);
 			$carbon =  Carbon::createFromTime($time[0], isset($time[1])?$time[1]:0, isset($time[2])?$time[2]:0);
 		}else{
-			$carbon = new Carbon($date);
+			$carbon = new Carbon($time);
 		}
 	 	return $carbon; 
 	}

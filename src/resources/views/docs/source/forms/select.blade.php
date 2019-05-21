@@ -8,7 +8,7 @@
 		'placeholder'=>'Choose item...',
 		'options'=>$selectoptions, 
 		'required'=>false,
-		'show-deselector' => true,
+		'show-deselector' => false,
 		'size'=>5,
 		'live-search'=>true,
 		
