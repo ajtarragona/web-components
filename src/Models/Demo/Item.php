@@ -19,6 +19,9 @@ class Item extends Model
         'name','number','type_id','description'
 	];
 
+    protected $with = ['type'];
+
+
 	public function type()
     {
       return $this->belongsTo(Type::class);

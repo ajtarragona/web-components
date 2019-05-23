@@ -20273,9 +20273,17 @@ th {
   color: #bf002c;
 }
 
-.table-selectable tbody tr,
-.table-clickable tbody tr {
+.table-selectable tbody tr {
   cursor: default;
+}
+
+.table-clickable tbody tr,
+table[data-clickable=true] tbody tr {
+  cursor: default;
+}
+
+table[data-clicktype=click] tbody tr {
+  cursor: pointer;
 }
 
 /*responsive tables */

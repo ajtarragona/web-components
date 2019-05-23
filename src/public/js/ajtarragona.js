@@ -86934,7 +86934,7 @@ $.widget("ajtarragona.tgnTable", {
 
     if (this.options.clickable) {
       //al("is clickable");
-      var ev = this.element.data("clicktype") ? o.$element.data("clicktype") : "dblclick";
+      var ev = this.element.data("clicktype") ? this.element.data("clicktype") : "dblclick";
       this.element.on(ev, "tbody tr", function (e) {
         var url = $(this).data("url");
         if (url) window.location.href = url;
@@ -90006,8 +90006,8 @@ initToolbar = function initToolbar() {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! c:\Users\tmedrano\DEVELOP\xampp\htdocs\laravel\packages\ajtarragona\web-components\src\resources\assets\js\ajtarragona.js */"./src/resources/assets/js/ajtarragona.js");
-module.exports = __webpack_require__(/*! c:\Users\tmedrano\DEVELOP\xampp\htdocs\laravel\packages\ajtarragona\web-components\src\resources\assets\sass\ajtarragona.scss */"./src/resources/assets/sass/ajtarragona.scss");
+__webpack_require__(/*! C:\Users\tmedrano\DEVELOP\xampp\htdocs\laravel\packages\ajtarragona\web-components\src\resources\assets\js\ajtarragona.js */"./src/resources/assets/js/ajtarragona.js");
+module.exports = __webpack_require__(/*! C:\Users\tmedrano\DEVELOP\xampp\htdocs\laravel\packages\ajtarragona\web-components\src\resources\assets\sass\ajtarragona.scss */"./src/resources/assets/sass/ajtarragona.scss");
 
 
 /***/ }),

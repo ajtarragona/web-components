@@ -29,7 +29,7 @@ $.widget( "ajtarragona.tgnTable", {
 
 		if(this.options.clickable){
 			//al("is clickable");
-			var ev=this.element.data("clicktype")?o.$element.data("clicktype"):"dblclick";
+			var ev=this.element.data("clicktype")?this.element.data("clicktype"):"dblclick";
 
 			this.element.on(ev,"tbody tr",function(e){
 				var url=$(this).data("url");
