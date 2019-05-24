@@ -84750,7 +84750,8 @@ function tgnFormClass(obj, options) {
     validateOnChange: false,
     autofocus: false,
     autoselect: false,
-    target: false
+    target: false,
+    loadOnSubmit: true
   };
   this.$element = obj;
   this.$loader = false;
@@ -84809,6 +84810,7 @@ function tgnFormClass(obj, options) {
 
       return false;
     } else {
+      if (o.settings.loadOnSubmit) $('html').startLoading();
       $form.submit();
     }
   };

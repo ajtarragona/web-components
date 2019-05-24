@@ -13,6 +13,7 @@ function tgnFormClass(obj,options){
 		autofocus:false,
 		autoselect:false,
 		target: false,
+		loadOnSubmit: true
 	};
 
 	this.$element=obj;
@@ -86,6 +87,7 @@ function tgnFormClass(obj,options){
         	return false;
 
         }else{
+        	if(o.settings.loadOnSubmit) $('html').startLoading();
         	$form.submit();
 		}
 	}
