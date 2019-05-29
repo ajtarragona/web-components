@@ -59,9 +59,9 @@ function tgnFormClass(obj,options){
 
         	}else if($(o.settings.target).length>0){
         		var $target=$(o.settings.target);
-        		 al(url);
-        		 al(method);
-        		 al(params);
+        		 // al(url);
+        		 // al(method);
+        		 // al(params);
         		//$form.startLoading();
         		$target.startLoading();
 				//data._token= csrfToken();
@@ -71,7 +71,7 @@ function tgnFormClass(obj,options){
 		            data: params,
 		            dataType: 'html',
 		            success: function(data){
-		            	al(data);
+		            	//al(data);
 		            	$target.html(data).tgnInitAll().stopLoading();
 		            	//$form.stopLoading();
 		        			
@@ -100,7 +100,7 @@ function tgnFormClass(obj,options){
 
 		
 		console.group("TgnForm");
-		al($form);
+		//al($form);
 		//al(this.settings);
 
 		if(!$form.is(".forminit")){

@@ -443,7 +443,7 @@ $.fn.initAjaxContainer = function (){
             }
             //al(params);
             o.$container.startLoading();
-            al('loadContainer ' + o.settings.url);
+            //al('loadContainer ' + o.settings.url);
             //al(params);
 
             $.ajax({
@@ -499,7 +499,7 @@ $.fn.initAutoheight = function (){
    return this.each(function(){
         var o=this;
         o.$input=$(this);
-        al("initAutoheight");
+        //al("initAutoheight");
         
         var settings = $.extend({}, defaults, $(this).data()); 
          //al($(this));

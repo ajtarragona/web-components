@@ -251,7 +251,7 @@ TgnModal = function(options){
 		}
 		//$('.modal-backdrop').remove();
 		$('body').removeClass("modal-maximized");
-		al("tgnModal destroyed");
+		//al("tgnModal destroyed");
 		//o.$opener.off('click');
 	}
  
