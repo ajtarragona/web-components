@@ -1,5 +1,8 @@
-al = function (msg){
-	console.log(msg);
+al = function (msg, params){
+  if(params)
+	   console.log(msg,params);
+  else
+     console.log(msg);
 }
 
 __ = function( text, params ){
