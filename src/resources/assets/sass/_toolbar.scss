@@ -1,5 +1,10 @@
 /**toolbar*/
 
+.with-toolbar #main-container{
+  padding-top:$toolbarheight;
+}
+
+
 #maintoolbar{
   position:fixed;
   top:0;
@@ -25,7 +30,18 @@
 }
 
 
+
 @media (max-width: 767px) {
+      
+  .with-toolbar #main-container{
+    margin-left:0;
+    padding-top:85px;
+  }
+
+  .with-toolbar #maintoolbar .toolbar-content{
+    padding-left:0;
+  }
+  
   #maintoolbar{
      position:fixed;
      top:0;

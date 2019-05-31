@@ -17715,6 +17715,10 @@ body.modal-maximized.modal-open .modal {
 
 /**toolbar*/
 
+.with-toolbar #main-container {
+  padding-top: 72px;
+}
+
 #maintoolbar {
   position: fixed;
   top: 0;
@@ -17739,6 +17743,15 @@ body.modal-maximized.modal-open .modal {
 }
 
 @media (max-width: 767px) {
+  .with-toolbar #main-container {
+    margin-left: 0;
+    padding-top: 85px;
+  }
+
+  .with-toolbar #maintoolbar .toolbar-content {
+    padding-left: 0;
+  }
+
   #maintoolbar {
     position: fixed;
     top: 0;
@@ -18341,10 +18354,6 @@ body.modal-maximized.modal-open .modal {
   padding-top: 4.5rem;
 }
 
-.with-sidebar.with-toolbar #main-container {
-  padding-top: 72px;
-}
-
 .with-sidebar .sidebar {
   position: fixed;
   top: 0;
@@ -18490,15 +18499,6 @@ body.modal-maximized.modal-open .modal {
 }
 
 @media (max-width: 767px) {
-  .with-sidebar.with-toolbar #main-container {
-    margin-left: 0;
-    padding-top: 85px;
-  }
-
-  .with-sidebar.with-toolbar #maintoolbar .toolbar-content {
-    padding-left: 0;
-  }
-
   .with-sidebar .sidebar {
     margin-left: -300px;
   }
