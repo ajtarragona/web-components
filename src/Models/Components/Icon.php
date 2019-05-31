@@ -166,7 +166,12 @@ class Icon Extends WebComponent
 
 	public function render($args=[]){
 		if($this->isImage) return $this->iconname;
-		else return parent::render($args);
+
+
+		return "<i ". renderAttributes($this->attributes, $this->hiddenattributes) . " " . renderData($this->data) ."></i>";
+		// me estalvio cargar la vista
+
+		//else return parent::render($args);
 
 	}
 
