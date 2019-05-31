@@ -1,0 +1,242 @@
+<?php
+
+namespace Ajtarragona\WebComponents\Models\Forms;
+
+use Illuminate\Support\Str;
+
+class FormControl
+{
+	
+	public $tag;
+	public $closetag = false;
+
+	public $container = true;
+	
+	public $containerclass = '';
+
+	public $label = '';
+	public $outlined = true;
+	public $size = 'md';
+	public $sidelabel = false;
+	// public $disabled = false;
+	// public $readonly = false;
+	public $required = false;
+	public $helptext=false;
+	public $attributes = [];
+	public $icon=false;
+	public $iconposition="left";
+	
+	public $data = [];
+
+	
+	public function __construct($attributes=[], $data=[]){
+		//$this->attributes=$attributes;
+		//$this->data=$data;
+		$this->prepareAttributes($attributes);
+		$this->prepareData($data);
+	}
+
+	public function getAttribute($name,$default=null){
+		return data_get($this->attributes,$name,$default);
+	}
+
+	
+	public static function generateUid($prefix=false){
+		$ret= ($prefix?$prefix."-":""). Str::uuid();
+		return $ret;//uniqid($prefix?$prefix."-":false);
+	}
+
+
+	protected function prepareAttributes($attributes=[]){
+		//dd(get_object_vars($this));
+		foreach(get_object_vars($this) as $key=>$value){
+			if(in_array($key, array_keys($attributes))){
+				$this->$key = $attributes[$key];
+				unset($attributes[$key]);
+			}
+		}
+		
+		if(!$this->attributes['id']){
+			if($this->attributes['name']) $this->attributes['id']='input-'.$this->attributes['name'];
+			else $this->attributes['id']=self::generateUid('input');
+		}
+		
+		//la clase css la acumulo
+		if(isset($attributes['class']) && isset($this->attributes['class']) ){
+			if(is_array($attributes['class'])) $attributes['class']=implode(" ",$attributes['class']);
+			$attributes['class']= $this->attributes['class']." ".	$attributes['class'];
+		}
+
+		$this->attributes=array_merge($this->attributes,$attributes);
+	}
+	
+
+	protected function prepareData($data=[]){
+		$this->data=array_merge($this->data,$data);
+	}
+
+    
+    protected function renderAttributes($excluded=[]) {
+    	return self::html_attributes($this->attributes,false,$excluded);
+    }
+
+    protected function renderData($excluded=[]) {
+    	return self::html_attributes($this->data,"data",$excluded);
+    }
+
+    protected function isVisible(){
+    	if(isset($this->attributes["visible"])){
+    		return $this->attributes["visible"];
+    	} 
+    	return true;
+    }
+
+
+    public static function html_attributes($array=false, $prefix=false, $excluded=[]) {
+		
+		if(!$array) return;
+
+		$ret="";
+
+		
+		foreach ($array as $k => $v)
+		{	
+			//los data los pongo todos, los attributes solo los que tengan valor
+			if(!in_array($k, $excluded) && ($prefix || $v) ){
+				
+
+				$ret.=" ".($prefix?($prefix."-"):"").$k."=";
+
+				if(is_array($v) || is_object($v)){
+
+					$ret.="'".json_encode($v)."' ";
+			    }else{
+			    	$ret.="\"".addslashes($v)."\" ";
+			    }
+			}
+		    //$array[$prefix.'-'.$k] = $v;
+		    //unset($array[$k]);
+		}
+	
+		
+		return $ret;
+
+	}
+
+	
+
+
+	
+
+	
+
+
+	protected function containerClass(){
+		
+		$ret=["form-group", $this->containerclass];
+		if($errors = session()->get('errors')) {
+			if($errors->has($this->getAttribute('name'))) $ret[]=' with-feedback is-invalid ';
+		}
+
+		if($this->outlined) $ret[]="outlined";
+		if($this->sidelabel) $ret[]="sidelabel";
+		if($this->getAttribute("disabled")) $ret[]="disabled";
+		if($this->getAttribute("readonly")) $ret[]="readonly";
+		if($this->size) $ret[]="form-group-".$this->size;
+		if($this->required) $ret[]="required";
+		return implode(" ",$ret);
+
+	}
+
+
+	protected function renderFormGroup($attributes=[],$data=[]){
+			$ret="";
+			$ret.="<div ";
+			$ret.="	class='" .$this->containerClass(). "' ";
+			$ret.=html_attributes($attributes);
+			$ret.=html_attributes($data);
+			$ret.=">";
+			return $ret;
+	}
+
+
+
+	public function renderIcon(){
+		if($this->icon) return "<span class='input-icon icon-".$this->iconposition ." '>". icon($this->icon). "</span>";
+
+	}
+
+	public function renderLabel(){
+		if(!empty($this->label)){
+			return 	"<label for='".$this->attributes['id']."' class='col-form-label col-form-label-".$this->size."'>". $this->label."</label>";
+		}
+	}
+
+	public function renderHelpText(){
+		if($this->helptext){
+			return "<small class='form-text text-muted'>".$this->helptext."</small>";
+		}
+	}
+
+
+	public function renderErrors(){
+		if($errors=session()->get('errors')){
+			if($name=$this->getAttribute('name')){
+				return "<div class='invalid-feedback'>". $errors->first($name) ."</div>";
+			}
+		}
+	}
+
+	public function render($args=[]){
+    	if(!$this->isVisible()) return;
+
+			$ret="";
+			if($this->container){
+				$ret.=$this->renderFormGroup();
+			}
+
+			$ret.=$this->renderLabel();
+			$ret.=$this->renderIcon();
+
+
+
+			if(method_exists($this,'preHook')){
+      	$ret.=$this->preHook();
+			}
+			
+			//render the input
+    	$ret.="<{$this->tag} ";
+    	$ret.=$this->renderAttributes();
+    	$ret.=" ";
+    	$ret.=$this->renderData();
+    	$ret.=$this->closetag?">":"/>";
+
+    	// $this->renderBody();
+			if(method_exists($this,'bodyHook')){
+      	$ret.=$this->bodyHook();
+			}
+
+			if($this->closetag) $ret.="</{$this->tag}>";
+
+			if(method_exists($this,'postHook')){
+      	$ret.=$this->postHook();
+			}
+			
+			$ret.=$this->renderHelpText();
+			$ret.=$this->renderErrors();
+
+			
+			if($this->container) $ret.="</div>";
+    	return $ret;
+    	
+	}
+
+
+
+
+
+
+	
+
+
+}

@@ -26,7 +26,7 @@
 	  
 
 	<input 
-		id="{{$id}}"
+		id="{{ $id }}"
 	    type="{{ $type }}" 
 		name="{{ $name }}" 
 		class="{{ $class  }} " 

@@ -18736,6 +18736,13 @@ form.validating {
   color: #adb5bd;
 }
 
+.form-group::after {
+  content: "";
+  display: block !important;
+  clear: both;
+  position: relative !important;
+}
+
 /*form groups*/
 
 .form-group.outlined {

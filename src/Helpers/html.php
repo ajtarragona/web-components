@@ -2,8 +2,6 @@
 
 use Ajtarragona\WebComponents\Models\Components\WebComponent;
 use Ajtarragona\WebComponents\Models\Components\Icon;
-use Ajtarragona\WebComponents\Models\Components\Input;
-use Ajtarragona\WebComponents\Models\Components\Textarea;
 use Ajtarragona\WebComponents\Models\Components\Texteditor;
 use Ajtarragona\WebComponents\Models\Components\Select;
 use Ajtarragona\WebComponents\Models\Components\Checkbox;
@@ -18,6 +16,8 @@ use Ajtarragona\WebComponents\Facades\MainMenu;
 
 use \InvalidArgumentException as InvalidArgumentException;
 
+use Ajtarragona\WebComponents\Models\Forms\Textarea;
+use Ajtarragona\WebComponents\Models\Forms\Input;
 
 if (! function_exists('renderAttributes')) {
 	function renderAttributes($array=false,$excluded=[]) {
@@ -104,7 +104,7 @@ if (! function_exists('select')) {
 if (! function_exists('autocomplete')) {
 	function autocomplete($attributes=[],$data=[]){
 		if(!isset($attributes["class"])) $attributes["class"]="";
-		$attributes["class"].=" form-control autocomplete";
+		$attributes["class"].=" autocomplete";
 
 		$newdata=[];
 

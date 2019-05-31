@@ -146,9 +146,15 @@ form.validating{
 		}
 	}
 	
-
+	&::after{
+		content: '';
+		display: block !important;
+		clear: both;
+		position:relative !important;
+	}
 
 }
+
 
 /*form groups*/
 $sidelabel-size : 160px;

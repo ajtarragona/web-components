@@ -7,8 +7,11 @@ use Illuminate\Support\Str;
 class WebComponent
 {
 
+	public $tag;
+
 	public $attributes;
 	public $data;
+
 	protected $defaultattributes=[];
 	protected $defaultdata=[];
 	protected $hiddenattributes = []; //hidden attributes (do not render)
@@ -35,6 +38,7 @@ class WebComponent
     	$args=array_merge($args,$this->attributes);
     	$args["object"]=$this;
     	//dump($args);
+    	
     	return $this->renderView($this->view, $args);
 	}
 
@@ -139,8 +143,7 @@ class WebComponent
 
 	
 
-
-
+	
 
 
 

@@ -3,6 +3,8 @@ namespace Ajtarragona\WebComponents\Models\Components;
 
 class Input extends WebComponent
 {	
+	public $tag ="input";
+
 	protected $defaultattributes=[
 		'name'=>'unnamed',
 		'value'=>'',

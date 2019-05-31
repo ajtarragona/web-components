@@ -3,9 +3,9 @@
 	'method' => 'PUT', 
 	'id'=>'item-form', 
 	'action' => route('webcomponents.demo.items.update',[$item->id]), 
-	'validator'=>'Ajtarragona\WebComponents\Requests\ItemValidate', 
-	'validateonstart'=>false, 
-	'validateonchange'=>false,
+	// 'validator'=>'Ajtarragona\WebComponents\Requests\ItemValidate', 
+	// 'validateonstart'=>false, 
+	// 'validateonchange'=>false,
 	'autofocus'=>true
 ])	
 
