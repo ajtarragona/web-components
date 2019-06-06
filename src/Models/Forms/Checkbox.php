@@ -11,7 +11,7 @@ class Checkbox extends FormControl
     public $container = false;
     public $horizontal=false;
     public $options=[];
-    public $checked=[];
+    public $checked=false;
     
 	public $attributes=[
 		'name'=>'',
@@ -100,6 +100,8 @@ class Checkbox extends FormControl
 
             if($this->label) $this->checklabel=$this->label;
             $this->label=null;
+            
+            if($this->checked) $this->setAttribute('checked',true);
             
             if(!$this->getAttribute('id')) $this->setAttribute('id' , 'checkbox_'.$this->getAttribute('name').'_'.kebab_case($this->getAttribute('value')));
 		}
