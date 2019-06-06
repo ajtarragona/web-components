@@ -34,5 +34,27 @@ class Breadcrumb extends WebComponent
 		//dump($this);
 	}
 
+	protected function renderCrumb($item){
+		$crumb = new Crumb($item);
+		return $crumb->render();	
+	}
+
+	public function render($args=[]){
+		$ret="<ol ";
+		$ret.=" id=\"".$this->attributes['id']."\" ";
+		$ret.=" class=\"".$this->attributes['class']."\" ";
+		$ret.=renderAttributes($this->attributes, $this->hiddenattributes) . " " . renderData($this->data);
+		$ret.=">";
+
+		foreach($this->attributes["items"]  as $item){
+			$ret.=$this->renderCrumb($item);
+		}
+
+		$ret.="</ol>";
+
+		return $ret;
+
+	}
+
 
 }

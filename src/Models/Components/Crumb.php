@@ -43,8 +43,30 @@ class Crumb extends WebComponent
 		
 		$this->attributes['class'].=" breadcrumb-item ";
 
-		
-     }
+		$this->attributes['name']=isset($this->attributes['name'])?$this->attributes['name']:'';
+		$this->attributes['icon']=isset($this->attributes['icon'])?$this->attributes['icon']:'';
+	 }
+	 
+	 public function render($args=[]){
+		$ret="";
+		if($this->hasUrl()){
+			$ret.="<a ";
+			$ret.="	id=\"{$this->attributes['id']}\"";
+			$ret.="	class=\"{$this->attributes['class']}\"";
+			$ret.="	href=\"{$this->getUrl()}\" >";
+			$ret.= textAndIcon($this->attributes['name'],$this->attributes['icon']);
+			$ret.="</a>";
+
+		}else{
+			$ret.="<li ";
+			$ret.="	id=\"{$this->attributes['id']}\"";
+			$ret.="	class=\"{$this->attributes['class']}\"";		
+			$ret.=textAndIcon($this->attributes['name'],$this->attributes['icon']);
+					
+			$ret.="</li>";
+		}
+		return $ret;
+	 }
 
 
    
