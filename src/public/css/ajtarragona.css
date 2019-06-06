@@ -16790,13 +16790,6 @@ body {
   letter-spacing: 0px;
 }
 
-html.loading body {
-  -webkit-filter: grayscale(60%);
-          filter: grayscale(60%);
-  pointer-events: none;
-  overflow: hidden;
-}
-
 html.loading body:after {
   font-family: "Font Awesome 5 Free";
   font-weight: 900;
@@ -16817,8 +16810,17 @@ html.loading body:after {
   z-index: 1000;
 }
 
-html.loading select {
+html.loading body select {
   visibility: hidden;
+}
+
+html.loading body label[role=button],
+html.loading body button[type=submit],
+html.loading body input[type=submit] {
+  pointer-events: none !important;
+  opacity: 0.9 !important;
+  -webkit-filter: grayscale(60%) !important;
+          filter: grayscale(60%) !important;
 }
 
 html:not(.loading) body {
@@ -18736,13 +18738,6 @@ form.validating {
   color: #adb5bd;
 }
 
-.form-group::after {
-  content: "";
-  display: block !important;
-  clear: both;
-  position: relative !important;
-}
-
 /*form groups*/
 
 .form-group.outlined {
@@ -19442,10 +19437,11 @@ form.validating {
   background-image: none;
 }
 
-.form-group.outlined > input,
-.form-group.outlined > textarea,
-.form-group.outlined > .mentions-container,
-.form-group.outlined > .date-container .form-control {
+.form-group.outlined .form-control-container .form-control:not(.bootstrap-select),
+.form-group.outlined .form-control-container > input,
+.form-group.outlined .form-control-container > textarea,
+.form-group.outlined .form-control-container > .mentions-container,
+.form-group.outlined .form-control-container > .date-container .form-control {
   border-color: transparent;
   /*padding-left:0;
   padding-right:0;
@@ -19454,38 +19450,25 @@ form.validating {
   padding: 0.4rem 1rem;
 }
 
-.form-group.outlined > input.form-control-lg {
+.form-group.outlined .form-control-container > input.form-control-lg {
   height: auto;
 }
 
-.form-group.outlined > .form-row {
-  margin-left: 0;
-  margin-right: 0;
-}
-
-.form-group.outlined > .form-row .form-control {
-  border-color: transparent;
-  display: block;
-}
-
-.form-group.outlined > .input-icon + .form-row {
-  padding-left: 1.5rem;
-}
-
-.form-group.outlined > input:focus,
-.form-group.outlined > textarea:focus,
-.form-group.outlined > .date-container .form-control:focus,
-.form-group.outlined > .mentions-container:focus,
-.form-group.outlined > .custom-file .custom-file-input:focus,
-.form-group.outlined > .custom-file .custom-file-input:focus ~ .custom-file-label,
-.form-group.outlined > .form-row .form-control:focus {
+.form-group.outlined .form-control-container .form-control:not(.bootstrap-select):focus,
+.form-group.outlined .form-control-container > input:focus,
+.form-group.outlined .form-control-container > textarea:focus,
+.form-group.outlined .form-control-container > .date-container .form-control:focus,
+.form-group.outlined .form-control-container > .mentions-container:focus,
+.form-group.outlined .form-control-container > .custom-file .custom-file-input:focus,
+.form-group.outlined .form-control-container > .custom-file .custom-file-input:focus ~ .custom-file-label,
+.form-group.outlined .form-control-container > .form-row .form-control:focus {
   border-color: transparent;
   outline: none;
   box-shadow: none !important;
 }
 
-.form-group.outlined .form-control:disabled,
-.form-group.outlined .form-control[readonly] {
+.form-group.outlined .form-control-container .form-control:disabled,
+.form-group.outlined .form-control-container .form-control[readonly] {
   background-color: transparent;
   opacity: 0.6;
 }
@@ -19504,7 +19487,7 @@ form.validating {
   color: #d9534f;
 }
 
-.form-group.outlined.is-invalid > .input-icon {
+.form-group.outlined.is-invalid .input-icon {
   color: #d9534f;
 }
 
@@ -19525,10 +19508,6 @@ form.validating {
 
 .form-group.outlined.loading > label {
   color: #1F9BCF;
-}
-
-.form-group.outlined.with-feedback .input-icon {
-  bottom: 1.5em;
 }
 
 .form-group.outlined > .custom-control {
@@ -19588,75 +19567,41 @@ form.validating {
 }
 
 .form-group.outlined.sidelabel {
-  /*display:flex;*/
+  display: flex;
+  flex-direction: row;
 }
 
 .form-group.outlined.sidelabel > label {
   width: 160px;
-  float: left;
   padding-bottom: 0.8rem;
   line-height: 1.2em;
 }
 
-.form-group.outlined.sidelabel > label ~ input,
-.form-group.outlined.sidelabel > label ~ .input-group,
-.form-group.outlined.sidelabel > label ~ textarea {
-  width: calc(100% - 160px );
-  padding-left: 0em;
+.form-group.outlined.sidelabel .input-icon {
+  padding: 0.4rem;
 }
 
-.form-group.outlined.sidelabel > label ~ .selectpicker-wrapper,
-.form-group.outlined.sidelabel > label ~ .date-container,
-.form-group.outlined.sidelabel > label ~ .mentions-container,
-.form-group.outlined.sidelabel > label ~ .form-control-container,
-.form-group.outlined.sidelabel > label ~ .bootstrap-tagsinput,
-.form-group.outlined.sidelabel > label ~ .custom-file {
-  width: calc(100% - 160px );
-  float: left;
-}
-
-.form-group.outlined.sidelabel > label ~ .selectpicker-wrapper > .bootstrap-select .filter-option,
-.form-group.outlined.sidelabel > label ~ .date-container > .bootstrap-select .filter-option,
-.form-group.outlined.sidelabel > label ~ .mentions-container > .bootstrap-select .filter-option,
-.form-group.outlined.sidelabel > label ~ .form-control-container > .bootstrap-select .filter-option,
-.form-group.outlined.sidelabel > label ~ .bootstrap-tagsinput > .bootstrap-select .filter-option,
-.form-group.outlined.sidelabel > label ~ .custom-file > .bootstrap-select .filter-option {
-  padding-left: 0em;
-}
-
-.form-group.outlined.sidelabel > label ~ .mentions-container,
-.form-group.outlined.sidelabel > label ~ .file-input .file-caption {
-  padding-left: 0;
-}
-
-.form-group.outlined.sidelabel > label ~ .bootstrap-touchspin .form-control,
-.form-group.outlined.sidelabel > label ~ .bootstrap-touchspin .form-control,
-.form-group.outlined.sidelabel > label ~ .date-container .form-control,
-.form-group.outlined.sidelabel > label ~ .form-row .form-control {
-  padding-left: 0;
-}
-
-.form-group.outlined.sidelabel > .form-row {
+.form-group.outlined.sidelabel .form-control-container > .form-row {
   padding: 0;
 }
 
-.form-group.outlined.sidelabel > .input-group:not(.bootstrap-touchspin):not(.colorpicker-element):not(.iconpicker-container) {
+.form-group.outlined.sidelabel .form-control-container > .input-group:not(.bootstrap-touchspin):not(.colorpicker-element):not(.iconpicker-container) {
   padding-top: 0.4rem;
   padding-bottom: 0.4rem;
 }
 
-.form-group.outlined.sidelabel > .input-group.colorpicker-element,
-.form-group.outlined.sidelabel > .input-group.iconpicker-container {
+.form-group.outlined.sidelabel .form-control-container > .input-group.colorpicker-element,
+.form-group.outlined.sidelabel .form-control-container > .input-group.iconpicker-container {
   padding-top: 0;
   padding-bottom: 0;
 }
 
-.form-group.outlined.sidelabel > .input-group.colorpicker-element .form-control,
-.form-group.outlined.sidelabel > .input-group.iconpicker-container .form-control {
+.form-group.outlined.sidelabel .form-control-container > .input-group.colorpicker-element .form-control,
+.form-group.outlined.sidelabel .form-control-container > .input-group.iconpicker-container .form-control {
   padding-left: 0;
 }
 
-.form-group.outlined.sidelabel > .input-group.bootstrap-touchspin {
+.form-group.outlined.sidelabel .form-control-container > .input-group.bootstrap-touchspin {
   padding-bottom: 2px;
 }
 
@@ -19668,37 +19613,6 @@ form.validating {
   float: left;
   clear: both;
   padding-left: 0em !important;
-}
-
-.form-group.outlined.sidelabel > .input-icon {
-  margin-top: 0;
-  left: 160px;
-  padding-left: 0;
-}
-
-.form-group.outlined.sidelabel > .input-icon + input,
-.form-group.outlined.sidelabel > .input-icon + .input-group,
-.form-group.outlined.sidelabel > .input-icon + textarea,
-.form-group.outlined.sidelabel > .input-icon + .selectpicker-wrapper .dropdown-toggle,
-.form-group.outlined.sidelabel > .input-icon + .selectpicker-wrapper .filter-option,
-.form-group.outlined.sidelabel > .input-icon + .input-group,
-.form-group.outlined.sidelabel > .input-icon + .date-container,
-.form-group.outlined.sidelabel > .input-icon + .mentions-container,
-.form-group.outlined.sidelabel > .input-icon + .custom-file .custom-file-label,
-.form-group.outlined.sidelabel > .input-icon + .form-row {
-  padding-left: 1.5em;
-}
-
-.form-group.outlined.sidelabel.form-group-textarea > .input-icon {
-  bottom: auto;
-  top: 0em;
-}
-
-.form-group.outlined.sidelabel::after {
-  content: "";
-  display: block !important;
-  clear: both;
-  position: relative !important;
 }
 
 .form-inline .form-group.outlined {
@@ -19737,80 +19651,18 @@ label.btn {
 
 .input-icon {
   display: inline-block;
-  position: absolute;
-  bottom: 0px;
-  left: 0;
   line-height: 1.5rem;
-  padding: 0.4rem 1rem;
+  padding: 0.4rem 0 0.4rem 1rem;
   font-size: 1rem;
-  pointer-events: none;
   opacity: 0.6;
 }
 
-.form-group-textarea .input-icon {
-  bottom: auto;
-  top: 2em;
-}
-
-.input-icon.icon-right {
-  left: auto;
-  right: 0;
-}
-
-.input-icon + input.form-control,
-.input-icon + textarea.form-control,
-.input-icon + .selectpicker-wrapper .dropdown-toggle,
-.form-group .input-icon + .date-container .form-control.flatpickr-input,
-.input-icon + .mentions-container,
-.input-icon.icon-left + .custom-file .custom-file-label,
-.form-group .input-icon + .bootstrap-touchspin > .form-control,
-.input-icon + .bootstrap-tagsinput > .twitter-typeahead > input {
-  padding-left: 2.5rem;
-}
-
-.input-icon + .file-input .form-control.file-caption {
-  padding-left: 0;
-}
-
-.input-icon.icon-right + input.form-control,
-.input-icon.icon-right + textarea.form-control,
-.input-icon.icon-right + .selectpicker-wrapper .dropdown-toggle,
-.form-group .input-icon.icon-right + .date-container .form-control.flatpickr-input,
-.input-icon.icon-right + .mentions-container,
-.form-group .input-icon.icon-right + .bootstrap-touchspin > .form-control,
-.input-icon.icon-right + .bootstrap-tagsinput > .twitter-typeahead > input {
-  padding-left: 1rem;
-  padding-right: 3.5rem;
+.order-12 > .input-icon {
+  padding: 0.4rem 1rem 0.4rem 0;
 }
 
 .form-group.focused .input-icon {
   opacity: 1;
-}
-
-.form-inline .input-icon {
-  position: static;
-  padding: 0.4rem 1rem;
-  padding-right: 0;
-  line-height: 1.5;
-  margin-top: 0;
-}
-
-.custom-control-label .input-icon {
-  position: relative;
-  line-height: 1em;
-  padding: 0 0.3em 0 0;
-  top: 1px;
-}
-
-.form-inline label + .input-icon {
-  padding-left: 0;
-}
-
-.form-inline .input-icon + input.form-control,
-.form-inline .input-icon + textarea.form-control,
-.form-inline .input-icon + select.form-control.custom-select {
-  padding-left: 1rem;
-  padding-right: 1rem;
 }
 
 .tribute-container {
@@ -20392,7 +20244,7 @@ table[data-clicktype=click] tbody tr {
   border-width: 0px;
 }
 
-.form-group.outlined:not(.sidelabel) .col-form-label ~ .custom-file .custom-file-label::after {
+.form-group.outlined:not(.sidelabel) .custom-file .custom-file-label::after {
   border-top: 1px solid #eceeef;
 }
 

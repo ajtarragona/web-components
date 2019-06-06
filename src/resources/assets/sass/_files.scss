@@ -14,7 +14,7 @@
 	}
 
 	&:not(.sidelabel){
-		.col-form-label ~ .custom-file .custom-file-label::after{
+		.custom-file .custom-file-label::after{
 			border-top:1px solid $border-color;
 		}
 	}

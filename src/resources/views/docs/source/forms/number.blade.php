@@ -30,7 +30,8 @@
 		'name'=>'campo_numerico3', 
 		'label'=>'',
 		'placeholder'=>'Import en dolars',
-		'containerclass'=>'bg-info'
+		'containerclass'=>'bg-info',
+		'icon'=>'money-check-alt'
 	],
 	[
 		'decimals'=>4,
@@ -45,7 +46,9 @@
 		'name'=>'campo_numerico4', 
 		'label'=>'Euros',
 		'placeholder'=>'Import en euros',
-		'containerclass'=>'bg-warning'
+		'containerclass'=>'bg-warning',
+		'icon'=>'money-check-alt',
+		'iconposition'=>'right'
 	],
 	[
 		'decimals'=>4,

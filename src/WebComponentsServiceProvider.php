@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Schema;
 use Ajtarragona\WebComponents\DirectivesRepository;
 use Ajtarragona\WebComponents\Commands\InstallDemo;
 use Ajtarragona\WebComponents\Commands\PrepareJs;
+use Ajtarragona\WebComponents\Commands\SetupAuth;
 
 
 class WebComponentsServiceProvider extends ServiceProvider
@@ -118,6 +119,7 @@ class WebComponentsServiceProvider extends ServiceProvider
             $this->commands([
                 InstallDemo::class,
                 PrepareJs::class,
+                SetupAuth::class,
             ]);
         }
     }

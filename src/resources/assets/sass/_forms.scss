@@ -146,12 +146,7 @@ form.validating{
 		}
 	}
 	
-	&::after{
-		content: '';
-		display: block !important;
-		clear: both;
-		position:relative !important;
-	}
+
 
 }
 
@@ -294,62 +289,50 @@ $sidelabel-size : 160px;
 		background-image:none;
 	}
 
-
-	> input,
-	> textarea,
-	>.mentions-container,
-	>.date-container .form-control
-	{
-		border-color:transparent;
-		/*padding-left:0;
-		padding-right:0;
-		padding:0;*/
-		line-height:$input-line-height;
-		padding: $input-padding-y $input-padding-x ;
-	
-	}
-
-	> input.form-control-lg{
-		height:auto;
-	}
-
-	>.form-row 
-	{
-		// padding-left: $input-padding-x ;
-		// padding-right: $input-padding-x ;
-		margin-left:0;
-		margin-right:0;
-
-		.form-control{
+	.form-control-container {
+		.form-control:not(.bootstrap-select),
+		> input,
+		> textarea,
+		>.mentions-container,
+		>.date-container .form-control
+		{
 			border-color:transparent;
-			display:block;
+			/*padding-left:0;
+			padding-right:0;
+			padding:0;*/
+			line-height:$input-line-height;
+			padding: $input-padding-y $input-padding-x ;
+		
+		}
+		> input.form-control-lg{
+			height:auto;
+		}
+
+		
+	
+		.form-control:not(.bootstrap-select):focus,
+		> input:focus,
+		> textarea:focus,
+		>.date-container .form-control:focus,
+		>.mentions-container:focus,
+		>.custom-file .custom-file-input:focus,
+		>.custom-file .custom-file-input:focus ~ .custom-file-label,
+		>.form-row .form-control:focus
+		{
+			border-color:transparent;
+			outline:none;
+			box-shadow:none !important;
+		
+		}
+		
+		
+		.form-control:disabled, 
+		.form-control[readonly] {
+			background-color: transparent;
+			opacity: 0.6;
 		}
 	}
 
-	>.input-icon + .form-row {
-		padding-left: 1.5*$input-padding-x;
-	}
-
-	> input:focus,
-	> textarea:focus,
-	>.date-container .form-control:focus,
-	>.mentions-container:focus,
-	>.custom-file .custom-file-input:focus,
-	>.custom-file .custom-file-input:focus ~ .custom-file-label,
-	>.form-row .form-control:focus
-	{
-		border-color:transparent;
-		outline:none;
-		box-shadow:none !important;
-	
-	}
-	
-	
-	.form-control:disabled, 
-	.form-control[readonly] {
-	    background-color: transparent;
-	    opacity: 0.6;
-	}
 
 	&.is-invalid{
 		border-color:$danger;
@@ -362,7 +345,7 @@ $sidelabel-size : 160px;
 			color: $danger;
 		}
 
-		>.input-icon{
+		.input-icon{
 			color: $danger;
 		}
 
@@ -388,11 +371,6 @@ $sidelabel-size : 160px;
 	}
 	
 
-	&.with-feedback{
-		.input-icon{
-			bottom: 1.5em;
-		}
-	}
 
  	> .custom-control{
  		margin:$input-padding-y $input-padding-x ;
@@ -453,75 +431,51 @@ $sidelabel-size : 160px;
 	}
 
 	&.sidelabel{
-		/*display:flex;*/
-		> label{
+		display:flex;
+		flex-direction: row;
+		
+		> label {
 			width: $sidelabel-size;
-			float:left;
 			padding-bottom:2*$input-padding-y;
 			line-height: 1.2em;
-			~ input,
-			~ .input-group,
-			~ textarea{
-				width:calc(100% - #{$sidelabel-size} );
-				padding-left:0em;
+
+			
+		}
+
+		.input-icon{
+			padding: $input-padding-y;
+		}
+		
+
+		.form-control-container{
+
+			>.form-row
+			{
+				padding: 0;
 			}
 
-			~ .selectpicker-wrapper,
-			~ .date-container,
-			~ .mentions-container,
-			~ .form-control-container,
-			~ .bootstrap-tagsinput,
-			~ .custom-file{
-				width:calc(100% -  #{$sidelabel-size} ) ;
-				float:left;
-				>.bootstrap-select .filter-option{
-					padding-left:0em;
+			
+
+			> .input-group:not(.bootstrap-touchspin):not(.colorpicker-element):not(.iconpicker-container){
+				padding-top:$input-padding-y;
+				padding-bottom:$input-padding-y;
+			}
+
+			>.input-group.colorpicker-element,
+			>.input-group.iconpicker-container {
+				padding-top:0;
+				padding-bottom:0;
+				
+				.form-control{
+					padding-left:0;
 				}
 			}
 
-			~ .mentions-container,
-			~ .file-input .file-caption{
-				padding-left:0;
+			> .input-group.bootstrap-touchspin{
+				padding-bottom: 2px;
 			}
-			
-			~ .bootstrap-touchspin .form-control,
-			~ .bootstrap-touchspin .form-control,
-			~ .date-container .form-control,
-			~ .form-row .form-control{
-				padding-left:0;
-			
-			}
-		}
+		}	
 
-		
-
-		
-
-		>.form-row
-		{
-			padding: 0;
-		}
-
-		
-
-		> .input-group:not(.bootstrap-touchspin):not(.colorpicker-element):not(.iconpicker-container){
-			padding-top:$input-padding-y;
-			padding-bottom:$input-padding-y;
-		}
-
-		>.input-group.colorpicker-element,
-		>.input-group.iconpicker-container {
-			padding-top:0;
-			padding-bottom:0;
-			
-			.form-control{
-				padding-left:0;
-			}
-		}
-
-		> .input-group.bootstrap-touchspin{
-			padding-bottom: 2px;
-		}
 		.form-text,
 		.feedback{
 			padding-bottom:0rem;
@@ -531,38 +485,9 @@ $sidelabel-size : 160px;
 			clear: both;
 			padding-left:0em !important;
 		}
-		>.input-icon{
-			margin-top:0;
-			left:$sidelabel-size;
-			padding-left:0;
+		
 
-			+  input,
-			+  .input-group,
-			+  textarea,
-			+ .selectpicker-wrapper .dropdown-toggle,
-			+ .selectpicker-wrapper .filter-option,
-			+ .input-group,
-			+ .date-container,
-			+ .mentions-container,
-			+ .custom-file .custom-file-label,
-			+ .form-row
-			{
-				padding-left:1.5em;
-			}
-
-		}
-
-		&.form-group-textarea > .input-icon{
-			bottom:auto;
-			top:0em;
-		}
-
-		&::after{
-			content: '';
-		    display: block !important;
-		    clear: both;
-		    position:relative !important;
-		}
+		
 	}
 
 	
@@ -616,86 +541,26 @@ label.btn{
 
 .input-icon{
 	display:inline-block;
-	position: absolute;
-	bottom:0px;
-	left:0;
 	line-height:1.5rem;//$input-line-height;
-	padding: $input-padding-y $input-padding-x;
+	padding: $input-padding-y 0 $input-padding-y $input-padding-x ;
 	font-size:1rem;
-	pointer-events:none;
-	// color:$gray-400;
 	opacity:.6;
 }
-.form-group-textarea .input-icon{
-	bottom:auto;
-	top:2em;
+.order-12 > .input-icon{
+	padding: $input-padding-y $input-padding-x  $input-padding-y 0;
+	
 }
 
-.input-icon.icon-right{
-	left:auto;
-	right:0;
-}
 
 // label + .input-icon{
 // 	//padding: $input-padding-y $input-padding-x;
 // 	// margin-top: $input-padding-y+$input-line-height;
 // }
 
-.input-icon + input.form-control,
-.input-icon + textarea.form-control,
-.input-icon + .selectpicker-wrapper .dropdown-toggle,
-.form-group .input-icon + .date-container .form-control.flatpickr-input,
-.input-icon + .mentions-container,
-.input-icon.icon-left + .custom-file .custom-file-label,
-.form-group .input-icon + .bootstrap-touchspin > .form-control,
-.input-icon + .bootstrap-tagsinput > .twitter-typeahead > input{
-
-	padding-left:2.5*$input-padding-x;
-}
-
-.input-icon + .file-input .form-control.file-caption{
-	padding-left:0;
-}
-.input-icon.icon-right + input.form-control,
-.input-icon.icon-right + textarea.form-control,
-.input-icon.icon-right + .selectpicker-wrapper .dropdown-toggle,
-.form-group .input-icon.icon-right + .date-container .form-control.flatpickr-input,
-.input-icon.icon-right + .mentions-container,
-.form-group  .input-icon.icon-right + .bootstrap-touchspin > .form-control,
-.input-icon.icon-right + .bootstrap-tagsinput > .twitter-typeahead > input{
-	padding-left:$input-padding-x;
-	padding-right:3.5 * $input-padding-x;
-}
 
 .form-group.focused .input-icon{
 	//color:$secondary;
 	opacity:1;
-}
-
-.form-inline .input-icon{
-	position:static;
-	padding:$input-padding-y $input-padding-x;
-	padding-right:0;
-	line-height:$input-line-height;
-	margin-top:0;
-}
-
-.custom-control-label .input-icon{
-	position:relative;
-	line-height:1em;
-	padding:0 .3em 0 0;
-	top:1px;
-}
-
-.form-inline label + .input-icon{
-	padding-left:0;
-}
-
-.form-inline .input-icon + input.form-control,
-.form-inline .input-icon + textarea.form-control,
-.form-inline .input-icon + select.form-control.custom-select{
-	padding-left:$input-padding-x;
-	padding-right:$input-padding-x;
 }
 
 

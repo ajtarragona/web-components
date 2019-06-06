@@ -22,7 +22,7 @@ class MainMenu{
 
 
 	public function render(){
-		dd($this->items);
+		// dd($this->items);
 		return nav([
 			"navigation"=> 'drilldown',
 			'class'=>'nav-dark',

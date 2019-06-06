@@ -83775,7 +83775,7 @@ $.widget("ajtarragona.tgnAutocomplete", {
   _initSingle: function _initSingle() {
     var o = this;
     this.input = this.element;
-    this.element.wrap($('<div class="form-row"/>'));
+    this.element.wrap($('<div class="input-group"/>'));
     this.element.addClass("autocompleteinit");
 
     if (this.options.savevalue) {
@@ -83786,8 +83786,8 @@ $.widget("ajtarragona.tgnAutocomplete", {
       this.element.attr('name', 'content_' + this.options.inputname);
 
       if (this.options.showvalue) {
-        o.hidden.attr('type', 'text').addClass("form-control tt-value").attr('readonly', true).wrap($('<div class="col-2"/>'));
-        o.element.wrap($('<div class="col-10"/>'));
+        o.hidden.attr('type', 'text').addClass("form-control tt-value").attr('readonly', true).wrap($('<div class="input-group-prepend " style="width:60px"/>'));
+        o.element.wrap($('<div class="flex-grow-1"/>'));
       }
 
       this.element.on('keyup', function (e) {
@@ -84827,6 +84827,14 @@ function tgnFormClass(obj, options) {
           $(this).data('had-feedback', true);
         }
       });
+      $form.find('.input-icon').on('click', function (e) {
+        al('click icon');
+        var label = $(this).closest('.form-group').find('label.col-form-label');
+
+        if (label.length > 0) {
+          $("#" + label.attr('for')).focus();
+        }
+      });
       $form.addClass('forminit');
       TGN_FORMS.push(this); //al(this.settings);
 
@@ -84915,7 +84923,7 @@ function tgnFormClass(obj, options) {
         }
       }); //focus groups
 
-      $form.on('focus', ':input:not(.btn)', function () {
+      $form.on('focus', ':input:not(.btn)', function (e) {
         var group = $(this).closest('.form-group');
         if (!group.is(".disabled")) group.addClass('focused');
       }).on('blur', ':input:not(.btn)', function () {

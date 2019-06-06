@@ -30,8 +30,9 @@
     	<label for="{{ isset($id)?$id:'' }}" class="col-form-label col-form-label-{{ isset($size)?$size:'md' }}  ">{{ $label }}</label>
 	@endif
 
-	{{ $slot }}
 
+	{{ $slot }}
+	
 
 @if(!isset($container) || (isset($container) && $container))
 	

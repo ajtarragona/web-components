@@ -5,6 +5,7 @@ class Textarea extends FormControl
 {	
 	public $tag ="textarea";
 	public $closetag=true;
+	public $autoheight=false;
 	
 	public $attributes=[
 		'name'=>'',
@@ -18,6 +19,13 @@ class Textarea extends FormControl
 	
 	public function bodyHook(){
 		return $this->getAttribute("value");
+	}
+
+	public function __construct($attributes=[],$data=[]){
+		parent::__construct($attributes,$data);
+
+		if($this->autoheight) $this->addClass('autoheight');
+		
 	}
 
 	

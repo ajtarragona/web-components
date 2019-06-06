@@ -41,9 +41,10 @@
 				'action'=>route('webcomponents.docs.handle',['forms.checkbox'])
 			])
 				
-				@formgroup
+				<div class="mb-3">
 					@includeIf('ajtarragona-web-components::docs.source.forms.checkbox')
-				@endformgroup
+				</div>
+
 
 				@button(['type'=>'submit','size'=>'sm'])
 					Test @icon('chevron-right') 

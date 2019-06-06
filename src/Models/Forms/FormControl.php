@@ -40,6 +40,10 @@ class FormControl
 		return data_get($this->attributes,$name,$default);
 	}
 
+	public function setAttribute($name,$value){
+		data_set($this->attributes,$name,$value);
+	}
+
 	
 	public static function generateUid($prefix=false){
 		$ret= ($prefix?$prefix."-":""). Str::uuid();
@@ -49,9 +53,15 @@ class FormControl
 
 	protected function prepareAttributes($attributes=[]){
 		//dd(get_object_vars($this));
+		//las keys deben estar en camelCase, 
+		//los atributos en kebab-case 
 		foreach(get_object_vars($this) as $key=>$value){
+			$var=$key;
+			$key=kebab_case($key);
+			// dump($key);
+			// dump(array_keys($attributes));
 			if(in_array($key, array_keys($attributes))){
-				$this->$key = $attributes[$key];
+				$this->$var = $attributes[$key];
 				unset($attributes[$key]);
 			}
 		}
@@ -129,7 +139,9 @@ class FormControl
 	
 
 	
-
+	public function addClass($name){
+		$this->setAttribute('class',  	$this->getAttribute('class')." ".$name);
+	}
 
 	protected function containerClass(){
 		
@@ -162,7 +174,12 @@ class FormControl
 
 
 	public function renderIcon(){
-		if($this->icon) return "<span class='input-icon icon-".$this->iconposition ." '>". icon($this->icon). "</span>";
+		if($this->icon) {
+			$ret='<div class="input-group-prepend '. ($this->iconposition=="right"?'order-12':'') .'">';
+			$ret.="	<span class='input-icon '>". icon($this->icon). "</span>";
+			$ret.="</div>";
+			return $ret;
+		}
 
 	}
 
@@ -194,34 +211,47 @@ class FormControl
 			if($this->container){
 				$ret.=$this->renderFormGroup();
 			}
-
+			
 			$ret.=$this->renderLabel();
+
+			$ret.="<div class='input-group' >";
+	
 			$ret.=$this->renderIcon();
 
 
+			$ret.="<div class='flex-grow-1 form-control-container' >";
 
 			if(method_exists($this,'preHook')){
-      	$ret.=$this->preHook();
+				$ret.=$this->preHook();
 			}
 			
-			//render the input
-    	$ret.="<{$this->tag} ";
-    	$ret.=$this->renderAttributes();
-    	$ret.=" ";
-    	$ret.=$this->renderData();
-    	$ret.=$this->closetag?">":"/>";
+			if(method_exists($this,'bodyReplaceHook') && $this->bodyReplaceHook()){
+				$ret.=$this->bodyReplaceHook();
+			}else{
 
-    	// $this->renderBody();
-			if(method_exists($this,'bodyHook')){
-      	$ret.=$this->bodyHook();
+	
+				//render the input
+				$ret.="<{$this->tag} ";
+				$ret.=$this->renderAttributes();
+				$ret.=" ";
+				$ret.=$this->renderData();
+				$ret.=$this->closetag?">":"/>";
+	
+				// $this->renderBody();
+				if(method_exists($this,'bodyHook')){
+					$ret.=$this->bodyHook();
+				}
+	
+				if($this->closetag) $ret.="</{$this->tag}>";
 			}
-
-			if($this->closetag) $ret.="</{$this->tag}>";
-
+			
 			if(method_exists($this,'postHook')){
-      	$ret.=$this->postHook();
+				$ret.=$this->postHook();
 			}
 			
+			$ret.="</div><!--.form-control-container-->";
+
+			$ret.="</div><!--.input-group-->";
 			$ret.=$this->renderHelpText();
 			$ret.=$this->renderErrors();
 

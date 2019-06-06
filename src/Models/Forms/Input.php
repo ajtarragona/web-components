@@ -32,12 +32,12 @@ class Input extends FormControl
 
 		if($this->attributes['type']=="color"){
 			$this->attributes["type"]="text";
-			$this->attributes["class"].=" colorinput";
+			$this->addClass("colorinput");
 		}
 
 		if($this->attributes['type']=="number"){
 			$this->attributes["type"]="text";
-			$this->attributes["class"].=" number";
+			$this->addClass("number");
 		}
 		
 		if(isset($this->attributes["multiple"]) && $this->attributes["multiple"] && !ends_with($this->attributes['name'],"[]")) $this->attributes["name"].="[]";

@@ -2,48 +2,30 @@
 
 namespace Ajtarragona\WebComponents\Controllers\Auth;
 
-use Illuminate\Http\Request;
+// use Illuminate\Http\Request;
+// use Ajtarragona\WebComponents\Requests\AuthValidate;
 use Ajtarragona\WebComponents\Controllers\BaseController as Controller;
-use Ajtarragona\WebComponents\Requests\AuthValidate;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class SessionController extends Controller
 {
+	use AuthenticatesUsers;
 
-	public function __construct(){
-		$this->middleware('guest', ['except'=>'destroy']);
+	protected $redirectTo = '/';
 
+	public function __construct()
+    {
+        $this->middleware('guest')->except('logout');
 	}
 
-    public function index()
-	{
-		return $this->view("layout.auth.login");
+	public function showLoginForm()
+    {
+     	return $this->view("layout.auth.login");
 	}
 
-	public function start(AuthValidate $request)
-	{
-		//dd(request());
-		//attempt authenticate the user
-
-		if (!auth()->attempt($request->only(['username', 'password']))) {
-			
-			return back()->with(['error'=>__('tgn::auth.wrongcredentials')]);
-		}
-		//$url = redirect()->intended()->getTargetUrl();
-		//dd($url);
-
-		$ret= redirect()->intended();
-		//dd($ret->getTargetUrl());
-		return $ret;
-
-	}
-
-	public function destroy()
-	{
-		
-		auth()->logout();
-		
-		return redirect()->back();
-	}
-
+	public function username()
+    {
+        return 'username';
+    }
 
 }

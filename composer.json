@@ -20,7 +20,10 @@
         "imliam/laravel-env-set-command": "^1.0.0",
         "mariuzzo/laravel-js-localization": "^1.4.0",
         "tremby/laravel-git-version": "^1.1.0",
-        "tightenco/ziggy": "^0.7.0"
+        "tightenco/ziggy": "^0.7.0",
+        "adldap2/adldap2-laravel": "^6.0",
+        "laravel/passport": "^7.1"
+        
     },
     "autoload": {
         "psr-4": {

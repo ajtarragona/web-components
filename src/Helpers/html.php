@@ -2,10 +2,6 @@
 
 use Ajtarragona\WebComponents\Models\Components\WebComponent;
 use Ajtarragona\WebComponents\Models\Components\Icon;
-use Ajtarragona\WebComponents\Models\Components\Texteditor;
-use Ajtarragona\WebComponents\Models\Components\Select;
-use Ajtarragona\WebComponents\Models\Components\Checkbox;
-use Ajtarragona\WebComponents\Models\Components\Radio;
 use Ajtarragona\WebComponents\Models\Components\Nav;
 use Ajtarragona\WebComponents\Models\Components\NavItem;
 use Ajtarragona\WebComponents\Models\Components\Breadcrumb;
@@ -17,7 +13,11 @@ use Ajtarragona\WebComponents\Facades\MainMenu;
 use \InvalidArgumentException as InvalidArgumentException;
 
 use Ajtarragona\WebComponents\Models\Forms\Textarea;
+use Ajtarragona\WebComponents\Models\Forms\Texteditor;
 use Ajtarragona\WebComponents\Models\Forms\Input;
+use Ajtarragona\WebComponents\Models\Forms\Select;
+use Ajtarragona\WebComponents\Models\Forms\Checkbox;
+use Ajtarragona\WebComponents\Models\Components\Radio;
 
 if (! function_exists('renderAttributes')) {
 	function renderAttributes($array=false,$excluded=[]) {
@@ -155,7 +155,10 @@ if (! function_exists('radio')) {
 if (! function_exists('checkboxes')) {
 	function checkboxes($attributes=[],$data=[]){
 		$ret = new Checkbox($attributes,$data);
-		return $ret->render();
+		$val= $ret->render();
+		// dump($val);
+
+		return $val;
 	}
 }
 

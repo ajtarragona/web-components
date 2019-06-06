@@ -112,6 +112,14 @@ function tgnFormClass(obj,options){
 				}
 			});
 
+			$form.find('.input-icon').on('click',function(e){
+				al('click icon');
+				var label=$(this).closest('.form-group').find('label.col-form-label');
+				if(label.length>0){
+					$("#"+label.attr('for')).focus();
+				}
+			})
+
 			$form.addClass('forminit');
 	    	TGN_FORMS.push(this);
 	    	//al(this.settings);
@@ -206,8 +214,8 @@ function tgnFormClass(obj,options){
 	        });
 
 		     //focus groups
-		     $form.on('focus',':input:not(.btn)',function(){
-		     	var group=$(this).closest('.form-group');
+		     $form.on('focus',':input:not(.btn)',function(e){
+				var group=$(this).closest('.form-group');
 		     	if(!group.is(".disabled"))
 		     		group.addClass('focused');
 		     }).on('blur',':input:not(.btn)',function(){

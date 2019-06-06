@@ -9,6 +9,7 @@
 				@include('ajtarragona-web-components::docs.menuitem',['route'=>'start.introduction','title'=>'Introducció'])
 				@include('ajtarragona-web-components::docs.menuitem',['route'=>'start.installation','title'=>'Instal·lació'])
 				@include('ajtarragona-web-components::docs.menuitem',['route'=>'start.config','title'=>'Configuració'])
+				@include('ajtarragona-web-components::docs.menuitem',['route'=>'start.auth','title'=>'Autenticació'])
 				@include('ajtarragona-web-components::docs.menuitem',['route'=>'start.language','title'=>'Idiomes'])
 			</ul>
 	</li>

@@ -3,13 +3,13 @@
 //authentication routes
 Route::group(['middleware' => ['web','language']], function () {
 	//TODO
-	Route::get('/login', 'Ajtarragona\WebComponents\Controllers\Auth\SessionController@index')->name('login');
-	Route::post('/login', 'Ajtarragona\WebComponents\Controllers\Auth\SessionController@start')->name('tgn.dologin');
+	Route::get('/login', 'Ajtarragona\WebComponents\Controllers\Auth\SessionController@showLoginForm')->name('login');
+	Route::post('/login', 'Ajtarragona\WebComponents\Controllers\Auth\SessionController@login')->name('tgn.dologin');
 	
 });
 
 Route::group(['middleware' => ['web','language','auth']], function () {
-	Route::post('/logout', 'Ajtarragona\WebComponents\Controllers\Auth\SessionController@destroy')->name('tgn.logout');
+	Route::post('/logout', 'Ajtarragona\WebComponents\Controllers\Auth\SessionController@logout')->name('tgn.logout');
 });
 
 

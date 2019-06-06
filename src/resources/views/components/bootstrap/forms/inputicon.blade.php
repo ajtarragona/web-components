@@ -1,3 +1,5 @@
 @if(isset($icon) && $icon)
-	<span class='input-icon @if(isset($iconposition)) icon-{{$iconposition}} @else icon-left @endif '>@icon($icon)</span>
+	<div class="input-group-prepend  @if(isset($iconposition) && $iconposition=="right") order-12 @endif ">
+		<span class='input-icon '>@icon($icon)</span>
+	</div>
 @endif
