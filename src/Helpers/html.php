@@ -17,7 +17,7 @@ use Ajtarragona\WebComponents\Models\Forms\Texteditor;
 use Ajtarragona\WebComponents\Models\Forms\Input;
 use Ajtarragona\WebComponents\Models\Forms\Select;
 use Ajtarragona\WebComponents\Models\Forms\Checkbox;
-use Ajtarragona\WebComponents\Models\Components\Radio;
+use Ajtarragona\WebComponents\Models\Forms\Radio;
 
 if (! function_exists('renderAttributes')) {
 	function renderAttributes($array=false,$excluded=[]) {

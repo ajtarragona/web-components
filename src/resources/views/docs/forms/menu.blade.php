@@ -9,6 +9,7 @@
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'forms.select','title'=>'Select'])
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'forms.autocomplete','title'=>'Autocomplete'])
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'forms.checkbox','title'=>'Checkbox'])
+	@include('ajtarragona-web-components::docs.menuitem',['route'=>'forms.radio','title'=>'Radio'])
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'forms.date','title'=>'Date'])
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'forms.file','title'=>'File'])
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'forms.color','title'=>'Color picker '])
