@@ -67,7 +67,7 @@ class FormControl
 		}
 		
 		if(!isset($attributes['id'])){
-			if(isset($attributes['name'])) $this->attributes['id']='input-'.$attributes['name'];
+			if(isset($attributes['name'])) $this->attributes['id']=  'input-'. str_replace('[]', '', $attributes['name']) ;
 			else $this->attributes['id']=self::generateUid('input');
 		}
 		
