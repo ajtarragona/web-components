@@ -30,12 +30,12 @@ class Input extends FormControl
 		parent::__construct($attributes,$data);
 
 
-		if($this->attributes['type']=="color"){
+		if(isset($this->attributes['type']) && $this->attributes['type']=="color"){
 			$this->attributes["type"]="text";
 			$this->addClass("colorinput");
 		}
 
-		if($this->attributes['type']=="number"){
+		if(isset($this->attributes['type']) &&  $this->attributes['type']=="number"){
 			$this->attributes["type"]="text";
 			$this->addClass("number");
 		}
