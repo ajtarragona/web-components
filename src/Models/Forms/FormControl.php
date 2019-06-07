@@ -161,16 +161,23 @@ class FormControl
 	}
 
 
-	protected function renderFormGroup($attributes=[],$data=[]){
-			$ret="";
-			$ret.="<div ";
-			$ret.="	class='" .$this->containerClass(). "' ";
-			$ret.=html_attributes($attributes);
-			$ret.=html_attributes($data);
-			$ret.=">";
-			return $ret;
-	}
+	protected function renderFormGroupStart($attributes=[],$data=[]){
+		$ret="";
+		$ret.="<div ";
+		$ret.="	class='" .$this->containerClass(). "' ";
+		$ret.=html_attributes($attributes);
+		$ret.=html_attributes($data);
+		$ret.=">";
 
+		
+		return $ret;
+	}
+	
+	protected function renderFormGroupEnd($attributes=[],$data=[]){
+		$ret="";
+		$ret.="</div><!--.form-group-->";
+		return $ret;
+	}
 
 
 	public function renderIcon(){
@@ -209,18 +216,23 @@ class FormControl
 
 			$ret="";
 			if($this->container){
-				$ret.=$this->renderFormGroup();
+				$ret.=$this->renderFormGroupStart();
+			}
+			
+
+			if($this->sidelabel){
+				$ret.="<div class='d-flex flex-row'>";
 			}
 			
 			$ret.=$this->renderLabel();
-
+			
 			$ret.="<div class='input-group' >";
-	
+			
 			$ret.=$this->renderIcon();
-
-
+			
+			
 			$ret.="<div class='flex-grow-1 form-control-container' >";
-
+			
 			if(method_exists($this,'preHook')){
 				$ret.=$this->preHook();
 			}
@@ -229,19 +241,19 @@ class FormControl
 				$ret.=$this->bodyReplaceHook();
 			}else{
 
-	
+				
 				//render the input
 				$ret.="<{$this->tag} ";
 				$ret.=$this->renderAttributes();
 				$ret.=" ";
 				$ret.=$this->renderData();
 				$ret.=$this->closetag?">":"/>";
-	
+				
 				// $this->renderBody();
 				if(method_exists($this,'bodyHook')){
 					$ret.=$this->bodyHook();
 				}
-	
+				
 				if($this->closetag) $ret.="</{$this->tag}>";
 			}
 			
@@ -250,14 +262,23 @@ class FormControl
 			}
 			
 			$ret.="</div><!--.form-control-container-->";
-
+			
 			$ret.="</div><!--.input-group-->";
+			
+
+			if($this->sidelabel){
+				$ret.="</div><!--.flex-row-->";
+			}
+			
 			$ret.=$this->renderHelpText();
 			$ret.=$this->renderErrors();
-
 			
-			if($this->container) $ret.="</div>";
-    	return $ret;
+			
+			if($this->container){
+				$ret.=$this->renderFormGroupEnd();
+			}
+			
+			return $ret;
     	
 	}
 

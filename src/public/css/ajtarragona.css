@@ -18765,7 +18765,7 @@ form.validating {
   cursor: default;
 }
 
-.form-group.outlined > label {
+.form-group.outlined label.col-form-label {
   line-height: 1em;
   /*$input-line-height;*/
   display: block;
@@ -18777,19 +18777,19 @@ form.validating {
   font-weight: 700;
 }
 
-.form-group.outlined.form-group-lg > label {
+.form-group.outlined.form-group-lg label.col-form-label {
   font-size: 1.2em;
 }
 
-.form-group.outlined.form-group-sm > label {
+.form-group.outlined.form-group-sm label.col-form-label {
   font-size: 0.6em;
 }
 
-.form-group.outlined.focused > label {
+.form-group.outlined.focused label.col-form-label {
   color: #55595c;
 }
 
-.form-group.outlined.disabled > label {
+.form-group.outlined.disabled label.col-form-label {
   opacity: 0.6;
 }
 
@@ -19333,26 +19333,26 @@ form.validating {
   border-color: transparent;
 }
 
-.form-group.outlined.bg-black > label,
-.form-group.outlined.bg-gray-800 > label,
-.form-group.outlined.bg-gray-700 > label,
-.form-group.outlined.bg-gray-600 > label,
-.form-group.outlined.bg-gray-500 > label,
-.form-group.outlined.bg-orange > label,
-.form-group.outlined.bg-purple > label,
-.form-group.outlined.bg-teal > label,
-.form-group.outlined.bg-green > label,
-.form-group.outlined.bg-cyan > label,
-.form-group.outlined.bg-pink > label,
-.form-group.outlined.bg-indigo > label,
-.form-group.outlined.bg-blue > label,
-.form-group.outlined.bg-red > label,
-.form-group.outlined.bg-success > label,
-.form-group.outlined.bg-danger > label,
-.form-group.outlined.bg-dark > label,
-.form-group.outlined.bg-primary > label,
-.form-group.outlined.bg-secondary > label,
-.form-group.outlined.bg-info > label {
+.form-group.outlined.bg-black label.col-form-label,
+.form-group.outlined.bg-gray-800 label.col-form-label,
+.form-group.outlined.bg-gray-700 label.col-form-label,
+.form-group.outlined.bg-gray-600 label.col-form-label,
+.form-group.outlined.bg-gray-500 label.col-form-label,
+.form-group.outlined.bg-orange label.col-form-label,
+.form-group.outlined.bg-purple label.col-form-label,
+.form-group.outlined.bg-teal label.col-form-label,
+.form-group.outlined.bg-green label.col-form-label,
+.form-group.outlined.bg-cyan label.col-form-label,
+.form-group.outlined.bg-pink label.col-form-label,
+.form-group.outlined.bg-indigo label.col-form-label,
+.form-group.outlined.bg-blue label.col-form-label,
+.form-group.outlined.bg-red label.col-form-label,
+.form-group.outlined.bg-success label.col-form-label,
+.form-group.outlined.bg-danger label.col-form-label,
+.form-group.outlined.bg-dark label.col-form-label,
+.form-group.outlined.bg-primary label.col-form-label,
+.form-group.outlined.bg-secondary label.col-form-label,
+.form-group.outlined.bg-info label.col-form-label {
   color: rgba(255, 255, 255, 0.9);
 }
 
@@ -19425,7 +19425,7 @@ form.validating {
   border-color: transparent;
 }
 
-.form-group.outlined.bg-warning > label {
+.form-group.outlined.bg-warning label.col-form-label {
   color: rgba(52, 58, 64, 0.9);
 }
 
@@ -19483,7 +19483,7 @@ form.validating {
   display: block;
 }
 
-.form-group.outlined.is-invalid > label {
+.form-group.outlined.is-invalid label.col-form-label {
   color: #d9534f;
 }
 
@@ -19491,13 +19491,9 @@ form.validating {
   color: #d9534f;
 }
 
-.form-group.outlined.is-invalid .form-text {
-  display: none;
-}
-
-.form-group.outlined.is-invalid > input,
-.form-group.outlined.is-invalid > textarea,
-.form-group.outlined.is-invalid > select {
+.form-group.outlined.is-invalid input,
+.form-group.outlined.is-invalid textarea,
+.form-group.outlined.is-invalid select {
   border-color: transparent !important;
 }
 
@@ -19506,7 +19502,7 @@ form.validating {
   background-color: rgba(31, 155, 207, 0.1);
 }
 
-.form-group.outlined.loading > label {
+.form-group.outlined.loading label.col-form-label {
   color: #1F9BCF;
 }
 
@@ -19515,10 +19511,8 @@ form.validating {
 }
 
 .form-group.outlined .form-text {
-  margin-left: 1rem;
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-  clear: both;
+  margin: 0;
+  padding: 0.5em 1rem;
 }
 
 .form-group.outlined .bootstrap-touchspin .form-control {
@@ -19566,12 +19560,7 @@ form.validating {
   border-width: 0px;
 }
 
-.form-group.outlined.sidelabel {
-  display: flex;
-  flex-direction: row;
-}
-
-.form-group.outlined.sidelabel > label {
+.form-group.outlined.sidelabel label.col-form-label {
   width: 160px;
   padding-bottom: 0.8rem;
   line-height: 1.2em;
@@ -19607,12 +19596,7 @@ form.validating {
 
 .form-group.outlined.sidelabel .form-text,
 .form-group.outlined.sidelabel .feedback {
-  padding-bottom: 0rem;
-  margin-left: 160px;
   margin-top: -0.5em;
-  float: left;
-  clear: both;
-  padding-left: 0em !important;
 }
 
 .form-inline .form-group.outlined {

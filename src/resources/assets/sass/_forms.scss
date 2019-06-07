@@ -183,7 +183,7 @@ $sidelabel-size : 160px;
 	}
 
 
-	> label{
+	label.col-form-label{
 		line-height: 1em;/*$input-line-height;*/
 		display:block;
 		padding: 2*$input-padding-y $input-padding-x $input-padding-y $input-padding-x;
@@ -195,21 +195,21 @@ $sidelabel-size : 160px;
 	}
 
 	&.form-group-lg{
-		> label{
+		label.col-form-label{
 			font-size:1.2em;
 		}
 	}
 	&.form-group-sm{
-		> label{
+		label.col-form-label{
 			font-size:.6em;
 		}
 	}
 
-	&.focused > label{
+	&.focused label.col-form-label{
 		color:$secondary;
 	}
 
-	&.disabled > label{
+	&.disabled  label.col-form-label{
 		opacity:.6;
 	}
 
@@ -248,7 +248,7 @@ $sidelabel-size : 160px;
 			background-color:rgba(255,255,255,0.1);
 			border-color:transparent;
 		}
-		> label{
+		label.col-form-label{
 			color: rgba($white,0.9);
 		}
 		&:before{
@@ -272,7 +272,7 @@ $sidelabel-size : 160px;
 			background-color:rgba(255,255,255,0.1);
 			border-color:transparent;
 		}
-		> label{
+		label.col-form-label{
 			color: rgba($dark,0.9);
 		}
 	}
@@ -341,7 +341,7 @@ $sidelabel-size : 160px;
 			padding: 0 $input-padding-x $input-padding-y $input-padding-x;
 			display:block;
 		}
-		>label{
+		label.col-form-label{
 			color: $danger;
 		}
 
@@ -350,12 +350,12 @@ $sidelabel-size : 160px;
 		}
 
 		.form-text{
-			display:none;
+			// display:none;
 		}
 
-		> input,
-		> textarea,
-		> select{
+		input,
+		textarea,
+		select{
 			border-color:transparent !important;
 		}
 	}
@@ -365,7 +365,7 @@ $sidelabel-size : 160px;
 		border-color:$info;
 		background-color:rgba($info,0.1);
 		
-		>label{
+		label.col-form-label{
 			color: $info;
 		}
 	}
@@ -377,10 +377,10 @@ $sidelabel-size : 160px;
  	}
 
  	.form-text{
- 		margin-left: 1rem;
- 		margin-top:0;
- 		margin-bottom:.5rem;
- 		clear: both;
+ 		margin:0;
+		padding:.5em $input-padding-x ;
+		// border-top:1px solid rgba(0,0,0,0.03)
+			
  	}
 
  	.bootstrap-touchspin{
@@ -431,10 +431,8 @@ $sidelabel-size : 160px;
 	}
 
 	&.sidelabel{
-		display:flex;
-		flex-direction: row;
 		
-		> label {
+		label.col-form-label {
 			width: $sidelabel-size;
 			padding-bottom:2*$input-padding-y;
 			line-height: 1.2em;
@@ -478,12 +476,7 @@ $sidelabel-size : 160px;
 
 		.form-text,
 		.feedback{
-			padding-bottom:0rem;
-			margin-left:$sidelabel-size;
 			margin-top:-.5em;
-			float: left;
-			clear: both;
-			padding-left:0em !important;
 		}
 		
 

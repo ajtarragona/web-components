@@ -2,11 +2,15 @@
 
 @input(['name'=>'camp_nom', 'label'=>'Camp text', 'value'=>'default value'])
 
+@input(['name'=>'camp_nom1', 'label'=>'Camp text', 'value'=>'default value','helptext'=>'Ajuda del camp'])
+
 @input(['name'=>'camp_nom2', 'label'=>'Deshabilitat','disabled'=>true])
 
 @input(['name'=>'camp_pass', 'type'=>'password', 'label'=>'Camp password'])
 
 @input(['name'=>'camp_nom3', 'label'=>'Label lateral','sidelabel'=>true ,'placeholder'=>'placeholder...'])
+
+@input(['name'=>'camp_nom3_2', 'label'=>'Label lateral','sidelabel'=>true ,'placeholder'=>'placeholder...','helptext'=>'Ajuda del camp'])
 
 @input(['name'=>'campo_texto_nolabel', 'placeholder'=>'Sense label']) 
 
