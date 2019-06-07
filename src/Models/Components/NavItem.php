@@ -98,6 +98,74 @@ class NavItem extends WebComponent
      }
 
 
+	 public function render($args=[]){
+		if(isset($this->attributes["separator"]) && $this->attributes["separator"]) return "<hr/>";
+
+		$navigation=$this->attributes["navigation"];
+
+		$ret="";
+		
+		$ret.="	<li ";
+		$ret.="	id=\"{$this->attributes['id']}\"";
+		$ret.="	class=\"{$this->attributes['class']}\"";
+		$ret.=" >";
+		if($url=$this->getUrl()){
+				
+			$ret.="<a href=\"{$url}\" title=\"{$this->getTitle()}\" data-placement='right' class=\"{$this->attributes["linkclass"]}\" >";
+					
+		}else{
+			$ret.="<span title=\"{$this->getTitle()}\" data-placement='right' class=\"{$this->attributes["linkclass"]}\">";
+		}
+				
+		$ret.= textAndIcon($this->getTitle(),$this->attributes['icon'],$this->attributes['iconoptions']);
+					
+		if($navigation=="drilldown" && $this->hasChildren()){
+			if($this->hasUrl()){
+				$ret.="<span class='opener'><span class='opener-icon'>".icon('arrow-right')."</span></span>";
+			}else{
+				$ret.="<span class='opener-icon'>".icon('arrow-right')."</span>";
+			}
+		}
+						
+		if($this->hasUrl()){
+			$ret.="</a>";
+		}else{
+			$ret.="</span>";
+		}
+
+		$collapsed=$this->attributes["collapsed"];
+
+		if($children=$this->getChildren()){
+			if($navigation=="collapse" ){
+				
+				$ret.="	<div class='toggler ". ($collapsed?"collapsed":"") ."'  aria-expanded='true' data-toggle='collapse' href='#sub{$this->attributes['id']}' >".icon('angle-up')."</div>";
+				$ret.="	<ul class='subnav collapse ". ($collapsed?"":"in") ." ' aria-expanded='true' id='sub{$this->attributes['id']}'>";
+				
+			}elseif($navigation=="drilldown"){
+
+				$ret.="	<ul id='sub{$this->attributes['id']}'>";
+				$ret.="		<li><a href='#' class='back'>".icon('arrow-left'). " " . __("tgn::strings.Back") ."</a></li>";
+			}else{
+				
+				$ret.="	<div href='#' class='toggler' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false' href='#sub{$this->attributes['id']}'>".icon('angle-up')."</div>";
+				$ret.=" <ul class='dropdown-menu' id='sub{$this->attributes['id']}'>";
+			}
+			foreach ($children as $key => $item){
+				$subitem = new NavItem($item);
+				$ret.= $subitem->render();	
+			}
+
+			$ret.="</ul>";
+		}
+
+				
+		$ret.="</li>";
+
+		return $ret;
+
+			
+	 }
+
    
      	
 

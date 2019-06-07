@@ -67,4 +67,28 @@ class Nav extends WebComponent
 	}
 
 
+	protected function renderNavitem($item){
+		$navitem = new NavItem($item);
+		return $navitem->render();	
+	}
+
+	public function render($args=[]){
+		
+		$ret="";
+
+		$ret.="<ul ";
+		$ret.=" id=\"".$this->attributes['id']."\" ";
+		$ret.=" class=\"".$this->attributes['class']."\" ";
+		$ret.=renderAttributes($this->attributes, $this->hiddenattributes) . " " . renderData($this->data);
+		$ret.="	> ";
+		
+		foreach($this->attributes["items"]  as $item){
+			$ret.=$this->renderNavitem($item);
+		}
+		$ret.="</ul>";
+		
+		return $ret;
+	}
+
+
 }
