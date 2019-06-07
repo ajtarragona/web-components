@@ -42,6 +42,7 @@ class Input extends FormControl
 		
 		if(isset($this->attributes["multiple"]) && $this->attributes["multiple"] && !ends_with($this->attributes['name'],"[]")) $this->attributes["name"].="[]";
 		//dump($this->attributes);
+		
 	}
 	
 }

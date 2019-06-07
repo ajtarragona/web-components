@@ -66,8 +66,8 @@ class FormControl
 			}
 		}
 		
-		if(!isset($this->attributes['id'])){
-			if(isset($this->attributes['name'])) $this->attributes['id']='input-'.$this->attributes['name'];
+		if(!isset($attributes['id'])){
+			if(isset($attributes['name'])) $this->attributes['id']='input-'.$attributes['name'];
 			else $this->attributes['id']=self::generateUid('input');
 		}
 		
@@ -269,7 +269,7 @@ class FormControl
 			if($this->sidelabel){
 				$ret.="</div><!--.flex-row-->";
 			}
-			
+
 			$ret.=$this->renderHelpText();
 			$ret.=$this->renderErrors();
 			
