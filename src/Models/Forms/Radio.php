@@ -5,7 +5,7 @@ class Radio extends FormControl
 {
 	public $tag ="input";
     public $color;
-    public $renderhelper=true;
+    public $renderhelper=false;
     public $label=null;
     public $checklabel=null;
     public $container = false;
@@ -104,7 +104,7 @@ class Radio extends FormControl
             
             if($this->checked) $this->setAttribute('checked',true);
             
-            if(!$this->getAttribute('id')) $this->setAttribute('id' , 'radio_'.$this->getAttribute('name').'_'.kebab_case($this->getAttribute('value')));
+            $this->setAttribute('id' , 'radio_'.$this->getAttribute('name').'_'.kebab_case($this->getAttribute('value')));
 		}
         $this->setAttribute( "class", ($defclass." ".$this->getAttribute("class")) ) ;
         // dump($this);

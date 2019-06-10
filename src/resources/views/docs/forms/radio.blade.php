@@ -39,6 +39,8 @@
 		])
 			
 			
+				@includeIf('ajtarragona-web-components::docs.source.forms.radio')
+				<hr/>
 				@includeIf('ajtarragona-web-components::docs.source.forms.radios')
 
 			@button(['type'=>'submit','size'=>'sm'])
@@ -52,6 +54,7 @@
 
 
 		@code(['lang'=>'java'])
+			@includeSrc('ajtarragona-web-components::docs.source.forms.radio')
 			@includeSrc('ajtarragona-web-components::docs.source.forms.radios')
 		@endcode
 		
