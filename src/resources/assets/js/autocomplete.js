@@ -346,7 +346,8 @@ $.widget( "ajtarragona.tgnAutocomplete", {
 
     _refreshDeselector : function(){
         
-
+        if(this.options.multiple) return;
+        
         if(this.value() && !this.options.disabled) 
           this.deselector.attr('hidden',false);
         else 

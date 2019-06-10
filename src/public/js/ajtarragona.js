@@ -83935,6 +83935,7 @@ $.widget("ajtarragona.tgnAutocomplete", {
     }
   },
   _refreshDeselector: function _refreshDeselector() {
+    if (this.options.multiple) return;
     if (this.value() && !this.options.disabled) this.deselector.attr('hidden', false);else this.deselector.attr('hidden', true);
   },
   _createDeselector: function _createDeselector(argument) {
@@ -90016,8 +90017,8 @@ initToolbar = function initToolbar() {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! c:\Users\tmedrano\DEVELOP\xampp\htdocs\laravel\packages\ajtarragona\web-components\src\resources\assets\js\ajtarragona.js */"./src/resources/assets/js/ajtarragona.js");
-module.exports = __webpack_require__(/*! c:\Users\tmedrano\DEVELOP\xampp\htdocs\laravel\packages\ajtarragona\web-components\src\resources\assets\sass\ajtarragona.scss */"./src/resources/assets/sass/ajtarragona.scss");
+__webpack_require__(/*! C:\Users\tmedrano\DEVELOP\xampp\htdocs\laravel\packages\ajtarragona\web-components\src\resources\assets\js\ajtarragona.js */"./src/resources/assets/js/ajtarragona.js");
+module.exports = __webpack_require__(/*! C:\Users\tmedrano\DEVELOP\xampp\htdocs\laravel\packages\ajtarragona\web-components\src\resources\assets\sass\ajtarragona.scss */"./src/resources/assets/sass/ajtarragona.scss");
 
 
 /***/ }),
