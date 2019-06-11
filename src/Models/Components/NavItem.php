@@ -111,10 +111,10 @@ class NavItem extends WebComponent
 		$ret.=" >";
 		if($url=$this->getUrl()){
 				
-			$ret.="<a href=\"{$url}\" title=\"{$this->getTitle()}\" data-placement='right' class=\"{$this->attributes["linkclass"]}\" >";
+			$ret.="<a href=\"{$url}\" title=\"".htmlentities($this->getTitle())."\" data-placement='right' class=\"{$this->attributes["linkclass"]}\" >";
 					
 		}else{
-			$ret.="<span title=\"{$this->getTitle()}\" data-placement='right' class=\"{$this->attributes["linkclass"]}\">";
+			$ret.="<span title=\"".htmlentities($this->getTitle())."\" data-placement='right' class=\"{$this->attributes["linkclass"]}\">";
 		}
 				
 		$ret.= textAndIcon($this->getTitle(),$this->attributes['icon'],$this->attributes['iconoptions']);
