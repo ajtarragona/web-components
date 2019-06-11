@@ -15,9 +15,10 @@ if (! function_exists('language_items')) {
 		foreach (language()->allowed() as $code => $name){
 	       $items[]=
 	       [
-	       		"title" => ((language()->getCode()==$code)?icon('check').' ':'') . $name ,
+	       		"title" => $name ,
 	       		"active" => language()->getCode()==$code,
-	       		"url" => language()->back($code)
+				"url" => language()->back($code),
+				'icon' => ((language()->getCode()==$code)?'check-circle':'circle')
 	       ];
 	       // <li class="nav-item"><a class="nav-link {{ language()->getCode()==$code?"active":""}}" href="{{ language()->back($code) }}">{{ $name }}</a></li>
 			
