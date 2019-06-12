@@ -71,8 +71,8 @@ function tgnFormClass(obj,options){
 		            data: params,
 		            dataType: 'html',
 		            success: function(data){
-		            	//al(data);
-		            	$target.html(data).tgnInitAll().stopLoading();
+		            	$('html').stopLoading();
+		        		$target.html(data).tgnInitAll().stopLoading();
 		            	//$form.stopLoading();
 		        			
 		            },
