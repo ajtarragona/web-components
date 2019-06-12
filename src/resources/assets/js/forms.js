@@ -77,7 +77,8 @@ function tgnFormClass(obj,options){
 		        			
 		            },
 		            error: function(xhr){
-		                //$form.stopLoading();
+						// $form.stopLoading();
+						$('html').stopLoading();
 		        		$target.html('').stopLoading();
 						//console.log(xhr.status);
 		            }
