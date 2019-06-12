@@ -29,9 +29,9 @@
 			
 			@include('ajtarragona-web-components::layout.parts.messages')
 			
-			@container
+			<div class="container-fluid">
 				@yield('body')
-			@endcontainer
+			</div>
 
 		</main>
 		
