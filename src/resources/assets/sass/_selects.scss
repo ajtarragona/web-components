@@ -12,11 +12,11 @@ select.loading{
 	display:block;
 	/*width:100%;*/
 }
-.form-inline .form-group.outlined .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn){
-	/*width:200px;*/
-}
+// .form-inline .form-group.outlined .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn){
+// 	/*width:200px;*/
+// }
 
-.bootstrap-select > .dropdown-toggle {
+.bootstrap-select.form-control > .dropdown-toggle {
 	padding-top: $input-padding-y;
 	padding-bottom: $input-padding-y;
 	text-transform:none;
@@ -36,10 +36,10 @@ select.loading{
 
 
 }
-.bootstrap-select > .dropdown-toggle:active,
-.bootstrap-select > .dropdown-toggle:focus,
-.bootstrap-select > .dropdown-toggle:hover,
-.bootstrap-select.show > .dropdown-toggle{
+.bootstrap-select.form-control > .dropdown-toggle:active,
+.bootstrap-select.form-control > .dropdown-toggle:focus,
+.bootstrap-select.form-control > .dropdown-toggle:hover,
+.bootstrap-select.form-control.show > .dropdown-toggle{
 	outline:none  !important;
 	box-shadow:none  !important;
 	border-color:transparent  !important;
@@ -50,18 +50,18 @@ select.loading{
 	}
 }
 
-.form-group .input-icon:not(.icon-right) + .bootstrap-select > .dropdown-toggle{
+.form-group .input-icon:not(.icon-right) + .bootstrap-select.form-control > .dropdown-toggle{
 	display:block;
 	padding-left:3em;
 
 }
-.form-group .input-icon.icon-right + .bootstrap-select > .dropdown-toggle{
+.form-group .input-icon.icon-right + .bootstrap-select.form-control > .dropdown-toggle{
 	display:block;
 	padding-right:3em;
 
 }
 
-.bootstrap-select .deselect-btn{
+.bootstrap-select.form-control .deselect-btn{
 	position:absolute;
 	right:2.2em;
 	top:0;
@@ -72,11 +72,11 @@ select.loading{
 	cursor:pointer;
 }
 
-.bootstrap-select .dropdown-toggle.disabled .deselect-btn{
+.bootstrap-select.form-control .dropdown-toggle.disabled .deselect-btn{
 	display: none;
 }
 
-.bootstrap-select[class*='btn-'] .deselect-btn{
+.bootstrap-select[class*='btn-'].form-control .deselect-btn{
 	color:$white;
 }
 
@@ -85,14 +85,14 @@ select.loading{
 	right:4em;
 }
 
-.bootstrap-select select[required=required] + .deselect-btn{
+.bootstrap-select.form-control select[required=required] + .deselect-btn{
 	display:none;
 }
 
-.bootstrap-select .deselect-btn:hover{
+.bootstrap-select.form-control .deselect-btn:hover{
 	opacity:.5;
 }
 
-.bootstrap-select .dropdown-toggle .filter-option-inner-inner{
+.bootstrap-select.form-control .dropdown-toggle .filter-option-inner-inner{
 	margin-right: 1.5em;
 }

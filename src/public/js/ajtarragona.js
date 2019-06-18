@@ -84799,11 +84799,12 @@ function tgnFormClass(obj, options) {
           data: params,
           dataType: 'html',
           success: function success(data) {
-            //al(data);
+            $('html').stopLoading();
             $target.html(data).tgnInitAll().stopLoading(); //$form.stopLoading();
           },
           error: function error(xhr) {
-            //$form.stopLoading();
+            // $form.stopLoading();
+            $('html').stopLoading();
             $target.html('').stopLoading(); //console.log(xhr.status);
           }
         });
@@ -90017,8 +90018,8 @@ initToolbar = function initToolbar() {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\tmedrano\DEVELOP\xampp\htdocs\laravel\packages\ajtarragona\web-components\src\resources\assets\js\ajtarragona.js */"./src/resources/assets/js/ajtarragona.js");
-module.exports = __webpack_require__(/*! C:\Users\tmedrano\DEVELOP\xampp\htdocs\laravel\packages\ajtarragona\web-components\src\resources\assets\sass\ajtarragona.scss */"./src/resources/assets/sass/ajtarragona.scss");
+__webpack_require__(/*! c:\Users\tmedrano\DEVELOP\xampp\htdocs\laravel\packages\ajtarragona\web-components\src\resources\assets\js\ajtarragona.js */"./src/resources/assets/js/ajtarragona.js");
+module.exports = __webpack_require__(/*! c:\Users\tmedrano\DEVELOP\xampp\htdocs\laravel\packages\ajtarragona\web-components\src\resources\assets\sass\ajtarragona.scss */"./src/resources/assets/sass/ajtarragona.scss");
 
 
 /***/ }),
