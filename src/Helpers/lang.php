@@ -1,12 +1,33 @@
 <?php 
 
 if (! function_exists('language_flag')) {
-	function language_flag($attributes=[]){
+	function language_flag($code=null, $attributes=[]){
 
-		return '<img src="'.asset('vendor/ajtarragona/img/flags/'.language()->getCode().'.png').'" title="'.language()->getName().'" '.renderAttributes($attributes).'/>';
+		if($code){
+			if(is_array($code)){
+				$attributes=$code;
+				$code=null;
+			}else{
+				$languages=language()->allowed();
+				// dd($languages);
+				if(isset($languages[$code])){
+					$name=$languages[$code];
+				}
+			}
+		}
+		
+		if(!$code){
+			$code=language()->getCode();
+		 	$name=language()->getName();
+		}
+		
+		return '<img src="'.asset('vendor/ajtarragona/img/flags/'.$code.'.png').'" title="'.$name.'" '.renderAttributes($attributes).'/>';
 
 	}	
 }
+
+
+
 if (! function_exists('language_items')) {
 	function language_items(){
 		if(!function_exists('language')) return [];

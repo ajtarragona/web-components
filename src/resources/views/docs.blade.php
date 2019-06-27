@@ -12,7 +12,6 @@
 		@col(['size'=>2,'class'=>'docs-sidebar','style'=>''])
 			<h1 ><a class="doc-link" href="{{ route('webcomponents.docs',['page'=>'start.introduction']) }}">TGN</a></h1>
 			<hr/>
-		
 			@includeif('ajtarragona-web-components::docs.mainmenu')
     		
 		@endcol
