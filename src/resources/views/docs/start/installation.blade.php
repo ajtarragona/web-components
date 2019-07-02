@@ -22,17 +22,23 @@
 
 
 @block
-	<p>Disposem d'una comanda artisan que realitza tota la feina.</p>
+<p>Disposem d'una comanda artisan que realitza tota la feina.</p>
 
-	@code(['lang'=>'bsh'])
-		php artisan ajtarragona:prepare
-	@endcode
+@code(['lang'=>'bsh'])
+php artisan ajtarragona:prepare
+@endcode
 
-	<p><mark><strong>Nota:</strong> Això copiarà els scripts i estils a la carpeta <code>public\vendor\ajtarragona</code> del nostre projecte.</mark></p>
-	<p><mark><strong>Nota:</strong> Cal republicar cada vegada que actualitzem el paquet.</mark></p>
+<p><mark><strong>Nota:</strong> Això copiarà els scripts i estils a la carpeta <code>public\vendor\ajtarragona</code> del nostre projecte.</mark></p>
+<p><mark><strong>Nota:</strong> Cal republicar cada vegada que actualitzem el paquet.</mark></p>
+
 @endblock
 
-
+<p>3. Inicialitzar Git:</p>
+@code(['lang'=>'bsh'])
+git init
+git add .
+git commit -am "first commit"
+@endcode
 {{-- <hr/> --}}
 
 {{-- <h4>Configuració de les rutes</h4> --}}
