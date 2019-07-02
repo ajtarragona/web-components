@@ -41,9 +41,6 @@ composer require ajtarragona/web-components:"dev-master"
 
 ```bash
 php artisan ajtarragona:prepare
-git init
-git add .
-git commit -am "first commit"
 ```
 
 ## Documentació

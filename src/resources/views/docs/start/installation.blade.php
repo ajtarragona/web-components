@@ -33,12 +33,6 @@ php artisan ajtarragona:prepare
 
 @endblock
 
-<p>3. Inicialitzar Git:</p>
-@code(['lang'=>'bsh'])
-git init
-git add .
-git commit -am "first commit"
-@endcode
 {{-- <hr/> --}}
 
 {{-- <h4>Configuració de les rutes</h4> --}}
