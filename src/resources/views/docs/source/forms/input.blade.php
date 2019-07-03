@@ -1,6 +1,10 @@
+@php 
+    $value='dsds"dsds';
+@endphp
+
 @input
 
-@input(['name'=>'camp_nom', 'label'=>'Camp text', 'value'=>'default value'])
+@input(['name'=>'camp_nom', 'label'=>'Camp text', 'value'=>$value])
 
 @input(['name'=>'camp_nom1', 'label'=>'Camp text', 'value'=>'default value','helptext'=>'Ajuda del camp'])
 

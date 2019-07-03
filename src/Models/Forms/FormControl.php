@@ -121,7 +121,7 @@ class FormControl
 
 					$ret.="'".json_encode($v)."' ";
 			    }else{
-			    	$ret.="\"".addslashes($v)."\" ";
+			    	$ret.="\"".htmlspecialchars($v)."\" ";
 			    }
 			}
 		    //$array[$prefix.'-'.$k] = $v;
@@ -241,7 +241,7 @@ class FormControl
 				$ret.=$this->bodyReplaceHook();
 			}else{
 
-				
+				// dump($this->attributes);
 				//render the input
 				$ret.="<{$this->tag} ";
 				$ret.=$this->renderAttributes();
