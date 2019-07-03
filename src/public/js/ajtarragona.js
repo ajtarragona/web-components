@@ -85417,14 +85417,23 @@ $.fn.tgnInitAll = function () {
 
 $('html').startLoading();
 $(window).on('load', function () {
+  al("LOADED");
   $('body').tgnInitAll();
   $('html').stopLoading();
 });
 
+window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
+  al("ERROR", errorMsg); //$('body').tgnInitAll();
+
+  $('html').stopLoading();
+};
+
+
 $(document).ready(function () {
   initSidebar();
   initToolbar();
-  initFlashMessages(); //initFileInputs();
+  initFlashMessages(); // throw "NoDID";
+  //initFileInputs();
   // al(__('ajtarragona-web-components::strings.confirmation'));
   // al(__('ajtarragona-web-components::auth.throttle',{seconds:2}));
 });

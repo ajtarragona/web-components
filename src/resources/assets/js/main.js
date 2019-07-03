@@ -1,6 +1,7 @@
 
 $.fn.tgnInitAll = function( ){
   al('tgnInitAll');
+  
   this.find(".tgn-modal-opener").tgnModal();
   this.find('.tgn-nav').tgnNav()
   this.find(".tgn-form").tgnForm();
@@ -44,9 +45,18 @@ $.fn.tgnInitAll = function( ){
 $('html').startLoading();
 
 $(window).on('load',function(){
+  al("LOADED");
   $('body').tgnInitAll();
   $('html').stopLoading();
 });
+
+
+window.onerror= function myErrorHandler(errorMsg, url, lineNumber) {
+  
+  al("ERROR",errorMsg);
+  //$('body').tgnInitAll();
+  $('html').stopLoading();
+}
 
 
 
@@ -56,7 +66,9 @@ import bsCustomFileInput from 'bs-custom-file-input';
 $(document).ready(function(){
 	initSidebar();
 	initToolbar();
-	initFlashMessages();
+  initFlashMessages();
+  // throw "NoDID";
+ 
   //initFileInputs();
 
   // al(__('ajtarragona-web-components::strings.confirmation'));
