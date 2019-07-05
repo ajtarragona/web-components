@@ -85418,18 +85418,24 @@ $.fn.tgnInitAll = function () {
 $('html').startLoading();
 $(window).on('load', function () {
   al("LOADED");
-  $('body').tgnInitAll();
   $('html').stopLoading();
 });
 
-window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
+window.onerror = function (errorMsg, url, lineNumber) {
   al("ERROR", errorMsg); //$('body').tgnInitAll();
 
   $('html').stopLoading();
 };
 
+window.addEventListener("error", function (e) {
+  al("ERROR", e.error.message); //$('body').tgnInitAll();
+
+  $('html').stopLoading();
+});
 
 $(document).ready(function () {
+  al("READY");
+  $('body').tgnInitAll();
   initSidebar();
   initToolbar();
   initFlashMessages(); // throw "NoDID";

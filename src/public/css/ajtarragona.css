@@ -16814,6 +16814,15 @@ html.loading body select {
   visibility: hidden;
 }
 
+html.loading body label[role=button],
+html.loading body button[type=submit],
+html.loading body input[type=submit] {
+  pointer-events: none !important;
+  opacity: 0.9 !important;
+  -webkit-filter: grayscale(60%) !important;
+          filter: grayscale(60%) !important;
+}
+
 html:not(.loading) body {
   transition: margin 200ms ease-out;
 }

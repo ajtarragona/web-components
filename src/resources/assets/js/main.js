@@ -46,17 +46,22 @@ $('html').startLoading();
 
 $(window).on('load',function(){
   al("LOADED");
-  $('body').tgnInitAll();
   $('html').stopLoading();
 });
 
 
-window.onerror= function myErrorHandler(errorMsg, url, lineNumber) {
+window.onerror= function (errorMsg, url, lineNumber) {
   
   al("ERROR",errorMsg);
   //$('body').tgnInitAll();
   $('html').stopLoading();
 }
+
+window.addEventListener("error", function (e) {
+  al("ERROR",e.error.message);
+  //$('body').tgnInitAll();
+  $('html').stopLoading();
+})
 
 
 
@@ -64,7 +69,9 @@ window.onerror= function myErrorHandler(errorMsg, url, lineNumber) {
 import bsCustomFileInput from 'bs-custom-file-input';
 
 $(document).ready(function(){
-	initSidebar();
+  al("READY");
+  $('body').tgnInitAll();
+  initSidebar();
 	initToolbar();
   initFlashMessages();
   // throw "NoDID";
