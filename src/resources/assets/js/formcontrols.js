@@ -286,7 +286,7 @@ $.fn.initAutomention = function (){
         var PRE='{{';
         var POST='}}';
 
-        
+        // al(settings);
 
         settings.selectTemplate= function (item) {
            return PRE + item.original.value + POST;

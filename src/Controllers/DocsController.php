@@ -64,6 +64,27 @@ class DocsController extends Controller
   }
 
 
+  public function mentionsCombo(Request $request){
+    $options = collect($this->getTestOptions(50,true));
+    $ret = collect();
+    foreach($options as $o){
+      $ret->add(["key"=>$o["name"],"value"=>$o["name"]]);
+    }
+   // dd($options);
+    if($request->q){
+      $term=strtolower($request->q);
+      
+      $ret=$ret->filter(function ($value, $key) use ($term){
+        return str_contains(strtolower($value["key"]), $term);// || $value["value"]==intval($term);
+      });
+
+
+    }
+    //var_dump($options->toArray());
+    return array_values($ret->toArray());
+  }
+
+
   public function testCombo(Request $request){
 
     $options = collect($this->getTestOptions(50,true));

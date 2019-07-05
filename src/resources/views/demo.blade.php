@@ -26,6 +26,7 @@
 	
 	<h1>Welcome to the Demo</h1>
 
+	{{-- @input(["class"=>"automention"], ['url'=>route('webcomponents.mentions')]) --}}
 	
 	</div>
 	

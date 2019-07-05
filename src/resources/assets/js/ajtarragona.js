@@ -48,7 +48,7 @@ require('bootstrap-colorpicker');
 
 //tribute autocomplete
 
-require('tributejs');
+require('tributejs/dist/tribute.js');
 
 //textarea autoheight
 require('autosize');

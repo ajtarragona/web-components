@@ -83521,7 +83521,7 @@ __webpack_require__(/*! fontawesome-iconpicker */ "./node_modules/fontawesome-ic
 __webpack_require__(/*! bootstrap-colorpicker */ "./node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"); //tribute autocomplete
 
 
-__webpack_require__(/*! tributejs */ "./node_modules/tributejs/dist/tribute.js"); //textarea autoheight
+__webpack_require__(/*! tributejs/dist/tribute.js */ "./node_modules/tributejs/dist/tribute.js"); //textarea autoheight
 
 
 __webpack_require__(/*! autosize */ "./node_modules/autosize/dist/autosize.js");
@@ -84401,7 +84401,7 @@ $.fn.initAutomention = function () {
     };
     var settings = $.extend({}, defaults, $input.data());
     var PRE = '{{';
-    var POST = '}}';
+    var POST = '}}'; // al(settings);
 
     settings.selectTemplate = function (item) {
       return PRE + item.original.value + POST;
@@ -85415,7 +85415,6 @@ $.fn.tgnInitAll = function () {
   return this;
 };
 
-$('html').startLoading();
 $(window).on('load', function () {
   al("LOADED");
   $('html').stopLoading();
@@ -85433,6 +85432,7 @@ window.addEventListener("error", function (e) {
   $('html').stopLoading();
 });
 
+$('html').startLoading();
 $(document).ready(function () {
   al("READY");
   $('body').tgnInitAll();

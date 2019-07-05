@@ -42,8 +42,6 @@ $.fn.tgnInitAll = function( ){
 
 
 
-$('html').startLoading();
-
 $(window).on('load',function(){
   al("LOADED");
   $('html').stopLoading();
@@ -68,8 +66,12 @@ window.addEventListener("error", function (e) {
 
 import bsCustomFileInput from 'bs-custom-file-input';
 
+
+$('html').startLoading();
+
 $(document).ready(function(){
   al("READY");
+
   $('body').tgnInitAll();
   initSidebar();
 	initToolbar();
