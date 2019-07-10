@@ -45,6 +45,7 @@ $.widget( "ajtarragona.tgnSelectPicker", {
           this.isInit=true;
 
           this.element = this.element.selectpicker(this.options);
+          this.element.addClass("selectinit");
           this._prepare();
 
         }else{
