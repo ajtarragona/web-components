@@ -69,7 +69,8 @@ class PrepareJs extends Command
         Artisan::call('vendor:publish',['--tag'=>'ajtarragona-web-components-assets','--force'=>true]);
         
 
-        
+
+       
         
         
     }
