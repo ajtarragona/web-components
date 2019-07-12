@@ -86979,7 +86979,7 @@ $.widget("ajtarragona.tgnTable", {
     var o = this;
     this.rows.each(function (i) {
       var tr = $(this);
-      var check = tr.find('input[type=checkbox], input[type=radio]');
+      var check = tr.find('.row-selector'); //input[type=checkbox]., input[type=radio]');
 
       if (check.length > 0) {
         tr.find('.custom-control-label').on("click", function (e) {
@@ -86991,7 +86991,7 @@ $.widget("ajtarragona.tgnTable", {
       }
 
       tr.on("click", function (e) {
-        if ($(e.target).is('.custom-control-label') || $(e.target).is('td') || e.target == e.currentTarget) {
+        if (o.options.selectable && ($(e.target).is('.custom-control-label') || $(e.target).is('td') || e.target == e.currentTarget)) {
           o.toggleRow($(this));
         }
       });
@@ -87011,7 +87011,7 @@ $.widget("ajtarragona.tgnTable", {
   selectAll: function selectAll() {
     var o = this;
 
-    if (!this.options.selectSingle) {
+    if (this.options.selectable && !this.options.selectSingle) {
       this.rows.each(function (i) {
         o.selectRow($(this));
       });
@@ -87027,6 +87027,8 @@ $.widget("ajtarragona.tgnTable", {
     return this.options.selectStyle == "default" ? "table-active" : "table-" + this.options.selectStyle;
   },
   selectRow: function selectRow(tr) {
+    if (!this.options.selectable) return;
+
     if (this.options.selectSingle) {
       this.deselectAll();
     }
@@ -87064,6 +87066,13 @@ $.widget("ajtarragona.tgnTable", {
   },
   allSelected: function allSelected() {
     return this.getSelected().length == this.rows.length;
+  },
+  toggleSelectable: function toggleSelectable() {
+    this.options.selectable = !this.options.selectable;
+
+    if (!this.options.selectable) {
+      this.deselectAll();
+    }
   },
   refresh: function refresh() {}
 });

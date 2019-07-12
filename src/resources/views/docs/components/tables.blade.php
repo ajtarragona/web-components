@@ -28,6 +28,8 @@ php artisan vendor:publish --provider="Kyslik\ColumnSortable\ColumnSortableServi
 <h2>Taules seleccionables</h2>
 @row
 	@col(['size'=>6])
+
+	
 		@includeIf('ajtarragona-web-components::docs.source.components.table-selectable')
 
 	@endcol

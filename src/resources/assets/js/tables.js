@@ -55,19 +55,21 @@ $.widget( "ajtarragona.tgnTable", {
         
         this.rows.each(function(i){
 			var tr=$(this);
-			var check=tr.find('input[type=checkbox], input[type=radio]');
+			var check=tr.find('.row-selector');//input[type=checkbox]., input[type=radio]');
 
 			if(check.length>0){
+
 				tr.find('.custom-control-label').on("click",function(e){
 					e.preventDefault();
 				});
 				check.on("click",function(e){
 					e.preventDefault();
 				});
-			}
+			}	
+				
 
 			tr.on("click",function(e){
-				if( $(e.target).is('.custom-control-label') || $(e.target).is('td') || e.target==e.currentTarget ){
+				if(o.options.selectable  && ($(e.target).is('.custom-control-label') || $(e.target).is('td') || e.target==e.currentTarget )){
 					o.toggleRow($(this));
 				}
 			});
@@ -94,7 +96,7 @@ $.widget( "ajtarragona.tgnTable", {
 
     selectAll: function(  ) {
     	var o=this;
-		if(!this.options.selectSingle){
+		if(this.options.selectable && !this.options.selectSingle){
     		this.rows.each(function(i){
     			o.selectRow($(this));
     		});
@@ -106,6 +108,7 @@ $.widget( "ajtarragona.tgnTable", {
 		this.rows.each(function(i){
 			o.deselectRow($(this));
 		});
+		
     },
 
     getSelectStyle : function(){
@@ -114,6 +117,8 @@ $.widget( "ajtarragona.tgnTable", {
     },
 
     selectRow: function( tr ) {
+		if(!this.options.selectable ) return;
+
      	if(this.options.selectSingle){
 			this.deselectAll();
 		}
@@ -156,6 +161,14 @@ $.widget( "ajtarragona.tgnTable", {
 	allSelected : function(){
 	 	return this.getSelected().length == this.rows.length;
 	},
+
+	toggleSelectable : function(){
+		this.options.selectable=!this.options.selectable;
+
+		if(!this.options.selectable){
+			this.deselectAll();
+		}
+   },
 
     refresh: function( ) {
         

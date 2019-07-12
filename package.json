@@ -29,6 +29,7 @@
     "vue-template-compiler": "^2.6.10"
   },
   "dependencies": {
+    "@fortawesome/fontawesome": "^1.1.8",
     "@fortawesome/fontawesome-free": "^5.8.1",
     "autosize": "^4.0.2",
     "bloodhound-js": "^1.2.3",
@@ -42,6 +43,7 @@
     "code-prettify": "^0.1.0",
     "color-themes-for-google-code-prettify": "^2.0.4",
     "flatpickr": "^4.5.7",
+    "font-awesome": "^4.7.0",
     "fontawesome-iconpicker": "^3.2.0",
     "handlebars": "^4.1.2",
     "is-in-viewport": "^3.0.4",

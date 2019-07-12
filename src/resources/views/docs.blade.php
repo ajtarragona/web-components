@@ -34,6 +34,22 @@
 @endsection
 
 @section('js')
+<script>
+	$(document).ready(function(e){
+		$('.select-toggle').on('click',function(e){
+			$($(this).data('for')).tgnTable('toggleSelectable');
+			$(this).toggleClass('btn-light').toggleClass('btn-warning');
+		});
+		$('.select-all').on('click',function(e){
+			$($(this).data('for')).tgnTable('selectAll');
+		});
+		$('.deselect-all').on('click',function(e){
+			$($(this).data('for')).tgnTable('deselectAll');
+		});
+	});
+
+</script>
+
 	{{-- <script>
 		$(window).on('load',function(){
 
