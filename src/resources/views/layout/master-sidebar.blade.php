@@ -10,6 +10,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 	<link href="{{ asset('vendor/ajtarragona/css/ajtarragona.css') }}" rel="stylesheet">
+	<link rel="shortcut icon" type="image/x-icon" href="{{ asset('vendor/ajtarragona/img/favicon-round.ico') }}"/>
+	
 	
 	@yield('css')
 	@yield('meta')
