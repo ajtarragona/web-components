@@ -346,11 +346,11 @@ $.fn.initAutomention = function (){
           $(this).closest('.form-group.outlined').removeClass('focused');
         });
         $element.on('keyup',function(e){
-          $input.val($(this).html());
+          $input.val($(this).text());
         });
 
         $element.on('tribute-replaced', function (e) {
-          $input.val($(this).html());
+          $input.val($(this).text());
           //al($(this));
           //al($(this).text());
           //console.log('Original event that triggered text replacement:', e.detail.event);
