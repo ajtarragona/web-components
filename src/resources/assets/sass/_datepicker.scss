@@ -16,6 +16,9 @@
 	fill: $primary;
 }
 
+.flatpickr-current-month input.cur-year{
+  font-weight: 400;
+}
 .flatpickr-calendar{
     border-radius:0;
     outline:1px solid $default-border-color;//rgba( $primary, .2 );

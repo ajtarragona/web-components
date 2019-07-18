@@ -139,9 +139,11 @@ body .loading{
 
 h1, h2, h3, h4, h5, h6 {
   text-transform: uppercase;
-  letter-spacing: 3px;
+  letter-spacing: 0px;
 }
-
+h5, h6{
+  font-weight: 400;
+}
 
 
 // Navbar ======================================================================
@@ -455,4 +457,9 @@ hr.big{
         color:$gray-600;
       }
     }
+  }
+
+
+  .lead{
+    font-weight: 400;
   }
