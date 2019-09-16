@@ -73,12 +73,12 @@ $.fn.initConfirm = function(options){
       var fp=$input.flatpickr(args);
       if(!$input.prop('disabled')){
 	      var $deselector=$("<div class='deselect-btn'>&times;</div>");
-
+          $deselector.data('input',fp);
 	        $deselector.on('click',function(e){
 	          e.preventDefault();
 	          e.stopPropagation();
-	          var myInput =  $(this).siblings('.flatpickr-input');
-	          var fp = flatpickr(myInput[0], {});  // flatpickr
+	          // var myInput =  $(this).siblings('.flatpickr-input');
+	          var fp = $(this).data('input');//.flatpickr(myInput[0], args);  // flatpickr
 	          fp.clear();
 
 	        });
