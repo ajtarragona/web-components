@@ -591,6 +591,11 @@ $.fn.initTextEditor = function(){
   return this.each(function(){
     var o=this;
     o.$element=$(this); 
+
+    if(o.$element.is(".init-texteditor")) return;
+    o.$element.addClass('init-texteditor');
+    
+
     if(!o.$element.attr('id')) o.$element.attr('id',_UUID());
 
     o.$hidden=$('<input type="hidden" />');
