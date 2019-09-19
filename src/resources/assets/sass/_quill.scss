@@ -4,6 +4,9 @@
 	font-size: $font-size-base;
 }
 
+.ql-bubble .ql-tooltip{
+	z-index: 1;
+}
 .ql-toolbar.ql-snow{
 	border-top-width: 0;
 	border-left-width: 0;
