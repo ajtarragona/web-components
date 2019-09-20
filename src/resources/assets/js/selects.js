@@ -217,9 +217,11 @@ $.widget( "ajtarragona.tgnSelectPicker", {
     clear : function(){
        var o=this;
        if(o.options.multiple){
+            // o.element.selectpicker('val', '');
+
             o.element.selectpicker('deselectAll');
        }else{
-         o.element.selectpicker('val', false);
+         o.element.selectpicker('val', '');
        }
        o._refreshDeselector();
     },
