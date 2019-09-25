@@ -47,7 +47,9 @@ $.widget( "ajtarragona.tgnAutocomplete", {
         initialize: false,
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name','value'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        identify: function(obj) { return obj.value; },
+        identify: function(obj) { 
+          return obj.value;
+        },
         //prefetch: settings.url,
         remote: {
           url: this.getUrl(),
@@ -55,10 +57,11 @@ $.widget( "ajtarragona.tgnAutocomplete", {
           prepare: function (query, settings) {
             var url=o.getUrl();
            // al(url);
-            if(o.options.multiple)
+            if(o.options.multiple){
             	return url.replace('WILDCARD',o.input.val());
-            else 
-            	return url.replace('WILDCARD',o.element.val());
+            }else {
+              return url.replace('WILDCARD',o.element.val());
+            }
         }
         }
       });
