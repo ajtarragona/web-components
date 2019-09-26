@@ -115,7 +115,11 @@ $.widget( "ajtarragona.tgnAutocomplete", {
 
     	this.input.bind('typeahead:asyncrequest', function(ev, suggestion) {
 	        o._startLoading();
-    	});
+      });
+      
+      this.input.bind('typeahead:asynccancel', function(ev, suggestion) {
+        o._stopLoading();
+    });
 
     	this.input.bind('typeahead:asyncreceive', function(ev, suggestion) {
       	o._stopLoading();
@@ -201,6 +205,7 @@ $.widget( "ajtarragona.tgnAutocomplete", {
 
         this.element.on('focus',function(e){
             $(this).closest('.form-group.outlined').addClass('focused');
+            o._stopLoading();
         });
 
         this.element.on('blur',function(e){
@@ -228,6 +233,9 @@ $.widget( "ajtarragona.tgnAutocomplete", {
             o._startLoading();
         });
 
+        this.element.bind('typeahead:asynccancel', function(ev, suggestion) {
+            o._stopLoading();
+        });
         this.element.bind('typeahead:asyncreceive', function(ev, suggestion) {
            o._stopLoading();
         });
