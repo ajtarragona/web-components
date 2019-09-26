@@ -118,24 +118,26 @@ $.widget( "ajtarragona.tgnSelectPicker", {
     load: function(  ) {
        var o=this;
        o._startLoading();
-       al("Loading Select from: "+o.getUrl());
+      //  al("Loading Select from: "+o.getUrl());
        o.tmpVal=o.value();
        //o.value('');
        
        o.element.trigger("tgnselect:beforeload", { element: o.element }); 
 
        $.getJSON(o.getUrl(), function(data){
-          //al("LOADED");
+          // al("LOADED",o.element);
           o.element.trigger("tgnselect:load", {element:o.element, data:data});
 
           o.element.empty();
           
           if(data){
+            // al(data);
+            // al(o.options);
             $(data).each(function(){
               o.addOption(this.value,this.name);
             });
             o.refresh();
-            o.value(o.options.value);
+            if(o.options.value) o.value(o.options.value);
             o.element.trigger( "tgnselect:success", { element: o.element, data:data} );
               
           }else{

@@ -96,7 +96,22 @@
 	[
 		'label'=>'Ajax select', 
 		'name'=>'campo_select_ajax',
-		'placeholder'=>'Choose item...',
+		'placeholder'=>'Choose ajax item...',
+		'url'=> route('webcomponents.combo'),
+		'required'=>false,
+		'show-deselector' => true,
+		'size'=>5,
+		// 'selected'=>2
+		
+	]
+) 
+	
+
+@select(
+	[
+		'label'=>'Ajax select multiple', 
+		'name'=>'campo_select_ajax_multi',
+		'placeholder'=>'Choose ajax item...',
 		'url'=> route('webcomponents.combo'),
 		'selected'=>[5,6,10,20],
 		'multiple' =>true,
