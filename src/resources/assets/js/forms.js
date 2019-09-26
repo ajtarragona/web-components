@@ -310,9 +310,9 @@ function tgnFormClass(obj,options){
                         		var tab=$('.nav-link[href="#'+tabpane.attr('id')+'"]');
                         		//al(tab);
 
-                        		tab.addClass("anim bounce");
+                        		tab.addClass("anim beat in");
                         		tab.on('click',function(){
-                        			$(this).removeClass('anim').removeClass('bounce');
+                        			$(this).removeClass('anim').removeClass('beat').removeClass('in');
                         		});
                         	}
                         }
