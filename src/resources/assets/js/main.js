@@ -41,11 +41,10 @@ $.fn.tgnInitAll = function( ){
 
 
 
-
-$(window).on('load',function(){
+window.onload = function() {
   al("LOADED");
   $('html').stopLoading();
-});
+};
 
 
 window.onerror= function (errorMsg, url, lineNumber) {
@@ -66,10 +65,10 @@ window.addEventListener("error", function (e) {
 
 import bsCustomFileInput from 'bs-custom-file-input';
 
-
 $('html').startLoading();
 
-$(document).ready(function(){
+document.addEventListener('DOMContentLoaded', function() {
+// $(document).ready(function(){
   al("READY");
 
   $('body').tgnInitAll();
