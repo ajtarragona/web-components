@@ -21,5 +21,6 @@ return [
 	"Back" => "Volver",
 	"save" => "Guardar",
 	"language" => "Idioma",
-	"language :code" => "Idioma (:code)"
+	"language :code" => "Idioma (:code)",
+	"No Items Found" => "Ningún resultado"
 ];

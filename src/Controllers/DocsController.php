@@ -86,6 +86,8 @@ class DocsController extends Controller
 
 
   public function testCombo(Request $request){
+    // abort(500,"Error");
+    // return "dsad sad sad sa";
 
     $options = collect($this->getTestOptions(50,true));
    // dd($options);

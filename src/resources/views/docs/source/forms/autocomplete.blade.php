@@ -7,7 +7,7 @@
 	'url' => route('webcomponents.combo'),
 	'savevalue' => false,
 	'icon' => 'ellipsis-h',
-	'min-length' => 2,
+	'min-length' => 1,
 ])
 
 @autocomplete([

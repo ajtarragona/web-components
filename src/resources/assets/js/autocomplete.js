@@ -15,7 +15,7 @@ $.widget( "ajtarragona.tgnAutocomplete", {
   	    savevalue:false,
   	    saved:'name',
   	    showvalue:false,
-  	    limit:15,
+  	    limit:10,
   	    disabled: false,
     },
 
@@ -23,6 +23,19 @@ $.widget( "ajtarragona.tgnAutocomplete", {
     hidden:false,
     datasource:false,
 
+    templates: {
+      empty: [
+          "<div class='p-3 text-muted'>",
+          ___("strings.No Items Found"),
+          "</div>"
+      ].join("\n"),
+      // pending : [
+      //     "<div class='p-3 text-muted'>",
+      //     ___("strings.Searching for items"),
+      //     "</div>"
+      // ].join("\n")
+    },
+    
     _create: function() {
 		  var o=this;
      	
@@ -55,14 +68,42 @@ $.widget( "ajtarragona.tgnAutocomplete", {
           url: this.getUrl(),
           //wildcard: '%QUERY'
           prepare: function (query, settings) {
-            var url=o.getUrl();
+            
+            var url=settings.url;
            // al(url);
             if(o.options.multiple){
-            	return url.replace('WILDCARD',o.input.val());
+            	return url.replace('WILDCARD',encodeURIComponent(query));
             }else {
-              return url.replace('WILDCARD',o.element.val());
+              return url.replace('WILDCARD',encodeURIComponent(query));
             }
-        }
+
+            // al(query);
+            // al(url);
+            // return $.extend(settings, {
+            //   url: url,
+              // error: function(jqxhr, textStatus, errorThrown) {
+              //   al("ERROR autocomplete") ;
+              //   o._stopLoading();
+              //   TgnFlash.warning(___("strings.Error"));
+					
+
+              // },
+              // complete : function(jqxhr, textStatus) {
+              //   al("COMPLETE autocomplete") ;
+              //   o._stopLoading();
+                
+              // },
+              // success: function(data, textStatus, jqxhr) {
+              //   al("SUCCESS  autocomplete") ;
+              //   al(data);
+              //   o._stopLoading();
+              // }
+            // });
+          },
+          filter: function(parsedResponse){
+            o._stopLoading();
+            return parsedResponse;
+          }
         }
       });
         
@@ -106,6 +147,8 @@ $.widget( "ajtarragona.tgnAutocomplete", {
               name: this.options.inputname,
               displayKey: 'name',
               source: this.datasource.ttAdapter(),
+              templates: this.templates
+              
             }
           ]
     	});
@@ -122,7 +165,8 @@ $.widget( "ajtarragona.tgnAutocomplete", {
     });
 
     	this.input.bind('typeahead:asyncreceive', function(ev, suggestion) {
-      	o._stopLoading();
+        // al("RECEIVE multi");
+        o._stopLoading();
     	});
     	
     	this.element.on('itemAdded', function(event) {
@@ -221,7 +265,8 @@ $.widget( "ajtarragona.tgnAutocomplete", {
               name: this.options.inputname,
               displayKey: 'name',
               //display: 'name',
-              source: this.datasource.ttAdapter()
+              source: this.datasource.ttAdapter(),
+              templates: this.templates,
     		}
         );
 
@@ -237,6 +282,7 @@ $.widget( "ajtarragona.tgnAutocomplete", {
             o._stopLoading();
         });
         this.element.bind('typeahead:asyncreceive', function(ev, suggestion) {
+          // al("RECEIVE single");
            o._stopLoading();
         });
 
