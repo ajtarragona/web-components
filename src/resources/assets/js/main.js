@@ -41,24 +41,18 @@ $.fn.tgnInitAll = function( ){
 
 
 
-window.onload = function() {
+onWindowLoad(function() {
   al("LOADED");
   $('html').stopLoading();
-};
+});
 
 
-window.onerror= function (errorMsg, url, lineNumber) {
-  
-  al("ERROR",errorMsg);
-  //$('body').tgnInitAll();
-  $('html').stopLoading();
-}
 
-window.addEventListener("error", function (e) {
+onWindowError(function (e) {
   al("ERROR",e.error.message);
   //$('body').tgnInitAll();
   $('html').stopLoading();
-})
+});
 
 
 
@@ -67,7 +61,8 @@ import bsCustomFileInput from 'bs-custom-file-input';
 
 $('html').startLoading();
 
-document.addEventListener('DOMContentLoaded', function() {
+
+onDocumentReady(function(){
 // $(document).ready(function(){
   al("READY");
 

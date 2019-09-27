@@ -313,3 +313,24 @@ buildUrl = function (url,params){
 
   return ret;
 }
+
+
+onWindowLoad = function(callback){
+  if(window.addEventListener){
+      window.addEventListener('load',callback,false);
+  }else{
+      window.attachEvent('onload',callback);
+  }
+}
+
+onWindowError = function(callback){
+  if(window.addEventListener){
+      window.addEventListener('error',callback,false);
+  }else{
+      window.attachEvent('onerror',callback);
+  }
+}
+
+onDocumentReady = function (callback){
+  document.addEventListener('DOMContentLoaded', callback );
+}
