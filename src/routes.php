@@ -26,6 +26,8 @@ Route::group(['prefix' => 'ajtarragona/webcomponents','middleware' => ['web']], 
 	Route::get('/docs/modal', 'Ajtarragona\WebComponents\Controllers\DocsController@docsModal')->name('webcomponents.docs.modal');
 	
 	Route::post('/docs/showrequest', 'Ajtarragona\WebComponents\Controllers\DocsController@docsShowRequest')->name('webcomponents.docs.showrequest');
+	Route::get('/docs/combo/users', 'Ajtarragona\WebComponents\Controllers\DocsController@userscombo')->name('webcomponents.docs.userscombo');
+	Route::get('/docs/combo/tags', 'Ajtarragona\WebComponents\Controllers\DocsController@tagscombo')->name('webcomponents.docs.tagscombo');
 
 	Route::get('/docs/{page?}', 'Ajtarragona\WebComponents\Controllers\DocsController@docs')->name('webcomponents.docs');
 	Route::post('/docs/{page?}', 'Ajtarragona\WebComponents\Controllers\DocsController@docsHandle')->name('webcomponents.docs.handle');

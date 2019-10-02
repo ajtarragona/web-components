@@ -1,0 +1,4 @@
+.mentions-container:empty:before {
+    content:attr(placeholder);
+    color:$gray-600;
+}

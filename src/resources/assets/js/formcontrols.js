@@ -265,43 +265,96 @@ $.fn.initAutomention = function (){
     
 
     return this.each(function(){
-        var $input=$(this);
-        al("initAutomention");
+        
+      var $input=$(this);
+      al("initAutomention");
+        
         if($input.is(".init-automention")) return;
-
-        $input.attr('type','hidden');
+        $input.addClass('init-automention');
         
 
-        $input.addClass('init-automention');
+
+        var defaults={
+          trigger: '@',
+          requireLeadingSpace: false,
+          pre : '<span class="d-inline-block bg-gray-400 px-1">@',
+          post : '</span>',
+          prekey : '@',
+          postkey : '',
+        };
+
+
+        
+        $input.attr('type','hidden');
+        
         var $element=$("<div class='mentions-container'/>");
+        $element.attr('placeholder',$input.attr('placeholder'));
         $input.after($element);
         
 
-        var defaults={
-           trigger: '#',
-           requireLeadingSpace: false,
-        };
+        
 
         var settings = $.extend({}, defaults, $input.data()); 
-        var PRE='{{';
-        var POST='}}';
+        
+
 
         // al(settings);
 
-        settings.selectTemplate= function (item) {
-           return PRE + item.original.value + POST;
+        
+
+        var updateInput = function(){
+          
+          var nl='\n';
+          if($input.is("input")) nl=" ";
+
+          var content=$element.html();
+          content=content.replace( new RegExp(mentionPrefix(), 'g'),settings.prekey);
+          content=content.replace( new RegExp(mentionSuffix(), 'g') ,settings.postkey);
+          content=content.replace( new RegExp('&nbsp;', 'g') ,' ');
+          content=content.replace( new RegExp('<div>', 'g') ,nl);
+          content=content.replace( new RegExp('</div>', 'g') ,'');
+          
+          content=content.replace( new RegExp('<br>', 'g') ,nl);
+
+          // al("keyup:",content);
+          $input.val(content);
+          
+          // $input.val($(this).text());
+          //al($(this));
+          //al($(this).text());
+          // al('Original event that triggered text replacement:', e.detail.event);
+          // al('Matched item:', e.detail.item);
+        };
+        
+        var setInitialValue = function(){
+          var content=$input.val();
+        
+          // al(content);
+
+          var pattern = new RegExp(''+settings.prekey+'[a-z0-9-_.]+'+settings.postkey+'','gi');
+          // str.match(pattern);
+          var matches = content.match(pattern);
+
+          content=content.replace(pattern, function(x){
+            // al(x);
+            
+            x=x.replace( new RegExp('^'+settings.prekey+'') , mentionPrefix());
+            x=x.replace( new RegExp(''+settings.postkey+'$') , mentionSuffix() );
+
+            return x;
+          });
+
+          // al(content);
+          if($input.is("input"))
+            content=content.replace( new RegExp('\n', 'g') ,' ');
+          else
+            content=content.replace( new RegExp('\n', 'g') ,'<br>');
+          
+          $element.html(content);
         };
 
-        settings.menuItemTemplate= function (item) {
-              return item.string;
-        }; 
 
-        settings.values = function (text, cb) {
-          remoteSearch(text, users => cb(users));
-        };
-
-
-        function remoteSearch(text, cb) {
+        var remoteSearch = function(text, cb) {
           var URL = settings.url;
 
           
@@ -323,6 +376,44 @@ $.fn.initAutomention = function (){
         }
 
 
+        var mentionPrefix = function(){
+          return '<span contenteditable="false">'+settings.pre;
+        }
+
+        var mentionSuffix = function(){
+          return settings.post + '</span>';
+        }
+
+
+       
+
+        settings.selectTemplate= function (item) {
+            if (typeof item === 'undefined') return null;
+            if (this.range.isContentEditable(this.current.element)) {
+              return mentionPrefix() + item.original.value + mentionSuffix()+'</span>';
+            }
+
+            return '@' + item.original.value;
+          
+          
+          // return settings.pre + item.original.value + settings.post;
+        };
+
+
+        
+        
+        settings.menuItemTemplate= function (item) {
+              return item.string;
+        }; 
+
+        settings.values = function (text, cb) {
+          remoteSearch(text, users => cb(users));
+        };
+
+
+        
+
+
         //al(settings);
         var tribute = new Tribute({
           collection: [
@@ -331,30 +422,30 @@ $.fn.initAutomention = function (){
         });
 
 
-        var initval=$input.val();
-        $element.text(initval);
+        setInitialValue();
 
-        initval.replace(/{{/g, PRE);
-        initval=initval.replace(/}}/g, POST);
+        // initval.replace(/{{/g, PRE);
+        // initval=initval.replace(/}}/g, POST);
         
         tribute.attach($element[0]);
 
         $element.on('focus',function(e){
           $(this).closest('.form-group.outlined').addClass('focused');
         });
+        
         $element.on('blur',function(e){
           $(this).closest('.form-group.outlined').removeClass('focused');
         });
-        $element.on('keyup',function(e){
-          $input.val($(this).text());
-        });
 
+        $element.on('keyup',function(e){
+         
+          updateInput();
+          
+        });
+        
         $element.on('tribute-replaced', function (e) {
-          $input.val($(this).text());
-          //al($(this));
-          //al($(this).text());
-          //console.log('Original event that triggered text replacement:', e.detail.event);
-          //console.log('Matched item:', e.detail.item);
+          updateInput();
+          
         });
 
 

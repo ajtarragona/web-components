@@ -105,5 +105,31 @@ class DocsController extends Controller
 
   }
 
+
+  public function userscombo(Faker $faker){
+      $num=10;
+      $ret=[];
+      for ($i = 0; $i < $num; $i++) {
+        $word= $faker->name;
+        $ret[]= ["value"=>'user-'.$i,"key"=>$word];
+      }
+
+      return $ret;
+
+  }
+
+
+  public function tagscombo(Faker $faker){
+      $num=10;
+      $ret=[];
+      for ($i = 0; $i < $num; $i++) {
+        $word=$faker->word;
+        $ret[]= ["value"=>$word,"key"=>$word];
+      }
+
+      return $ret;
+
+  }
+
 }
 
