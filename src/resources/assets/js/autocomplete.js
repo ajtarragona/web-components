@@ -65,11 +65,11 @@ $.widget( "ajtarragona.tgnAutocomplete", {
         },
         //prefetch: settings.url,
         remote: {
-          url: this.getUrl(),
+          url: o.getUrl(),
           //wildcard: '%QUERY'
           prepare: function (query, settings) {
             
-            var url=settings.url;
+            var url=o.getUrl();
            // al(url);
             if(o.options.multiple){
             	return url.replace('WILDCARD',encodeURIComponent(query));
