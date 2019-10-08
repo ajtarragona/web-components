@@ -1,14 +1,42 @@
-.map-container{
-	margin-bottom:0.5rem;
-}
-.google-map{
-	min-height:350px;
-	// height:100%;
-	width:100%;
 
-	border:1px solid $border-color;
-	background-color:$white;
+.map-container{
+	position:relative;
+
+	.map-search-input{
+		position:absolute;
+		left: 10px;
+		top: 10px;
+		z-index: 1;
+		width: calc(100% - 75px);
+		box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.1);//$box-shadow-sm;
+		background: #fff;
+		
+		.form-group{
+			margin-bottom: 0px;
+			
+			.form-control{
+				height: 2.5rem;
+				&:focus{
+					// background-color:white;
+				}
+
+			}
+		}
+	}
+
+		
+	.google-map{
+		min-height:350px;
+		// height:100%;
+		width:100%;
+
+		border:1px solid $border-color;
+		background-color:$white;
+	}
+
+
 }
+
 
 .pac-container {
 	z-index: 2000;

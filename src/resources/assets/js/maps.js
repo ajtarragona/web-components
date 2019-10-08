@@ -1,3 +1,6 @@
+var MarkerClusterer = require("@google/markerclusterer");
+
+
 var MAPS=[];
 
 
@@ -205,7 +208,6 @@ var tgnmapdefaults = {
 TgnMapClass = function(obj,options){
 
 
-  al("init() tgnMap");
   //al(obj);
   this.$element=obj;
   this.id=obj.attr("id");
@@ -225,12 +227,15 @@ TgnMapClass = function(obj,options){
 
   this.markers=[];
   
-  this.value=false;
+  // this.value=false;
+  this.markerClusterer=null;
+  this.bounds=null;
 
 
   this.settings=tgnmapdefaults;
   if(options) this.settings = $.extend(true, {}, this.settings, options); 
-  
+  al("init() tgnMap", this.settings);
+ 
 
   this.setCenter = function(center){
     //al('setCenter');
@@ -254,29 +259,36 @@ TgnMapClass = function(obj,options){
   this.initMarkers = function(){
     al('initMarkers');
     var o=this;
-
-    var bounds = new google.maps.LatLngBounds();
+ 
+    o.bounds = new google.maps.LatLngBounds();
 
     //al(this.settings.markers);
-
-    for(var i in this.settings.markers){
-      var marker=this.addMarker(this.settings.markers[i].location);
-      if(this.settings.markers[i].infobox) marker.infobox=this.settings.markers[i].infobox;
-      bounds.extend(marker.position);
+    // al()
+    o.markerClusterer = new MarkerClusterer(o.gmap, [], {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+    // al(o.markerClusterer);
+    if(!this.settings.multiple){
+        if(this.settings.markers.length>0){
+          this.addMarker(this.settings.markers[0].location, this.settings.markers[0].name, this.settings.markers[0].infobox);
+        }
+    }else{
+      var markers=[];
+      for(var i in this.settings.markers){
+        this.addMarker(this.settings.markers[i].location,this.settings.markers[i].name,  this.settings.markers[i].infobox);
+      }
+      // o.markerClusterer.addMarkers(markers);
     }
+    
+    // o.gmap.fitBounds(bounds);
 
-    o.gmap.fitBounds(bounds);
-
-    if(this.settings.cluster){
-      var markerCluster = new MarkerClusterer(o.gmap, o.markers,
-            {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
-    }
+   
 
     //al(bounds);
 
   }
 
-  this.addMarker = function(coords){
+ 
+
+  this.addMarker = function(coords,name,infobox){
     var o=this;
 
     //al("addMarker ");
@@ -291,12 +303,13 @@ TgnMapClass = function(obj,options){
       map: this.gmap
     });
     //al(marker);
-   
+    marker.name=name;
+
     marker.addListener('dragend', function() {
       //al("marker drooped");
       //al(this);
-
-      o.setValue({location: {lat:this.position.lat(), lng: this.position.lng()}});
+      
+      o.updateValue();
 
     });
 
@@ -315,9 +328,19 @@ TgnMapClass = function(obj,options){
         }
       });
   
-    this.markers.push(marker);
+    
+    
+    if(infobox) marker.infobox=infobox;
+    
+    o.bounds.extend(marker.position);
+    
+    o.markerClusterer.addMarker(marker);
+    
+    o.markers.push(marker);
 
-    this.setCenter(coords);
+    o.setCenter(coords);
+    o.gmap.fitBounds(o.bounds);
+    o.updateValue();
     return marker;
   }
 
@@ -330,7 +353,7 @@ TgnMapClass = function(obj,options){
   }
 
   // Deletes all markers in the array by removing references to them.
-  this. deleteMarkers= function() {
+  this.deleteMarkers= function() {
       this.clearMarkers();
       this.markers = [];
   }
@@ -345,11 +368,11 @@ TgnMapClass = function(obj,options){
     if(this.$autocompleteinput.length>0)
       this.autocompleteinput = this.$autocompleteinput[0];
     
-    this.$forminput=$('[type=hidden][data-map="#'+this.id+'"]');
+    this.$forminput=$('[data-value][data-map="#'+this.id+'"]');
     if(this.$forminput.length>0)
       this.forminput = this.$forminput[0];
     
-    this.initValue();
+    // this.initValue();
 
 
 
@@ -454,16 +477,17 @@ TgnMapClass = function(obj,options){
           if(place.address_components){
             var loc={lat:place.geometry.location.lat(),lng:place.geometry.location.lng()};
 
-              o.setValue({
-                name:place.name,
-                location : loc
-              });
-              
-              o.addMarker(loc);
+              // o.setValue({
+              //   name:place.name,
+              //   location : loc
+              // });
+              o.addMarker(loc,place.name,place.name);
+              o.updateValue();
+             
               
           }else{
-            o.setValue({name:place.name})
-
+            // o.setValue({name:place.name})
+            o.updateValue();
           }
 
     });
@@ -471,49 +495,61 @@ TgnMapClass = function(obj,options){
 
 
   this.clearValue = function(settings){
-    this.value={name:'',location:{lat:'',lng:''}};
-    this.$forminput.val(JSON.stringify(this.value));
-    this.displayCoords();
+    // this.value={name:'',location:{lat:'',lng:''}};
+    this.markers=[];
+    this.updateValue();
+    // this.$forminput.val(JSON.stringify(this.value));
+    // this.displayCoords();
     
 
   }
 
-  this.setValue = function(settings){
+  this.updateValue = function(settings){
         
-      this.value = $.extend(true, {}, this.value, settings); 
-
-      this.$forminput.val(JSON.stringify(this.value));
-      this.displayCoords();
+   
+      var value=[];
+      for (var i = 0; i < this.markers.length; i++) {
+       
+        var val={
+          name: this.markers[i].name,
+          location: {
+            lat:this.markers[i].position.lat(),
+            lng:this.markers[i].position.lng()
+          }
+        };
+        value.push(val);
+        
+      }
+      al("UPDATE",value);
+      this.$forminput.val(JSON.stringify(value));
+     
       
   }
 
-  this.initValue = function(){
-      var val = this.$forminput.val();
-      try{
-         this.value=JSON.parse(val);
-      }catch(e){
-         this.value ={name:'',location:{lat:'',lng:''}};
-      }
-      if(this.value && this.value.hasOwnProperty("name")){
-        this.$autocompleteinput.val(this.value.name);
-        this.displayCoords();
-      }
-  }
+  // this.initValue = function(){
+  //   var val = this.settings.markers;//$forminput.val();
+      
+  //     this.updateValue();
+  //     // if(this.value && this.value.hasOwnProperty("name")){
+  //     //   this.$autocompleteinput.val(this.value.name);
+  //     //   this.displayCoords();
+  //     // }
+  // }
   this.displayCoords= function(){
-    if(this.value.location){
-      this.$coordsdisplay.html("LAT:"+this.value.location.lat+", LNG:"+this.value.location.lng);  
-    }
+    // if(this.value.location){
+    //   this.$coordsdisplay.html("LAT:"+this.value.location.lat+", LNG:"+this.value.location.lng);  
+    // }
   }
   this.initAll= function(){
     // 
-    //al("initAll");
+    al("initAll",this.settings);
     //this.addMarker(this.settings.center);
     this.initTextField();
     //al(this.value.location);
     
-    if(this.value && this.value.location && this.value.location.lng && this.value.location.lat){
-      this.addMarker(this.value.location);
-    }
+    // if(this.value && this.value.location && this.value.location.lng && this.value.location.lat){
+    //   this.addMarker(this.value.location,this.value.name);
+    // }
 
     if(this.settings.markers){
       this.initMarkers();

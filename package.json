@@ -31,6 +31,7 @@
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.8",
     "@fortawesome/fontawesome-free": "^5.9.0",
+    "@google/markerclusterer": "^1.0.3",
     "autosize": "^4.0.2",
     "bloodhound-js": "^1.2.3",
     "bootstrap-colorpicker": "^3.1.2",

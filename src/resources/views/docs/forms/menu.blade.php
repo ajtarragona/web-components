@@ -17,4 +17,6 @@
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'forms.icon','title'=>'Icon picker'])
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'forms.button','title'=>'Buttons'])
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'forms.buttongroup','title'=>'Buttongroups'])
+	@include('ajtarragona-web-components::docs.menuitem',['route'=>'forms.maps','title'=>'Maps'])
+
 </ul>

@@ -49,7 +49,7 @@
 	});
 
 </script>
-
+	@include("ajtarragona-web-components::layout.parts.gmaps")
 	{{-- <script>
 		$(window).on('load',function(){
 

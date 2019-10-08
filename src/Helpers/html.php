@@ -17,6 +17,8 @@ use Ajtarragona\WebComponents\Models\Forms\Texteditor;
 use Ajtarragona\WebComponents\Models\Forms\Input;
 use Ajtarragona\WebComponents\Models\Forms\Select;
 use Ajtarragona\WebComponents\Models\Forms\Checkbox;
+use Ajtarragona\WebComponents\Models\Forms\FormControl;
+use Ajtarragona\WebComponents\Models\Forms\GMap;
 use Ajtarragona\WebComponents\Models\Forms\Radio;
 
 if (! function_exists('renderAttributes')) {
@@ -120,6 +122,20 @@ if (! function_exists('autocomplete')) {
 		
 		$ret = new Input($attributes,$newdata);
 		return $ret->render();
+	}
+}
+
+
+
+
+
+if (! function_exists('gmap')) {
+	function gmap($attributes=[],$data=[]){
+		// if(!isset($attributes["class"])) $attributes["class"]="";
+		// $attributes["class"].=" autocomplete";
+		$ret = new GMap($attributes,$data);
+		return $ret->render();
+		
 	}
 }
 

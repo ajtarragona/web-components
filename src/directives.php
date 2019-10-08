@@ -327,6 +327,9 @@ return [
     'autocomplete' => function($expression) {
         return "<?php echo autocomplete({$expression}); ?>";
     },
+    'gmap' => function($expression) {
+        return "<?php echo gmap({$expression}); ?>";
+    },
     'fileinput' => function($expression) {
         return "<?php echo fileinput({$expression}); ?>";
     },
