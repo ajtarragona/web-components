@@ -231,7 +231,7 @@ class FormControl
 			$ret.=$this->renderIcon();
 			
 			
-			$ret.="<div class='flex-grow-1 form-control-container' >";
+			$ret.="<div class='flex-grow-1 form-control-container mw-100' >";
 			
 			if(method_exists($this,'preHook')){
 				$ret.=$this->preHook();

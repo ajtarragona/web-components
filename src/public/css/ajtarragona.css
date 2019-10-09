@@ -20398,7 +20398,8 @@ table[data-clicktype=click] tbody tr {
   left: 10px;
   top: 10px;
   z-index: 1;
-  width: calc(100% - 75px);
+  width: auto;
+  max-width: calc(100% - 75px);
   box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.1);
   background: #fff;
 }
@@ -20409,6 +20410,14 @@ table[data-clicktype=click] tbody tr {
 
 .map-container .map-search-input .form-group .form-control {
   height: 2.5rem;
+}
+
+.map-container .coords-display {
+  display: block;
+}
+
+.map-container .coords-display:empty {
+  display: none;
 }
 
 .map-container .google-map {

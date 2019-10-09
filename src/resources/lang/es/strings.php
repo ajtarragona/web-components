@@ -22,5 +22,6 @@ return [
 	"save" => "Guardar",
 	"language" => "Idioma",
 	"language :code" => "Idioma (:code)",
-	"No Items Found" => "Ningún resultado"
+	"No Items Found" => "Ningún resultado",
+	"Marcador" => "Marcador",
 ];
