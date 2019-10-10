@@ -79,7 +79,9 @@
     "zoom" =>12,
     "readonly"=>true,
     "multiple"=>false,
-   "markers"=>[
+    "mapcontainerclass"=>"mb-3",
+    "class"=>"img-fluid img-thumbnail",
+    "markers"=>[
         [
             "name"=>"Avinguda Prat de la Riba",
             "location"=> [
@@ -111,6 +113,13 @@
             "location"=> [
                 "lat"=>41.1126923, 
                 "lng"=>1.242945500000019
+            ]
+        ],
+        [
+            "name"=>"",
+            "location"=> [
+                "lat"=>41.0999623021731, 
+                "lng"=>1.133002214129533
             ]
         ]
     ]

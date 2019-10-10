@@ -37,7 +37,7 @@ class GMap extends FormControl
         $size= (($this->width&&is_int(intval($this->width)))?$this->width:"300")."x".(($this->height&&is_int(intval($this->height)))?$this->height:"180");
 
         $options= [
-            "zoom"=>$this->zoom, 
+            // "zoom"=>$this->zoom, 
             "size"=> $size,
             "maptype"=> $this->maptype,
             "format"=> $this->format
@@ -53,31 +53,50 @@ class GMap extends FormControl
             $center=0;
             foreach($this->getMarkers() as $marker){
                 if(is_object($marker)) $marker=to_array($marker);
-                
+
                 $center= $marker["location"]["lat"].",".$marker["location"]["lng"];
                 $markers[]=$center;
             }
             $url.="&markers=".implode("|",$markers);
         }else{
-            $url.="&center=".$this->center;
+            $url.="&zoom=".$this->zoom."&center=".$this->center;
         }
 
             
-        return "<img src=\"".$url."\" />";
+        return "<img src=\"".$url."\" class='".$this->getAttribute("class")."'/>";
     }
 
-	public function bodyReplaceHook(){
+    public function render($args=[]){
+    	if(!$this->isVisible()) return;        
         
         
 		$ret="";
-        $ret.='<div class="map-container '.$this->getAttribute("mapcontainerclass").'">';
-
-        if($this->getAttribute("readonly",false) || $this->getAttribute("disabled",false) ){
-
-            $ret.=$this->miniMap();
-
-        }else{
         
+        if($this->getAttribute("readonly",false) || $this->getAttribute("disabled",false) ){
+            
+            $ret.='<div class="map-container '.$this->getAttribute("mapcontainerclass").'">';
+            $ret.=$this->miniMap();
+            $ret.="</div>";
+        }else{
+            
+			if($this->container){
+				$ret.=$this->renderFormGroupStart();
+			}
+			
+
+			if($this->sidelabel){
+				$ret.="<div class='d-flex flex-row'>";
+			}
+			
+			$ret.=$this->renderLabel();
+			
+			$ret.="<div class='input-group' >";
+			
+			$ret.="<div class='flex-grow-1 form-control-container mw-100' >";
+			
+			
+            $ret.='<div class="map-container '.$this->getAttribute("mapcontainerclass").'">';
+
             if($this->search || $this->addmarkerbtn ){
                 $ret.="<div class='input-group map-search-input'>";
                 
@@ -136,8 +155,25 @@ class GMap extends FormControl
 
             
             // $ret = new Input($attributes,$newdata);
+            $ret.='</div>';
+
+            $ret.="</div><!--.form-control-container-->";
+			
+			$ret.="</div><!--.input-group-->";
+			
+
+			if($this->sidelabel){
+				$ret.="</div><!--.flex-row-->";
+			}
+
+			$ret.=$this->renderHelpText();
+			$ret.=$this->renderErrors();
+			
+			
+			if($this->container){
+				$ret.=$this->renderFormGroupEnd();
+			}
         }
-        $ret.='</div>';
 		return $ret;//->render();
 	}
 	
