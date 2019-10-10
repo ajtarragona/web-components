@@ -15,6 +15,7 @@ class GMap extends FormControl
     public $cluster=false;
     public $maptype="roadmap";
     public $format="PNG";
+    public $fitbounds= false;
     public $addmarkerbtn= true;
     public $animation= false;
     public $center= false;
@@ -140,6 +141,7 @@ class GMap extends FormControl
             $ret.='    data-animation="'. ($this->animation?'true':'false') .'"';
             $ret.='    data-map-type="'. $this->maptype .'"';
             $ret.='    data-cluster="'. ($this->cluster?'true':'false') .'"';
+            $ret.='    data-fitbounds="'. ($this->fitbounds?'true':'false') .'"';
             $ret.='    data-markers=\''. json_encode($this->getMarkers()) .'\'';
 
 

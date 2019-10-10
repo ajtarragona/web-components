@@ -309,6 +309,7 @@ TgnMapClass = function(obj,options){
       }
       
     }
+    if(o.settings.fitbounds) o.gmap.fitBounds(o.bounds);
     
     // al("markers",this.markers);
     // o.gmap.fitBounds(bounds);
@@ -390,7 +391,6 @@ TgnMapClass = function(obj,options){
     // o.markers.push(marker);
 
     o.setCenter(coords);
-    if(o.settings.fitbounds) o.gmap.fitBounds(o.bounds);
     o.updateValue();
     return marker;
   }

@@ -44,6 +44,7 @@
     "addmarkerbtn" => true,
     "animation" => true,
     "cluster" => true,
+    "fitbounds" => true,
     "markers"=>[
         [
             "name"=>"Avinguda Prat de la Riba",
@@ -74,6 +75,10 @@
     
 ])
 
+
+<hr/>
+
+<h4>Como imágen</h4>
 
 @gmap([
     "zoom" =>12,
