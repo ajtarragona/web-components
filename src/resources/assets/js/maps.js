@@ -582,6 +582,7 @@ TgnMapClass = function(obj,options){
 
         var val={
           name: marker.name,
+          infobox: marker.name,
           location: {
             lat:marker.position.lat(),
             lng:marker.position.lng()
