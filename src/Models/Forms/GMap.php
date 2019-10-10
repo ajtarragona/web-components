@@ -52,6 +52,8 @@ class GMap extends FormControl
             $markers=[];
             $center=0;
             foreach($this->getMarkers() as $marker){
+                if(is_object($marker)) $marker=to_array($marker);
+                
                 $center= $marker["location"]["lat"].",".$marker["location"]["lng"];
                 $markers[]=$center;
             }
