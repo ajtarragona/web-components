@@ -33,6 +33,11 @@
 {{-- <link href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/github-v2.min.css"  rel="stylesheet"/> --}}
 @endsection
 
+@section('pre-js')
+	@include("ajtarragona-web-components::layout.parts.gmaps")
+@endsection
+
+
 @section('js')
 <script>
 	$(document).ready(function(e){
@@ -49,7 +54,6 @@
 	});
 
 </script>
-	@include("ajtarragona-web-components::layout.parts.gmaps")
 	{{-- <script>
 		$(window).on('load',function(){
 

@@ -254,6 +254,9 @@ $sidelabel-size : 160px;
 		&:before{
 			color: rgba($white,0.9);
 		}
+		.form-text{
+			color:rgba(255,255,255,0.7) !important;
+		}
 
 	}
 	&.bg-warning{

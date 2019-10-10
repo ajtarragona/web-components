@@ -1,7 +1,9 @@
 // var MarkerClusterer = require("@google/markerclusterer");
+var MarkerClusterer = require("@google/markerclustererplus");
+// var OverlappingMarkerSpiderfier = require("overlapping-marker-spiderfier");
+// import OverlappingMarkerSpiderfier from 'overlapping-marker-spiderfier';
 
-
-var MAPS=[];
+// var MAPS=[];
 
 
 var tgnmapdefaults = {
@@ -12,6 +14,9 @@ var tgnmapdefaults = {
   readonly:false,
   animation:false,
   cluster:true,
+  fitbounds:false,
+  clusterMinZoom: 15,
+  mapType: 'roadmap',
   controls : {
     zoom: true,
     mapType: false,
@@ -204,6 +209,7 @@ var tgnmapdefaults = {
     //   },
 
 
+
 TgnMapClass = function(obj,options){
 
   this.currentId = 0;
@@ -211,6 +217,7 @@ TgnMapClass = function(obj,options){
   this.uniqueId = function() {
     return ++this.currentId;
   }
+ 
   //al(obj);
   this.$element=obj;
   this.id=obj.attr("id");
@@ -240,7 +247,8 @@ TgnMapClass = function(obj,options){
 
   this.settings=tgnmapdefaults;
   if(options) this.settings = $.extend(true, {}, this.settings, options); 
-  al("init() tgnMap", this.settings);
+  al("init() tgnMap");
+  // al(this.settings);
  
 
   this.setCenter = function(center){
@@ -270,7 +278,25 @@ TgnMapClass = function(obj,options){
 
     //al(this.settings.markers);
     // al()
-    if(this.settings.cluster) this.markerClusterer = new MarkerClusterer(o.gmap, [], {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+    if(this.settings.cluster){
+      this.markerClusterer = new MarkerClusterer(o.gmap, [], {
+        imagePath: baseUrl()+'/vendor/ajtarragona/img/mapcluster/m'
+      });
+      this.markerClusterer.setMaxZoom(o.settings.clusterMinZoom);
+
+    }
+
+
+    //spider
+    this.overlappingmarkers = new OverlappingMarkerSpiderfier(o.gmap, {
+      // markersWontMove: true,
+      // markersWontHide: true,
+      // basicFormatEvents: true,
+      keepSpiderfied: true,
+
+    });
+
+
     // al(o.markerClusterer);
     if(!this.settings.multiple){
         if(this.settings.markers.length>0){
@@ -320,9 +346,8 @@ TgnMapClass = function(obj,options){
 
     });
 
-    marker.addListener('click', function(point) {
-      o.displayCoords(this);
-    });
+
+    
     marker.addListener('rightclick', function(point) {
       
       o.deleteMarker(this);
@@ -336,21 +361,28 @@ TgnMapClass = function(obj,options){
       // });
       
 
-      marker.addListener('click', function() {
+    // marker.addListener('click', function() {
+    marker.addListener('spider_click', function() {
         //al("marker clicked");
         //al(this);
         if(this.infobox){
           o.showInfo(this,this.infobox);
         }
-      });
-  
+        o.displayCoords(this);
+    });
+    
     
     
     if(infobox) marker.infobox=infobox;
     
     o.bounds.extend(marker.position);
     
+    o.overlappingmarkers.addMarker(marker); 
+
     if(o.settings.cluster)  o.markerClusterer.addMarker(marker);
+
+
+
     // al(marker);
     var id = o.uniqueId();
     marker.uid=id
@@ -358,7 +390,7 @@ TgnMapClass = function(obj,options){
     // o.markers.push(marker);
 
     o.setCenter(coords);
-    o.gmap.fitBounds(o.bounds);
+    if(o.settings.fitbounds) o.gmap.fitBounds(o.bounds);
     o.updateValue();
     return marker;
   }
@@ -376,7 +408,7 @@ TgnMapClass = function(obj,options){
   // Deletes all markers in the array by removing references to them.
   this.deleteMarker = function(marker) {
     marker.setMap(null);
-    al("Deletemarker",marker);
+    // al("Deletemarker",marker);
     if(this.settings.cluster)  this.markerClusterer.removeMarker(marker);
     
     delete this.markers[marker.uid];
@@ -430,12 +462,13 @@ TgnMapClass = function(obj,options){
     this.gmap = new google.maps.Map(this.$element[0], {
         center: this.settings.center,
         zoom: this.settings.zoom,
-        //mapTypeId: 'satellite',
+        mapTypeId: this.settings.mapType,
         zoomControl: this.settings.controls.zoom,
         mapTypeControl: this.settings.controls.mapType,
         mapTypeControlOptions: {
-          style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-          position: google.maps.ControlPosition.LEFT_BOTTOM
+          // style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+          position: google.maps.ControlPosition.LEFT_BOTTOM,
+          mapTypeIds: ['roadmap', 'satellite','hybrid','terrain']
         },
         scaleControl: this.settings.controls.scale,
         streetViewControl: this.settings.controls.streetView,
@@ -518,24 +551,15 @@ TgnMapClass = function(obj,options){
     });
 
     this.autocomplete.addListener('place_changed', function() {
-       // al("place changed");
+        // al("place changed");
         // Get the place details from the autocomplete object.
           var place = o.autocomplete.getPlace();
-          //al(place);
 
           if(place.address_components){
             var loc={lat:place.geometry.location.lat(),lng:place.geometry.location.lng()};
-             al(place);
-              // o.setValue({
-              //   name:place.name,
-              //   location : loc
-              // });
               o.addMarker(loc,place.name,place.name);
               o.updateValue();
-             
-              
           }else{
-            // o.setValue({name:place.name})
             o.updateValue();
           }
 
@@ -544,13 +568,9 @@ TgnMapClass = function(obj,options){
 
 
   this.clearValue = function(settings){
-    // this.value={name:'',location:{lat:'',lng:''}};
     this.markers={};
     this.updateValue();
-    // this.$forminput.val(JSON.stringify(this.value));
-    // this.displayCoords();
     
-
   }
 
   this.updateValue = function(settings){
@@ -560,8 +580,6 @@ TgnMapClass = function(obj,options){
       
       for (marker of Object.values(this.markers)) {
 
-      // for (var i = 0; i < this.markers.length; i++) {
-       
         var val={
           name: marker.name,
           location: {
@@ -572,11 +590,13 @@ TgnMapClass = function(obj,options){
         value.push(val);
         
       }
-      al("UPDATE",value, this.markers);
-      al("MARKERS",this.markers);
+
+
+      // al("UPDATE",value, this.markers);
+      // al("MARKERS",this.markers);
 
       if(!this.settings.multiple){
-        al("length:", Object.keys(this.markers).length);
+        // al("length:", Object.keys(this.markers).length);
         if(Object.keys(this.markers).length>0){
           this.$addmarkerbtn.prop('disabled',true).addClass('disabled');
         }else{
@@ -588,36 +608,25 @@ TgnMapClass = function(obj,options){
       
   }
 
-  // this.initValue = function(){
-  //   var val = this.settings.markers;//$forminput.val();
-      
-  //     this.updateValue();
-  //     // if(this.value && this.value.hasOwnProperty("name")){
-  //     //   this.$autocompleteinput.val(this.value.name);
-  //     //   this.displayCoords();
-  //     // }
-  // }
+  
   this.displayCoords= function(marker){
     if(marker){
       this.$coordsdisplay.html("LAT:"+marker.position.lat()+", LNG:"+marker.position.lng());  
     }
   }
-  this.initAll= function(){
-    // 
-    // al("initAll",this.settings);
-    //this.addMarker(this.settings.center);
-    this.initTextField();
-    //al(this.value.location);
-    
-    // if(this.value && this.value.location && this.value.location.lng && this.value.location.lat){
-    //   this.addMarker(this.value.location,this.value.name);
-    // }
 
+
+  this.initAll= function(){
+    // al("initAll",this.settings);
+   
+    this.initTextField();
+    
     if(this.settings.markers){
       this.initMarkers();
     }
 
   }
+
 
   this.geoLocate = function(callback){
     var o = this;

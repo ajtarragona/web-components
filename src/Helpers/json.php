@@ -47,3 +47,11 @@ if (! function_exists('get_property')) {
 		}
 	}
 }
+
+if (! function_exists('is_assoc')) {
+
+	function is_assoc($array){
+		return !(array_values($array) === $array);
+
+	}
+}

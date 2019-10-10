@@ -21,21 +21,21 @@
                 <tr>
                     <td><code>search</code></td>
                     <td>
-                        <p>Activa o desactiva el buscador de carrers.</p>
+                        <p>Activa o desactiva el buscador de carrers. Per defecte <code>true</code></p>
                     </td>
                 </tr>
                 
 				<tr>
 					<td><code>multiple</code></td>
 					<td>
-						<p>Multiple admetrà afegir diversos marcadors</p>
+						<p>Multiple admetrà afegir diversos marcadors. Per defecte <code>false</code></p>
 					</td>
                 </tr>
                 
                 <tr>
                     <td><code>zoom</code></td>
                     <td>
-                        <p>Nivell de zoom per defecte. Si hi ha marcadors s'ajustarà per que es visualitzin tots.</p>
+                        <p>Nivell de zoom per defecte. Per defecte <code>15</code></p>
                     </td>
                 </tr>
                 <tr>
@@ -47,52 +47,72 @@
                 <tr>
                     <td><code>geolocate</code></td>
                     <td>
-                        <p>Si s'activa, ubica el centre del mapa a la teva localització. S'ignora el paràmetre <code>center</code>.</p>
+                        <p>Si s'activa, ubica el centre del mapa a la teva localització. S'ignora el paràmetre <code>center</code>. Per defecte <code>true</code></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td><code>fitbounds</code></td>
+                    <td>
+                        <p>Si hi ha marcadors ajustarà el centre i el zoom per que es visualitzin tots. Per defecte <code>false</code></p>
                     </td>
                 </tr>
 
                 <tr>
                     <td><code>addmarkerbtn</code></td>
                     <td>
-                        <p>Activa el botó per afegir marcadors manualment.</p>
+                        <p>Activa el botó per afegir marcadors manualment. Per defecte <code>true</code></p>
                     </td>
                 </tr>
 
                 <tr>
                     <td><code>addmarkerbtntext</code></td>
                     <td>
-                        <p>Text que es mostrará al botó d'afegir marcador.</p>
+                        <p>Text que es mostrará al botó d'afegir marcador. </p>
                     </td>
                 </tr>
                 <tr>
                     <td><code>animation</code></td>
                     <td>
-                        <p>Activa l'animació d'aparició dels marcadors.</p>
+                        <p>Activa l'animació d'aparició dels marcadors. Per defecte <code>false</code></p>
                     </td>
                 </tr>
 
                 <tr>
                     <td><code>markers</code></td>
                     <td>
-                        <p>Array de marcadors.</p>
+                        <p>Array de marcadors o bé un sol marcador.</p>
                         <p>Cada marcador pot tenir els atributs: <code>name</code>, <code>location</code> (array <code>lat</code> i <code>lng</code>) i opcionalment <code>infobox</code>.</p>                    
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><code>value</code></td>
+                    <td>
+                        <p>Equivalent a markers. Si es passa aquest valor i també el de markers, aquest precederà al que hi hagi a markers.</p>                    
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><code>maptype</code></td>
+                    <td>
+                        <p>Tipus de mapa: <code>roadmap</code>, <code>satellite</code>, <code>hybrid</code>, <code>terrain</code>. Per defecte <code>roadmap</code></p>                    
                     </td>
                 </tr>
                 <tr>
                     <td><code>cluster</code></td>
                     <td>
-                        <p>Activa l'agrupació de marcadors.</p>                    
+                        <p>Activa l'agrupació de marcadors. Per defecte <code>false</code></p>                    
                     </td>
                 </tr>
 
 				<tr>
-                        <td><code>controls</code></td>
-                        <td>
-                            <p>Activa o desactiva els controls de google maps.</p>                    
-                            <p><code>zoom</code>, <code>mapType</code>, <code>scale</code>, <code>streetView</code>, <code>rotate</code>, <code>fullscreen</code></p>
-                        </td>
-                    </tr>
-                
+                    <td><code>controls</code></td>
+                    <td>
+                        <p>Activa o desactiva els controls de google maps.</p>                    
+                        <p><code>zoom</code>, <code>mapType</code>, <code>scale</code>, <code>streetView</code>, <code>rotate</code>, <code>fullscreen</code></p>
+                    </td>
+                </tr>
+            
 		
 				
 			</tbody>

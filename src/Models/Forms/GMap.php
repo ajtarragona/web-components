@@ -5,44 +5,52 @@ class GMap extends FormControl
 {	
 	public $tag ="div";
 
-    public $inputicon;
-    public $height="auto";   //for not readonly, width is always 100%
-    public $size="500x300"; //for readonly, pixel dimensions
-
+    
+    public $height=false;  
+    public $width=false;   
+    // public $size="500x300"; //for readonly, pixel dimensions
+    public $markers=[];
+    public $zoom=14;
+    public $geolocate=true;
+    public $cluster=false;
+    public $maptype="roadmap";
+    public $format="PNG";
+    public $addmarkerbtn= true;
+    public $animation= false;
+    public $center= false;
+    public $controls= [];
+    public $search= true;
+    public $multiple= false;
 
 	public $attributes=[
-		'name'=>'',
-		'value'=>'',
-		'type'=>'text',
-		'title'=>'',
-		'placeholder'=>'',
-		'id'=>'',
-        'class'=>'map-container',
-        "zoom"=>15,
-        "maptype" => "roadmap",
-        "format" => "PNG" ,
-        "addmarkerbtn" => true,
-        "animation" => false,
-        "geolocate" => true,
-        "cluster" => false,
-    
 	];
 
-	protected function miniMap(){
-        // dump($this->size);
-        // dump($this->attributes);
-        if($this->size) $this->attributes["size"]=$this->size;
+	protected function getMarkers(){
+        if(is_assoc($this->markers)) return [$this->markers];
+        else return $this->markers;
+    }
 
-        $options=array_only($this->attributes, ["zoom","size","maptype","format"]);
+	protected function miniMap(){
+        
+        // dump($this);
+        $size= (($this->width&&is_int(intval($this->width)))?$this->width:"300")."x".(($this->height&&is_int(intval($this->height)))?$this->height:"180");
+
+        $options= [
+            "zoom"=>$this->zoom, 
+            "size"=> $size,
+            "maptype"=> $this->maptype,
+            "format"=> $this->format
+        ];
+
         $apikey=config('webcomponents.gmaps.api_key');
 
         // dd($this->center);
         $url="https://maps.googleapis.com/maps/api/staticmap?".http_build_query($options)."&key=".$apikey;
         
-        if($this->markers){
+        if($this->getMarkers()){
             $markers=[];
             $center=0;
-            foreach($this->markers as $marker){
+            foreach($this->getMarkers() as $marker){
                 $center= $marker["location"]["lat"].",".$marker["location"]["lng"];
                 $markers[]=$center;
             }
@@ -56,50 +64,32 @@ class GMap extends FormControl
     }
 
 	public function bodyReplaceHook(){
-		$newdata=[];
-
-		// if(isset($attributes["multiple"])) $newdata["multiple"]=$attributes["multiple"];
-		// if(isset($attributes["url"])) $newdata["url"]=$attributes["url"];
-		// if(isset($attributes["value"])) $newdata["value"]=$attributes["value"];
-		// if(isset($attributes["valuename"])) $attributes["value"]=$attributes["valuename"];
-		// if(isset($attributes["savevalue"])) $newdata["savevalue"]=$attributes["savevalue"];
-		// if(isset($attributes["showvalue"])) $newdata["showvalue"]=$attributes["showvalue"];
-		// if(isset($attributes["min-length"])) $newdata["min-length"]=$attributes["min-length"];
-		
-		
-        $this->markers=$this->getAttribute("markers",[]);
-
-        $this->center=$this->getAttribute("center",config('webcomponents.gmaps.tgn_coords'));
-        $this->zoom=$this->getAttribute("zoom",config('webcomponents.gmaps.default_zoom'));
-		$this->multiple=$this->getAttribute("multiple",false);
-		$this->geolocate=$this->getAttribute("geolocate",true);
-		// $this->animation=$this->getAttribute("animation",false);
-		
-		// dump($multiple);
-		
-		
+        
+        
 		$ret="";
-        $ret.='<div class="map-container">';
+        $ret.='<div class="map-container '.$this->getAttribute("mapcontainerclass").'">';
 
         if($this->getAttribute("readonly",false) || $this->getAttribute("disabled",false) ){
+
             $ret.=$this->miniMap();
+
         }else{
         
-            if($this->getAttribute("search",true) || $this->getAttribute("addmarkerbtn",true)){
+            if($this->search || $this->addmarkerbtn ){
                 $ret.="<div class='input-group map-search-input'>";
                 
-                if($this->getAttribute("search",true)){
-                    $inputattrs=array_only($this->attributes, ["placeholder","inputclass"]);
-                    $inputattrs["icon"]=$this->inputicon;
-                    $inputattrs["containerclass"]='flex-grow-1';
+                if($this->search){
+
+                    $inputattrs=array_only($this->attributes, ["placeholder","class","inputicon","required","label","helptext","size"]);
+                    $inputattrs["containerclass"]=$this->containerClass("containerclass","").' flex-grow-1';
 
                     $ret.=input($inputattrs, array_merge($this->data,[
                         'map' => "#".$this->getAttribute("id")
-                        ]));
+                    ]));
                         
                 }
                     
-                if($this->getAttribute("addmarkerbtn",true)){
+                if($this->addmarkerbtn){
                     $txt=$this->getAttribute("addmarkerbtntext", (icon('plus')." ".__("tgn::strings.Marcador")) );
 
                     $ret.="<div class='input-group-append'>";
@@ -109,21 +99,30 @@ class GMap extends FormControl
                 }
 
                 $ret.="</div>";
-            }   
-            $ret.='    <input type="hidden" data-value data-map="#'.$this->attributes["id"].'" name="'.$this->attributes["name"].'" />';
+            } 
+            
+            $inputdata=[
+                "value"=>true,
+                "map"=>"#".$this->attributes["id"]
+            ];
+
+            $ret.='    <input type="hidden" '.self::html_attributes($inputdata,"data").' name="'.$this->attributes["name"].'" />';
+
+
             $ret.='   <div class="google-map" id="'.$this->attributes["id"].'"	';
-            if($this->height && $this->height!="auto") $ret.=" data-height='".$this->height."' ";
+            if($this->height) $ret.=" data-height='".$this->height."' ";
             $ret.='    data-center="'. $this->center .'"';
             $ret.='    data-geolocate="'. $this->geolocate .'"';
             $ret.='    data-zoom="'. $this->zoom .'"';
             $ret.='    data-multiple="'. ($this->multiple?'true':'false') .'"';
-            $ret.='    data-animation="'. ($this->getAttribute("animation",false)?'true':'false') .'"';
-            $ret.='    data-cluster="'. ($this->getAttribute("cluster",false)?'true':'false') .'"';
-            $ret.='    data-markers=\''. json_encode($this->markers) .'\'';
+            $ret.='    data-animation="'. ($this->animation?'true':'false') .'"';
+            $ret.='    data-map-type="'. $this->maptype .'"';
+            $ret.='    data-cluster="'. ($this->cluster?'true':'false') .'"';
+            $ret.='    data-markers=\''. json_encode($this->getMarkers()) .'\'';
 
 
-            if($controls=$this->getAttribute("controls")){
-                $ret.='    data-controls=\''. json_encode($controls) .'\'';
+            if($this->controls){
+                $ret.='    data-controls=\''. json_encode($this->controls) .'\'';
 
             }
                 // $ret.='    data-click-add="true"';
@@ -143,18 +142,29 @@ class GMap extends FormControl
         // dump($attributes);
         parent::__construct($attributes,$data);
 
-        if(isset($attributes['icon'])){
-			$this->inputicon = $attributes['icon'];
-			$this->icon=null;
+
+        /*quiito el icono del control y se lo pongo al input del buscador*/
+        if($this->icon){
+			$this->attributes['inputicon'] = $this->icon;
+			$this->icon = false;
         }
+
+        // $this->markers=$this->getAttribute("markers",[]);
+
+        if(!$this->center) $this->center=config('webcomponents.gmaps.tgn_coords');
+        // dd($this);
+        // $this->zoom=$this->getAttribute("zoom",config('webcomponents.gmaps.default_zoom'));
+		// $this->multiple=$this->getAttribute("multiple",false);
+		// $this->geolocate=$this->getAttribute("geolocate",true);
         // dump($this);
         // dump($this->attributes);
 
 
-		// if(isset($this->attributes['type']) &&  $this->attributes['type']=="number"){
-		// 	$this->attributes["type"]="text";
-		// 	$this->addClass("number");
-		// }
+		if(isset($this->attributes['value'])){
+            $val=$this->attributes['value'];
+            if(is_array($val) && is_assoc($val)) $val=[$val];
+			$this->markers=$val;
+		}
 		
 		// if(isset($this->attributes["multiple"]) && $this->attributes["multiple"] && !ends_with($this->attributes['name'],"[]")) $this->attributes["name"].="[]";
 		//dump($this->attributes);

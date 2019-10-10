@@ -4,8 +4,10 @@
 @gmap([
     "name"=>"map_simple3",
     "zoom"=>10,
+    "addmarkerbtn" => false,
     "center" =>"43.3051042,-1.9774373999999852",
-    "geolocate"=>false
+    "geolocate"=>false,
+    'maptype'=>'hybrid'
 ])
 
 
@@ -13,12 +15,15 @@
     "zoom" =>12,
     "multiple"=>false,
     "name"=>"map_simple2",
-    "addmarkerbtn" => true,
+    "id"=>"iddelcampo",
     "placeholder"=>"Buscador",
     "addmarkerbtntext"=>"Dale!",
     "icon" => "search",
     "height"=>"600px",
-    "markers"=>[
+    "label"=>"Titol camp",
+    "sidelabel"=>false,
+    "helptext"=>"lalala",
+    "value"=>
         [
             "name"=>"Avinguda Prat de la Riba",
             "location"=> [
@@ -26,7 +31,7 @@
                 "lng"=>1.2460229000000709
             ]
         ]
-    ]
+    
     
 ])
 
@@ -37,11 +42,12 @@
     "name"=>"map_multiple",
     "search"=>false,
     "addmarkerbtn" => true,
-    "animation" => false,
+    "animation" => true,
     "cluster" => true,
     "markers"=>[
         [
             "name"=>"Avinguda Prat de la Riba",
+            "infobox"=>"Avinguda Prat de la Riba",
             "location"=> [
                 "lat"=>41.1176215,
                 "lng"=>1.2460229000000709
@@ -89,7 +95,8 @@
 @gmap([
     "multiple"=>true,
     "readonly"=>true,
-    "size" => "300x300",
+    "width" => "400",
+    "height" => "400",
     "markers"=>[
         [
             "name"=>"Avinguda Prat de la Riba",
