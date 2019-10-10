@@ -27,6 +27,7 @@ class GMap extends FormControl
 
 	protected function getMarkers(){
         if(is_assoc($this->markers)) return [$this->markers];
+        if(is_object($this->markers)) return [to_array($this->markers)];
         else return $this->markers;
     }
 
