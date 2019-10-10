@@ -51,6 +51,8 @@ if (! function_exists('get_property')) {
 if (! function_exists('is_assoc')) {
 
 	function is_assoc($array){
+		if(!$array) return false;
+		if(!is_array($array)) return false;
 		return !(array_values($array) === $array);
 
 	}
