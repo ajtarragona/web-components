@@ -12,6 +12,7 @@ var tgnmapdefaults = {
   geolocate: true,
   multiple:false,
   readonly:false,
+  disabled:false,
   animation:false,
   cluster:true,
   fitbounds:false,
@@ -289,8 +290,8 @@ TgnMapClass = function(obj,options){
 
     //spider
     this.overlappingmarkers = new OverlappingMarkerSpiderfier(o.gmap, {
-      // markersWontMove: true,
-      // markersWontHide: true,
+      markersWontMove: false,
+      markersWontHide: false,
       // basicFormatEvents: true,
       keepSpiderfied: true,
 
@@ -309,7 +310,17 @@ TgnMapClass = function(obj,options){
       }
       
     }
-    if(o.settings.fitbounds) o.gmap.fitBounds(o.bounds);
+
+  // al(this.markers);
+
+    if(o.settings.fitbounds){
+      o.gmap.fitBounds(o.bounds);
+      //aleja un poco si es demasiado cercano
+      var listener = google.maps.event.addListener(o.gmap, "idle", function() { 
+         if (o.gmap.getZoom() > 16) o.gmap.setZoom(16); 
+         google.maps.event.removeListener(listener); 
+      });
+    }
     
     // al("markers",this.markers);
     // o.gmap.fitBounds(bounds);
@@ -322,6 +333,9 @@ TgnMapClass = function(obj,options){
 
  
 
+  this.isReadonly = function(){
+    return this.settings.readonly || this.settings.disabled;
+  }
   this.addMarker = function(coords,name,infobox){
     var o=this;
 
@@ -332,7 +346,7 @@ TgnMapClass = function(obj,options){
 
     var marker = new google.maps.Marker({
       position: coords, 
-      draggable: !this.settings.readonly,
+      draggable: !this.isReadonly(),
       animation: this.settings.animation?google.maps.Animation.DROP:false,
       map: this.gmap
     });
@@ -350,8 +364,9 @@ TgnMapClass = function(obj,options){
 
     
     marker.addListener('rightclick', function(point) {
-      
-      o.deleteMarker(this);
+      if(!o.isReadonly()){
+        o.deleteMarker(this);
+      }
 
     });
 
@@ -575,7 +590,8 @@ TgnMapClass = function(obj,options){
 
   this.updateValue = function(settings){
         
-   
+      if(this.isReadonly()) return;
+      
       var value=[];
       
       for (marker of Object.values(this.markers)) {

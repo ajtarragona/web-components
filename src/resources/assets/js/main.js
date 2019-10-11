@@ -49,7 +49,7 @@ onWindowLoad(function() {
 
 
 onWindowError(function (e) {
-  al("ERROR",e.error.message);
+  console.error("ERROR Tgn",e);
   //$('body').tgnInitAll();
   $('html').stopLoading();
 });

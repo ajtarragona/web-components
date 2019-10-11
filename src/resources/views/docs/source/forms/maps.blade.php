@@ -23,13 +23,16 @@
     "label"=>"Titol camp",
     "sidelabel"=>false,
     "helptext"=>"lalala",
+    "readonly"=>true,
+    "fitbounds"=>true,
     "value"=>
         [
-            "name"=>"Avinguda Prat de la Riba",
+            "name"=>"Avinguda 'Prat de la Riba",
             "location"=> [
                 "lat"=>41.1176215,
                 "lng"=>1.2460229000000709
-            ]
+            ],
+            "infobox" => "<h5>Títol</h5><div>Infobox amb HTML i <strong>apostrofs</strong> 'simples'  i \"dobles\"</div> ",
         ]
     
     
@@ -82,7 +85,7 @@
 
 @gmap([
     "zoom" =>12,
-    "readonly"=>true,
+    "static"=>true,
     "multiple"=>false,
     "mapcontainerclass"=>"mb-3",
     "class"=>"img-fluid img-thumbnail",
@@ -101,7 +104,7 @@
 
 @gmap([
     "multiple"=>true,
-    "readonly"=>true,
+    "static"=>true,
     "width" => "400",
     "height" => "400",
     "markers"=>[
