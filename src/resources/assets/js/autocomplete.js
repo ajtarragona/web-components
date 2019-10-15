@@ -391,8 +391,14 @@ $.widget( "ajtarragona.tgnAutocomplete", {
 
 	    	  if(this.options.savevalue){
 	          this.hidden.val(value);
-	        }
-	        this.element.val(name);
+          }
+
+          if(this.options.multiple){
+            this.element.val(name);
+          }else{
+            this.element.typeahead('val', name);
+          }
+                    
           this._refreshDeselector();
           //al(this.element);
 	        // this.element.trigger("typeahead:select", [argument]);	
