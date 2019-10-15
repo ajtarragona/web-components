@@ -395,7 +395,7 @@ $.widget( "ajtarragona.tgnAutocomplete", {
 	        this.element.val(name);
           this._refreshDeselector();
           //al(this.element);
-	        this.element.trigger("typeahead:select", [argument]);	
+	        // this.element.trigger("typeahead:select", [argument]);	
 	        this.element.trigger("tgnautocomplete:change", {element:this.element, item: argument});
              
        }
