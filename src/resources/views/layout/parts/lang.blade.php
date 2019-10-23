@@ -26,7 +26,7 @@
 	@endlist
 </div>
  --}}
-@if(function_exists('language'))
+@if(function_exists('language') && config("webcomponents.language.enabled",false))
 	
 	@if($items=language_items())
 		@if(count($items)>1)

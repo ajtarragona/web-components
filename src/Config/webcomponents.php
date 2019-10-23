@@ -6,6 +6,9 @@ return [
 	'credits'=> env('APP_CREDITS'),
 	'icon'=> env('APP_ICON','globe'),
 	'autopublish' => true,
+	'language' => [
+		'enabled' => env('APP_LANGUAGE_SELECTOR',false)
+	],
 	'demo' =>[
 		"tables_prefix" => "ajt",
 		"tables" => [

@@ -5,11 +5,16 @@
 <p>S'inclou com a dependència de composer el paquet <a href="https://github.com/akaunting/language" target="_blank"><code>akaunting/language</code></a> que permet la selecció d'idioma per part de l'usuari.</p>
 
 <p>Per habilitar-ho, cal seguir els següents passos:</p>
+<p>Definir la variable a l'arxiu <code>.env</code>.</p>
+@code
+APP_LANGUAGE_SELECTOR = true
+@endcode
+
 <p>Definim el locale per defecte a l'arxiu <code>config/app.php</code></p>
 @code
 	'locale' => 'ca'
 @endcode
-
+{{-- 
 <p>Opcionalment, afegim el Provider a l'arxiu <code>config/app.php</code></p>
 
 @code(['lang'=>'bsh'])
@@ -25,12 +30,19 @@
  	...
 	'Language'   => Akaunting\Language\Facade::class,
 ]
-@endcode
+@endcode --}}
 		
 <p>Publiquem la configuració:</p>
 @code(['lang'=>'bsh'])
 	php artisan vendor:publish --tag=language
 @endcode
+
+   
+<p>Executem la migració (s'afegirà la columna locale a la taula d'usuaris):</p>
+@code(['lang'=>'bsh'])
+	php artisan migrate
+@endcode
+
 
 <p>Configurem els idiomes disponibles a l'arxiu <code>config/language.php</code>:</p>
 @code(['lang'=>'bsh'])
@@ -46,11 +58,7 @@
 ]
 @endcode
 
-        
-<p>Executem la migració (s'afegirà la columna locale a la taula d'usuaris):</p>
-@code(['lang'=>'bsh'])
-	php artisan migrate
-@endcode
+     
 
 
 <hr/>

@@ -70,6 +70,7 @@ php artisan ajtarragona:setupauth
 
 <p>Publiquem la configuració del paquet adldap:</p>
 @code
+php artisan vendor:publish --provider=Adldap\Laravel\AdldapAuthServiceProvider
 php artisan vendor:publish --provider=Adldap\Laravel\AdldapServiceProvider
 @endcode
 
