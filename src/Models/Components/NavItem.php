@@ -99,6 +99,8 @@ class NavItem extends WebComponent
 
 
 	 public function render($args=[]){
+		if(!$this->attributes["visible"]) return;
+		
 		if(isset($this->attributes["separator"]) && $this->attributes["separator"]) return "<hr/>";
 
 		$navigation=$this->attributes["navigation"];
