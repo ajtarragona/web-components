@@ -228,6 +228,10 @@ $.widget( "ajtarragona.tgnSelectPicker", {
        o._refreshDeselector();
     },
 
+    destroy : function(){
+      o.element.selectpicker('destroy');
+    },
+
     _createDeselector: function( argument ) {
       var o=this;
 

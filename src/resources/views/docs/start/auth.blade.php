@@ -2,7 +2,10 @@
 
 <hr class="big"/>
 
-<p>El paquet prporciona les rutes, models i controladors necessaris per autenticació.</p>
+<p>El paquet proporciona les rutes, models i controladors necessaris per autenticació.</p>
+
+<p><mark><strong>Important!</strong> Primer cal assegurar-se que tenim configurada la base de dades a l'arxiu <code>.env</code>.</mark></p>
+
 <p>Cal que executem la següent comanda per preparar la taula d'usuaris.</p>
 @code
 php artisan ajtarragona:setupauth
