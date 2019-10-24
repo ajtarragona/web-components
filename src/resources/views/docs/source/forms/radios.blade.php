@@ -7,6 +7,16 @@
 	'checked'=> 2
 ]) 
 
+
+@radios([
+	'name'=>'radio_switch', 
+	'container'=>true,
+	'switch'=>true, 
+	'options'=>[1=>"Switch 1",2=>"Switch 2",3=>"Switch 3"],
+	'checked'=> 2
+]) 
+
+
 @radios([
 	'name'=>'radio_horizontal', 
 	'label'=>'Horizontales',

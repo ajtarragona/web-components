@@ -53,9 +53,18 @@ form.validating{
 	&.success > .custom-control-input:checked ~ .custom-control-label::before {
 		background-color:$success;
 	}
+
+	&.success > .custom-control-input:focus ~ .custom-control-label::before{
+		box-shadow:0 0 0 $input-btn-focus-width rgba($success,0.4);
+	}
+	
 	&.secondary > .custom-control-input:active ~ .custom-control-label::before,
 	&.secondary > .custom-control-input:checked ~ .custom-control-label::before {
 		background-color:$secondary;
+	}
+
+	&.secondary > .custom-control-input:focus ~ .custom-control-label::before{
+		box-shadow:0 0 0 $input-btn-focus-width rgba($secondary,0.4);
 	}
 
 	&.info > .custom-control-input:active ~ .custom-control-label::before,
@@ -63,14 +72,26 @@ form.validating{
 		background-color: $cyan;
 	}
 	
+	&.info > .custom-control-input:focus ~ .custom-control-label::before{
+		box-shadow:0 0 0 $input-btn-focus-width rgba($info,0.4);
+	}
+
 	&.warning > .custom-control-input:active ~ .custom-control-label::before,
 	&.warning > .custom-control-input:checked ~ .custom-control-label::before {
 		background-color:$warning;
 	}
 	
+	&.warning > .custom-control-input:focus ~ .custom-control-label::before{
+		box-shadow:0 0 0 $input-btn-focus-width rgba($warning,0.4);
+	}
+
 	&.danger > .custom-control-input:active ~ .custom-control-label::before,
 	&.danger > .custom-control-input:checked ~ .custom-control-label::before {
 		background-color:$danger;
+	}
+
+	&.danger > .custom-control-input:focus ~ .custom-control-label::before{
+		box-shadow:0 0 0 $input-btn-focus-width rgba($danger,0.4);
 	}
 
 	&.dark > .custom-control-input:active ~ .custom-control-label::before,
@@ -78,9 +99,17 @@ form.validating{
 		background-color:$dark;
 	}
 
+	&.dark > .custom-control-input:focus ~ .custom-control-label::before{
+		box-shadow:0 0 0 $input-btn-focus-width rgba($dark,0.4);
+	}
+
 	&.light > .custom-control-input:active ~ .custom-control-label::before,
 	&.light > .custom-control-input:checked ~ .custom-control-label::before {
 		background-color:$light;
+	}
+
+	&.light > .custom-control-input:focus ~ .custom-control-label::before{
+		box-shadow:0 0 0 $input-btn-focus-width rgba($dark,0.4);
 	}
 
 
@@ -90,6 +119,25 @@ form.validating{
 
 	}
 
+
+	&.custom-switch{
+		.custom-control-input:checked ~ .custom-control-label:after,
+		{
+			background-color: #fff;
+			background-image:none;
+		}
+
+		.custom-control-input:focus ~ .custom-control-label::before{
+			color: #444;
+		}
+
+		&.light > .custom-control-input:checked ~ .custom-control-label:after,
+		{
+			background-color: $gray-800;
+		}
+		
+
+	}
 	
 }
 

@@ -24,6 +24,10 @@
 					<td>Color del check (success, info, danger ...)</td>
 				</tr>
 				<tr>
+					<td><code>switch</code></td>
+					<td>Si se visualiza como un switch</td>
+				</tr>
+				<tr>
 					<td><code>checked</code></td>
 					<td>Booleà indicant si està marcat o no</td>
 				</tr>
@@ -58,6 +62,36 @@
 
 		@code(['lang'=>'java'])
 			@includeSrc('ajtarragona-web-components::docs.source.forms.checkbox')
+		@endcode
+		
+	@endcol
+@endrow
+<hr/>
+@row
+	@col(['size'=>6])	
+			
+			@form([
+				'method'=>'POST',
+				'action'=>route('webcomponents.docs.handle',['forms.checkbox'])
+			])
+				
+				<div class="mb-3">
+					@includeIf('ajtarragona-web-components::docs.source.forms.switch')
+				</div>
+
+
+				@button(['type'=>'submit','size'=>'sm'])
+					Test @icon('chevron-right') 
+				@endbutton
+			@endform
+		
+	@endcol
+
+	@col(['size'=>6])
+
+
+		@code(['lang'=>'java'])
+			@includeSrc('ajtarragona-web-components::docs.source.forms.switch')
 		@endcode
 		
 	@endcol

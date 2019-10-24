@@ -12,6 +12,7 @@ class Radio extends FormControl
     public $horizontal=false;
     public $options=[];
     public $checked=false;
+    public $switch=false;
     
 	public $attributes=[
 		'name'=>'',
@@ -34,7 +35,7 @@ class Radio extends FormControl
             $ret.="<div class='checkbox-group p-3 ". ($this->horizontal?'input-group':'') . "' id='".$this->getAttribute("id")."' >";
         }else{
 
-            $ret.="<div class='custom-control custom-radio {$this->color}'>";
+            $ret.="<div class='custom-control ".($this->switch?"custom-switch":"custom-radio")." ". $this->color. "'>";
 
             if($this->renderhelper) $ret.="<input type='hidden' name='".$this->getAttribute("name")."' value='' />";
         }
@@ -63,7 +64,7 @@ class Radio extends FormControl
             foreach($this->options as $key=>$option){
                 $id='radio_'. str_replace('[]', '', $this->getAttribute('name').'_'.kebab_case($key));
                     
-                $ret.="<div class='".$this->getAttribute("class")."'>";
+                $ret.="<div class='".$this->getAttribute("class")." ". $this->color ."'>";
                 $ret.="   <input type='radio' ";
                 $ret.="        name=\"".$this->getAttribute('name')."\" "; 
                 $ret.="        id=\"".$id."\""; 
@@ -93,7 +94,7 @@ class Radio extends FormControl
  		
 
 		if($this->options){
-            $defclass="custom-control custom-radio";
+            $defclass="custom-control " . ($this->switch?"custom-switch":"custom-radio");
             
             //if( !ends_with( $this->getAttribute('name') ,"[]") )  $this->setAttribute('name', $this->getAttribute('name')."[]");
 		}else{

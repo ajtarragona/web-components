@@ -15,3 +15,13 @@
 	'horizontal'=>true,
 	'checked'=>[2]
 ]) 
+
+
+@checkboxes([
+	'name'=>'check_switches', 
+	'container'=>true,
+	'color'=>'success', 
+	'switch'=>true, 
+	'options'=>[1=>"Switch 1",2=>"Switch 2",3=>"Switch 3"],
+	'checked'=>[3]
+]) 

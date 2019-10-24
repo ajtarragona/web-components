@@ -12,6 +12,7 @@ class Checkbox extends FormControl
     public $horizontal=false;
     public $options=[];
     public $checked=false;
+    public $switch=false;
     
 	public $attributes=[
 		'name'=>'',
@@ -34,7 +35,7 @@ class Checkbox extends FormControl
             $ret.="<div class='checkbox-group p-3 ". ($this->horizontal?'input-group':'') . "' id='".$this->getAttribute("id")."' >";
         }else{
 
-            $ret.="<div class='custom-control custom-checkbox {$this->color}'>";
+            $ret.="<div class='custom-control ". ($this->switch?"custom-switch":"custom-checkbox"). " ". $this->color ."'>";
 
             if($this->renderhelper) $ret.="<input type='hidden' name='".$this->getAttribute("name")."' value='' />";
         }
@@ -63,7 +64,7 @@ class Checkbox extends FormControl
             foreach($this->options as $key=>$option){
                 $id='checkbox_'. str_replace('[]', '', $this->getAttribute('name').'_'.kebab_case($key));
                     
-                $ret.="<div class='".$this->getAttribute("class")."'>";
+                $ret.="<div class='".$this->getAttribute("class")." ". $this->color ."'>";
                 $ret.="   <input type='checkbox' ";
                 $ret.="        name=\"".$this->getAttribute('name')."\" "; 
                 $ret.="        id=\"".$id."\""; 
@@ -92,7 +93,7 @@ class Checkbox extends FormControl
 
         
 		if($this->options){
-            $defclass="custom-control custom-checkbox";
+            $defclass="custom-control " . ($this->switch?"custom-switch":"custom-checkbox");
             
             if( !ends_with( $this->getAttribute('name') ,"[]") )  $this->setAttribute('name', $this->getAttribute('name')."[]");
 		}else{
