@@ -1,4 +1,6 @@
-@texteditor(['label'=>"Editor simple", "placeholder"=>"Escriu aquí ...",'name'=>"editor1",'height'=>'200px'])
+@texteditor(['label'=>"Editor simple mida fixa", "placeholder"=>"Escriu aquí ...",'name'=>"editor1",'height'=>'200px'])
+
+@texteditor(['label'=>"Editor simple mida minima", "placeholder"=>"Escriu aquí ...",'name'=>"editor4",'min-height'=>'10em'])
 
 @texteditor(['label'=>"Editor avançat", "placeholder"=>"Escriu aquí ...", 'name'=>"editor2", "toolbar"=>"advanced"])
 
