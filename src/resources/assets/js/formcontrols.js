@@ -664,7 +664,7 @@ $.fn.initTextEditor = function(){
 
   var simpletoolbar=[
       [{ 'header': [1, 2, 3, 4,false] }],
-      ['bold', 'italic', 'underline'],        // toggled buttons
+      ['bold', 'italic', 'underline','link'],        // toggled buttons
       [{ 'list': 'ordered'}, { 'list': 'bullet' }],
       [{ 'align': [] }],
       ['clean']                                         // remove formatting button

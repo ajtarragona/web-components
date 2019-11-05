@@ -29,6 +29,10 @@
 					<td><code>height</code></td>
 					<td>Alçada de l'editor. Si no s'especifica l'alçada s'adaptarà al contingut.</td>
 				</tr>
+				<tr>
+					<td><code>min-height</code></td>
+					<td>Alçada mínima de l'editor. Si el contingut és més gran s'adaptarà la mida.</td>
+				</tr>
 				
 				
 			</tbody>
