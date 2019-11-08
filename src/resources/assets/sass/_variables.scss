@@ -39,7 +39,8 @@ $danger:        $red !default;
 $light:         $gray-100 !default;
 $dark:          $gray-800 !default;
 
-$default-border-color: rgba($dark,0.08) !default;
+$default-border-color: rgba($dark,0.13) !default;
+$border-color: $default-border-color !default;
 
 $yiq-contrasted-threshold:  185 !default;
 
