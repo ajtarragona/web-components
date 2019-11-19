@@ -529,6 +529,10 @@ $.fn.initAjaxContainer = function (){
         this.loadContainer = function(){
 
             var params={};
+            
+            if(o.settings.method!="GET"){
+              params._token= csrfToken();
+            }
             if(o.$watched.length>0){
               params[o.$watched.attr('name')]=o.$watched.val();
             }
@@ -725,3 +729,25 @@ $.fn.initTextEditor = function(){
 
   });
 }
+
+
+
+
+
+
+// $.fn.initCheckboxes = function (){
+//   var defaults={
+    
+//   };
+
+//   return this.each(function(){
+//        var o=this;
+
+//        o.$element=$(this);
+       
+//        if(o.$element.data('color')){
+//         //  .find('.custom-control-label'):checked~.custom-control-label:before
+//        }
+//         //al($(this));
+//   });
+// }

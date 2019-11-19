@@ -1,6 +1,8 @@
 <?php
 namespace Ajtarragona\WebComponents\Models\Forms;
 
+use Illuminate\Support\Str;
+
 class Checkbox extends FormControl
 {	
 	public $tag ="input";
@@ -34,8 +36,14 @@ class Checkbox extends FormControl
             
             $ret.="<div class='checkbox-group p-3 ". ($this->horizontal?'input-group':'') . "' id='".$this->getAttribute("id")."' >";
         }else{
-
-            $ret.="<div class='custom-control ". ($this->switch?"custom-switch":"custom-checkbox"). " ". $this->color ."'>";
+            $datacolor="";
+            $color="";
+            if(Str::startsWith($this->color,"#")){
+                $datacolor="data-color='".$this->color."'";
+            }else{
+                $color=$this->color;
+            }
+            $ret.="<div class='custom-control ". ($this->switch?"custom-switch":"custom-checkbox")." ".$color."' ".$datacolor.">";
 
             if($this->renderhelper) $ret.="<input type='hidden' name='".$this->getAttribute("name")."' value='' />";
         }
@@ -61,10 +69,18 @@ class Checkbox extends FormControl
     public function bodyReplaceHook(){
         if($this->options){
             $ret="";
+            $datacolor="";
+            $color="";
+            if(Str::startsWith($this->color,"#")){
+                $datacolor="data-color='".$this->color."'";
+            }else{
+                $color=$this->color;
+            }
+
             foreach($this->options as $key=>$option){
                 $id='checkbox_'. str_replace('[]', '', $this->getAttribute('name').'_'.kebab_case($key));
-                    
-                $ret.="<div class='".$this->getAttribute("class")." ". $this->color ."'>";
+                
+                $ret.="<div class='".$this->getAttribute("class")." ".$color."' ".$datacolor.">";
                 $ret.="   <input type='checkbox' ";
                 $ret.="        name=\"".$this->getAttribute('name')."\" "; 
                 $ret.="        id=\"".$id."\""; 

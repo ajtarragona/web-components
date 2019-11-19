@@ -7,5 +7,6 @@
 @checkbox(['name'=>'check-warning', 'label'=>'Warning','value'=>123,'color'=>'warning','checked'=>true]) 
 @checkbox(['name'=>'check-light', 'label'=>'Light','value'=>123,'color'=>'light','checked'=>true]) 
 @checkbox(['name'=>'check-dark', 'label'=>'Dark','value'=>123,'color'=>'dark','checked'=>true]) 
+{{-- @checkbox(['name'=>'check-custom-color', 'switch'=>true,'label'=>'Custom color switch','value'=>123,'color'=>'#ff4422','checked'=>true])  --}}
 
 
