@@ -583,6 +583,56 @@ $.fn.initAjaxContainer = function (){
  }
 
 
+ 
+
+$.fn.initAjaxButton = function (){
+  var defaults={
+      method : 'GET'
+   };
+
+
+  return this.each(function(){
+    
+    var o=this;
+    o.$button=$(this);
+    al("initAjaxButton");
+    o.settings = $.extend({}, defaults, o.$button.data()); 
+        
+    o.$button.on('click',function(e){
+      e.preventDefault();
+      o.load();
+    });
+
+
+    o.load = function(){
+      var params={};
+      
+      if(o.settings.method!="GET"){
+        params._token= csrfToken();
+      }
+      o.$button.addClass('disabled').prop('disabled',true).startLoading();
+      
+      var url=o.settings.url?o.settings.url:o.$button.attr('href');
+
+      $.ajax({
+        url: url,
+        type: o.settings.method,
+        data: params,
+        dataType: 'json',
+        success: function(data){
+          o.$button.removeClass('disabled').prop('disabled',false).stopLoading();
+          executeCallback(o.settings.onsuccess,{data:data, button:o.$button});  
+        },
+        error: function(xhr){
+          o.$button.removeClass('disabled').prop('disabled',false).stopLoading();
+          executeCallback(o.settings.onerror,{data:xhr, button:o.$button});
+        }
+      });
+
+    }
+  });
+}
+
 
 import * as autosize from 'autosize';
 

@@ -3,6 +3,10 @@
 	<h2>Buttons</h2>
 	@row
 		@col(['size'=>6])
+			@button(['class'=>'ajax-button',"data"=>['url'=>route('webcomponents.combo'), 'onsuccess' => 'successAjaxCallback']])
+				Ajax
+			@endbutton
+
 			@button
 				Primary
 			@endbutton

@@ -30,6 +30,8 @@ $.fn.tgnInitAll = function( ){
   this.find('.text-editor').initTextEditor();
   this.find('.anim').initAnimation();
   this.find('[data-toggle="popover"]').initPopover();
+  this.find('.ajax-button').initAjaxButton();
+
   
   this.initSessionTriggers();
   

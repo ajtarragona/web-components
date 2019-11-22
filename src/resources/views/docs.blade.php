@@ -53,6 +53,13 @@
 		});
 	});
 
+	var successAjaxCallback = function (data, button){
+		al("successAjaxCallback");
+		al(data);
+		al(button);
+		TgnFlash.success("Ok");
+	}
+
 </script>
 	{{-- <script>
 		$(window).on('load',function(){
