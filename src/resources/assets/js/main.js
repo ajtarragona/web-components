@@ -33,6 +33,7 @@ $.fn.tgnInitAll = function( ){
   this.find('.ajax-button').initAjaxButton();
 
   
+  
   this.initSessionTriggers();
   
   bsCustomFileInput.init();

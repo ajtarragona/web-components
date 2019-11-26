@@ -646,17 +646,36 @@ $.fn.initAutoheight = function (){
         o.$input=$(this);
         //al("initAutoheight");
         
+        o.init =function(){
+          var o=this;
+          if(!o.$input.is('.autosize-loaded')){
+            al("INIT AUTOSIZE");
+            o.$input.addClass("autosize-loaded");
+            autosize(o);
+          }
+        }
+
         var settings = $.extend({}, defaults, $(this).data()); 
          //al($(this));
-        if(!$(this).is(".autosize-loaded")){
-          //al("INIT AUTOSIZE");
-          $(this).addClass("autosize-loaded");
-          autosize(this);
-        }else{
-          //al("UPDATE AUTOSIZE");
-          autosize.update(this);
-
-        }
+         if($(this).parents('.tab-pane').length > 0){
+           var tabpane = $(this).closest('.tab-pane');
+          
+            // al(tabpane);
+            if(tabpane.is('.active')){
+                o.init();
+            }else{
+                //inicializo al clicar en la pestaña
+                $('.nav-link[href="#'+tabpane.attr('id')+'"]').on('click',function(e){
+                    setTimeout(function(){
+                      o.init();
+                    },160);
+                });
+            }
+         }else{
+            //inicializo
+            o.init();
+         }  
+  
 
    });
 }

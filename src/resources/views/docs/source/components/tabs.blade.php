@@ -22,6 +22,7 @@
             @endtab
             @tab(['href'=>'#tab4','persist'=>'kitchen-tab'])
                 {{ $faker->words(2,true) }}
+               
             @endtab
         @endtabs
     @endcol
@@ -29,11 +30,19 @@
 
 
         @tabcontent
-            @tabpane(['fade'=>false,'id'=>'tab3','persist'=>'kitchen-tab'])
+            @tabpane(['fade'=>true,'id'=>'tab3','persist'=>'kitchen-tab'])
                 <div class="p-2">{{ $faker->paragraph() }}</div>
             @endtabpane
-            @tabpane(['fade'=>false,'id'=>'tab4','persist'=>'kitchen-tab'])
-                <div class="p-2">{{ $faker->paragraph() }}</div>
+            @tabpane(['fade'=>true,'id'=>'tab4','persist'=>'kitchen-tab'])
+                <div class="p-2 text-left">
+                    {{ $faker->paragraph() }}
+                    <textarea class="autoheight form-control " rows="3">ddjkl sadsa dñsja dlsña ddjkl sadsa dñsja dlsñaddjkl sadsa dñsja dlsñaddjkl 
+                            sadsa dñsja dlsñaddjkl sadsa dñsja dlsñaddjkl sadsa dñsja dlsñaddjkl sadsa dñsja 
+                            dlsñaddjkl sadsa dñsja dlsñaddjkl sadsa dñsja dlsñaddjkl sadsa dñsja dlsñaddjkl s
+                            adsa dñsja dlsñaddjkl sadsa dñsja dlsñaddjkl sadsa dñsja dlsñaddjkl sadsa dñsja dlsñaddjkl
+                             sadsa dñsja dlsñaddjkl sadsa dñsja dlsñaddjkl sadsa dñsja dlsñaddjkl sadsa dñsja dlsñaddjkl 
+                             sadsa dñsja dlsñaddjkl sadsa dñsja dlsñaddjkl sadsa dñsja dlsña</textarea>
+                </div>
             @endtabpane
         @endtabcontent
     @endcol
