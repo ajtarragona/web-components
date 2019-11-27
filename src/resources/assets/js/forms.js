@@ -198,10 +198,21 @@ function tgnFormClass(obj,options){
 	           		}
 	            }
 
-	            if(o.settings.confirm){
-					//al("is confirm");
+				//si el formulario tiene confirmacion y el botón no tiene definida confirmacion o si la tiene definida con algun valor no false
+	            if(o.settings.confirm && ( ( typeof btn.data('confirm') == 'undefined' ) || btn.data('confirm')) ){
 
+					//al("is confirm");
 					TgnModal.confirm(o.settings.confirm, function(modal){
+						//al("callback");
+						doSubmit();
+						modal.hide();
+						
+					});
+
+				//si el boton tiene confirmacion
+				}else if(btn.data('confirm')){
+					//al("is confirm");
+					TgnModal.confirm(btn.data('confirm'), function(modal){
 						//al("callback");
 						doSubmit();
 						modal.hide();

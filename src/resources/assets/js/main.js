@@ -25,7 +25,7 @@ $.fn.tgnInitAll = function( ){
   this.find('textarea.autoheight').initAutoheight();
   this.find('input.autocomplete:not(.tt-input):not(.tt-hint):not([type=hidden])').tgnAutocomplete();
   this.find('[data-toggleclass]').initToggleClass();
-  this.find('a[data-confirm], button[data-confirm]').initConfirm();
+  this.find('a[data-confirm], button[type=button][data-confirm]').initConfirm();
   this.find('pre.prettyprint').initPrettyprint();
   this.find('.text-editor').initTextEditor();
   this.find('.anim').initAnimation();
