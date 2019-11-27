@@ -159,7 +159,8 @@ function tgnFormClass(obj,options){
 			        });
 		    	}
 		    	if(this.settings.validateOnSubmit){
-		    		 $form.on('submit',function(e){
+					$form.on('submit',function(e){
+						
 			            if(o.validated) {
 			                var $form = $(this);
 			                if ($form.data('submitted') === true) {
@@ -187,13 +188,21 @@ function tgnFormClass(obj,options){
 		     $form.find("[type=submit]").on('click', function(e){
 	            e.preventDefault();
 	           	var btn=$(this);
-
+				
 	            function doSubmit(){
-	            	o.buton_submit = btn;
-	            	
-	            	if(o.settings.validator){
+					o.buton_submit = btn;
+					var validate=o.settings.validator; 
+				
+					if(typeof o.buton_submit.data('validate') !== 'undefined' ){
+						validate=false;
+					}
+
+					if(validate){
+						// al("validate");
 	            		o.validate();
-	           		}else {
+					}else {
+						// al("no validate");
+						o.validated=true;
 	           			o.runSubmit();
 	           		}
 	            }
