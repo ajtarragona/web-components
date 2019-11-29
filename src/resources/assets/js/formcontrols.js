@@ -588,7 +588,11 @@ $.fn.initAjaxContainer = function (){
 
 $.fn.initAjaxButton = function (){
   var defaults={
-      method : 'GET'
+      method : 'GET',
+      target : null,
+      datatype:'json',
+      toggle: false,
+      url:false,
    };
 
 
@@ -596,12 +600,27 @@ $.fn.initAjaxButton = function (){
     
     var o=this;
     o.$button=$(this);
+    
     al("initAjaxButton");
     o.settings = $.extend({}, defaults, o.$button.data()); 
-        
+    if(!o.settings.url) o.settings.url=o.$button.attr('href');
+
     o.$button.on('click',function(e){
       e.preventDefault();
-      o.load();
+      if(o.settings.target){
+        if(o.settings.toggle){
+          if($(o.settings.target).data('loaded') == o.settings.url){
+              $(o.settings.target).html('').removeClass('loaded').data('loaded',false);
+              o.$button.removeClass('active');
+          }else{
+            o.load();
+          }
+        }else{
+          o.load();
+        }
+      }else{
+        o.load();
+      }
     });
 
 
@@ -613,14 +632,26 @@ $.fn.initAjaxButton = function (){
       }
       o.$button.addClass('disabled').prop('disabled',true).startLoading();
       
-      var url=o.settings.url?o.settings.url:o.$button.attr('href');
+      $('.ajax-button').each(function(i){
+        if( $(this).data('target')== o.settings.target) $(this).removeClass('active');
+      });
 
+      if(o.settings.target){
+        o.settings.datatype='html';
+        $(o.settings.target).startLoading();
+      }
+      
       $.ajax({
-        url: url,
+        url: o.settings.url,
         type: o.settings.method,
         data: params,
-        dataType: 'json',
+        dataType: o.settings.datatype,
         success: function(data){
+          if(o.settings.target){
+            o.$button.addClass('active');
+            $(o.settings.target).html(data).tgnInitAll().stopLoading().data('loaded',o.settings.url);
+            
+          }
           o.$button.removeClass('disabled').prop('disabled',false).stopLoading();
           executeCallback(o.settings.onsuccess,{data:data, button:o.$button});  
         },

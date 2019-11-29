@@ -221,11 +221,13 @@ $.fn.selectText = function() {
 
 $.fn.startLoading = function( ){
   this.addClass('loading');
+  return this;
   //initNavs(this);
 };
 
 $.fn.stopLoading = function( ){
   this.removeClass('loading').addClass("loaded");
+  return this;
   //initNavs(this);
 };
 
