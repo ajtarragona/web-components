@@ -479,6 +479,7 @@ $.fn.initConditional = function (){
               case ">=": return $watched.val()>=expedtedval; break;
               case "<=": return $watched.val()<=expedtedval; break;
               case "contains": return $watched.val().includes(expedtedval); break;
+              case "checked": return $watched.is(':checked'); break;
               case "in": 
                 var val=isNaN($watched.val())?""+$watched.val():Number($watched.val());
 
