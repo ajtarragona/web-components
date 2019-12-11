@@ -201,7 +201,10 @@ $.fn.tgnAjaxTable = function(){
 	       		$.get(href,function(data){
 	       			tablecontainer.stopLoading();
 	       			tablecontainer.html(data);
-	       			tablecontainer.tgnInitAll();
+					tablecontainer.tgnInitAll();
+					if(tablecontainer.data("onsuccess")){
+						executeCallback(tablecontainer.data("onsuccess"),tablecontainer);	
+					}
 	       		})
 	       });
 	    }
