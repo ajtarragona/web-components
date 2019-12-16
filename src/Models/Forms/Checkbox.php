@@ -78,7 +78,8 @@ class Checkbox extends FormControl
             }
 
             foreach($this->options as $key=>$option){
-                $id='checkbox_'. str_replace('[]', '', $this->getAttribute('name').'_'.kebab_case($key));
+                // $id='checkbox_'. str_replace('[]', '', $this->getAttribute('name').'_'.kebab_case($key));
+                $id=$this->getAttribute("id").'_'. kebab_case($key);
                 
                 $ret.="<div class='".$this->getAttribute("class")." ".$color."' ".$datacolor.">";
                 $ret.="   <input type='checkbox' ";

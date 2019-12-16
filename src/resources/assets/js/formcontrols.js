@@ -482,7 +482,6 @@ $.fn.initConditional = function (){
               case "checked": return $watched.is(':checked'); break;
               case "in": 
                 var val=isNaN($watched.val())?""+$watched.val():Number($watched.val());
-
                 return ($.isArray(expedtedval) && $.inArray(val,expedtedval)>-1);
                 break;
               default: return false;
