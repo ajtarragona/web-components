@@ -789,7 +789,31 @@ $.fn.initTextEditor = function(){
 
     if(o.$element.is(".init-texteditor")) return;
     o.$element.addClass('init-texteditor');
+    var id=o.$element.attr('id');
+
+    var label=o.$element.closest('.form-group').find('label[for='+id+']');
+    label.on('click',function(e){
+      if(!$(this).closest('.form-group').find('.text-editor').is('.ql-disabled')){
+        o.$element.find('.ql-editor').focus();
+        $(this).closest('.form-group').addClass('focused');
+      }
+    });
+
+    o.$element.on('click',function(e){
+      // al("click",e.target);
+      if(!$(this).is('.ql-disabled')){
+        if($(e.target).is('.text-editor')){
+          var editor=$(e.target).find('.ql-editor');
+          editor.focus();
+        }
+        $(this).closest('.form-group').addClass('focused');
+      }
+    });
     
+    o.$element.on('blur','.ql-editor',function(){
+      // al("BLUR");
+      $(this).closest('.form-group').removeClass('focused');
+    });
 
     if(!o.$element.attr('id')) o.$element.attr('id',_UUID());
 
