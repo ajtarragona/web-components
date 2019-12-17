@@ -145,7 +145,7 @@ class FormControl
 
 	protected function containerClass(){
 		
-		$ret=["form-group", $this->containerclass];
+		$ret=["form-group", "", $this->containerclass];
 		if($errors = session()->get('errors')) {
 			if($errors->has($this->getAttribute('name'))) $ret[]=' with-feedback is-invalid ';
 		}
@@ -226,7 +226,7 @@ class FormControl
 			
 			$ret.=$this->renderLabel();
 			
-			$ret.="<div class='input-group' >";
+			$ret.="<div class='input-group flex-sm-nowrap ' >";
 			
 			$ret.=$this->renderIcon();
 			

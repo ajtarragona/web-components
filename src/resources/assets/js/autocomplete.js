@@ -17,7 +17,7 @@ $.widget( "ajtarragona.tgnAutocomplete", {
   	    showvalue:false,
   	    limit:10,
         disabled: false,
-        freeInput : false, 
+        
     },
 
     isInit: false,	
@@ -135,7 +135,6 @@ $.widget( "ajtarragona.tgnAutocomplete", {
       this.element.tagsinput({
           itemValue: this.options.saved,
           itemText: 'name',
-          freeInput: this.options.freeInput,
           hint: true,
           highlight: true,
           delimiter:'##',
