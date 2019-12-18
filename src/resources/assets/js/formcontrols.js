@@ -266,8 +266,8 @@ $.fn.initAutomention = function (){
 
     return this.each(function(){
         
-      var $input=$(this);
-      al("initAutomention");
+        var $input=$(this);
+        al("initAutomention");
         
         if($input.is(".init-automention")) return;
         $input.addClass('init-automention');
@@ -291,6 +291,10 @@ $.fn.initAutomention = function (){
         $element.attr('placeholder',$input.attr('placeholder'));
         $input.after($element);
         
+        if($input.attr('rows')){
+          var rows=$input.attr('rows');
+          $element.css('min-height', (rows*1.4)+"em");
+        }
 
         
 

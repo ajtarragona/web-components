@@ -286,14 +286,15 @@ function tgnFormClass(obj,options){
                     $.each($form.serializeArray(), function(i, field) {
 
                         var campo = $form.find("[name='"+field.name+"']");
-                        var father = campo.closest('.form-group');
+                        var closestfather = campo.closest('.form-group');
+                        var fathers = campo.parents('.form-group');
                         //al(campo);
                         //al(father);
                         campo.removeClass('is-invalid');
                         //campo.addClass('is-valid');
-                        father.removeClass('is-invalid');
-                        if(!campo.data('had-feedback')) father.removeClass('with-feedback');
-                        father.find('div[class*=-feedback]').html('');
+                        closestfather.removeClass('is-invalid');
+                        if(!campo.data('had-feedback')) closestfather.removeClass('with-feedback');
+                        closestfather.find('div[class*=-feedback]').html('');
                     });
 
                     o.validated = true;
@@ -313,11 +314,12 @@ function tgnFormClass(obj,options){
                     	//al(key);
                         var campo = $form.find("[name='"+key+"']");
                         
-                        var father = campo.parents('.form-group');
+                        var fathers = campo.parents('.form-group');
+                        var closestfather = campo.closest('.form-group');
                         //campo.removeClass('is-valid');
                         campo.addClass('is-invalid');
-                        father.addClass('is-invalid').addClass('with-feedback');
-                        father.find('div[class*=-feedback]').html(data[0]);
+                        closestfather.addClass('is-invalid').addClass('with-feedback');
+                        closestfather.find('div[class*=-feedback]').html(data[0]);
                         campos_error.push(key);
 
 
@@ -336,18 +338,21 @@ function tgnFormClass(obj,options){
                         		});
                         	}
                         }
-                    });
-                    $.each($form.serializeArray(), function(i, field) {
+					});
+					var formFields=$form.serializeArray();
+
+                    $.each(formFields, function(i, field) {
                     	if (!field.name.startsWith('content_') && $.inArray(field.name, campos_error) === -1)
                         {
-                            var campo = $form.find("[name='"+field.name+"']");
-                            var father = campo.closest('.form-group');
+                            var campo = $form.find('[name="'+field.name+'"],[name="'+field.name+'[]"]');
+                            var closestfather = campo.closest('.form-group');
+                            var fathers = campo.parents('.form-group');
                             campo.removeClass('is-invalid');
-                            father.removeClass('is-invalid');
-                            if(!campo.data('had-feedback')) father.removeClass('with-feedback');
+                            closestfather.removeClass('is-invalid');
+                            if(!campo.data('had-feedback')) closestfather.removeClass('with-feedback');
                             //campo.addClass('is-valid');
 
-                            father.find('div[class*=-feedback]').html('');
+                            closestfather.find('div[class*=-feedback]').html('');
 
                             
                         }
