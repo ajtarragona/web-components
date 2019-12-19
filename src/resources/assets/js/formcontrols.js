@@ -484,6 +484,7 @@ $.fn.initConditional = function (){
               case "<=": return $watched.val()<=expedtedval; break;
               case "contains": return $watched.val().includes(expedtedval); break;
               case "checked": return $watched.is(':checked'); break;
+              case "unchecked": return !$watched.is(':checked'); break;
               case "in": 
                 var val=isNaN($watched.val())?""+$watched.val():Number($watched.val());
                 return ($.isArray(expedtedval) && $.inArray(val,expedtedval)>-1);
@@ -492,7 +493,7 @@ $.fn.initConditional = function (){
           }
         }
         var toggleVisibility = function(){
-            al('toggleVisibility');
+            // al('toggleVisibility');
           
            if(assertCondition()) $container.show();
            else $container.hide();
