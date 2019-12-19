@@ -131,5 +131,33 @@ class DocsController extends Controller
 
   }
 
+
+  protected function rand_float($st_num=0,$end_num=1,$mul=1000000)
+  {
+    if ($st_num>$end_num) return false;
+    return mt_rand($st_num*$mul,$end_num*$mul)/$mul;
+  }
+
+  public function mapmarkers(Request $request){
+
+    $nummarkers=rand(1,5);
+    $markers=[];
+
+    for($i=0;$i<$nummarkers;$i++){
+      $lat=$this->rand_float($request->minlat, $request->maxlat);
+      $lng=$this->rand_float($request->minlng, $request->maxlng);
+      
+      $markers[]=[
+        "name"=>"Marker ".($i+1),
+        "location" => ["lat"=>$lat,"lng"=>$lng],
+        "infobox" =>"Marker ".($i+1),
+      ];
+    }
+
+    
+    return $markers;
+
+  }
+
 }
 

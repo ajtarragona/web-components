@@ -2,6 +2,10 @@
 .map-container{
 	position:relative;
 
+	&.loading::after{
+		font-size:1.5em;
+	}
+
 	.map-search-input{
 		position:absolute;
 		left: 10px;

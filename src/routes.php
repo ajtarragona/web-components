@@ -24,6 +24,7 @@ Route::group(['prefix' => 'ajtarragona/webcomponents','middleware' => ['web']], 
 	Route::get('/docs/testcombo', 'Ajtarragona\WebComponents\Controllers\DocsController@testCombo')->name('webcomponents.combo');
 	Route::get('/docs/mentions', 'Ajtarragona\WebComponents\Controllers\DocsController@mentionsCombo')->name('webcomponents.mentions');
 	Route::get('/docs/modal', 'Ajtarragona\WebComponents\Controllers\DocsController@docsModal')->name('webcomponents.docs.modal');
+	Route::post('/docs/mapmarkers', 'Ajtarragona\WebComponents\Controllers\DocsController@mapmarkers')->name('webcomponents.mapmarkers');
 	
 	Route::post('/docs/showrequest', 'Ajtarragona\WebComponents\Controllers\DocsController@docsShowRequest')->name('webcomponents.docs.showrequest');
 	Route::get('/docs/combo/users', 'Ajtarragona\WebComponents\Controllers\DocsController@userscombo')->name('webcomponents.docs.userscombo');

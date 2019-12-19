@@ -1,6 +1,8 @@
-@gmap([
+{{-- @gmap([
     "name"=>"map_simple",
 ])
+
+
 @gmap([
     "name"=>"map_simple3",
     "zoom"=>10,
@@ -132,4 +134,19 @@
         ]
     ]
     
-]) 
+])  --}}
+
+
+<h5>Ajax markers</h5>
+{{-- @dump(config('webcomponents.gmaps.tgn_coords')); --}}
+
+@gmap([
+    "name"=>"map_ajax",
+    "zoom"=>config('webcomponents.gmaps.default_zoom'),
+    "center" =>config('webcomponents.gmaps.tgn_coords'),
+    "geolocate"=>false,
+    "fitbounds"=>false,
+    "multiple"=>true,
+    'url' => route('webcomponents.mapmarkers'),
+    'method' => 'POST'
+])

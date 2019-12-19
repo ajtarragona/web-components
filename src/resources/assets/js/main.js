@@ -45,7 +45,7 @@ $.fn.tgnInitAll = function( ){
 
 
 onWindowLoad(function() {
-  al("LOADED");
+  // al("LOADED");
   $('html').stopLoading();
 });
 

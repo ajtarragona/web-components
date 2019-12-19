@@ -18,6 +18,8 @@ var tgnmapdefaults = {
   fitbounds:false,
   clusterMinZoom: 15,
   mapType: 'roadmap',
+  method:'get',
+  url:false,
   controls : {
     zoom: true,
     mapType: false,
@@ -244,10 +246,14 @@ TgnMapClass = function(obj,options){
   // this.value=false;
   this.markerClusterer=null;
   this.bounds=null;
-
+  
+  
 
   this.settings=tgnmapdefaults;
   if(options) this.settings = $.extend(true, {}, this.settings, options); 
+
+  if(this.settings.url) this.settings.fitbounds=false;
+
   al("init() tgnMap");
   // al(this.settings);
  
@@ -405,7 +411,7 @@ TgnMapClass = function(obj,options){
     o.markers[id] = marker; 
     // o.markers.push(marker);
 
-    o.setCenter(coords);
+    if(o.settings.fitbounds) o.setCenter(coords);
     o.updateValue();
     return marker;
   }
@@ -512,11 +518,77 @@ TgnMapClass = function(obj,options){
         o.initAll();
     }
 
+    if(this.settings.url){
+     
+      google.maps.event.addListener(this.gmap, 'idle', function() {
+        o.loadAjaxMarkers();
+      });
+
+      // google.maps.event.addListener(this.gmap, 'zoom_changed', function() {
+      //   o.loadAjaxMarkers();
+      // });
+      
+    }
+
     
 
   }
 
   
+  this.loadAjaxMarkers= function(e){
+    var o=this;
+
+    var params   =   {
+      maxlat : o.gmap.getBounds().getNorthEast().lat(),
+      maxlng  : o.gmap.getBounds().getNorthEast().lng(),
+      minlat  :   o.gmap.getBounds().getSouthWest().lat(),  
+      minlng  :   o.gmap.getBounds().getSouthWest().lng()
+    } 
+    // al(bounds);
+      // al("Bounds changed", params);
+
+      if(o.settings.method!="get"){
+        params._token= csrfToken();
+      }
+      // $target.startLoading();
+      //data._token= csrfToken();
+      o.$element.closest('.map-container').startLoading();
+      // al(o.settings.method);
+      $.ajax({
+          url: o.settings.url,
+          type: o.settings.method,
+          data: params,
+          dataType: 'json',
+          success: function(data){
+            o.$element.closest('.map-container').stopLoading();
+
+            if(data){
+              $.each(data,function(key, marker){
+                // al(marker);
+                // al(key);
+                if(marker.location){
+                  var location= new google.maps.LatLng(marker.location.lat, marker.location.lng)
+                  o.addMarker(location,(marker.name?marker.name:null),(marker.infobox?marker.infobox:null));
+                }
+              });
+            }
+          },
+          error: function(xhr){
+            o.$element.closest('.map-container').stopLoading();
+          
+          }
+      });
+      
+      /**"select lat, lng 
+      from your_table 
+      where lat >= $minLat 
+      AND lat <= $maxLat
+      AND lng <= $maxLng
+      AND lng >= $minLng"; */
+
+  }
+
+
   this.initTextField= function(){
     var o=this;
     
@@ -637,7 +709,9 @@ TgnMapClass = function(obj,options){
     // al("initAll",this.settings);
    
     this.initTextField();
-    
+    // if(this.settings.url){ 
+    //   this.loadAjaxMarkers();
+    // }
     if(this.settings.markers){
       this.initMarkers();
     }

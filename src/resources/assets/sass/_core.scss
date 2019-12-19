@@ -26,10 +26,10 @@ html{
         font-family: "Font Awesome 5 Free";
         font-weight: 900;
         position:absolute;
-        right:1em;
-        bottom:4em;
+        right:.5em;
+        top:.5em;
         content: "\f110";
-        font-size:.8em;
+        font-size:1.5em;
             -moz-osx-font-smoothing: grayscale;
           -webkit-font-smoothing: antialiased;
           display: inline-block;
@@ -39,7 +39,7 @@ html{
           line-height: 1;
           animation: spin 2s infinite linear;
           z-index:1000;
-
+         color:$primary;
       }
       select{
         visibility:hidden;
@@ -120,6 +120,7 @@ body .loading{
       right:.5em;
       bottom:0.5em;
       content: "\f110";
+      color:$primary;
       font-size:.8em;
         -moz-osx-font-smoothing: grayscale;
       -webkit-font-smoothing: antialiased;

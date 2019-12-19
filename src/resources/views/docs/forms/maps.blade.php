@@ -113,6 +113,19 @@
                     </td>
                 </tr>
             
+                <tr>
+                    <td><code>url</code></td>
+                    <td>
+                        <p>Defineix una URL d'on es llegiran els marcadors via AJAX</p>                    
+                    </td>
+                </tr>
+                <tr>
+                    <td><code>method</code></td>
+                    <td>
+                        <p>Defineix una mètode amb que es cridarà a la URL ajax (per defecte GET)</p>                    
+                    </td>
+                </tr>
+            
 		
 				
 			</tbody>
