@@ -142,12 +142,15 @@ class DocsController extends Controller
 
     $nummarkers=rand(1,5);
     $markers=[];
-
+    // dump($request->ids);
     for($i=0;$i<$nummarkers;$i++){
       $lat=$this->rand_float($request->minlat, $request->maxlat);
       $lng=$this->rand_float($request->minlng, $request->maxlng);
       
+      $id=_uuid();
+
       $markers[]=[
+        "id"=> $id,
         "name"=>"Marker ".($i+1),
         "location" => ["lat"=>$lat,"lng"=>$lng],
         "infobox" =>"Marker ".($i+1),

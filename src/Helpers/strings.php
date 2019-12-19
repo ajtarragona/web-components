@@ -1,4 +1,5 @@
 <?php 
+use Illuminate\Support\Str;
 
 
 
@@ -30,6 +31,15 @@ if (! function_exists('removeAccents')) {
 		}
 	}
 }
+
+
+
+if (! function_exists('_uuid')) {
+	function _uuid($prefix=null){
+		return ($prefix?$prefix:"").Str::uuid();
+	}
+}
+
 
 
 

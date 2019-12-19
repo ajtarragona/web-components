@@ -307,12 +307,29 @@ TgnMapClass = function(obj,options){
     // al(o.markerClusterer);
     if(!this.settings.multiple){
         if(this.settings.markers.length>0){
-          this.addMarker(this.settings.markers[0].location, this.settings.markers[0].name, this.settings.markers[0].infobox);
+          var tmpmarker=this.settings.markers[0];
+          if(tmpmarker.location){
+            this.addMarker(
+              tmpmarker.location, 
+              tmpmarker.name?tmpmarker.name:null, 
+              tmpmarker.infobox?tmpmarker.infobox:null,
+              tmpmarker.id?tmpmarker.id:null
+            );
+          }
+
         }
     }else{
       // var markers=[];
       for(var i in this.settings.markers){
-        this.addMarker(this.settings.markers[i].location,this.settings.markers[i].name,  this.settings.markers[i].infobox);
+        var tmpmarker=this.settings.markers[i];
+        if(tmpmarker.location){
+          this.addMarker(
+            tmpmarker.location, 
+            tmpmarker.name?tmpmarker.name:null, 
+            tmpmarker.infobox?tmpmarker.infobox:null,
+            tmpmarker.id?tmpmarker.id:null
+          );
+        }
       }
       
     }
@@ -342,13 +359,23 @@ TgnMapClass = function(obj,options){
   this.isReadonly = function(){
     return this.settings.readonly || this.settings.disabled;
   }
-  this.addMarker = function(coords,name,infobox){
+
+
+  this.addMarker = function(coords,name,infobox,id){
     var o=this;
 
-    //al("addMarker ");
-   // al(coords);
+    // al("addMarker ");
+    // al(coords);
+    // al(marker);
+    var id = id ? id : o.uniqueId();
+    if(o.markers[id]) return;
+    // al("addMarker " + id);
+    // al("markers",o.markers);
+
+    
 
     if(!this.settings.multiple) this.deleteMarkers();
+
 
     var marker = new google.maps.Marker({
       position: coords, 
@@ -358,7 +385,8 @@ TgnMapClass = function(obj,options){
     });
     //al(marker);
     marker.name=name;
-
+    marker.uid=id
+    
     marker.addListener('dragend', function() {
       //al("marker drooped");
       //al(this);
@@ -403,13 +431,11 @@ TgnMapClass = function(obj,options){
 
     if(o.settings.cluster)  o.markerClusterer.addMarker(marker);
 
-
-
-    // al(marker);
-    var id = o.uniqueId();
-    marker.uid=id
+    //añado al array de markers
     o.markers[id] = marker; 
+    
     // o.markers.push(marker);
+    // al("markers  ",o.markers);
 
     if(o.settings.fitbounds) o.setCenter(coords);
     o.updateValue();
@@ -552,6 +578,9 @@ TgnMapClass = function(obj,options){
       }
       // $target.startLoading();
       //data._token= csrfToken();
+      // al(o.markers);
+      params.ids= Object.keys(o.markers);
+      
       o.$element.closest('.map-container').startLoading();
       // al(o.settings.method);
       $.ajax({
@@ -568,7 +597,7 @@ TgnMapClass = function(obj,options){
                 // al(key);
                 if(marker.location){
                   var location= new google.maps.LatLng(marker.location.lat, marker.location.lng)
-                  o.addMarker(location,(marker.name?marker.name:null),(marker.infobox?marker.infobox:null));
+                  o.addMarker(location,(marker.name?marker.name:null),(marker.infobox?marker.infobox:null),(marker.id?marker.id:null) );
                 }
               });
             }
