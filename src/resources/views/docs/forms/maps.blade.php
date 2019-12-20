@@ -117,9 +117,8 @@
                     <td><code>url</code></td>
                     <td>
                         <p>Defineix una URL d'on es llegiran els marcadors via AJAX</p>  
-                        <p>S'espera un array de marcadors en format json. Cada marcador por tenir els següents atributs: location (lat i lng), name, infobox i id.</p>
-                        <p>A la url se li passaran els paràmetres: minlat, maxlat, minlng, maxlng (la bounding box) i ids (els ids dels marcadors ja pintats)</p>
-
+                        <p>S'espera un array de marcadors en format json. Cada marcador por tenir els següents atributs: <code>location</code> (lat i lng), <code>name</code>, <code>infobox</code>, <code>id</code> i <code>url</code>. En cas de rebre l'atribut url, s'ignorarà l'atribut infobox i aquesta es carregarà via ajax.</p>
+                        <p>A la url se li passaran els paràmetres: <code>minlat</code>, <code>maxlat</code>, <code>minlng</code>, <code>maxlng</code> (la bounding box) i <code>ids</code> (els ids dels marcadors ja pintats).</p>
                     </td>
                 </tr>
                 <tr>

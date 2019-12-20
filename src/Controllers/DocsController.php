@@ -153,6 +153,7 @@ class DocsController extends Controller
         "id"=> $id,
         "name"=>"Marker ".($i+1),
         "location" => ["lat"=>$lat,"lng"=>$lng],
+        "url" => route('webcomponents.markerinfobox',['id'=>$id]),
         "infobox" =>"Marker ".($i+1),
       ];
     }
@@ -160,6 +161,11 @@ class DocsController extends Controller
     
     return $markers;
 
+  }
+  
+  public function markerInfobox($id, Request $request){
+    
+    return "<h2>".$id."</h2><table class='table'><tbody><tr><td>dsds</td><td>dsds</td><td>dsds</td></tr><tr><td>dsds</td><td>dsds</td><td>dsds</td></tr><tr><td>dsds</td><td>dsds</td><td>dsds</td></tr></tbody></table>";
   }
 
 }

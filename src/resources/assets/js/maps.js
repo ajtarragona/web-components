@@ -270,10 +270,48 @@ TgnMapClass = function(obj,options){
     o.infoWindow.close();
   }
   
+  this.isURL = function(str) {
+    var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|'+ // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+    return pattern.test(str);
+  }
+
+  
+  this.loadInfobox = function(url,marker){
+    var o=this;
+    o.infoWindow.open(o.map,marker);
+    o.infoWindow.setContent('<div class="loading px-4 py-2">'+___("strings.loading")+'...</div>');
+    $.ajax({
+      url: url,
+      type: 'get',
+      // data: params,
+      dataType: 'html',
+      success: function(data){
+        o.infoWindow.setContent(data);
+        // o.$element.closest('.map-container').stopLoading();
+        o.infoWindow.open(o.map,marker);
+        
+      },
+      error: function(xhr){
+        o.infoWindow.setContent('<div class="alert alert-danger mb-0">'+___("strings.loaderror")+'</div>');
+      }
+    });
+  }
+
   this.showInfo = function(marker,content){
     var o=this;
-    o.infoWindow.setContent(content);
-    o.infoWindow.open(o.map,marker);
+    // al('showInfo',content);
+    if(o.isURL(content)){
+        o.loadInfobox(content,marker);
+        
+    }else{
+      o.infoWindow.setContent(content);
+      o.infoWindow.open(o.map,marker);
+    }
       
   }
 
@@ -312,7 +350,7 @@ TgnMapClass = function(obj,options){
             this.addMarker(
               tmpmarker.location, 
               tmpmarker.name?tmpmarker.name:null, 
-              tmpmarker.infobox?tmpmarker.infobox:null,
+              tmpmarker.url?tmpmarker.url:(tmpmarker.infobox?tmpmarker.infobox:null),
               tmpmarker.id?tmpmarker.id:null
             );
           }
@@ -326,7 +364,7 @@ TgnMapClass = function(obj,options){
           this.addMarker(
             tmpmarker.location, 
             tmpmarker.name?tmpmarker.name:null, 
-            tmpmarker.infobox?tmpmarker.infobox:null,
+            tmpmarker.url?tmpmarker.url:(tmpmarker.infobox?tmpmarker.infobox:null),
             tmpmarker.id?tmpmarker.id:null
           );
         }
@@ -596,8 +634,15 @@ TgnMapClass = function(obj,options){
                 // al(marker);
                 // al(key);
                 if(marker.location){
-                  var location= new google.maps.LatLng(marker.location.lat, marker.location.lng)
-                  o.addMarker(location,(marker.name?marker.name:null),(marker.infobox?marker.infobox:null),(marker.id?marker.id:null) );
+                  var location= new google.maps.LatLng(marker.location.lat, marker.location.lng);
+                  var infobox= (marker.url?marker.url:(marker.infobox?marker.infobox:null));
+
+                  o.addMarker(
+                    location,
+                    (marker.name?marker.name:null),
+                    infobox,
+                    (marker.id?marker.id:null) 
+                  );
                 }
               });
             }

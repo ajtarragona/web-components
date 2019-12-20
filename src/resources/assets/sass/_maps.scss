@@ -91,3 +91,22 @@
 		}
 	}
 }
+
+
+.gm-style .gm-style-iw-c{
+	border-radius:0;
+	padding:0px  !important;
+	max-height:none  !important;
+	max-width:none  !important;
+	.gm-style-iw-d{
+		margin:30px 5px 5px 15px;
+		max-height:none  !important;
+		max-width:none  !important;
+		// padding-left:1em;
+		// padding-right:1em;
+	}
+	button.gm-ui-hover-effect{
+		top:0px !important;
+		right:0px !important;
+	}
+}
