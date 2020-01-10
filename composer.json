@@ -22,7 +22,8 @@
         "tremby/laravel-git-version": "^1.1.0",
         "tightenco/ziggy": "^0.7.0",
         "adldap2/adldap2-laravel": "^6.0",
-        "laravel/passport": "^7.1"
+        "laravel/passport": "^7.1",
+        "meyfa/php-svg": "^0.9.1"
         
     },
     "autoload": {

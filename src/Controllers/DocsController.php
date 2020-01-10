@@ -7,6 +7,7 @@ use Faker\Generator as Faker;
 use Faker\Factory as FakerFactory;
 use Illuminate\Http\Request;
 use \Artisan;
+use SVG\SVG;
 
 
 class DocsController extends Controller
@@ -154,7 +155,10 @@ class DocsController extends Controller
         "name"=>"Marker ".($i+1),
         "location" => ["lat"=>$lat,"lng"=>$lng],
         "url" => route('webcomponents.markerinfobox',['id'=>$id]),
-        "infobox" =>"Marker ".($i+1),
+        // "infobox" =>"Marker ".($i+1),
+        "icon" => 'plus',
+        "color" => '#ff0000',
+        // "image" => '#ffff00',
       ];
     }
 
@@ -164,8 +168,31 @@ class DocsController extends Controller
   }
   
   public function markerInfobox($id, Request $request){
-    
-    return "<h2>".$id."</h2><table class='table'><tbody><tr><td>dsds</td><td>dsds</td><td>dsds</td></tr><tr><td>dsds</td><td>dsds</td><td>dsds</td></tr><tr><td>dsds</td><td>dsds</td><td>dsds</td></tr></tbody></table>";
+    // return $request->all();
+    return "<table class='table'><tbody><tr><td>dsds</td></tr><tr><td>dsds</td></tr></tbody></table>";
+  }
+
+  public function markerImage(Request $request){
+    $options=[
+      "bgcolor" => "#bf002c",
+      "color" => "#ffffff",
+    ];
+    $options=array_merge($options, $request->all());
+  // dd($options);
+
+    $svg  = '<svg x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" fill="'.$options["bgcolor"].'" xml:space="preserve">';
+    $svg .= '<g><path d="M500,10c-196.7,0-356.1,159.3-356.1,355.9c0,57.3,13.5,111.2,37.6,159.2c14.4,28.6,32.7,55.4,53.9,79L500,990l264.6-386c21.2-23.5,39.6-50.4,53.9-79c24.1-48,37.6-101.8,37.6-159.2C856.1,169.3,696.7,10,500,10L500,10z"/><path d="M690.6,357.8c0,105.1-85.5,190.3-190.7,190.3c-105.2,0-190.5-85.2-190.5-190.3c0-105.1,85.3-190.4,190.5-190.4C605.1,167.4,690.6,252.6,690.6,357.8z"/></g>';
+    $svg .= '</svg>';
+
+    $image = SVG::fromString($svg);
+    $doc = $image->getDocument();
+
+    // $rect = $doc->getChild(0);
+    // $rect->setX(25)->setY(25);
+
+    header('Content-Type: image/svg+xml');
+    echo $image;
+    die();
   }
 
 }

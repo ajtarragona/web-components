@@ -327,8 +327,15 @@ TgnMapClass = function(obj,options){
       this.markerClusterer = new MarkerClusterer(o.gmap, [], {
         imagePath: baseUrl()+'/vendor/ajtarragona/img/mapcluster/m'
       });
+
+
       this.markerClusterer.setMaxZoom(o.settings.clusterMinZoom);
 
+      
+     //toggle Clustered 
+      google.maps.event.addListener(this.markerClusterer, 'clusteringend', function() {
+          o.lookForClusteredMarkers();
+      });
     }
 
 
@@ -351,7 +358,10 @@ TgnMapClass = function(obj,options){
               tmpmarker.location, 
               tmpmarker.name?tmpmarker.name:null, 
               tmpmarker.url?tmpmarker.url:(tmpmarker.infobox?tmpmarker.infobox:null),
-              tmpmarker.id?tmpmarker.id:null
+              tmpmarker.id?tmpmarker.id:null,
+              tmpmarker.color?tmpmarker.color:null,
+              tmpmarker.icon?tmpmarker.icon:null,
+              tmpmarker.iconcolor?tmpmarker.iconcolor:null 
             );
           }
 
@@ -365,7 +375,10 @@ TgnMapClass = function(obj,options){
             tmpmarker.location, 
             tmpmarker.name?tmpmarker.name:null, 
             tmpmarker.url?tmpmarker.url:(tmpmarker.infobox?tmpmarker.infobox:null),
-            tmpmarker.id?tmpmarker.id:null
+            tmpmarker.id?tmpmarker.id:null,
+            tmpmarker.color?tmpmarker.color:null,
+            tmpmarker.icon?tmpmarker.icon:null,
+            tmpmarker.iconcolor?tmpmarker.iconcolor:null
           );
         }
       }
@@ -380,6 +393,8 @@ TgnMapClass = function(obj,options){
       var listener = google.maps.event.addListener(o.gmap, "idle", function() { 
          if (o.gmap.getZoom() > 16) o.gmap.setZoom(16); 
          google.maps.event.removeListener(listener); 
+
+         
       });
     }
     
@@ -399,10 +414,10 @@ TgnMapClass = function(obj,options){
   }
 
 
-  this.addMarker = function(coords,name,infobox,id){
+  this.addMarker = function(coords,name,infobox,id,color,icon,iconcolor){
     var o=this;
 
-    // al("addMarker ");
+    al("addMarker ");
     // al(coords);
     // al(marker);
     var id = id ? id : o.uniqueId();
@@ -415,16 +430,74 @@ TgnMapClass = function(obj,options){
     if(!this.settings.multiple) this.deleteMarkers();
 
 
-    var marker = new google.maps.Marker({
-      position: coords, 
-      draggable: !this.isReadonly(),
-      animation: this.settings.animation?google.maps.Animation.DROP:false,
-      map: this.gmap
-    });
+    var marker = null;
+    
+    // if(color || icon ){
+    //   al("CUSTOM",coords);
+    //   marker = new CustomMarker(
+    //     coords, 
+    //     this.gmap,
+    //     {
+    //       color: color,
+    //       draggable: !this.isReadonly(),
+    //       animation: this.settings.animation?google.maps.Animation.DROP:false,
+    //       icon: icon,
+    //     }
+    //   );
+
+    // }else{
+
+      // var image = route('webcomponents.markerimage');//'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+      var imgurl=route('webcomponents.markerimage',{'bgcolor':color}).url();
+      // al("markerurl",imgurl);
+      marker = new google.maps.Marker({
+        position: coords, 
+        draggable: !this.isReadonly(),
+        animation: this.settings.animation?google.maps.Animation.DROP:false,
+        map: this.gmap,
+        icon : {
+          url: imgurl,
+          size: new google.maps.Size(36, 36),
+          // origin: new google.maps.Point(0, 0),
+          // anchor: new google.maps.Point(17, 34),
+          scaledSize: new google.maps.Size(36, 36)
+        },
+      });
+
+
+      if(icon){
+        // al("icon",icon);
+        // al("coords",coords);
+        // al("icon",icon);
+        var iconargs={
+          icon: icon,
+        };
+
+        if(iconcolor) iconargs.iconcolor= iconcolor;
+
+        var iconmarker = new CustomMarker(
+            coords, 
+            this.gmap,
+            iconargs
+          );
+          marker.customicon=iconmarker;
+          // al("end");
+
+      }
+      
+    // }
     //al(marker);
     marker.name=name;
-    marker.uid=id
+    marker.uid=id;
     
+    
+    marker.addListener('drag', function() {
+      al("DRAG");
+      if(this.customicon){
+        this.customicon.setPosition(this.position);
+      }
+    });
+
     marker.addListener('dragend', function() {
       //al("marker drooped");
       //al(this);
@@ -437,6 +510,10 @@ TgnMapClass = function(obj,options){
     
     marker.addListener('rightclick', function(point) {
       if(!o.isReadonly()){
+       if(this.customicon){
+          // al(this.customicon);
+          this.customicon.remove();
+       }
         o.deleteMarker(this);
       }
 
@@ -451,8 +528,8 @@ TgnMapClass = function(obj,options){
 
     // marker.addListener('click', function() {
     marker.addListener('spider_click', function() {
-        //al("marker clicked");
-        //al(this);
+        al("marker clicked");
+        al(this);
         if(this.infobox){
           o.showInfo(this,this.infobox);
         }
@@ -463,12 +540,14 @@ TgnMapClass = function(obj,options){
     
     if(infobox) marker.infobox=infobox;
     
-    o.bounds.extend(marker.position);
+    // al("position",marker.getPosition());
+    o.bounds.extend(marker.getPosition());
     
     o.overlappingmarkers.addMarker(marker); 
 
     if(o.settings.cluster)  o.markerClusterer.addMarker(marker);
 
+    // al(marker);
     //añado al array de markers
     o.markers[id] = marker; 
     
@@ -594,11 +673,34 @@ TgnMapClass = function(obj,options){
       
     }
 
+
+
     
 
   }
 
   
+  this.lookForClusteredMarkers= function(e){
+    al('lookForClusteredMarkers');
+    // al(this.markerClusterer);
+    var clusters = this.markerClusterer.getClusters(); // use the get clusters method which returns an array of objects
+    // al(clusters);
+    // al("CLUSTERS:" +clusters.length);
+    for( var i=0; i < clusters.length; i++ ){
+      var markers=clusters[i].getMarkers();
+      if(markers && markers.length>0){
+        if(markers.length>1){
+          for( var j=0; j< markers.length; j++ ){
+              marker = markers[j]; // <-- Here's your clustered marker
+              $(marker.customicon.div).hide();
+          }
+        }else{
+            $(markers[0].customicon.div).show();
+        }
+      }
+    }
+  }
+
   this.loadAjaxMarkers= function(e){
     var o=this;
 
@@ -641,7 +743,10 @@ TgnMapClass = function(obj,options){
                     location,
                     (marker.name?marker.name:null),
                     infobox,
-                    (marker.id?marker.id:null) 
+                    (marker.id?marker.id:null) ,
+                    (marker.color?marker.color:null) ,
+                    (marker.icon?marker.icon:null),
+                    (marker.iconcolor?marker.iconcolor:null) 
                   );
                 }
               });
@@ -746,8 +851,8 @@ TgnMapClass = function(obj,options){
           name: marker.name,
           infobox: marker.name,
           location: {
-            lat:marker.position.lat(),
-            lng:marker.position.lng()
+            lat:marker.getPosition().lat(),
+            lng:marker.getPosition().lng()
           }
         };
         value.push(val);

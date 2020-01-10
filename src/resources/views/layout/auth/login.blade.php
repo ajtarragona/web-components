@@ -4,31 +4,53 @@
 
 @section('body')
 
-<div class="bg-dark vw-100 vh-100 fixed-top d-flex justify-content-center align-items-start overflow-auto" style="z-index:1">
+<div class="login-container" >
 	
-	<div class="col-lg-4 col-md-6 col-sm-8">
-		<div class="card mt-5" >
-			<div class="card-body">				
+		<div class="bg-image" style="background-image:url({{ asset(config('webcomponents.login_bg')) }})" ></div>
+
+
+		<div class="card col-lg-3 col-md-6 col-sm-8 m-sm-0 m-2 p-0" >
+			<div class="card-body d-flex align-items-center ">				
 				
 				
-				<div class="row">
-					<div class="col-sm-4 col-6">
-						<img src="{{ asset('vendor/ajtarragona/img/logo-tgn-negre.png')}}" title="tgn" class="img-fluid"/>
-						<h2 class="card-title" style="text-transform: lowercase">{{ config('app.name')}}</h2>
-						<h6 class="card-subtitle mb-4">@lang('tgn::auth.login-form')</h6>
-				
+				<div class="row ">
+					<div class="col-sm-12">
+						{{-- <img src="{{ asset('vendor/ajtarragona/img/logo-tgn-negre.png')}}" title="tgn" class="img-fluid" /> --}}
+
+						@includeFirst([
+							'layout.auth.brand', 
+							'ajtarragona-web-components::layout.auth.brand'
+						])
+            
+						
 					</div>
 					
-					<div class="col-sm-8 ">
+					<div class="col-sm-12 ">
 							@form(['method'=>'POST','action'=>route('tgn.dologin')])
 			                      
-							@input(['container'=>true, 'icon'=>'user', 'name'=>'username', 'label'=>__("tgn::auth.username"), 'value'=>old('name')])
-							@input(['container'=>true, 'icon'=>'lock', 'type'=>'password', 'name'=>'password', 'label'=>__("tgn::auth.password")])
+							@input([
+								'container'=>true, 
+								'icon'=>'user', 
+								'name'=>'username', 
+								'placeholder'=>__("tgn::auth.username"), 
+								'value'=>old('name'),
+								'class'=>'form-control-lg text-center',
+								'containerclass'=>'border-left-0 border-right-0 border-top-0'
+								])
+							@input([
+								'container'=>true, 
+								'icon'=>'lock', 
+								'type'=>'password', 
+								'name'=>'password', 
+								'placeholder'=>__("tgn::auth.password"),
+								'class'=>'form-control-lg text-center',
+								'containerclass'=>'border-left-0 border-right-0 border-top-0'
+								])
 							{{-- @checkbox(['name'=>'remember', 'label'=>'Remember Me']) --}}
 												
 						 
-							<div class="btn-group mt-2 text-right" >
-								@button(['type'=>'submit'])
+							<div class="mt-4 " >
+								@button(['type'=>'submit', 'size' =>'md', 'class'=>'btn-block'])
 									@lang('tgn::auth.login') @icon('sign-in-alt') 
 								@endbutton
 		
@@ -51,7 +73,6 @@
 
 			</div>
 		</div>
-	</div>
 		
 			
 </div>

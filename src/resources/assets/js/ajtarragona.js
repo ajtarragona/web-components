@@ -60,6 +60,7 @@ require('bootstrap-tagsinput');
 
 //require('./vendor/bootstrap3-typeahead.min.js');
 
+require('./vendor/custom-marker.js');
 
 require('code-prettify/loader/prettify.js');
 require('clipboard');

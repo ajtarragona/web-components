@@ -38,7 +38,7 @@
         ]
     
     
-])
+]) --}}
 
 
 @gmap([
@@ -57,7 +57,10 @@
             "location"=> [
                 "lat"=>41.1176215,
                 "lng"=>1.2460229000000709
-            ]
+            ],
+            "icon" => 'ambulance',
+            'iconcolor' => "#ffff00",
+            "color" => '#ff4499'
         ],
         [
             "name"=>"Pere Martell 49",
@@ -65,7 +68,9 @@
             "location"=> [
                 "lat"=>41.1126923, 
                 "lng"=>1.242945500000019
-            ]
+            ],
+            "icon" => 'circle',
+            
         ]
     ],
     "controls" =>[
@@ -80,7 +85,7 @@
     
 ])
 
-
+{{-- 
 <hr/>
 
 <h4>Como imágen</h4>
@@ -147,6 +152,7 @@
     "geolocate"=>false,
     "fitbounds"=>false,
     "multiple"=>true,
+    "cluster"=>true,
     'url' => route('webcomponents.mapmarkers'),
     'method' => 'POST'
 ])

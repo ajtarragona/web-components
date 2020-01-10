@@ -5,6 +5,7 @@ return [
 	'theme' => 'bootstrap',
 	'credits'=> env('APP_CREDITS'),
 	'icon'=> env('APP_ICON','globe'),
+	'login_bg'=> env('APP_LOGIN_BG','vendor/ajtarragona/img/default-login-bg.jpg'),
 	'autopublish' => true,
 	'language' => [
 		'enabled' => env('APP_LANGUAGE_SELECTOR',false)

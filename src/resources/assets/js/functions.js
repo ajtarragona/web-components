@@ -20,8 +20,8 @@ ___ = function( text, params ){
     return text;
   }
 }
-_icon = function( text ){
-  return "<i class='fa fa-"+text+"'></i>";
+_icon = function( text , style){
+  return "<i class='fa fa-"+text+"' "+ (style?('style="'+style+'"'):'') +"></i>";
 }
 
 currentLanguage = function( ){
