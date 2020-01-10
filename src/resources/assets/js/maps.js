@@ -20,6 +20,7 @@ var tgnmapdefaults = {
   mapType: 'roadmap',
   method:'get',
   url:false,
+  customicons:false,
   controls : {
     zoom: true,
     mapType: false,
@@ -448,24 +449,33 @@ TgnMapClass = function(obj,options){
     // }else{
 
       // var image = route('webcomponents.markerimage');//'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
-      var imgurl=route('webcomponents.markerimage',{'bgcolor':color}).url();
       // al("markerurl",imgurl);
-      marker = new google.maps.Marker({
+      var markerargs={
         position: coords, 
         draggable: !this.isReadonly(),
         animation: this.settings.animation?google.maps.Animation.DROP:false,
         map: this.gmap,
-        icon : {
+        
+      };
+
+      if(this.settings.customicons){
+        var imgurl = route('webcomponents.markerimage',{'bgcolor':color}).url();
+      
+        markerargs.icon= {
           url: imgurl,
           size: new google.maps.Size(36, 36),
           // origin: new google.maps.Point(0, 0),
           // anchor: new google.maps.Point(17, 34),
           scaledSize: new google.maps.Size(36, 36)
-        },
-      });
+        };
 
+        
 
-      if(icon){
+      }
+
+      marker = new google.maps.Marker(markerargs);
+
+      if(this.settings.customicons && icon){
         // al("icon",icon);
         // al("coords",coords);
         // al("icon",icon);
@@ -484,6 +494,7 @@ TgnMapClass = function(obj,options){
           // al("end");
 
       }
+     
       
     // }
     //al(marker);
@@ -681,6 +692,8 @@ TgnMapClass = function(obj,options){
 
   
   this.lookForClusteredMarkers= function(e){
+    if(!this.settings.customicons) return;
+
     al('lookForClusteredMarkers');
     // al(this.markerClusterer);
     var clusters = this.markerClusterer.getClusters(); // use the get clusters method which returns an array of objects

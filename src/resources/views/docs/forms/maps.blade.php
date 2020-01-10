@@ -127,6 +127,12 @@
                         <p>Defineix una mètode amb que es cridarà a la URL ajax (per defecte GET)</p>                    
                     </td>
                 </tr>
+                <tr>
+                    <td><code>customicons</code></td>
+                    <td>
+                        <p>Defineix si es faran servir les icones customitzades de marcadors</p>                    
+                    </td>
+                </tr>
             
 		
 				

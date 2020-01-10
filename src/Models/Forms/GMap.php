@@ -25,6 +25,7 @@ class GMap extends FormControl
     public $static= false;
     public $isreadonly= false;
     public $url= false;
+    public $customicons= false;
     public $method= 'get';
 
 	public $attributes=[
@@ -144,6 +145,7 @@ class GMap extends FormControl
             $ret.='    data-zoom="'. $this->zoom .'"';
             $ret.='    data-multiple="'. ($this->multiple?'true':'false') .'"';
             $ret.='    data-animation="'. ($this->animation?'true':'false') .'"';
+            $ret.='    data-customicons="'. ($this->customicons?'true':'false') .'"';
             $ret.='    data-map-type="'. $this->maptype .'"';
             $ret.='    data-cluster="'. ($this->cluster?'true':'false') .'"';
             $ret.='    data-fitbounds="'. ($this->fitbounds?'true':'false') .'"';

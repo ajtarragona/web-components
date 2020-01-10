@@ -50,6 +50,7 @@
     "animation" => true,
     "cluster" => true,
     "fitbounds" => true,
+    "customicons"=>true,
     "markers"=>[
         [
             "name"=>"Avinguda Prat de la Riba",
