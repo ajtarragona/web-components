@@ -169,7 +169,15 @@ class DocsController extends Controller
   
   public function markerInfobox($id, Request $request){
     // return $request->all();
-    return "<table class='table'><tbody><tr><td>dsds</td></tr><tr><td>dsds</td></tr></tbody></table>";
+    $ret= input(
+      [
+        'type'=>'number', 
+        'name'=>'campo_numerico', 
+        'label'=>'Number', 
+        'placeholder'=>'Enter num...'
+      ]
+    ) ;
+    return $ret;
   }
 
   public function markerImage(Request $request){

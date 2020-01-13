@@ -285,6 +285,7 @@ TgnMapClass = function(obj,options){
   this.loadInfobox = function(url,marker){
     var o=this;
     o.infoWindow.open(o.map,marker);
+
     o.infoWindow.setContent('<div class="loading px-4 py-2">'+___("strings.loading")+'...</div>');
     $.ajax({
       url: url,
@@ -292,8 +293,10 @@ TgnMapClass = function(obj,options){
       // data: params,
       dataType: 'html',
       success: function(data){
-        o.infoWindow.setContent(data);
-        // o.$element.closest('.map-container').stopLoading();
+        
+        var content='<div id="infobox-content-'+marker.uid+'" class="infobox-content">'+data+'</div>';
+        o.infoWindow.setContent(content);
+        $('#infobox-content-'+marker.uid).tgnInitAll();
         o.infoWindow.open(o.map,marker);
         
       },
@@ -540,7 +543,7 @@ TgnMapClass = function(obj,options){
     // marker.addListener('click', function() {
     marker.addListener('spider_click', function() {
         al("marker clicked");
-        al(this);
+        // al(this);
         if(this.infobox){
           o.showInfo(this,this.infobox);
         }
