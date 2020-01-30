@@ -17,6 +17,8 @@
 		'name'=>'campo_fecha_multiple', 
 		'label'=>'Data multiple', 
 		'placeholder'=>'Choose dates...',
+		'sidelabel' => true
+		
 		
 	],
 	[

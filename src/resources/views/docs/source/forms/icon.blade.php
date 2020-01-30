@@ -21,6 +21,7 @@
 		'name'=>'campo_icono3', 
 		'label'=>'Icona per defecte', 
 		'value' =>'fas fa-atom',
-		'placeholder'=>'Choose icon...'
+		'placeholder'=>'Choose icon...',
+		'sidelabel' => true
 	]
 ) 

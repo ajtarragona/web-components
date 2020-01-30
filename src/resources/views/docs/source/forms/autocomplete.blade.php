@@ -39,6 +39,7 @@
 	'showvalue' => true,
 	'icon' => 'ellipsis-h',
 	'min-length' => 2,
+	'sidelabel' => true
 ])
 
 @autocomplete([
@@ -52,5 +53,6 @@
 	'savevalue' => true,
 	'showvalue' => false,
 	'icon' => 'ellipsis-h',
-	'iconposition'=>'right'
+	'iconposition'=>'right',
+	'sidelabel' => true
 ])
