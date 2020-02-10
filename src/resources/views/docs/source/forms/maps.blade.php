@@ -1,3 +1,4 @@
+
 {{-- @gmap([
     "name"=>"map_simple",
 ])

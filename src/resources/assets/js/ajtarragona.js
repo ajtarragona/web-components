@@ -13,6 +13,7 @@ require("jquery-mask-plugin");
 import 'jquery-ui/ui/widgets/draggable.js';
 import 'jquery-ui/ui/widgets/sortable.js';
 import 'jquery-ui/ui/widgets/droppable.js';
+import 'jquery-ui/ui/widgets/resizable.js';
 //import 'jquery-ui/ui/widgets/autocomplete.js';
 
 
@@ -87,3 +88,5 @@ require('./sessiontriggers');
 require('./prettyprint');
 require('./animations');
 require('./main');
+
+

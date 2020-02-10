@@ -19,6 +19,7 @@ $.fn.tgnInitAll = function( ){
   this.find('input[type=icon]').initIconPicker();
   this.find('input.colorinput').initColorPicker();
   this.find('.google-map').tgnMap();
+  
   this.find('.automention').initAutomention();
   this.find('.conditional-container').initConditional();
   this.find('.ajax-container').initAjaxContainer();
