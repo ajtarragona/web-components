@@ -14,7 +14,8 @@
    			['name'=>__("Demo"),'icon'=>'home']
    		]
    ])
-    	
+		
+		
 
 	
 @endsection
