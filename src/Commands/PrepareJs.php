@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use \Artisan;
 use \Exception;
-
+// use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;  
 
 class PrepareJs extends Command
 {
@@ -59,6 +60,14 @@ class PrepareJs extends Command
         //Artisan::call('ziggy:generate',['path'=>$resources_path."/".$this->routes_filename.".js"]);
         
         
+        //copy fonts to public
+        $origin = public_path('vendor/ajtarragona/fonts');
+        $destination= public_path('fonts');
+        
+        $this->line("Copying fonts ...");
+        File::copyDirectory($origin, $destination);
+
+        // Storage::copy($origin,$destination);
 
         $this->line("Exporting localization strings ...");
         Artisan::call('vendor:publish',['--tag'=>'ajtarragona-web-components-translations','--force'=>true]);

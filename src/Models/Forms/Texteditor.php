@@ -3,7 +3,7 @@ namespace Ajtarragona\WebComponents\Models\Forms;
 
 class Texteditor extends FormControl
 {	
-	public $tag ="div";
+	public $tag ="textarea";
 	public $closetag=true;
 	
 	public $attributes=[
@@ -18,8 +18,11 @@ class Texteditor extends FormControl
 	];
 
     public $data = [
-        'theme'=>'snow',
-		'tools' =>'simple'
+        'air-mode'=>false,
+		'toolbar' =>'simple',
+		'air-mode' =>false,
+		'hint-url' =>false,
+		'hint-trigger' =>'{'
     ];
 	
 	public function bodyHook(){
@@ -32,16 +35,19 @@ class Texteditor extends FormControl
 
         if(isset($this->attributes['placeholder'])) $this->data["placeholder"]=$this->attributes['placeholder'];
         if(isset($this->attributes['readonly'])) $this->data["read-only"]=$this->attributes['readonly'];
-        if(isset($this->attributes['toolbar'])) $this->data["tools"]=$this->attributes['toolbar'];
-        if(isset($this->attributes['theme'])) $this->data["theme"]=$this->attributes['theme'];
+        if(isset($this->attributes['toolbar'])) $this->data["toolbar"]=$this->attributes['toolbar'];
+        if(isset($this->attributes['air-mode'])) $this->data["air-mode"]=$this->attributes['air-mode'];
+        if(isset($this->attributes['hint-url'])) $this->data["hint-url"]=$this->attributes['hint-url'];
+        if(isset($this->attributes['hint-trigger'])) $this->data["hint-trigger"]=$this->attributes['hint-trigger'];
         
         if(isset($this->attributes['height'])&& $this->attributes['height']){
-			$this->attributes['style'].= ";height:".$this->attributes['height'];
+            $this->data["height"]=$this->attributes['height'];
+			// $this->attributes['style'].= ";height:".$this->attributes['height'];
         }
 
-        if(isset($this->attributes['min-height'])&& $this->attributes['min-height']){
-			$this->attributes['style'].= ";min-height:".$this->attributes['min-height'];
-        }
+        // if(isset($this->attributes['min-height'])&& $this->attributes['min-height']){
+		// 	$this->attributes['style'].= ";min-height:".$this->attributes['min-height'];
+        // }
         
 
     

@@ -13,7 +13,7 @@ let mix = require('laravel-mix');
 
 mix.js('src/resources/assets/js/ajtarragona.js', 'src/public/js')
 	.sass('src/resources/assets/sass/ajtarragona.scss', 'src/public/css')
-	.copyDirectory('src/resources/assets/img', 'src/public/img');
-	//.copyDirectory('fonts', 'src/public/fonts');
+	.copyDirectory('src/resources/assets/img', 'src/public/img')
+	.copyDirectory('fonts', 'src/public/fonts');
 
 

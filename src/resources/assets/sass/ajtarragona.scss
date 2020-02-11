@@ -60,8 +60,12 @@
 
 //quill text editor
 // @import "~quill/dist/quill.core.css";
-@import "~quill/dist/quill.snow.css";
-@import "~quill/dist/quill.bubble.css";
+// @import "~quill/dist/quill.snow.css";
+// @import "~quill/dist/quill.bubble.css";
+
+
+//summernote text editor
+ @import "~summernote/dist/summernote.min.css";
 
 
 //framework styles
@@ -85,7 +89,7 @@
 @import "files";
 @import "maps";
 @import "prettyprint";
-@import "quill";
+@import "texteditor";
 @import "mentions";
 @import "documentacio";
 

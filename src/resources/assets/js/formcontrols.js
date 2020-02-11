@@ -746,48 +746,42 @@ $.fn.initToggleClass = function (){
 
 
 
-import * as Quill from 'quill';
-
+// import * as Quill from 'quill';
+// import * as summernote from 'summernote';
 
 $.fn.initTextEditor = function(){
 
   var advancedtoolbar=[
-      ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-      ['blockquote', 'code-block'],
-
-      [{ 'header': 1 }, { 'header': 2 }],               // custom button values
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
-      [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
-      [{ 'direction': 'rtl' }],                         // text direction
-
-      [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
-      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-      [ 'link', 'image', 'video', 'formula' ],          // add's image support
-      [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-      [{ 'font': [] }],
-      [{ 'align': [] }],
-
-      ['clean']                                         // remove formatting button                                      // remove formatting button
-    ];
+      ['style', ['bold', 'italic', 'underline', 'clear']],
+      ['font', ['strikethrough', 'superscript', 'subscript']],
+      ['fontsize', ['fontsize','fontname']],
+      ['color', ['forecolor','backcolor']],
+      ['para', ['ul', 'ol', 'paragraph','height','style','hr']],
+      ['media', ['picture','link']],
+      ['misc', ['fullscreen','codeview']]
+  ];
 
   var simpletoolbar=[
-      [{ 'header': [1, 2, 3, 4,false] }],
-      ['bold', 'italic', 'underline','link'],        // toggled buttons
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      [{ 'align': [] }],
-      ['clean']                                         // remove formatting button
+      ['style', ['bold', 'italic', 'underline', 'clear']],
+      ['color', ['forecolor','backcolor']],
+      ['para', ['ul', 'ol', 'paragraph','style']],
+      ['media', ['picture','link']]
+     
     ];
 
 
   var defaults={
-     theme: 'snow',
+     airMode: false,
      readOnly : false,
-      modules: {
-        toolbar: simpletoolbar,
+     toolbar : 'simple',
+     height: '80px',
+     hintUrl: false,
+     hintTrigger: '{',
+      // modules: {
+      //   toolbar: simpletoolbar,
         // 'image-tooltip': true,
         // 'link-tooltip': true  
-      }
+      // }
   };
 
   return this.each(function(){
@@ -796,67 +790,76 @@ $.fn.initTextEditor = function(){
 
     if(o.$element.is(".init-texteditor")) return;
     o.$element.addClass('init-texteditor');
+
     var id=o.$element.attr('id');
+    if(!o.$element.attr('id')) o.$element.attr('id',_UUID());
 
-    var label=o.$element.closest('.form-group').find('label[for='+id+']');
+    // al('initTextEditor',o.$element);
+
+    var label=o.$element.closest('.form-group').find('> label[for='+id+']');
     label.on('click',function(e){
-      if(!$(this).closest('.form-group').find('.text-editor').is('.ql-disabled')){
-        o.$element.find('.ql-editor').focus();
-        $(this).closest('.form-group').addClass('focused');
-      }
-    });
-
-    o.$element.on('click',function(e){
-      // al("click",e.target);
-      if(!$(this).is('.ql-disabled')){
-        if($(e.target).is('.text-editor')){
-          var editor=$(e.target).find('.ql-editor');
-          editor.focus();
-        }
-        $(this).closest('.form-group').addClass('focused');
+      if(!$(this).closest('.form-group').find('.note-editable').is('[contenteditable=false]')){
+        o.$element.summernote('focus');
       }
     });
     
-    o.$element.on('blur','.ql-editor',function(){
+    var settings = $.extend({}, defaults, $(this).data()); 
+    if(settings.toolbar=='advanced') settings.toolbar = advancedtoolbar;
+    else settings.toolbar=simpletoolbar;
+    
+    if(settings.hintUrl){
+      $.ajax({
+        url: settings.hintUrl,
+        async: false 
+      }).then(function(data) {
+        settings.hintData=data;
+      });
+  
+  
+      var regex = new RegExp("{(\\w*)$",'gi'); // settings.hintTrigger+'([\-+\w]+)$');
+      
+      settings.hint = {
+          match: /{(\w*)$/,///{(\w*)$/,
+          search: function (keyword, callback) {
+
+            callback($.grep(settings.hintData, function (item) {
+              return item.value.toLowerCase().indexOf(keyword.toLowerCase())  !== -1 || item.key.toLowerCase().indexOf(keyword.toLowerCase()) !== -1;
+            }));
+          },
+          template: function (item) {
+            return item.key;
+            
+          },
+          content: function (item) {
+            return '{{'+item.value+'}}';
+          }
+        };
+    }
+    
+
+
+    o.$element.summernote(settings);
+
+  
+    
+    o.$element.on('summernote.blur',function(){
       // al("BLUR");
       $(this).closest('.form-group').removeClass('focused');
     });
 
-    if(!o.$element.attr('id')) o.$element.attr('id',_UUID());
-
-    o.$hidden=$('<input type="hidden" />');
-    o.$hidden.attr('name',o.$element.attr('name')).attr('for',o.$element.attr('id'));
-    o.$element.after(o.$hidden);
-
-
-    o.updateContent = function() {
-        var content=o.$element.find('> .ql-editor').html();
-        if(content=='<p><br></p>') content='';
-        o.$hidden.val(content);
-    }
-    
-
-    var settings = $.extend({}, defaults, $(this).data()); 
-    //al(settings);
-    if(settings.tools=='advanced') settings.modules.toolbar=advancedtoolbar;
-    else settings.modules.toolbar=simpletoolbar;
-
-    var quill = new Quill(o, settings);
-
-    if(settings.readOnly){
-      o.$element.parent().find('.ql-toolbar').css({
-        opacity:0.7,
-        pointerEvents:'none'
-      });
-
-      
-    }
-
-    quill.on('editor-change', function(eventName, ...args) {
-      o.updateContent();
+    o.$element.on('summernote.focus',function(){
+      $(this).closest('.form-group').addClass('focused');
     });
 
-    o.updateContent();
+  
+    if(settings.readOnly){
+      o.$element.summernote('disable');
+    }
+
+
+    
+
+   
 
   });
 }

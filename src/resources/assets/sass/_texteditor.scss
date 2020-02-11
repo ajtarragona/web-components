@@ -1,0 +1,50 @@
+.note-editor.note-airframe, .note-editor.note-frame{
+    border-width: 0px;
+
+    &.fullscreen{
+        background-color: $white;
+    }
+    .note-toolbar{
+        border-bottom:1px solid $border-color;
+    }
+
+    .note-editing-area .note-editable{
+        background-color: transparent !important;
+    }
+
+    .note-btn{
+        font-size: 12px;
+        padding-top:.5rem;
+        padding-bottom:.5rem;
+        // border:1px solid $gray-300;
+
+        .note-icon-caret{
+            display: none;
+        }
+
+        &:hover{
+            background-color: $gray-300;
+        }
+    }
+    .note-input{
+        border:1px solid $border-color !important;
+    }
+
+    .note-hint-popover{
+        padding:0;  
+
+        .popover-content{
+            padding:0;  
+
+            .note-hint-group .note-hint-item{
+                padding:.5em;
+                line-height: 1.4;
+            } 
+            .note-hint-group .note-hint-item.active, 
+            .note-hint-group .note-hint-item:hover{
+                background-color:$gray-300;
+                color:$dark;
+            }
+        }
+    }
+}

@@ -1,6 +1,6 @@
 <h1 class="display-4">Text editor</h1>
 <p class="lead">Podem crear camps de text amb format amb la directiva <mark><code>&commat;texteditor</code></mark></p>
-<p>Es basa en el mòdul <a href="https://quilljs.com/docs/" target="_blank">@icon('external-link-alt') QuillJS</a></p>
+<p>Es basa en el mòdul <a href="https://summernote.org/" target="_blank">@icon('external-link-alt') Summernote</a></p>
 		
 <hr class="big"/>
 
@@ -17,10 +17,10 @@
 			</thead>
 			
 			<tbody>
-				<tr>
-					<td><code>theme</code></td>
-					<td>Tema a utilitzar (<code>snow</code> o <code>bubble</code>).</td>
-				</tr>
+				{{-- <tr>
+					<td><code>air-mode</code></td>
+					<td>Activa el mode popup.</td>
+				</tr> --}}
 				<tr>
 					<td><code>toolbar</code></td>
 					<td>Barra d'eines a utilitzar (<code>simple</code> o <code>advanced</code>).</td>
@@ -30,11 +30,14 @@
 					<td>Alçada de l'editor. Si no s'especifica l'alçada s'adaptarà al contingut.</td>
 				</tr>
 				<tr>
-					<td><code>min-height</code></td>
-					<td>Alçada mínima de l'editor. Si el contingut és més gran s'adaptarà la mida.</td>
+					<td><code>hint-url</code></td>
+					<td>Url de l'autocompletable amb el caràcter <code>{</code>.</td>
 				</tr>
 				
-				
+				{{-- <tr>
+					<td><code>hint-trigger</code></td>
+					<td>Caràcter per llençar l'autocompletable. Per defecte.</td>
+				</tr> --}}
 			</tbody>
 		</table>
 	

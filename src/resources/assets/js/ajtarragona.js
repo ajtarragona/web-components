@@ -68,7 +68,10 @@ require('clipboard');
 
 
 //rich text editor
-require('quill');
+// require('quill');
+
+
+require('summernote/dist/summernote.min.js');
 
 require('is-in-viewport') 
 
