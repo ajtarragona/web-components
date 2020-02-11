@@ -19,14 +19,14 @@ import 'jquery-ui/ui/widgets/resizable.js';
 
 require("flatpickr");
 
-if(lang=='es'){
+// if(lang=='es'){
 	require("bootstrap-select/dist/js/i18n/defaults-es_ES.js");
+	// require("bootstrap-select/dist/js/i18n/defaults-ca.js");
 	require("flatpickr/dist/l10n/es.js").default.es;
-}else if(lang=='ca'){
-	require("flatpickr/dist/l10n/es.js").default.es;
-	//require("bootstrap-select/dist/js/i18n/defaults-ca.js");
+// }else if(lang=='ca'){
+	// require("flatpickr/dist/l10n/es.js").default.es;
 	//require("flatpickr/dist/l10n/cat.js").default.cat;
-}
+// }
 
 
 require('bootstrap-confirmation2');
@@ -72,6 +72,8 @@ require('clipboard');
 
 
 require('summernote/dist/summernote.min.js');
+require('summernote/lang/summernote-es-ES.js');
+require('summernote/lang/summernote-ca-ES.js');
 
 require('is-in-viewport') 
 

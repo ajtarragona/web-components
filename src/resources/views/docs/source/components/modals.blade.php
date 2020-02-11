@@ -14,6 +14,7 @@
 @modalopener([
 	'href'=>route('webcomponents.docs.modal'),
 	'icon' => 'external-link-square-alt',
+	'size'=>'lg',
 	'style' => 'success',
 	'class' =>'btn btn-success btn-sm'
 ])

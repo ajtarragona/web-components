@@ -767,8 +767,12 @@ $.fn.initTextEditor = function(){
       ['para', ['ul', 'ol', 'paragraph','style']],
       ['media', ['picture','link']]
      
-    ];
+  ];
 
+  var lang=currentLanguage();
+  if(lang=="es") lang="es-ES";
+  if(lang=="ca") lang="ca-ES";
+  else lang="en";
 
   var defaults={
      airMode: false,
@@ -777,6 +781,8 @@ $.fn.initTextEditor = function(){
      height: '80px',
      hintUrl: false,
      hintTrigger: '{',
+     dialogsInBody: true,
+     lang: lang
       // modules: {
       //   toolbar: simpletoolbar,
         // 'image-tooltip': true,
@@ -836,7 +842,7 @@ $.fn.initTextEditor = function(){
         };
     }
     
-
+// al(settings);
 
     o.$element.summernote(settings);
 
