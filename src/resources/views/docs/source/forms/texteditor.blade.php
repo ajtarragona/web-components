@@ -1,6 +1,6 @@
 @texteditor(['label'=>"Editor simple mida fixa", "placeholder"=>"Escriu aquí ...",'name'=>"editor1",'height'=>'400px'])
 
-@texteditor(['label'=>"Editor simple mida minima", "placeholder"=>"Escriu aquí ...",'name'=>"editor4"])
+{{-- @texteditor(['label'=>"Editor simple mida minima", "placeholder"=>"Escriu aquí ...",'name'=>"editor4"]) --}}
 
 @texteditor(['label'=>"Editor avançat amb autocompletat", "placeholder"=>"Escriu { per mostrar els usuaris", 'name'=>"editor2", "toolbar"=>"advanced",'hint-url' =>route('webcomponents.docs.userscombo')])
 

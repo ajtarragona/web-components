@@ -757,7 +757,7 @@ $.fn.initTextEditor = function(){
       ['fontsize', ['fontsize','fontname']],
       ['color', ['forecolor','backcolor']],
       ['para', ['ul', 'ol', 'paragraph','height','style','hr']],
-      ['media', ['picture','link']],
+      ['media', ['picture','video','link','table']],
       ['misc', ['fullscreen','codeview']]
   ];
 
