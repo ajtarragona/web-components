@@ -38,7 +38,7 @@ $.widget( "ajtarragona.tgnSelectPicker", {
         
 
         if(this.element.closest(".modal").length>0){
-          this.options.container = '.modal';
+            this.options.container = false;//"#"+this.element.closest(".modal").attr('id');
         }
         
         if(!this.isInit){

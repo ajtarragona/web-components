@@ -19,7 +19,9 @@ class DocsController extends Controller
   {
     
     $request=$request->except(['_token','_method']);
-      return $this->view('docs.source.layout.modal', compact('faker','request'));
+    $args=compact('faker','request');
+    $args['selectoptions']=$this->getTestOptions(10);
+    return $this->view('docs.source.layout.modal', $args);
   }
  
   public function docsHandle($page='start.introduction',Request $request)

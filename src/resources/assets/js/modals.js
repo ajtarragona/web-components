@@ -96,10 +96,13 @@ TgnModal = function(options){
 	}
 
 	this.setId = function(id){
-		if(id){
-			this.id=id;
-			this.render();
+		// al("setID",id)
+		if(!id || id.trim()==""){
+			id='modal_'+_UUID();
 		}
+		// al(id);
+		this.id=id;
+		this.render();
 	}
 
 	this.setBody = function(body){
@@ -155,6 +158,7 @@ TgnModal = function(options){
 
 			o.$dialog.on('hide.bs.modal', function (e) {
 				if(!o.isLocal()) o.destroy();
+				al("CERRANDO");
 			});
 
 			//para multiples modales, manejo el zindex
