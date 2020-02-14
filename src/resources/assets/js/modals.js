@@ -158,7 +158,7 @@ TgnModal = function(options){
 
 			o.$dialog.on('hide.bs.modal', function (e) {
 				if(!o.isLocal()) o.destroy();
-				al("CERRANDO");
+				// al("CERRANDO");
 			});
 
 			//para multiples modales, manejo el zindex
