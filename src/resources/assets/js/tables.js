@@ -17,7 +17,7 @@ $.widget( "ajtarragona.tgnTable", {
         al("creating tgnTable");
         
         this.options = $.extend({}, this.options, this.element.data()); 
-        this.rows=this.element.find("tbody tr");
+        this.rows=this.element.find("> tbody > tr");
 
 		
 		if(this.options.selectable){
@@ -31,14 +31,14 @@ $.widget( "ajtarragona.tgnTable", {
 			//al("is clickable");
 			var ev=this.element.data("clicktype")?this.element.data("clicktype"):"dblclick";
 
-			this.element.on(ev,"tbody tr",function(e){
+			this.element.on(ev,"> tbody > tr",function(e){
 				if(!o.options.selectable){
 					var url=$(this).data("url");
 					if(url) window.location.href=url;
 				}
 			});
 
-			this.element.on("touchend","tbody tr",function(e){
+			this.element.on("touchend","> tbody > tr",function(e){
 				if(!o.options.selectable){
 					var url=$(this).data("url");
 					if(url) window.location.href=url;
