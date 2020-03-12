@@ -452,6 +452,16 @@ $.fn.initAutomention = function (){
           
         });
 
+        //elimina el formato al pegar
+        $element.on("paste", function(e){
+          e.preventDefault();
+          var pastedData = e.originalEvent.clipboardData.getData('text');
+          document.execCommand("insertHTML", false, pastedData);
+
+          
+         
+      } );
+
 
     });
 }
