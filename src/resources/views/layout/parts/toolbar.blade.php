@@ -1,5 +1,5 @@
 <div id="maintoolbar" >
-	<div class="toolbar-toggle">@icon("cogs")</div>
+	<div class="toolbar-toggle">@icon("ellipsis-v")</div>
 	<div class="toolbar-content ">
 		<div class="container-fluid">
 			<div class="row align-items-center">
