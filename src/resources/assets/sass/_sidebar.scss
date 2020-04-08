@@ -2,12 +2,15 @@
 
   #main-container{
     position:relative;
-    margin-left:$sidebarwidthclosed;
     padding-top:4.5rem;
   }
 
+  @media (min-width: 768px) {
 
- 
+    #main-container{
+      margin-left:$sidebarwidthclosed;
+    }
+  }
 
 
 

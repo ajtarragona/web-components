@@ -19,9 +19,11 @@
  #maintoolbar  .toolbar-toggle{
   display:none;
 }
+
 #maintoolbar .toolbar-content{
   padding-left:$sidebarwidthclosed;
 }
+
 
 
 #maintoolbar .toolbar-content .the-actions{
@@ -40,6 +42,8 @@
 
   .with-toolbar #maintoolbar .toolbar-content{
     padding-left:0;
+    box-shadow: $box-shadow-sm;
+    	  
   }
   
   #maintoolbar{
@@ -58,10 +62,10 @@
     padding:0 !important;
     font-size:1.2em;
     z-index:10;
-    background-color:$light;
+    background-color:$white;
     color:$secondary;
     border-radius:50%;
-    box-shadow: 0 0 0 0.2rem rgba($gray-400, 0.5);
+    box-shadow: none; //0 0 0 0.2rem rgba($gray-400, 0.5);
     width: 42px;
       height: 42px;
       line-height: 42px;
@@ -72,52 +76,61 @@
 
   #maintoolbar .toolbar-content{
     position:fixed;
-    display:flex;
-    align-items:flex-end;
-    right:0px;
-    top:0;
-    margin-right:-$toolbarwidth;
+    display:block;
+    transform:rotateX(90deg);
+    transform-origin: center top;
+    top: $toolbarheight;
+    // flex-direction: column;
+    // align-items:flex-start;
     width:$toolbarwidth;
-    height:100%;
-    background-color:$gray-200;
+    // height: calc( 100vh - #{$toolbarheight});
+    background-color:$white;
     /*border-left:1px solid $gray-300;*/
     padding:0;
     z-index:9;
-    border-left:1px solid $gray-300;
+    border-bottom:1px solid $gray-300;
   }
   #maintoolbar .toolbar-content > .container-fluid,
   #maintoolbar .toolbar-content > .container-fluid >.row{
-    align-self: start;
-     display:flex;
-    align-items:flex-end;
+    //  align-self: start;
+    //  display:flex;
+    //  align-items:flex-end;
 
   }
   #maintoolbar .toolbar-content .the-breadcrumb{
-    align-self: flex-start;
+    // align-self: flex-start;
+    border-bottom:1px solid rgba(0,0,0,0.05);
+    // padding-left:1em;
+    // padding-right:1em;
+
   }
 
 
   
 
   #maintoolbar .toolbar-content .the-actions{
-    align-self:flex-end;
-    text-align:left;
+    // align-self:flex-end;
+    // text-align:left;
     border-top:1px solid rgba(0,0,0,0.05);
 
   }
 
   body.toolbar-open #maintoolbar .toolbar-content{
-     margin-right:0px;
-   
+    //  margin-right:0px;
+     transform:rotateX(0deg);
   }
   body.toolbar-open {
-    margin-right:$toolbarwidth;
-    margin-left:-$toolbarwidth;
+    // margin-right:$toolbarwidth;
+    // margin-left:-$toolbarwidth;
   }
   body.toolbar-open  #maintoolbar  .toolbar-toggle{
-    right:$toolbarwidth;
-    background-color:$secondary;
-    color:$white;
+    // right:$toolbarwidth;
+    // background-color:$secondary;
+    // color:$gray-400;
+
+    >.icon:before{
+      content:"\f00d";
+    }
   }
 
   

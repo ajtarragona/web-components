@@ -79,7 +79,7 @@ html{
     }
     
     #maintoolbar .toolbar-content{
-      transition:padding-left  $transition-speed, margin $transition-speed;
+      transition:padding-left  $transition-speed, margin $transition-speed, transform $transition-speed;;
     }
 
     .form-group.outlined{ 
