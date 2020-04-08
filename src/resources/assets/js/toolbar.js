@@ -10,7 +10,7 @@ initToolbar = function( ){
 		
 		$('body').on('click',function(e){
 			
-			if($(e.target).closest('.toolbar-toggle').length==0 && $(e.target).closest('.sidebar-toggle').length==0){
+			if( $(e.target).closest('.toolbar-content').length==0 && $(e.target).closest('.toolbar-toggle').length==0 && $(e.target).closest('.sidebar-toggle').length==0){
 				if($(this).is('.toolbar-open')) $(this).removeClass('toolbar-open');
 				//if($(this).is('.sidebar-open')) $(this).removeClass('sidebar-open');
 			}
