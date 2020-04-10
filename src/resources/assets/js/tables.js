@@ -38,12 +38,42 @@ $.widget( "ajtarragona.tgnTable", {
 				}
 			});
 
-			this.element.on("touchend","> tbody > tr",function(e){
-				if(!o.options.selectable){
-					var url=$(this).data("url");
-					if(url) window.location.href=url;
+			this.startY=0;
+			this.yDistance=0;
+			this.touch=null;
+			
+			this.element.find("> tbody > tr").on("touchstart", function(event){
+				o.touch = event.changedTouches[0];
+				// event.preventDefault();
+				o.startY = o.touch.clientY;
+
+			});
+
+			this.element.find("> tbody > tr").on("touchmove", function(event){
+				o.touch = event.changedTouches[0];
+				// event.preventDefault();
+
+			});
+
+			
+			this.element.find("> tbody > tr").on('touchend', function(){
+
+				o.yDistance = o.startY - o.touch.clientY;
+
+				if(Math.abs(o.yDistance) < 30){
+					if(!o.options.selectable){
+						var url=$(this).data("url");
+						if(url) window.location.href=url;
+					}
 				}
 			});
+
+			// this.element.on("touchend","> tbody > tr",function(e){
+			// 	if(!o.options.selectable){
+			// 		var url=$(this).data("url");
+			// 		if(url) window.location.href=url;
+			// 	}
+			// });
 		}
 
 
