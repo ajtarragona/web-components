@@ -39,13 +39,16 @@ $.widget( "ajtarragona.tgnTable", {
 			});
 
 			this.startY=0;
+			this.startX=0;
 			this.yDistance=0;
+			this.xDistance=0;
 			this.touch=null;
 			
 			this.element.find("> tbody > tr").on("touchstart", function(event){
 				o.touch = event.changedTouches[0];
 				// event.preventDefault();
 				o.startY = o.touch.clientY;
+				o.startX = o.touch.clientX;
 
 			});
 
@@ -59,8 +62,9 @@ $.widget( "ajtarragona.tgnTable", {
 			this.element.find("> tbody > tr").on('touchend', function(){
 
 				o.yDistance = o.startY - o.touch.clientY;
+				o.xDistance = o.startX - o.touch.clientX;
 
-				if(Math.abs(o.yDistance) < 30){
+				if(Math.abs(o.yDistance) < 30 && Math.abs(o.xDistance) < 30){
 					if(!o.options.selectable){
 						var url=$(this).data("url");
 						if(url) window.location.href=url;
