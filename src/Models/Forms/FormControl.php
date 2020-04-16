@@ -111,8 +111,10 @@ class FormControl
 		
 		foreach ($array as $k => $v)
 		{	
-			//los data los pongo todos, los attributes solo los que tengan valor
-			if(!in_array($k, $excluded) && ($prefix || $v) ){
+			//los data los pongo todos, los attributes solo los que tengan valor 
+			$hasValue= !is_null($v);
+
+			if(!in_array($k, $excluded) && ($prefix || $hasValue) ){
 				
 
 				$ret.=" ".($prefix?($prefix."-"):"").$k."=";
