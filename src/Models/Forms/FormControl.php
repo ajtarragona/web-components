@@ -102,7 +102,7 @@ class FormControl
     }
 
 
-    public static function html_attributes($array=false, $prefix=false, $excluded=[]) {
+	public static function html_attributes($array=false, $prefix=false, $excluded=[]) {
 		
 		if(!$array) return;
 
@@ -112,7 +112,11 @@ class FormControl
 		foreach ($array as $k => $v)
 		{	
 			//los data los pongo todos, los attributes solo los que tengan valor 
-			$hasValue= !is_null($v);
+			// dump($k);
+			// dump($v);
+			$hasValue= ($v || $v===0 || $v==="0");
+			// dump($hasValue);
+			// if(!in_array($k, $excluded) && ($prefix || $v  )){
 
 			if(!in_array($k, $excluded) && ($prefix || $hasValue) ){
 				
