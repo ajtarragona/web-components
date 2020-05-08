@@ -53,7 +53,10 @@ $.widget( "ajtarragona.tgnAutocomplete", {
       this.addParam('term','WILDCARD');
 		
 		  if(this.options.savevalue) this.options.saved='value';
-		  if(this.options.disabled) this.element.prop('disabled');
+		  if(this.options.disabled){
+        al("isDisabled");
+        this.element.prop('disabled',true);
+      }
         //al(this.getUrl());
 		  //al(this.options);
 
@@ -419,9 +422,11 @@ $.widget( "ajtarragona.tgnAutocomplete", {
 
     _createDeselector: function( argument ) {
         var o=this;
+        
+        this.deselector=$("<div class='deselect-btn'>&times;</div>");
+        this.element.after(this.deselector);
+
         if(!this.options.disabled){
-          this.deselector=$("<div class='deselect-btn'>&times;</div>");
-          this.element.after(this.deselector);
           this.deselector.on('click',function(e){
              //al(o.input);
             //al(o.input.prop('disabled'));
@@ -431,6 +436,8 @@ $.widget( "ajtarragona.tgnAutocomplete", {
                o.clear('');
               }
           });
+        }else{
+          // this.deselector.
         }
     },
 });

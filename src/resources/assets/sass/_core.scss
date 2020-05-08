@@ -198,6 +198,10 @@ h5, h6{
 
 }
 
+body.modal-open #messages{
+  z-index:1200;
+}
+
 
 #messages .alert:last-child{
     margin:0;

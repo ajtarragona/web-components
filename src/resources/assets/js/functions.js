@@ -148,7 +148,8 @@ $.fn.serializeControls = function() {
   var data = {};
 
   function buildInputObject(data, arr, val) {
-
+    if(!data) data={};
+        
     if (arr.length < 1)
       return val;  
     var objkey = arr[0];
@@ -314,6 +315,14 @@ buildUrl = function (url,params){
   }
 
   return ret;
+}
+
+is_float = function(mixedVar) { 
+  return +mixedVar === mixedVar && (!isFinite(mixedVar) || !!(mixedVar % 1))
+}
+
+is_int = function(mixedVar) { 
+ return mixedVar === +mixedVar && isFinite(mixedVar) && !(mixedVar % 1) 
 }
 
 
