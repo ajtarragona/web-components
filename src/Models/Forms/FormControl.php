@@ -232,7 +232,7 @@ class FormControl
 			
 			$ret.=$this->renderLabel();
 			
-			$ret.="<div class='input-group flex-sm-nowrap ' >";
+			$ret.="<div class='input-group flex-nowrap ' >";
 			
 			$ret.=$this->renderIcon();
 			
