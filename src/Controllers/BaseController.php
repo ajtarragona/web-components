@@ -2,10 +2,10 @@
 
 namespace Ajtarragona\WebComponents\Controllers; 
 
-use App\Http\Controllers\Controller;
+
 use Illuminate\Http\Request;
 use \Artisan;
-
+use Illuminate\Routing\Controller;
 
 class BaseController extends Controller
 {
