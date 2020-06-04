@@ -42,6 +42,10 @@
 			<td>L'etiqueta es posicionarà a l'esquerra si posem <code>true</code></td>
 		</tr>
 		<tr>
+			<td><code>sidelabelwidth</code></td>
+			<td>Per defecte l'etiqueta lateral té una amplada fixa de 160px. Ho podem sobreescriure ab aquest atribut, indicant la quantitat i les unitats (px, em, % ...)</td>
+		</tr>
+		<tr>
 			<td><code>disabled</code></td>
 			<td>Si està deshabilitada</td>
 		</tr>

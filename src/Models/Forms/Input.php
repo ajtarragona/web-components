@@ -1,6 +1,8 @@
 <?php
 namespace Ajtarragona\WebComponents\Models\Forms;
 
+use Illuminate\Support\Str;
+
 class Input extends FormControl
 {	
 	public $tag ="input";
@@ -40,7 +42,7 @@ class Input extends FormControl
 			$this->addClass("number");
 		}
 		
-		if(isset($this->attributes["multiple"]) && $this->attributes["multiple"] && !ends_with($this->attributes['name'],"[]")) $this->attributes["name"].="[]";
+		if(isset($this->attributes["multiple"]) && $this->attributes["multiple"] && !Str::endsWith($this->attributes['name'],"[]")) $this->attributes["name"].="[]";
 		//dump($this->attributes);
 		
 	}

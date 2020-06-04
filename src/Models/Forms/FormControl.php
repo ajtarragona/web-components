@@ -18,6 +18,7 @@ class FormControl
 	public $outlined = true;
 	public $size = 'md';
 	public $sidelabel = false;
+	public $sidelabelwidth = false;
 	// public $disabled = false;
 	// public $readonly = false;
 	public $required = false;
@@ -169,7 +170,7 @@ class FormControl
 
 	protected function renderFormGroupStart($attributes=[],$data=[]){
 		$ret="";
-		$ret.="<div ";
+		$ret.="<div";
 		$ret.="	class='" .$this->containerClass(). "' ";
 		$ret.=html_attributes($attributes);
 		$ret.=html_attributes($data);
@@ -198,7 +199,7 @@ class FormControl
 
 	public function renderLabel(){
 		if(!empty($this->label)){
-			return 	"<label for='".$this->attributes['id']."' class='col-form-label col-form-label-".$this->size."'>". $this->label."</label>";
+			return 	"<label for='".$this->attributes['id']."' ".($this->sidelabelwidth?"style='width:".$this->sidelabelwidth."' ":"")." class='col-form-label col-form-label-".$this->size."'>". $this->label."</label>";
 		}
 	}
 

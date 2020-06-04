@@ -16,6 +16,8 @@
 
 @input(['name'=>'camp_nom3_2', 'label'=>'Label lateral','sidelabel'=>true ,'placeholder'=>'placeholder...','helptext'=>'Ajuda del camp'])
 
+@input(['name'=>'camp_nom3_3', 'label'=>'Curt','sidelabel'=>true ,'sidelabelwidth'=>'50px','placeholder'=>'placeholder...'])
+
 @input(['name'=>'campo_texto_nolabel', 'placeholder'=>'Sense label']) 
 
 @input(['helptext'=>"Text d'ajuda", 'name'=>'camp_ajuda', 'label'=>'Amb ajuda', 'required'=>true])
