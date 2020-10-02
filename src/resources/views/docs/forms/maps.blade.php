@@ -134,6 +134,13 @@
                     </td>
                 </tr>
             
+                <tr>
+                    <td><code>theme</code></td>
+                    <td>
+                        <p>Podem personalitzar l'estil visual del mapa passant un array d'estils. <a href="https://mapstyle.withgoogle.com/">https://mapstyle.withgoogle.com/</a></p>                    
+                    </td>
+                </tr>
+            
 		
 				
 			</tbody>

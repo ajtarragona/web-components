@@ -27,6 +27,7 @@ class GMap extends FormControl
     public $url= false;
     public $customicons= false;
     public $method= 'get';
+    public $theme= false;
 
 	public $attributes=[
 	];
@@ -75,7 +76,7 @@ class GMap extends FormControl
     public function render($args=[]){
     	if(!$this->isVisible()) return;        
         
-        
+        // dd($this);
 		$ret="";
         
         if($this->static){
@@ -153,6 +154,7 @@ class GMap extends FormControl
             $ret.='    data-method="'. ($this->method?$this->method:'') .'"';
             $ret.='    data-readonly="'. ($this->isreadonly?'true':'false') .'"';
             $ret.='    data-markers=\''. json_encode($this->getMarkers()) .'\'';
+            $ret.='    data-theme=\''. json_encode($this->theme) .'\'';
 
 
             if($this->controls){

@@ -30,7 +30,7 @@ var tgnmapdefaults = {
     fullscreen: true,
 
   },
-  styles: 
+  theme: 
     [
   
       {
@@ -255,6 +255,7 @@ TgnMapClass = function(obj,options){
 
   if(this.settings.url) this.settings.fitbounds=false;
 
+  // al(this.$element.data('styles'));
   al("init() tgnMap");
   // al(this.settings);
  
@@ -635,7 +636,7 @@ TgnMapClass = function(obj,options){
       this.setCenter({lat: parseFloat(center[0]), lng: parseFloat(center[1])});
 
     }  
-
+  
 
     this.gmap = new google.maps.Map(this.$element[0], {
         center: this.settings.center,
@@ -652,7 +653,7 @@ TgnMapClass = function(obj,options){
         streetViewControl: this.settings.controls.streetView,
         rotateControl: this.settings.controls.rotate,
         fullscreenControl: this.settings.controls.fullscreen,
-        styles: this.settings.styles
+        styles: this.settings.theme
     });
 
     if(this.settings.height) this.$element.css('height',this.settings.height);
