@@ -52,6 +52,8 @@
     "cluster" => true,
     "fitbounds" => true,
     "customicons"=>true,
+    "inputicon" => "search",
+    "color"=>"success",
     "markers"=>[
         [
             "name"=>"Avinguda Prat de la Riba",

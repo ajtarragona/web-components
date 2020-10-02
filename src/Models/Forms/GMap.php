@@ -1,6 +1,8 @@
 <?php
 namespace Ajtarragona\WebComponents\Models\Forms;
 
+use Illuminate\Support\Arr;
+
 class GMap extends FormControl
 {	
 	public $tag ="div";
@@ -105,13 +107,17 @@ class GMap extends FormControl
             $ret.='<div class="map-container '.$this->getAttribute("mapcontainerclass").'">';
 
             if(!$this->isreadonly && ($this->search || $this->addmarkerbtn )){
-                $ret.="<div class='input-group map-search-input'>";
+                $ret.="<div class='input-group map-search-input ".($this->search?'with-search':'')."'>";
+                
+                $inputattrs=Arr::only($this->attributes, ["placeholder","class","color","inputicon","required","label","helptext","size"]);
+                $inputattrs["containerclass"]=$this->containerClass("containerclass","").' flex-grow-1';
+                $inputattrs["icon"]=$inputattrs["inputicon"] ?? null;
+
                 
                 if($this->search){
 
-                    $inputattrs=array_only($this->attributes, ["placeholder","class","inputicon","required","label","helptext","size"]);
-                    $inputattrs["containerclass"]=$this->containerClass("containerclass","").' flex-grow-1';
-
+                    if(isset($inputattrs["color"])) $inputattrs["containerclass"].=" bg-".$inputattrs["color"];
+                    // dd($inputattrs);
                     $ret.=input($inputattrs, array_merge($this->data,[
                         'map' => "#".$this->getAttribute("id")
                     ]));
@@ -122,7 +128,7 @@ class GMap extends FormControl
                     $txt=$this->getAttribute("addmarkerbtntext", (icon('plus')." ".__("tgn::strings.Marcador")) );
 
                     $ret.="<div class='input-group-append'>";
-                    $ret.="<button type='button' class='btn btn-light btn-sm add-marker-btn border' data-map='#".$this->attributes["id"]."' >". $txt."</button>";
+                    $ret.="<button type='button' class='btn btn-". (isset($inputattrs["color"])?$inputattrs["color"]:'light') ." btn-sm add-marker-btn border' data-map='#".$this->attributes["id"]."' >". $txt."</button>";
                     $ret.="</div>";
 
                 }

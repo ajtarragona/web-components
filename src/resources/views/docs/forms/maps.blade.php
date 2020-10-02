@@ -76,6 +76,12 @@
                         <p>Activa l'animació d'aparició dels marcadors. Per defecte <code>false</code></p>
                     </td>
                 </tr>
+                <tr>
+                    <td><code>color</code></td>
+                    <td>
+                        <p>Dels estils bootstrap (success, warning, etc.). Serà el color de la caixa de cerca o el botó d'afegir marcadors.</p>
+                    </td>
+                </tr>
 
                 <tr>
                     <td><code>markers</code></td>

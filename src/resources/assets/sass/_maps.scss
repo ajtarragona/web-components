@@ -12,10 +12,13 @@
 		top: 10px;
 		z-index: 1;
 		// width:auto;
-		width: calc(100% - 75px);
 		box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.1);//$box-shadow-sm;
 		background: #fff;
-		
+		width: auto;
+
+		&.with-search{
+			width: calc(100% - 75px);
+		}
 		.form-group{
 			margin-bottom: 0px;
 			
