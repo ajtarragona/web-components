@@ -35,6 +35,8 @@ class Checkbox extends FormControl
         if($this->options){
             
             $ret.="<div class='checkbox-group px-3 pb-3 ". ($this->horizontal?'input-group':'') . "' id='".$this->getAttribute("id")."' >";
+            if($this->renderhelper) $ret.="<input type='hidden' name='".$this->getAttribute("name")."' value='' />";
+
         }else{
             $datacolor="";
             $color="";
