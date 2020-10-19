@@ -286,6 +286,7 @@ function tgnFormClass(obj,options){
                     $.each($form.serializeArray(), function(i, field) {
 
                         var campo = $form.find("[name='"+field.name+"']");
+                        if(campo.length==0) campo= $form.find("[name^='"+key+"']");//empieza por, para campos multiples []
                         var closestfather = campo.closest('.form-group');
                         var fathers = campo.parents('.form-group');
                         //al(campo);
@@ -313,6 +314,7 @@ function tgnFormClass(obj,options){
                     	}
                     	//al(key);
                         var campo = $form.find("[name='"+key+"']");
+                        if(campo.length==0) campo= $form.find("[name^='"+key+"']");//empieza por, para campos multiples []
                         
                         var fathers = campo.parents('.form-group');
                         var closestfather = campo.closest('.form-group');
