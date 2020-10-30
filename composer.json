@@ -12,18 +12,19 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=7.0.0",
-        "laravel/framework": "^5.8.0",
-        "laravelista/ekko": "^1.5.0",
-        "kyslik/column-sortable": "^5.8.0",
+        "laravel/framework": "^6.0",
+        "laravelista/ekko": "^3.2.0",
+        "kyslik/column-sortable": "^6.0",
         "laraveles/spanish": "^1.0",
         "akaunting/language": "^1.0.5",
         "imliam/laravel-env-set-command": "^1.0.0",
         "mariuzzo/laravel-js-localization": "^1.4.0",
         "tremby/laravel-git-version": "^1.1.0",
-        "tightenco/ziggy": "^0.7.0",
+        "tightenco/ziggy": "^0.9.0",
         "adldap2/adldap2-laravel": "^6.0",
-        "laravel/passport": "^7.1",
-        "meyfa/php-svg": "^0.9.1"
+        "laravel/passport": "^9.3.2",
+        "meyfa/php-svg": "^0.9.1",
+        "laravel/helpers": "^1.0"
         
     },
     "autoload": {
