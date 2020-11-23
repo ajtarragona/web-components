@@ -12,7 +12,7 @@
     "geolocate"=>false,
     'maptype'=>'hybrid'
 ])
-
+ --}}
 
 @gmap([
     "zoom" =>12,
@@ -28,6 +28,7 @@
     "helptext"=>"lalala",
     "readonly"=>true,
     "fitbounds"=>true,
+    "show-infobox" =>true,
     "value"=>
         [
             "name"=>"Avinguda 'Prat de la Riba",
@@ -39,7 +40,7 @@
         ]
     
     
-]) --}}
+])
 
 
 @gmap([

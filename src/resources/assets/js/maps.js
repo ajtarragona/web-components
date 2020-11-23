@@ -22,6 +22,7 @@ $.widget( "ajtarragona.tgnMap", {
     method:'get',
     url:false,
     customicons:false,
+    showInfobox: false,
     controls : {
       zoom: true,
       mapType: false,
@@ -462,7 +463,14 @@ $.widget( "ajtarragona.tgnMap", {
     
     
     
-    if(infobox) marker.infobox=infobox;
+    if(infobox){
+      marker.infobox=infobox;
+      // al('show',o.options);
+      if(o.options.showInfobox){
+        o._showInfo(marker, infobox);
+      }
+    }
+
     
     // al("position",marker.getPosition());
     o.bounds.extend(marker.getPosition());
@@ -677,6 +685,9 @@ $.widget( "ajtarragona.tgnMap", {
     
   },
 
+  value : function(){
+    return this.$forminput.val();
+  },
   _updateValue : function(settings){
       //  al('updateValue');
       if(this._isReadonly()) return;
