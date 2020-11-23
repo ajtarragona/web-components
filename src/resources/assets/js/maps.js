@@ -248,7 +248,8 @@ TgnMapClass = function(obj,options){
   this.markerClusterer=null;
   this.bounds=null;
   
-  
+  this.initialized=false;
+
 
   this.settings=tgnmapdefaults;
   if(options) this.settings = $.extend(true, {}, this.settings, options); 
@@ -422,7 +423,7 @@ TgnMapClass = function(obj,options){
   this.addMarker = function(coords,name,infobox,id,color,icon,iconcolor){
     var o=this;
 
-    al("addMarker ");
+    // al("addMarker ");
     // al(coords);
     // al(marker);
     var id = id ? id : o.uniqueId();
@@ -507,7 +508,7 @@ TgnMapClass = function(obj,options){
     
     
     marker.addListener('drag', function() {
-      al("DRAG");
+      // al("DRAG");
       if(this.customicon){
         this.customicon.setPosition(this.position);
       }
@@ -605,7 +606,7 @@ TgnMapClass = function(obj,options){
   }
 
   this.init = function(){
-    //al("initMap");
+    al("initMap");
     var o=this;
 
     this.$coordsdisplay=this.$element.closest('.map-container').find('.coords-display');
@@ -671,9 +672,12 @@ TgnMapClass = function(obj,options){
     if(this.settings.geolocate){
       this.geoLocate(function(){
         o.initAll();
+        if(!o.settings.url) o.initialized=true;
+        
       });
     }else{
         o.initAll();
+        if(!o.settings.url) o.initialized=true;
     }
 
     if(this.settings.url){
@@ -689,7 +693,7 @@ TgnMapClass = function(obj,options){
     }
 
 
-
+    
     
 
   }
@@ -698,7 +702,7 @@ TgnMapClass = function(obj,options){
   this.lookForClusteredMarkers= function(e){
     if(!this.settings.customicons) return;
 
-    al('lookForClusteredMarkers');
+    // al('lookForClusteredMarkers');
     // al(this.markerClusterer);
     var clusters = this.markerClusterer.getClusters(); // use the get clusters method which returns an array of objects
     // al(clusters);
@@ -720,7 +724,7 @@ TgnMapClass = function(obj,options){
 
   this.loadAjaxMarkers= function(e){
     var o=this;
-
+    // al('loadAjaxMarkers');
     var params   =   {
       maxlat : o.gmap.getBounds().getNorthEast().lat(),
       maxlng  : o.gmap.getBounds().getNorthEast().lng(),
@@ -747,7 +751,7 @@ TgnMapClass = function(obj,options){
           dataType: 'json',
           success: function(data){
             o.$element.closest('.map-container').stopLoading();
-
+            // al('end loadAjaxMarkers');
             if(data){
               $.each(data,function(key, marker){
                 // al(marker);
@@ -768,9 +772,11 @@ TgnMapClass = function(obj,options){
                 }
               });
             }
+            o.initialized=true;
           },
           error: function(xhr){
             o.$element.closest('.map-container').stopLoading();
+            o.initialized=true;
           
           }
       });
@@ -857,7 +863,7 @@ TgnMapClass = function(obj,options){
   }
 
   this.updateValue = function(settings){
-        
+      //  al('updateValue');
       if(this.isReadonly()) return;
       
       var value=[];
@@ -889,7 +895,11 @@ TgnMapClass = function(obj,options){
         }
       }
       this.$forminput.val(JSON.stringify(value));
-     
+      if(this.initialized){
+        // al("CHANGED");
+        this.$forminput.trigger('change');
+
+      }
       
   }
 
