@@ -32,7 +32,7 @@ class Radio extends FormControl
 
         if($this->options){
             
-            $ret.="<div class='checkbox-group p-3 ". ($this->horizontal?'input-group':'') . "' id='".$this->getAttribute("id")."' >";
+            $ret.="<div class='checkbox-group pt-1 px-3 pb-3 ". ($this->horizontal?'input-group':'') . "' id='".$this->getAttribute("id")."' >";
         }else{
 
             $ret.="<div class='custom-control ".($this->switch?"custom-switch":"custom-radio")." ". $this->color. "'>";
