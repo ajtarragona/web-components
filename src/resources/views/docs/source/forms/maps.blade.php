@@ -51,7 +51,7 @@
     "animation" => true,
     "cluster" => true,
     "fitbounds" => true,
-    "customicons"=>true,
+    // "customicons"=>true,
     "inputicon" => "search",
     "color"=>"success",
     "markers"=>[

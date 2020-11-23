@@ -5,275 +5,182 @@ var MarkerClusterer = require("@google/markerclustererplus");
 
 // var MAPS=[];
 
+$.widget( "ajtarragona.tgnMap", {
 
-var tgnmapdefaults = {
-  center : {lat:0, lng:0},
-  zoom: 15,
-  geolocate: true,
-  multiple:false,
-  readonly:false,
-  disabled:false,
-  animation:false,
-  cluster:true,
-  fitbounds:false,
-  clusterMinZoom: 15,
-  mapType: 'roadmap',
-  method:'get',
-  url:false,
-  customicons:false,
-  controls : {
-    zoom: true,
-    mapType: false,
-    scale: false,
-    streetView: false,
-    rotate: false,
-    fullscreen: true,
+  options : {
+    center : {lat:0, lng:0},
+    zoom: 15,
+    geolocate: true,
+    multiple:false,
+    readonly:false,
+    disabled:false,
+    animation:false,
+    cluster:true,
+    fitbounds:false,
+    clusterMinZoom: 15,
+    mapType: 'roadmap',
+    method:'get',
+    url:false,
+    customicons:false,
+    controls : {
+      zoom: true,
+      mapType: false,
+      scale: false,
+      streetView: false,
+      rotate: false,
+      fullscreen: true,
+
+    },
+    theme: 
+      [
+    
+        {
+          featureType: "poi",
+          stylers: [
+            {
+              visibility: "off"
+            }
+          ]
+        },
+        {
+          featureType: "transit",
+          stylers: [
+            {
+              visibility: "off"
+            }
+          ]
+        }
+    ]
+      
+  },
+
+  markers : [],
+  initialized: false,
+  
+  _init: function() {
+    var o=this;
+    al("init() tgnMap");
+    
+    this.options = $.extend({}, this.options, this.element.data()); 
+    // al(obj);
+    this.currentId=0;
+    this.initialized=false;
+
+    this.id=this.element.attr("id");
+   
+
+    // if(options) this.options = $.extend(true, {}, this.options, options); 
+  
+    if(this.options.url) this.options.fitbounds=false;
+
+
+    // al("initMap");
+
+
+    this.$coordsdisplay=this.element.closest('.map-container').find('.coords-display');
+
+    this.$autocompleteinput=$('[type=text][data-map="#'+this.id+'"]');
+    if(this.$autocompleteinput.length>0)
+      this.autocompleteinput = this.$autocompleteinput[0];
+    
+    this.$addmarkerbtn=$('button.add-marker-btn[data-map="#'+this.id+'"]');
+    if(this.$addmarkerbtn.length>0)
+      this.addmarkerbtn = this.$addmarkerbtn[0];
+    
+    this.$forminput=$('[data-value][data-map="#'+this.id+'"]');
+    if(this.$forminput.length>0)
+      this.forminput = this.$forminput[0];
+    
+    // this.initValue();
+
+
+
+  
+    //al(this.forminput);
+   
+
+    if(this.element.data("center")){
+      var center=this.element.data("center");
+      center=center.split(",");
+      this.setCenter({lat: parseFloat(center[0]), lng: parseFloat(center[1])});
+
+    }  
+  
+
+    this.gmap = new google.maps.Map(this.element[0], {
+        center: this.options.center,
+        zoom: this.options.zoom,
+        mapTypeId: this.options.mapType,
+        zoomControl: this.options.controls.zoom,
+        mapTypeControl: this.options.controls.mapType,
+        mapTypeControlOptions: {
+          // style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+          position: google.maps.ControlPosition.LEFT_BOTTOM,
+          mapTypeIds: ['roadmap', 'satellite','hybrid','terrain']
+        },
+        scaleControl: this.options.controls.scale,
+        streetViewControl: this.options.controls.streetView,
+        rotateControl: this.options.controls.rotate,
+        fullscreenControl: this.options.controls.fullscreen,
+        styles: this.options.theme
+    });
+
+    if(this.options.height) this.element.css('height',this.options.height);
+
+
+    this.infoWindow = new google.maps.InfoWindow({
+        map: this.gmap
+    });
+
+    this.$addmarkerbtn.on('click',function(){
+      o.addMarker(o.gmap.getCenter());
+    });
+    
+
+    if(this.options.geolocate){
+      this._geoLocate(function(){
+        o._initAll();
+        if(!o.options.url) o.initialized=true;
+        
+      });
+    }else{
+        o._initAll();
+        if(!o.options.url) o.initialized=true;
+    }
+
+    if(this.options.url){
+     
+      google.maps.event.addListener(this.gmap, 'idle', function() {
+        o._loadAjaxMarkers();
+      });
+
+      // google.maps.event.addListener(this.gmap, 'zoom_changed', function() {
+      //   o.loadAjaxMarkers();
+      // });
+      
+    }
+
 
   },
-  theme: 
-    [
-  
-      {
-        featureType: "poi",
-        stylers: [
-          {
-            visibility: "off"
-          }
-        ]
-      },
-      {
-        featureType: "transit",
-        stylers: [
-          {
-            visibility: "off"
-          }
-        ]
-      }
-  ]
-    
-};
 
-    // {
-    //     "elementType": "geometry",
-    //     "stylers": [
-    //       {
-    //         "color": "#f5f5f5"
-    //       }
-    //     ]
-    //   },
-    //   {
-    //     "elementType": "labels.icon",
-    //     "stylers": [
-    //       {
-    //         "visibility": "off"
-    //       }
-    //     ]
-    //   },
-    //   {
-    //     "elementType": "labels.text.fill",
-    //     "stylers": [
-    //       {
-    //         "color": "#616161"
-    //       }
-    //     ]
-    //   },
-    //   {
-    //     "elementType": "labels.text.stroke",
-    //     "stylers": [
-    //       {
-    //         "color": "#f5f5f5"
-    //       }
-    //     ]
-    //   },
-    //   {
-    //     "featureType": "administrative.land_parcel",
-    //     "elementType": "labels.text.fill",
-    //     "stylers": [
-    //       {
-    //         "color": "#bdbdbd"
-    //       }
-    //     ]
-    //   },
-    //   {
-    //     "featureType": "poi",
-    //     "elementType": "geometry",
-    //     "stylers": [
-    //       {
-    //         "color": "#eeeeee"
-    //       }
-    //     ]
-    //   },
-    //   {
-    //     "featureType": "poi",
-    //     "elementType": "labels.text.fill",
-    //     "stylers": [
-    //       {
-    //         "color": "#757575"
-    //       }
-    //     ]
-    //   },
-    //   {
-    //     "featureType": "poi.park",
-    //     "elementType": "geometry",
-    //     "stylers": [
-    //       {
-    //         "color": "#e5e5e5"
-    //       }
-    //     ]
-    //   },
-    //   {
-    //     "featureType": "poi.park",
-    //     "elementType": "labels.text.fill",
-    //     "stylers": [
-    //       {
-    //         "color": "#9e9e9e"
-    //       }
-    //     ]
-    //   },
-    //   {
-    //     "featureType": "road",
-    //     "elementType": "geometry",
-    //     "stylers": [
-    //       {
-    //         "color": "#ffffff"
-    //       }
-    //     ]
-    //   },
-    //   {
-    //     "featureType": "road.arterial",
-    //     "elementType": "labels.text.fill",
-    //     "stylers": [
-    //       {
-    //         "color": "#757575"
-    //       }
-    //     ]
-    //   },
-    //   {
-    //     "featureType": "road.highway",
-    //     "elementType": "geometry",
-    //     "stylers": [
-    //       {
-    //         "color": "#dadada"
-    //       }
-    //     ]
-    //   },
-    //   {
-    //     "featureType": "road.highway",
-    //     "elementType": "labels.text.fill",
-    //     "stylers": [
-    //       {
-    //         "color": "#616161"
-    //       }
-    //     ]
-    //   },
-    //   {
-    //     "featureType": "road.local",
-    //     "elementType": "labels.text.fill",
-    //     "stylers": [
-    //       {
-    //         "color": "#9e9e9e"
-    //       }
-    //     ]
-    //   },
-    //   {
-    //     "featureType": "transit.line",
-    //     "elementType": "geometry",
-    //     "stylers": [
-    //       {
-    //         "color": "#e5e5e5"
-    //       }
-    //     ]
-    //   },
-    //   {
-    //     "featureType": "transit.station",
-    //     "elementType": "geometry",
-    //     "stylers": [
-    //       {
-    //         "color": "#eeeeee"
-    //       }
-    //     ]
-    //   },
-    //   {
-    //     "featureType": "water",
-    //     "elementType": "geometry",
-    //     "stylers": [
-    //       {
-    //         "color": "#c9c9c9"
-    //       }
-    //     ]
-    //   },
-    //   {
-    //     "featureType": "water",
-    //     "elementType": "labels.text.fill",
-    //     "stylers": [
-    //       {
-    //         "color": "#9e9e9e"
-    //       }
-    //     ]
-    //   },
-
-
-
-TgnMapClass = function(obj,options){
-
-  this.currentId = 0;
-
-  this.uniqueId = function() {
+  _uniqueId : function() {
     return ++this.currentId;
-  }
- 
-  //al(obj);
-  this.$element=obj;
-  this.id=obj.attr("id");
- 
-  this.$autocompleteinput=false;
-  this.autocompleteinput=false;
-
-  this.$addmarkerbtn=false;
-  this.addmarkerbtn=false;
-  
-  this.$forminput=false;
-  this.forminput=false;
-
-  this.$coordsdisplay=false;
-  this.gmap=false;
-  this.infoWindow=false;
-
-  this.autocomplete=false;
-  this.geoposition=false;
-
-  this.markers={};
-  
-  // this.value=false;
-  this.markerClusterer=null;
-  this.bounds=null;
-  
-  this.initialized=false;
-
-
-  this.settings=tgnmapdefaults;
-  if(options) this.settings = $.extend(true, {}, this.settings, options); 
-
-  if(this.settings.url) this.settings.fitbounds=false;
-
-  // al(this.$element.data('styles'));
-  al("init() tgnMap");
-  // al(this.settings);
+  },
  
 
-  this.setCenter = function(center){
+  setCenter :  function(center){
     //al('setCenter');
-    this.settings.center=center;
+    this.options.center=center;
     if(this.gmap) this.gmap.setCenter(center);
-  }
+  },
 
 
-  this.hideInfo = function(){
+  _hideInfo : function(){
     var o=this;
     o.infoWindow.close();
-  }
+  },
   
-  this.isURL = function(str) {
+  _isURL : function(str) {
     var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
     '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|'+ // domain name
     '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
@@ -281,10 +188,10 @@ TgnMapClass = function(obj,options){
     '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
     '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
     return pattern.test(str);
-  }
+  },
 
   
-  this.loadInfobox = function(url,marker){
+  _loadInfobox : function(url,marker){
     var o=this;
     o.infoWindow.open(o.map,marker);
 
@@ -306,41 +213,42 @@ TgnMapClass = function(obj,options){
         o.infoWindow.setContent('<div class="alert alert-danger mb-0">'+___("strings.loaderror")+'</div>');
       }
     });
-  }
+  },
 
-  this.showInfo = function(marker,content){
+
+  _showInfo : function(marker,content){
     var o=this;
     // al('showInfo',content);
-    if(o.isURL(content)){
-        o.loadInfobox(content,marker);
+    if(o._isURL(content)){
+        o._loadInfobox(content,marker);
         
     }else{
       o.infoWindow.setContent(content);
       o.infoWindow.open(o.map,marker);
     }
       
-  }
+  },
 
-  this.initMarkers = function(){
+  _initMarkers : function(){
     // al('initMarkers');
     var o=this;
  
     o.bounds = new google.maps.LatLngBounds();
 
-    //al(this.settings.markers);
+    //al(this.options.markers);
     // al()
-    if(this.settings.cluster){
+    if(this.options.cluster){
       this.markerClusterer = new MarkerClusterer(o.gmap, [], {
         imagePath: baseUrl()+'/vendor/ajtarragona/img/mapcluster/m'
       });
 
 
-      this.markerClusterer.setMaxZoom(o.settings.clusterMinZoom);
+      this.markerClusterer.setMaxZoom(o.options.clusterMinZoom);
 
       
      //toggle Clustered 
       google.maps.event.addListener(this.markerClusterer, 'clusteringend', function() {
-          o.lookForClusteredMarkers();
+          o._lookForClusteredMarkers();
       });
     }
 
@@ -356,9 +264,9 @@ TgnMapClass = function(obj,options){
 
 
     // al(o.markerClusterer);
-    if(!this.settings.multiple){
-        if(this.settings.markers.length>0){
-          var tmpmarker=this.settings.markers[0];
+    if(!this.options.multiple){
+        if(this.options.markers.length>0){
+          var tmpmarker=this.options.markers[0];
           if(tmpmarker.location){
             this.addMarker(
               tmpmarker.location, 
@@ -374,8 +282,8 @@ TgnMapClass = function(obj,options){
         }
     }else{
       // var markers=[];
-      for(var i in this.settings.markers){
-        var tmpmarker=this.settings.markers[i];
+      for(var i in this.options.markers){
+        var tmpmarker=this.options.markers[i];
         if(tmpmarker.location){
           this.addMarker(
             tmpmarker.location, 
@@ -393,7 +301,7 @@ TgnMapClass = function(obj,options){
 
   // al(this.markers);
 
-    if(o.settings.fitbounds){
+    if(o.options.fitbounds){
       o.gmap.fitBounds(o.bounds);
       //aleja un poco si es demasiado cercano
       var listener = google.maps.event.addListener(o.gmap, "idle", function() { 
@@ -411,29 +319,29 @@ TgnMapClass = function(obj,options){
 
     //al(bounds);
 
-  }
+  },
 
  
 
-  this.isReadonly = function(){
-    return this.settings.readonly || this.settings.disabled;
-  }
+  _isReadonly : function(){
+    return this.options.readonly || this.options.disabled;
+  },
 
 
-  this.addMarker = function(coords,name,infobox,id,color,icon,iconcolor){
+  addMarker : function(coords,name,infobox,id,color,icon,iconcolor){
     var o=this;
 
     // al("addMarker ");
     // al(coords);
     // al(marker);
-    var id = id ? id : o.uniqueId();
+    var id = id ? id : o._uniqueId();
     if(o.markers[id]) return;
     // al("addMarker " + id);
     // al("markers",o.markers);
 
     
 
-    if(!this.settings.multiple) this.deleteMarkers();
+    if(!this.options.multiple) this.deleteMarkers();
 
 
     var marker = null;
@@ -445,8 +353,8 @@ TgnMapClass = function(obj,options){
     //     this.gmap,
     //     {
     //       color: color,
-    //       draggable: !this.isReadonly(),
-    //       animation: this.settings.animation?google.maps.Animation.DROP:false,
+    //       draggable: !this._isReadonly(),
+    //       animation: this.options.animation?google.maps.Animation.DROP:false,
     //       icon: icon,
     //     }
     //   );
@@ -457,13 +365,13 @@ TgnMapClass = function(obj,options){
       // al("markerurl",imgurl);
       var markerargs={
         position: coords, 
-        draggable: !this.isReadonly(),
-        animation: this.settings.animation?google.maps.Animation.DROP:false,
+        draggable: !this._isReadonly(),
+        animation: this.options.animation?google.maps.Animation.DROP:false,
         map: this.gmap,
         
       };
 
-      if(this.settings.customicons){
+      if(this.options.customicons){
         var imgurl = route('webcomponents.markerimage',{'bgcolor':color}).url();
       
         markerargs.icon= {
@@ -480,7 +388,7 @@ TgnMapClass = function(obj,options){
 
       marker = new google.maps.Marker(markerargs);
 
-      if(this.settings.customicons && icon){
+      if(this.options.customicons && icon){
         // al("icon",icon);
         // al("coords",coords);
         // al("icon",icon);
@@ -517,15 +425,15 @@ TgnMapClass = function(obj,options){
     marker.addListener('dragend', function() {
       //al("marker drooped");
       //al(this);
-      o.displayCoords(this);
-      o.updateValue();
+      o._displayCoords(this);
+      o._updateValue();
 
     });
 
 
     
     marker.addListener('rightclick', function(point) {
-      if(!o.isReadonly()){
+      if(!o._isReadonly()){
        if(this.customicon){
           // al(this.customicon);
           this.customicon.remove();
@@ -547,9 +455,9 @@ TgnMapClass = function(obj,options){
         al("marker clicked");
         // al(this);
         if(this.infobox){
-          o.showInfo(this,this.infobox);
+          o._showInfo(this,this.infobox);
         }
-        o.displayCoords(this);
+        o._displayCoords(this);
     });
     
     
@@ -561,7 +469,7 @@ TgnMapClass = function(obj,options){
     
     o.overlappingmarkers.addMarker(marker); 
 
-    if(o.settings.cluster)  o.markerClusterer.addMarker(marker);
+    if(o.options.cluster)  o.markerClusterer.addMarker(marker);
 
     // al(marker);
     //añado al array de markers
@@ -570,137 +478,44 @@ TgnMapClass = function(obj,options){
     // o.markers.push(marker);
     // al("markers  ",o.markers);
 
-    if(o.settings.fitbounds) o.setCenter(coords);
-    o.updateValue();
+    if(o.options.fitbounds) o.setCenter(coords);
+    o._updateValue();
     return marker;
-  }
+  },
 
 
 
-  this.clearMarkers = function() {
+  clearMarkers : function() {
     for ( marker of Object.values(this.markers)) {
       marker.setMap(null);
     }
-    if(this.settings.cluster) this.markerClusterer.clearMarkers();
+    if(this.options.cluster) this.markerClusterer.clearMarkers();
     
-  }
+  },
 
   // Deletes all markers in the array by removing references to them.
-  this.deleteMarker = function(marker) {
+  deleteMarker : function(marker) {
     marker.setMap(null);
     // al("Deletemarker",marker);
-    if(this.settings.cluster)  this.markerClusterer.removeMarker(marker);
+    if(this.options.cluster)  this.markerClusterer.removeMarker(marker);
     
     delete this.markers[marker.uid];
     
-    this.updateValue();
-  }
+    this._updateValue();
+  },
 
 
 
-  this.deleteMarkers= function() {
+  deleteMarkers : function() {
       this.clearMarkers();
      
       this.markers = {};
-      this.updateValue();
-  }
-
-  this.init = function(){
-    al("initMap");
-    var o=this;
-
-    this.$coordsdisplay=this.$element.closest('.map-container').find('.coords-display');
-
-    this.$autocompleteinput=$('[type=text][data-map="#'+this.id+'"]');
-    if(this.$autocompleteinput.length>0)
-      this.autocompleteinput = this.$autocompleteinput[0];
-    
-    this.$addmarkerbtn=$('button.add-marker-btn[data-map="#'+this.id+'"]');
-    if(this.$addmarkerbtn.length>0)
-      this.addmarkerbtn = this.$addmarkerbtn[0];
-    
-    this.$forminput=$('[data-value][data-map="#'+this.id+'"]');
-    if(this.$forminput.length>0)
-      this.forminput = this.$forminput[0];
-    
-    // this.initValue();
-
-
+      this._updateValue();
+  },
 
   
-    //al(this.forminput);
-   
-
-    if(this.$element.data("center")){
-      var center=this.$element.data("center");
-      center=center.split(",");
-      this.setCenter({lat: parseFloat(center[0]), lng: parseFloat(center[1])});
-
-    }  
-  
-
-    this.gmap = new google.maps.Map(this.$element[0], {
-        center: this.settings.center,
-        zoom: this.settings.zoom,
-        mapTypeId: this.settings.mapType,
-        zoomControl: this.settings.controls.zoom,
-        mapTypeControl: this.settings.controls.mapType,
-        mapTypeControlOptions: {
-          // style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-          position: google.maps.ControlPosition.LEFT_BOTTOM,
-          mapTypeIds: ['roadmap', 'satellite','hybrid','terrain']
-        },
-        scaleControl: this.settings.controls.scale,
-        streetViewControl: this.settings.controls.streetView,
-        rotateControl: this.settings.controls.rotate,
-        fullscreenControl: this.settings.controls.fullscreen,
-        styles: this.settings.theme
-    });
-
-    if(this.settings.height) this.$element.css('height',this.settings.height);
-
-
-    this.infoWindow = new google.maps.InfoWindow({
-        map: this.gmap
-    });
-
-    this.$addmarkerbtn.on('click',function(){
-      o.addMarker(o.gmap.getCenter());
-    });
-    
-
-    if(this.settings.geolocate){
-      this.geoLocate(function(){
-        o.initAll();
-        if(!o.settings.url) o.initialized=true;
-        
-      });
-    }else{
-        o.initAll();
-        if(!o.settings.url) o.initialized=true;
-    }
-
-    if(this.settings.url){
-     
-      google.maps.event.addListener(this.gmap, 'idle', function() {
-        o.loadAjaxMarkers();
-      });
-
-      // google.maps.event.addListener(this.gmap, 'zoom_changed', function() {
-      //   o.loadAjaxMarkers();
-      // });
-      
-    }
-
-
-    
-    
-
-  }
-
-  
-  this.lookForClusteredMarkers= function(e){
-    if(!this.settings.customicons) return;
+  _lookForClusteredMarkers : function(e){
+    if(!this.options.customicons) return;
 
     // al('lookForClusteredMarkers');
     // al(this.markerClusterer);
@@ -720,9 +535,9 @@ TgnMapClass = function(obj,options){
         }
       }
     }
-  }
+  },
 
-  this.loadAjaxMarkers= function(e){
+  _loadAjaxMarkers : function(e){
     var o=this;
     // al('loadAjaxMarkers');
     var params   =   {
@@ -734,7 +549,7 @@ TgnMapClass = function(obj,options){
     // al(bounds);
       // al("Bounds changed", params);
 
-      if(o.settings.method!="get"){
+      if(o.options.method!="get"){
         params._token= csrfToken();
       }
       // $target.startLoading();
@@ -742,15 +557,15 @@ TgnMapClass = function(obj,options){
       // al(o.markers);
       params.ids= Object.keys(o.markers);
       
-      o.$element.closest('.map-container').startLoading();
-      // al(o.settings.method);
+      o.element.closest('.map-container').startLoading();
+      // al(o.options.method);
       $.ajax({
-          url: o.settings.url,
-          type: o.settings.method,
+          url: o.options.url,
+          type: o.options.method,
           data: params,
           dataType: 'json',
           success: function(data){
-            o.$element.closest('.map-container').stopLoading();
+            o.element.closest('.map-container').stopLoading();
             // al('end loadAjaxMarkers');
             if(data){
               $.each(data,function(key, marker){
@@ -775,7 +590,7 @@ TgnMapClass = function(obj,options){
             o.initialized=true;
           },
           error: function(xhr){
-            o.$element.closest('.map-container').stopLoading();
+            o.element.closest('.map-container').stopLoading();
             o.initialized=true;
           
           }
@@ -788,10 +603,10 @@ TgnMapClass = function(obj,options){
       AND lng <= $maxLng
       AND lng >= $minLng"; */
 
-  }
+  },
 
 
-  this.initTextField= function(){
+  _initTextField : function(){
     var o=this;
     
     if(!this.autocompleteinput) return;
@@ -815,7 +630,7 @@ TgnMapClass = function(obj,options){
     }
 
     var circle = new google.maps.Circle({
-      center: this.settings.center,
+      center: this.options.center,
       radius: 3143
     });
   
@@ -847,24 +662,24 @@ TgnMapClass = function(obj,options){
           if(place.address_components){
             var loc={lat:place.geometry.location.lat(),lng:place.geometry.location.lng()};
               o.addMarker(loc,place.name,place.name);
-              o.updateValue();
+              o._updateValue();
           }else{
-            o.updateValue();
+            o._updateValue();
           }
 
     });
-  }
+  },
 
 
-  this.clearValue = function(settings){
+  clearValue : function(settings){
     this.markers={};
-    this.updateValue();
+    this._updateValue();
     
-  }
+  },
 
-  this.updateValue = function(settings){
+  _updateValue : function(settings){
       //  al('updateValue');
-      if(this.isReadonly()) return;
+      if(this._isReadonly()) return;
       
       var value=[];
       
@@ -886,7 +701,7 @@ TgnMapClass = function(obj,options){
       // al("UPDATE",value, this.markers);
       // al("MARKERS",this.markers);
 
-      if(!this.settings.multiple){
+      if(!this.options.multiple){
         // al("length:", Object.keys(this.markers).length);
         if(Object.keys(this.markers).length>0){
           this.$addmarkerbtn.prop('disabled',true).addClass('disabled');
@@ -901,31 +716,31 @@ TgnMapClass = function(obj,options){
 
       }
       
-  }
+  },
 
   
-  this.displayCoords= function(marker){
+  _displayCoords : function(marker){
     if(marker){
       this.$coordsdisplay.html("LAT:"+marker.position.lat()+", LNG:"+marker.position.lng());  
     }
-  }
+  },
 
 
-  this.initAll= function(){
-    // al("initAll",this.settings);
+  _initAll : function(){
+    // al("initAll",this.options);
    
-    this.initTextField();
-    // if(this.settings.url){ 
+    this._initTextField();
+    // if(this.options.url){ 
     //   this.loadAjaxMarkers();
     // }
-    if(this.settings.markers){
-      this.initMarkers();
+    if(this.options.markers){
+      this._initMarkers();
     }
 
-  }
+  },
 
 
-  this.geoLocate = function(callback){
+  _geoLocate : function(callback){
     var o = this;
     //al("Geolocating");
     // Try HTML5 geolocation.
@@ -941,20 +756,20 @@ TgnMapClass = function(obj,options){
         executeCallback(callback);  
 
       }, function() {
-        o.handleLocationError(true);
+        o._handleLocationError(true);
       });
     } else {
       // Browser doesn't support Geolocation
-      o.handleLocationError(false);
+      o._handleLocationError(false);
     }
 
-  }
+  },
 
 
 
 
 
-  this.handleLocationError = function(browserHasGeolocation) {
+  _handleLocationError : function(browserHasGeolocation) {
       var o = this;
       o.infoWindow.setContent(browserHasGeolocation ?
           'Error: The Geolocation service failed.' :
@@ -966,18 +781,4 @@ TgnMapClass = function(obj,options){
 
 
 
-}
-
- 
-$.fn.tgnMap = function( options ){
-  
-  return this.each(function(){
-    var obj=$(this);
-    obj.settings={};
-    if(obj.data()) obj.settings = $.extend(true, {}, obj.settings, obj.data()); 
-    var map=new TgnMapClass(obj, obj.settings);
-    map.init();
-
-  });
-};
-
+});
