@@ -39,7 +39,7 @@
 								])
 							@input([
 								'container'=>true, 
-								'icon'=>'lock', 
+								'icon'=>'key', 
 								'type'=>'password', 
 								'name'=>'password', 
 								'placeholder'=>__("tgn::auth.password"),

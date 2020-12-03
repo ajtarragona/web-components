@@ -326,11 +326,12 @@ $.widget( "ajtarragona.tgnSelectPicker", {
               o.load();
             }else{
               o.refresh();
+              
             }
             
             //al("INITIALIZED");
             $(this).trigger( "tgnselect:init", {element: $(this) });
-            $(this).trigger( "tgnselect:change", {element: $(this)});
+            // $(this).trigger( "tgnselect:change", {element: $(this)});
           
 
        });

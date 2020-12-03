@@ -3,6 +3,7 @@
 if (! function_exists('isJson')) {
 	function isJson($string) {
 	 	try{
+			if(!is_string($string)) return false;
 			$ret=json_decode($string);
 			if(!is_array($ret) && !is_object($ret)) return false; //es un tipo simple
 			 

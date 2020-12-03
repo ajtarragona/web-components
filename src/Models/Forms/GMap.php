@@ -62,8 +62,8 @@ class GMap extends FormControl
             $markers=[];
             $center=0;
             foreach($this->getMarkers() as $marker){
-                if(is_object($marker)) $marker=to_array($marker);
-
+                $marker=to_array($marker);
+                
                 $center= $marker["location"]["lat"].",".$marker["location"]["lng"];
                 $markers[]=$center;
             }
@@ -238,6 +238,7 @@ class GMap extends FormControl
         if($this->markers){
             // dump($this->markers);
             foreach($this->markers as $i=>$marker){
+                $marker=to_array($marker);
                 if(isset($marker["name"])) $this->markers[$i]["name"]=str_replace("'","&apos;",$this->markers[$i]["name"]);
                 if(isset($marker["infobox"])) $this->markers[$i]["infobox"]=str_replace("'","&apos;",$this->markers[$i]["infobox"]);
             }
