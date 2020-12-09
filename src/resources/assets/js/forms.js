@@ -236,10 +236,13 @@ function tgnFormClass(obj,options){
 
 		     //focus groups
 		     $form.on('focus',':input:not(.btn)',function(e){
-				var group=$(this).closest('.form-group');
-		     	if(!group.is(".disabled"))
-		     		group.addClass('focused');
+				if(!($(this).is(':checkbox') || $(this).is(':radio'))){
+					var group=$(this).closest('.form-group');
+					if(!group.is(".disabled"))
+						group.addClass('focused');
+				}
 		     }).on('blur',':input:not(.btn)',function(){
+				 
 		     	var group=$(this).closest('.form-group');
 		     	if(!group.is(".disabled"))
 		     		group.removeClass('focused');
