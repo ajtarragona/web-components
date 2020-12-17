@@ -1,16 +1,18 @@
 <h1 class="display-4">Icones</h1>
 <p class="lead">
-	Podem crear icones Fontawesome amb la directiva <mark><code>&commat;icon</code> </mark>
+	Podem crear icones Fontawesome o Bootstrap amb la directiva <mark><code>&commat;icon</code> </mark>
 	<br/>També disposem de la directiva <mark><code>&commat;circleicon</code> </mark>
 </p>
 <p><a href="https://fontawesome.com/icons?d=gallery&m=free" target="_blank">@icon('external-link-alt')  Documentació sobre icones Fontawesome</a></p>
+<p><a href="https://icons.getbootstrap.com/" target="_blank">@icon('external-link-alt')  Documentació sobre icones Bootstrap</a></p>
 
 <hr class="big"/>
 
 @row
 	
 	@col(['size'=>6])
-		<p>En aquest cas el primer paràmetre és el nom de la icona Fontawesome. Podem excloure el prefix <code>fa-</code>.</p>
+		<p>En aquest cas el primer paràmetre és el nom de la icona. Si incloem el prefix <code>bi-</code> s'utilitzaran icones Bootstrap. </p>
+		<p>Si no fem servir prefix o bé fem servir el prefix <code>fa-</code>, es faran servir les icones Fontawesome.</p>
 		<p>El segon paràmetre és un array d'arguments.</p>
 		<table class="table table-sm">
 			<thead>

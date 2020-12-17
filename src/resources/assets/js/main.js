@@ -1,6 +1,6 @@
 
 $.fn.tgnInitAll = function( ){
-  al('tgnInitAll');
+  al('tgnInitAll', this);
   
   this.find(".tgn-modal-opener").tgnModal();
   this.find('.tgn-nav').tgnNav()

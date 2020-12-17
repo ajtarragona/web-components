@@ -42,28 +42,32 @@ class Icon Extends WebComponent
 		$classes=[];
     	$cssstyle=[];
 
-    	$type="fas";
-		$attrs="";
+    	
+		$type="";
+
+		//Si no empieza con bi- asumo que es fontawesome
+		//Si no, es bootstrap icon
+		if(!starts_with($this->iconname, 'bi-')){
+
+			$type="fas";
 		
 
+			$tmp=explode(" ",$this->iconname);
 
-		$tmp=explode(" ",$this->iconname);
+			if(count($tmp)==2){
+				$type=$tmp[0];
+				$this->iconname=$tmp[1];
+			}	
+			if(!starts_with($this->iconname,"fa-")) $this->iconname="fa-".$this->iconname;
 
-		if(count($tmp)==2){
-			$type=$tmp[0];
-			$this->iconname=$tmp[1];
+
+
+			//estilo del icono fontawesome
+			$styles=["fas","far","fal","fab"];
+			if(isset($this->attributes["type"]) && in_array($this->attributes["type"], $styles)){
+				$type=$this->attributes["type"];
+			}
 		}
-
-		if(!starts_with($this->iconname,"fa-")) $this->iconname="fa-".$this->iconname;
-
-
-
-		//estilo del icono fontawesome
-		$styles=["fas","far","fal","fab"];
-		if(isset($this->attributes["type"]) && in_array($this->attributes["type"], $styles)){
-			$type=$this->attributes["type"];
-		}
-
 
 		
 		//color del icono
