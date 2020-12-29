@@ -45,13 +45,29 @@ class Select extends FormControl
     }
 
     
+    protected function renderOptions($options){
+        $ret="";
+        if($options){
+            foreach($options as $key=>$value){
+                if(is_array($value) && $value){
+                    $ret.="<optgroup label='{$key}'>";
+                    $ret.=$this->renderOptions($value);
+                    $ret.="</optgroup>";
+                }else{
+                    if(is_null($value)) $ret.='<option data-divider="true"></option>';
+                    else $ret.="<option value='{$key}' ".(in_array($key,$this->selected)?'selected':'').">{$value}</option>";
+                }
+            }
+        }
+        return $ret;
+    }
+
+
     public function bodyHook(){
         $ret="";
         
         if($this->options){
-            foreach($this->options as $key=>$value){
-                $ret.="<option value='{$key}' ".(in_array($key,$this->selected)?'selected':'').">{$value}</option>";
-            }
+            $ret.=$this->renderOptions($this->options);
         }
         return $ret;
 	}

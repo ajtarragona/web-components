@@ -15,6 +15,47 @@
 	]
 ) 
 		
+
+		
+@select(
+	[
+		'label'=>'With groups', 
+		'name'=>'campo_select_groups',
+		'placeholder'=>'Choose item...',
+		'options'=>[
+			
+			"val3" =>"Valor3",
+			"Grup 1" => [
+				"val1" =>"Valor1",
+				"val2" =>"Valor2",
+			],
+			"Grup 3" => [
+				"val4" =>"Valor4",
+				"val5" =>"Valor5",
+			]
+		], 
+	]
+) 
+
+
+	
+@select(
+	[
+		'label'=>'With divider', 
+		'name'=>'campo_select_divider',
+		'placeholder'=>'Choose item...',
+		'options'=>[
+			"val1" =>"Valor1",
+			"val2" =>"Valor2",
+			"valorr" => null,
+			"val3" =>"Valor3",
+			"val4" =>"Valor4",
+			"val5" =>"Valor5",
+		
+		], 
+	]
+) 
+
 @select(
 	[
 		'label'=>'Sidelabel', 
@@ -112,7 +153,7 @@
 		'label'=>'Ajax select multiple', 
 		'name'=>'campo_select_ajax_multi',
 		'placeholder'=>'Choose ajax item...',
-		'url'=> route('webcomponents.combo'),
+		'url'=> route('webcomponents.combogroups'),
 		'selected'=>[5,6,10,20],
 		'multiple' =>true,
 		'required'=>false,

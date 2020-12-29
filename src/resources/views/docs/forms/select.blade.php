@@ -20,7 +20,11 @@
 			<tbody>
 				<tr>
 					<td><code>options</code></td>
-					<td>Array de valors del select.</td>
+					<td>
+						Array de valors del select. <br/>
+						Pots afegir divisors posant a null el valor.<br/>
+						Pots fer grups d'opcions anidant arrays. Es farà servir la clau de l'array com a label del grup.
+					</td>
 				</tr>
 				<tr>
 					<td><code>multiple</code></td>
@@ -62,7 +66,12 @@
 
 				<tr>
 					<td><code>url</code></td>
-					<td>Si passem una url es carregaran els valors per ajax. La url ha de retornar un array d'objectes en format JSON amb els atributs <code>value</code> i <code>name</code>.</td>
+					<td>Si passem una url es carregaran els valors per ajax. <br/>
+						La url ha de retornar un array d'objectes en format JSON amb els atributs <code>value</code> i <code>name</code>.<br/>
+						Si l'objecte té l'atribut <code>divider</code> aquest serà un divisor.<br/>
+						Si <code>value</code> és un array, s'interpretarà que és un optiongroup.
+
+					</td>
 				</tr>
 				
 				

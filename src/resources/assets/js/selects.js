@@ -80,21 +80,56 @@ $.widget( "ajtarragona.tgnSelectPicker", {
       return url;
     },
 
-    
-
-    addOption: function( value, name, content ) {
+    _makeOption: function( value, name, content ) {
+      // al('_makeOption '+name,value );
         var o=this;
         var $option=$("<option/>");
         $option.val(value);
         $option.append(name);
-        
         if(($.inArray(value, o.options.value)>=0) || ($.inArray(""+value, o.options.value)>=0) || $.inArray(parseInt(value), o.options.value)>=0 ) $option.attr("selected",true);
         if(content) $option.data("content",content);
-        
-        o.element.append($option);
+        return $option;
+    },
+
+    _makeOptionDivider: function( ) {
+        var $option=$("<option/>");
+        $option.attr('data-divider',true);
+        return $option;
         
         
     },
+
+    addOptionGroup: function( label, options ) {
+      // al('addOptionGroup',label);
+      var o=this;
+      var $group=$("<optgroup/>");
+      $group.attr('label',label);
+      for(var i in options){
+        var option=options[i];
+        if(option.divider){
+          $option=o._makeOptionDivider();
+        }else{
+          $option=o._makeOption(option.value, option.name);
+        }
+        $group.append($option);
+      }
+      o.element.append($group);
+    },
+    
+    addDivider: function( ) {
+      // al('addDivider');
+      var o=this;
+      var $option=o._makeOptionDivider();
+      o.element.append($option);
+    },
+    
+    addOption: function( value, name, content ) {
+        var o=this;
+        var $option=o._makeOption(value, name, content);
+       
+        o.element.append($option);
+    },
+    
 
     removeOption: function( value ) {
       if(this.element.find('option[value="'+value+'"]').length>0){
@@ -133,9 +168,21 @@ $.widget( "ajtarragona.tgnSelectPicker", {
           if(data){
             // al(data);
             // al(o.options);
-            $(data).each(function(){
-              o.addOption(this.value,this.name);
-            });
+            for( var index in data){
+            // $(data).each(function(index){
+              var opt=data[index];
+              // al(index, opt);
+              if($.isArray(opt)){
+                o.addOptionGroup(index, opt);
+              }else{
+                if(opt.divider){
+                  o.addDivider();
+                }else{
+                  o.addOption(opt.value, opt.name);
+                }
+              }
+            }
+            // });
             o.refresh();
             if(o.options.value) o.value(o.options.value);
             o.element.trigger( "tgnselect:success", { element: o.element, data:data} );

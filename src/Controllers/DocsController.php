@@ -43,12 +43,22 @@ class DocsController extends Controller
        
   }
 
-  private function getTestOptions($num=10, $combo=false){
+  private function getTestOptions($num=10, $combo=false, $dividers=false){
       $faker = FakerFactory::create();
       $ret = [];
       for($i=1;$i<=$num;$i++){
-          if($combo) $ret[] = ["value"=>$i, "name" =>"Opció $i - ".$faker->name];
-          else $ret[$i] = "Opció $i";
+          if($combo){
+            $ret[] = ["value"=>$i, "name" =>"Opció $i - ".$faker->name];
+            if($dividers){
+              if(mt_rand(0,100)>90) $ret[]=["divider"=>true];
+            }
+          }else{
+            $ret[$i] = "Opció $i";
+            if($dividers){
+              if(mt_rand(0,100)>90) $ret[null]=null;
+            }
+          }
+          
       }
       return $ret;
   }
@@ -87,6 +97,15 @@ class DocsController extends Controller
     return array_values($ret->toArray());
   }
 
+
+  public function testComboGroups(Request $request){
+      return [
+        "Group 1" => $this->getTestOptions(5,true),
+        "Group 2" => $this->getTestOptions(2,true),
+        "Group 3" => $this->getTestOptions(15,true,true),
+
+      ];
+  }
 
   public function testCombo(Request $request){
     // abort(500,"Error");
