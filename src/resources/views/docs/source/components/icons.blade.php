@@ -23,17 +23,18 @@
 <h5>Bootstrap Icons</h5>
 @icon('bi-star')  Hola
 <br/>
-@icon('bi-star') 
-@icon('bi-star',['class'=>'spin','color'=>'info']) 
+@icon('bi-collection') 
+@icon('bi-collection-fill') 
+@icon('bi-collection',['class'=>'spin','color'=>'info']) 
 @icon('bi-star',['class'=>'beat','color'=>'warning']) 
 @icon('bi-star',['class'=>'bounce','color'=>'success']) 
 @icon('bi-star',['class'=>'blink','color'=>'#ff00ff']) 
 
 <hr/>
-@circleicon('bi-check',['size'=>'xs']) 
+@circleicon('bi-collection',['size'=>'xs']) 
 @circleicon('bi-check',['size'=>'sm','bg-color'=>'info','color'=>'white']) 
 @circleicon('bi-check',['size'=>'md','bg-color'=>'danger','color'=>'white']) 
 @circleicon('bi-check',['size'=>'lg','bg-color'=>'warning','color'=>'#ff0000'])  
 @circleicon('bi-check',['size'=>'xl','bg-color'=>'success','color'=>'white']) 
 @circleicon('bi-check',['size'=>'xl','bg-color'=>'white','color'=>'success']) 
-@circleicon('bi-check',['size'=>'xl','bg-color'=>'dark','color'=>'white'])
+@circleicon('bi-collection',['size'=>'xl','bg-color'=>'dark','color'=>'white'])
