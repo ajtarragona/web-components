@@ -320,5 +320,19 @@
     "multiple"=>true,
     "cluster"=>true,
     'url' => route('webcomponents.mapmarkers'),
-    'method' => 'POST'
+    'method' => 'POST',
+    'readonly'=>true
+])
+
+@gmap([
+    "name"=>"map_ajax_2",
+    "zoom"=>config('webcomponents.gmaps.default_zoom'),
+    "center" =>config('webcomponents.gmaps.tgn_coords'),
+    "geolocate"=>false,
+    "fitbounds"=>false,
+    "multiple"=>true,
+    "cluster"=>true,
+    'url' => route('webcomponents.mapmarkers'),
+    'method' => 'POST',
+    'readonly'=>true
 ])

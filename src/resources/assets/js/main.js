@@ -68,7 +68,7 @@ $('html').startLoading();
 
 onDocumentReady(function(){
 // $(document).ready(function(){
-  al("READY");
+  // al("READY");
 
   $('body').tgnInitAll();
   initSidebar();

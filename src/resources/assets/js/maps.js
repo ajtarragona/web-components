@@ -57,109 +57,138 @@ $.widget( "ajtarragona.tgnMap", {
 
   markers : [],
   initialized: false,
-  
-  _init: function() {
-    var o=this;
-    al("init() tgnMap");
-    
-    this.options = $.extend({}, this.options, this.element.data()); 
-    // al(obj);
-    this.currentId=0;
-    this.initialized=false;
+  gmap: null,
 
-    this.id=this.element.attr("id");
-   
+  _getGmap: function() {
+    if(!this.gmap){
+        this.gmap = new google.maps.Map(this.element[0], {
+            // center: this.options.center,
+            zoom: this.options.zoom,
+            mapTypeId: this.options.mapType,
+            zoomControl: this.options.controls.zoom,
+            mapTypeControl: this.options.controls.mapType,
+            mapTypeControlOptions: {
+            // style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+            position: google.maps.ControlPosition.LEFT_BOTTOM,
+            mapTypeIds: ['roadmap', 'satellite','hybrid','terrain']
+            },
+            scaleControl: this.options.controls.scale,
+            streetViewControl: this.options.controls.streetView,
+            rotateControl: this.options.controls.rotate,
+            fullscreenControl: this.options.controls.fullscreen,
+            styles: this.options.theme
+        });
+        // al('gmap',this.gmap);
+    }
+    return this.gmap;
+  },
 
-    // if(options) this.options = $.extend(true, {}, this.options, options); 
-  
-    if(this.options.url) this.options.fitbounds=false;
-
-
-    // al("initMap");
-
-
-    this.$coordsdisplay=this.element.closest('.map-container').find('.coords-display');
-
-    this.$autocompleteinput=$('[type=text][data-map="#'+this.id+'"]');
-    if(this.$autocompleteinput.length>0)
-      this.autocompleteinput = this.$autocompleteinput[0];
-    
-    this.$addmarkerbtn=$('button.add-marker-btn[data-map="#'+this.id+'"]');
-    if(this.$addmarkerbtn.length>0)
-      this.addmarkerbtn = this.$addmarkerbtn[0];
-    
-    this.$forminput=$('[data-value][data-map="#'+this.id+'"]');
-    if(this.$forminput.length>0)
-      this.forminput = this.$forminput[0];
-    
-    // this.initValue();
-
-
-
-  
-    //al(this.forminput);
-   
-
-    if(this.element.data("center")){
-      var center=this.element.data("center");
-      center=center.split(",");
-      this.setCenter({lat: parseFloat(center[0]), lng: parseFloat(center[1])});
-
-    }  
-  
-
-    this.gmap = new google.maps.Map(this.element[0], {
-        center: this.options.center,
-        zoom: this.options.zoom,
-        mapTypeId: this.options.mapType,
-        zoomControl: this.options.controls.zoom,
-        mapTypeControl: this.options.controls.mapType,
-        mapTypeControlOptions: {
-          // style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-          position: google.maps.ControlPosition.LEFT_BOTTOM,
-          mapTypeIds: ['roadmap', 'satellite','hybrid','terrain']
-        },
-        scaleControl: this.options.controls.scale,
-        streetViewControl: this.options.controls.streetView,
-        rotateControl: this.options.controls.rotate,
-        fullscreenControl: this.options.controls.fullscreen,
-        styles: this.options.theme
-    });
-
-    if(this.options.height) this.element.css('height',this.options.height);
-
-
-    this.infoWindow = new google.maps.InfoWindow({
-        map: this.gmap
-    });
-
-    this.$addmarkerbtn.on('click',function(){
-      o.addMarker(o.gmap.getCenter());
-    });
-    
-
-    if(this.options.geolocate){
-      this._geoLocate(function(){
-        o._initAll();
-        if(!o.options.url) o.initialized=true;
+  _create: function() {
+      var o=this;
         
-      });
-    }else{
-        o._initAll();
-        if(!o.options.url) o.initialized=true;
-    }
+      this.gmap=null;
+    
+      // if(this.element.is('.map-init')) return;
+  
+      this.markers=[];
+  
+      this.element.addClass('map-init');
+  
+      this.currentId=0;
+      this.initialized=false;
+  
+      this.id=this.element.attr("id");
+      this.options = $.extend({}, this.options, this.element.data()); 
 
-    if(this.options.url){
-     
-      google.maps.event.addListener(this.gmap, 'idle', function() {
-        o._loadAjaxMarkers();
-      });
-
-      // google.maps.event.addListener(this.gmap, 'zoom_changed', function() {
-      //   o.loadAjaxMarkers();
-      // });
       
-    }
+  
+      if(this.options.url) this.options.fitbounds=false;
+  
+      if(this.options.url){
+       
+          google.maps.event.addListener(this._getGmap(), 'idle', function() {
+            o._loadAjaxMarkers();
+          });
+    
+          // google.maps.event.addListener(this.gmap, 'zoom_changed', function() {
+          //   o.loadAjaxMarkers();
+          // });
+          
+        }
+     
+      
+      // this.initValue();
+  
+  
+  
+    
+      //al(this.forminput);
+     
+  
+      if(this.element.data("center")){
+        var center=this.element.data("center");
+      //   al('center',center);
+        center=center.split(",");
+      //   al(center);
+        this.setCenter({lat: parseFloat(center[0]), lng: parseFloat(center[1])});
+  
+      }  
+  
+      if(this.options.height) this.element.css('height',this.options.height);
+  
+  
+      this.infoWindow = new google.maps.InfoWindow({
+          map: this._getGmap()
+      });
+  
+      
+      
+  
+      if(this.options.geolocate){
+        this._geoLocate(function(){
+          o._initAll();
+          if(!o.options.url) o.initialized=true;
+          
+        });
+      }else{
+          o._initAll();
+          if(!o.options.url) o.initialized=true;
+      }
+  
+      
+            // al(this.options.center);
+
+      
+        
+
+        this.$coordsdisplay=this.element.closest('.map-container').find('.coords-display');
+
+        this.$autocompleteinput=$('[type=text][data-map="#'+this.id+'"]');
+        if(this.$autocompleteinput.length>0)
+          this.autocompleteinput = this.$autocompleteinput[0];
+        
+        this.$addmarkerbtn=$('button.add-marker-btn[data-map="#'+this.id+'"]');
+        if(this.$addmarkerbtn.length>0)
+          this.addmarkerbtn = this.$addmarkerbtn[0];
+        
+        this.$forminput=$('[data-value][data-map="#'+this.id+'"]');
+        if(this.$forminput.length>0)
+          this.forminput = this.$forminput[0];
+
+
+      
+
+      this.$addmarkerbtn.on('click',function(){
+        o.addMarker(o._getGmap().getCenter());
+      });
+
+
+//   },
+
+//   _init: function() {
+//     var o= this;
+//     al('_init');
+   
 
 
   },
@@ -172,7 +201,7 @@ $.widget( "ajtarragona.tgnMap", {
   setCenter :  function(center){
     //al('setCenter');
     this.options.center=center;
-    if(this.gmap) this.gmap.setCenter(center);
+    if(this._getGmap()) this._getGmap().setCenter(center);
   },
 
 
@@ -239,7 +268,7 @@ $.widget( "ajtarragona.tgnMap", {
     //al(this.options.markers);
     // al()
     if(this.options.cluster){
-      this.markerClusterer = new MarkerClusterer(o.gmap, [], {
+      this.markerClusterer = new MarkerClusterer(o._getGmap(), [], {
         imagePath: baseUrl()+'/vendor/ajtarragona/img/mapcluster/m'
       });
 
@@ -255,7 +284,7 @@ $.widget( "ajtarragona.tgnMap", {
 
 
     //spider
-    this.overlappingmarkers = new OverlappingMarkerSpiderfier(o.gmap, {
+    this.overlappingmarkers = new OverlappingMarkerSpiderfier(o._getGmap(), {
       markersWontMove: false,
       markersWontHide: false,
       // basicFormatEvents: true,
@@ -303,10 +332,10 @@ $.widget( "ajtarragona.tgnMap", {
   // al(this.markers);
 
     if(o.options.fitbounds){
-      o.gmap.fitBounds(o.bounds);
+      o._getGmap().fitBounds(o.bounds);
       //aleja un poco si es demasiado cercano
-      var listener = google.maps.event.addListener(o.gmap, "idle", function() { 
-         if (o.gmap.getZoom() > 16) o.gmap.setZoom(16); 
+      var listener = google.maps.event.addListener(o._getGmap(), "idle", function() { 
+         if (o._getGmap().getZoom() > 16) o._getGmap().setZoom(16); 
          google.maps.event.removeListener(listener); 
 
          
@@ -332,9 +361,9 @@ $.widget( "ajtarragona.tgnMap", {
   addMarker : function(coords,name,infobox,id,color,icon,iconcolor){
     var o=this;
 
-    // al("addMarker ");
+    // al("addMarker ", coords);
     // al(coords);
-    // al(marker);
+    // al(o.markers);
     var id = id ? id : o._uniqueId();
     if(o.markers[id]) return;
     // al("addMarker " + id);
@@ -368,7 +397,7 @@ $.widget( "ajtarragona.tgnMap", {
         position: coords, 
         draggable: !this._isReadonly(),
         animation: this.options.animation?google.maps.Animation.DROP:false,
-        map: this.gmap,
+        map: this._getGmap(),
         
       };
 
@@ -401,7 +430,7 @@ $.widget( "ajtarragona.tgnMap", {
 
         var iconmarker = new CustomMarker(
             coords, 
-            this.gmap,
+            this._getGmap(),
             iconargs
           );
           marker.customicon=iconmarker;
@@ -453,7 +482,7 @@ $.widget( "ajtarragona.tgnMap", {
 
     // marker.addListener('click', function() {
     marker.addListener('spider_click', function() {
-        al("marker clicked");
+        // al("marker clicked");
         // al(this);
         if(this.infobox){
           o._showInfo(this,this.infobox);
@@ -549,10 +578,10 @@ $.widget( "ajtarragona.tgnMap", {
     var o=this;
     // al('loadAjaxMarkers');
     var params   =   {
-      maxlat : o.gmap.getBounds().getNorthEast().lat(),
-      maxlng  : o.gmap.getBounds().getNorthEast().lng(),
-      minlat  :   o.gmap.getBounds().getSouthWest().lat(),  
-      minlng  :   o.gmap.getBounds().getSouthWest().lng()
+      maxlat : o._getGmap().getBounds().getNorthEast().lat(),
+      maxlng  : o._getGmap().getBounds().getNorthEast().lng(),
+      minlat  :   o._getGmap().getBounds().getSouthWest().lat(),  
+      minlng  :   o._getGmap().getBounds().getSouthWest().lng()
     } 
     // al(bounds);
       // al("Bounds changed", params);
@@ -574,7 +603,7 @@ $.widget( "ajtarragona.tgnMap", {
           dataType: 'json',
           success: function(data){
             o.element.closest('.map-container').stopLoading();
-            // al('end loadAjaxMarkers');
+            // al('loaded', data);
             if(data){
               $.each(data,function(key, marker){
                 // al(marker);
@@ -644,7 +673,7 @@ $.widget( "ajtarragona.tgnMap", {
   
 
     this.autocomplete.setBounds(circle.getBounds());
-    this.autocomplete.bindTo('bounds', this.gmap);
+    this.autocomplete.bindTo('bounds', this._getGmap());
     this.autocomplete.setOptions({strictBounds: true})
     this.autocomplete.setFields(['address_components', 'geometry', 'name']);
 
@@ -785,7 +814,7 @@ $.widget( "ajtarragona.tgnMap", {
       o.infoWindow.setContent(browserHasGeolocation ?
           'Error: The Geolocation service failed.' :
           'Error: Your browser doesn\'t support geolocation.');
-      o.infoWindow.setPosition(o.gmap.getCenter());
+      o.infoWindow.setPosition(o._getGmap().getCenter());
       o.infoWindow.open(o.map);
      
   }
