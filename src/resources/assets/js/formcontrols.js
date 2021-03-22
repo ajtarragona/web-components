@@ -138,12 +138,14 @@ $.fn.initIconPicker = function (){
     return this.each(function(){
 
         function setIcon(input){
-
           input.siblings().find('.icon-input-addon i').attr('class',input.val());
-
         }
 
         var $input=$(this);
+        if($input.is(".iconpicker-init")) return;
+        
+        
+        $input.addClass(".iconpicker-init");
         al("initIconPicker");
         
        
@@ -216,6 +218,10 @@ $.fn.initIconPicker = function (){
 $.fn.initColorPicker = function (){
     return this.each(function(){
         var $input=$(this);
+        if($input.is(".colorpicker-init")) return;
+        
+        
+        $input.addClass(".colorpicker-init");
         al("initColorPicker");
         
         //generate html
