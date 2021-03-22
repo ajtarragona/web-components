@@ -59,6 +59,9 @@ $.widget( "ajtarragona.tgnAutocomplete", {
       }
         //al(this.getUrl());
 		  //al(this.options);
+      // this.element.on('change',function(){
+      //   al('autoselect changed', o.value());
+      // });
 
       this.datasource = new Bloodhound({
         initialize: false,

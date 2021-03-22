@@ -188,17 +188,26 @@ $.fn.initIconPicker = function (){
             e.stopPropagation();
             $input.val('');
             setIcon($input);
+            // al('trigger change');
+            $input.trigger('change');
+            
             $(this).prop('hidden',true);
         });
 
 
         $input.on('iconpickerSelected', function(event){
-           al("Icon selected");
+          //  al("Icon selected");
            var input=$(event.currentTarget);
            input.parent().find('.deselect-btn').prop('hidden',false);
            setIcon(input);
+          //  al('trigger change');
+           input.trigger('change');
            
         });
+
+        // $input.on('change',function(){
+        //   al('icon changed', $(this).val());
+        // });
        
     });
   }
@@ -224,7 +233,7 @@ $.fn.initColorPicker = function (){
 
 
 
-         
+       
           
         var defaults={}; 
         
@@ -250,6 +259,9 @@ $.fn.initColorPicker = function (){
             $(this).closest('.colorpicker-element').colorpicker('setValue','');
             $(this).closest('.colorpicker-element').find('.colorpicker-input-addon i').attr('style','');
             $input.val('');
+            $input.trigger('change');
+           
+            // input.trigger('change');
             //$input.colorpicker('update');
             
         });
