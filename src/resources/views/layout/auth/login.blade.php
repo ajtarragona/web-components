@@ -9,7 +9,7 @@
 		<div class="bg-image" style="background-image:url({{ asset(config('webcomponents.login_bg')) }})" ></div>
 
 
-		<div class="card col-lg-3 col-md-6 col-sm-8 m-sm-0 m-2 p-0" >
+		<div class="card col-lg-3 col-md-6 col-sm-8 m-sm-0 m-2 p-0 anim from-bottom in" >
 			<div class="card-body d-flex align-items-center ">				
 				
 				
