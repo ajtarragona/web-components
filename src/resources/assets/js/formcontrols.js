@@ -145,7 +145,7 @@ $.fn.initIconPicker = function (){
         if($input.is(".iconpicker-init")) return;
         
         
-        $input.addClass(".iconpicker-init");
+        $input.addClass("iconpicker-init");
         al("initIconPicker");
         
        
