@@ -26,6 +26,8 @@ class FormControl
 	public $attributes = [];
 	public $icon=false;
 	public $iconposition="left";
+	public $append=false;
+	public $prepend=false;
 	
 	public $data = [];
 
@@ -237,6 +239,11 @@ class FormControl
 			
 			$ret.=$this->renderIcon();
 			
+			if($this->prepend){
+				$ret.='<div class="input-group-prepend">';
+				$ret.='	<span class="input-group-text" >'.$this->prepend.'</span>';
+				$ret.='</div>';
+			}
 			
 			$ret.="<div class='flex-grow-1 form-control-container mw-100' >";
 			
@@ -248,6 +255,7 @@ class FormControl
 				$ret.=$this->bodyReplaceHook();
 			}else{
 
+				
 				// dump($this->attributes);
 				//render the input
 				$ret.="<{$this->tag} ";
@@ -262,6 +270,8 @@ class FormControl
 				}
 				
 				if($this->closetag) $ret.="</{$this->tag}>";
+
+				
 			}
 			
 			if(method_exists($this,'postHook')){
@@ -270,6 +280,11 @@ class FormControl
 			
 			$ret.="</div><!--.form-control-container-->";
 			
+			if($this->append){
+				$ret.='<div class="input-group-append">';
+				$ret.='	<span class="input-group-text" >'.$this->append.'</span>';
+				$ret.='</div>';
+			}
 			$ret.="</div><!--.input-group-->";
 			
 
