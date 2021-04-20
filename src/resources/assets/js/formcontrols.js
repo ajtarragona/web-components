@@ -393,7 +393,10 @@ $.fn.initAutomention = function (){
               }
             }
           };
-          xhr.open("GET", URL + '?q=' + text, true);
+          if(URL.includes('?')) URL+="&";
+          else URL+="?";
+          URL+='q=' + text;
+          xhr.open("GET", URL, true);
           xhr.send();
         }
 
