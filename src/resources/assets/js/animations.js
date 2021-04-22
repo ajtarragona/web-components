@@ -21,7 +21,7 @@ animScrollManager = function(){
 $.fn.initAnimation = function(options){
 
    var ret=this.each(function(){
-     al("initAnimation()");
+    //  al("initAnimation()");
      this.$element=$(this);
      
      this.settings = {

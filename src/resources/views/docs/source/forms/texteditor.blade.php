@@ -5,11 +5,12 @@
 @texteditor(['label'=>"Editor avançat amb autocompletat", "placeholder"=>"Escriu { per mostrar els usuaris", 'name'=>"editor2", "toolbar"=>"advanced",'hint-url' =>route('webcomponents.docs.userscombo')])
 
 @texteditor(['label'=>"Editor nomes lectura", 'name'=>"editor3", 'readonly'=>true ,'value'=>"Texto"])
-{{-- 
+
 @texteditor([
 	'label'=>"Editor popup",
 	'helptext'=>"Fes doble click per mostrar la barra d'eines", 
 	'air-mode'=>true,
 	'name'=>"editor4",
+	// "toolbar"=>"advanced",
 	'value'=>'Contenido por <strong>defecto</strong>'
-]) --}}
+])

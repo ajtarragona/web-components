@@ -107,7 +107,7 @@ $.fn.initInputMask = function(){
 $.fn.initNumberInput = function (){
     return this.each(function(){
         var $input=$(this);
-        al("initNumberInput");
+        // al("initNumberInput");
         
         var defaults={
           verticalbuttons: true,
@@ -146,7 +146,7 @@ $.fn.initIconPicker = function (){
         
         
         $input.addClass("iconpicker-init");
-        al("initIconPicker");
+        // al("initIconPicker");
         
        
          
@@ -222,7 +222,7 @@ $.fn.initColorPicker = function (){
         
         
         $input.addClass(".colorpicker-init");
-        al("initColorPicker");
+        // al("initColorPicker");
         
         //generate html
         var $ig=$("<div class='input-group'/>");
@@ -285,7 +285,7 @@ $.fn.initAutomention = function (){
     return this.each(function(){
         
         var $input=$(this);
-        al("initAutomention");
+        // al("initAutomention");
         
         if($input.is(".init-automention")) return;
         $input.addClass('init-automention');
@@ -493,7 +493,7 @@ $.fn.initConditional = function (){
    return this.each(function(){
         var o=this;
         var $container=$(this);
-        al("initConditional");
+        // al("initConditional");
         var defaults={
            op : '='
         };
@@ -554,7 +554,7 @@ $.fn.initAjaxContainer = function (){
    return this.each(function(){
         var o=this;
         o.$container=$(this);
-        al("initAjaxContainer");
+        // al("initAjaxContainer");
         
         
         o.settings = $.extend({}, defaults, o.$container.data()); 
@@ -636,7 +636,7 @@ $.fn.initAjaxButton = function (){
     var o=this;
     o.$button=$(this);
     
-    al("initAjaxButton");
+    // al("initAjaxButton");
     o.settings = $.extend({}, defaults, o.$button.data()); 
     if(!o.settings.url) o.settings.url=o.$button.attr('href');
 
@@ -716,7 +716,7 @@ $.fn.initAutoheight = function (){
         o.init =function(){
           var o=this;
           if(!o.$input.is('.autosize-loaded')){
-            al("INIT AUTOSIZE");
+            // al("INIT AUTOSIZE");
             o.$input.addClass("autosize-loaded");
             autosize(o);
           }
@@ -762,7 +762,7 @@ $.fn.initToggleClass = function (){
         o.$element=$(this);
         if(!o.$element.is(".toggle-init")){
           o.$element.addClass("toggle-init");
-          al("initToggleClass");
+          // al("initToggleClass");
         
           var settings = $.extend({}, defaults, $(this).data()); 
           if(settings.target){

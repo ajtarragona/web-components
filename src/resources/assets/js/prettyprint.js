@@ -6,7 +6,7 @@ import ClipboardJS from "clipboard";
 $.fn.initPrettyprint = function(options){
 
     var ret=this.each(function(){
-     al("initPrettyprint()");
+    //  al("initPrettyprint()");
 
 
       var $element=$(this);

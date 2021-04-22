@@ -18,7 +18,7 @@ $.widget( "ajtarragona.tgnSelectPicker", {
 
     _create: function() {
         var o=this;
-        al("creating tgnSelectPicker");
+        // al("creating tgnSelectPicker");
         
         this.options = $.extend({}, this.options, this.element.data()); 
 

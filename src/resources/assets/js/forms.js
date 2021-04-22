@@ -39,7 +39,7 @@ function tgnFormClass(obj,options){
 	      	.attr('value', o.buton_submit.val() )
 	      	.appendTo($form);
 		}
-        al("Submitting form...");
+        // al("Submitting form...");
 
         if(o.settings.target){
         	var url = $form.attr('action');
@@ -114,7 +114,7 @@ function tgnFormClass(obj,options){
 			});
 
 			$form.find('.input-icon').on('click',function(e){
-				al('click icon');
+				// al('click icon');
 				var label=$(this).closest('.form-group').find('label.col-form-label');
 				if(label.length>0){
 					$("#"+label.attr('for')).focus();
@@ -257,7 +257,7 @@ function tgnFormClass(obj,options){
 	
 
 	this.validate = function(){
-		al("Validating Form...");
+		// al("Validating Form...");
 		var o = this;
 		var $form=this.$element;
 		//al($form);

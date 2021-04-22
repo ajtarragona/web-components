@@ -60,7 +60,7 @@ if (typeof google !== 'undefined') {
 	};
 
 	CustomMarker.prototype.remove = function() {
-		al("custom marker remove", this.div);
+		// al("custom marker remove", this.div);
 		if (this.div) {
 			this.div.parentNode.removeChild(this.div);
 			this.div = null;

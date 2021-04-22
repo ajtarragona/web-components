@@ -14,7 +14,7 @@ $.widget( "ajtarragona.tgnTable", {
 
     _create: function() {
         var o=this;
-        al("creating tgnTable");
+        // al("creating tgnTable");
         
         this.options = $.extend({}, this.options, this.element.data()); 
         this.rows=this.element.find("> tbody > tr");

@@ -31,7 +31,7 @@ var tgnmodaldefaults = {
 
 TgnModal = function(options){
 
-	al("TgnModal");
+	// al("TgnModal");
 
 	this.$dialog=false;
 	this.title=false;
@@ -315,7 +315,7 @@ TgnModal = function(options){
 		o.$opener=btn;
 
 		
-		al("init() tgnModal");
+		// al("init() tgnModal");
 		if(!o.$opener.is(".modalinit")){
 			o.$opener.addClass('modalinit');
 	    	o.settings.url=o.$opener.attr("href");

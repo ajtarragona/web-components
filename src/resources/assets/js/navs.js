@@ -61,7 +61,7 @@ TgnNav = function(obj,options){
 
 
 	this.initCollapsableNav=function(){
-		al('CollapsableNav');
+		// al('CollapsableNav');
 		var o=this;
 		var $nav=this.$element;
 
@@ -81,7 +81,7 @@ TgnNav = function(obj,options){
 
 
 	this.initDropdownNav=function(){
-		al('DropdownNav');
+		// al('DropdownNav');
 		var o=this;
 		var $nav=this.$element;
 
@@ -156,7 +156,7 @@ TgnNav = function(obj,options){
 
 
 	this.initDrilldownNav=function(){
-	 	al('DrilldownNav');
+	 	// al('DrilldownNav');
 		var o=this;
 		var $nav=this.$element;
 

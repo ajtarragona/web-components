@@ -54,7 +54,7 @@ $.widget( "ajtarragona.tgnAutocomplete", {
 		
 		  if(this.options.savevalue) this.options.saved='value';
 		  if(this.options.disabled){
-        al("isDisabled");
+        // al("isDisabled");
         this.element.prop('disabled',true);
       }
         //al(this.getUrl());

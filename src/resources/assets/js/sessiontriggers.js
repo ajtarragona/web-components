@@ -3,7 +3,7 @@ $.fn.initSessionTriggers = function(){
 		var ev="click";
 		if($(this).data("session-event")) ev=$(this).data("session-event");
 		
-		al("initSessionTrigger: " + $(this).data("session-setting"));
+		// al("initSessionTrigger: " + $(this).data("session-setting"));
 			
 		$(this).on(ev,function(e){
 			var setting=$(this).data("session-setting");
