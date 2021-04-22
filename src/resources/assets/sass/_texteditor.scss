@@ -10,6 +10,10 @@
 
     .note-editing-area .note-editable{
         background-color: transparent !important;
+
+        p:last-child{
+            margin-bottom:0px;
+        }
     }
 
     .note-btn{
@@ -47,6 +51,8 @@
             }
         }
     }
+
+    
 }
 
 .note-modal .modal-header{
