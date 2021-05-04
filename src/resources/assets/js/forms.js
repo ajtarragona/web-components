@@ -285,7 +285,7 @@ function tgnFormClass(obj,options){
                  $form.removeClass("validating");
       			// al(data);
                 if(data.success){
-
+					
                     $.each($form.serializeArray(), function(i, field) {
 
                         var campo = $form.find("[name='"+field.name+"']");
@@ -300,7 +300,8 @@ function tgnFormClass(obj,options){
                         if(!campo.data('had-feedback')) closestfather.removeClass('with-feedback');
                         closestfather.find('div[class*=-feedback]').html('');
                     });
-
+					$form.trigger("tgnform:validate-success", {element:$form });
+  	    
                     o.validated = true;
                     if(o.buton_submit){
                         o.runSubmit();//$form.submit();
@@ -308,7 +309,7 @@ function tgnFormClass(obj,options){
                 } else {
                 	
                     var campos_error = [];
-
+					
                     $.each(data.errors,function(key, data){
                     	if(key.includes('.')){
                     		key=key.split(".");
@@ -362,6 +363,9 @@ function tgnFormClass(obj,options){
                             
                         }
                     });
+
+					$form.trigger("tgnform:validate-error", {element:$form, errors: data.errors });
+  	    
                     TgnFlash.warning(___("strings.Form validation errors"));
 					
 					//scroll to element			
