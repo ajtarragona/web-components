@@ -844,6 +844,9 @@ $.fn.initTextEditor = function(){
     if(settings.toolbar=='advanced') settings.toolbar = advancedtoolbar;
     else settings.toolbar=simpletoolbar;
     
+    settings.popover = {
+        air: settings.toolbar
+    };
     if(settings.hintUrl){
       $.ajax({
         url: settings.hintUrl,
