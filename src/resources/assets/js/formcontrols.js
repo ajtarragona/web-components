@@ -796,7 +796,7 @@ $.fn.initTextEditor = function(){
       ['style', ['bold', 'italic', 'underline', 'clear']],
       ['color', ['forecolor','backcolor']],
       ['para', ['ul', 'ol', 'paragraph','style']],
-      ['media', ['picture','link']]
+      ['media', ['link']]
      
   ];
 
