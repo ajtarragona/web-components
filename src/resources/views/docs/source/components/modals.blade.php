@@ -21,6 +21,23 @@
 	Modal ajax 2
 @endmodalopener
 
+<br/>
+
+@modalopener([
+	'href'=>route('webcomponents.docs.modal'),
+	'maximizable'=>false,
+	'draggable'=>false,
+	'closable'=>true,
+	'size'=>'sm',
+	'valign'=>'center',
+	'halign'=>'center',
+	'dismissable'=>false,
+	'class' =>'btn btn-success btn-sm'
+
+])
+	Modal ajax no close with Esc or click outside
+@endmodalopener
+
 
 
 @modalopener([

@@ -224,7 +224,7 @@ $.widget( "ajtarragona.tgnMap", {
   _loadInfobox : function(url,marker){
     var o=this;
     o.infoWindow.open(o.map,marker);
-
+    
     o.infoWindow.setContent('<div class="loading px-4 py-2">'+___("strings.loading")+'...</div>');
     $.ajax({
       url: url,

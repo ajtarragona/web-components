@@ -40,7 +40,7 @@ $.widget( "ajtarragona.tgnAutocomplete", {
     _create: function() {
 		  var o=this;
      	
-     	al("creating tgnAutocomplete()");
+     	//al("creating tgnAutocomplete()");
       //al(this.element);
 
       this.options = $.extend({}, this.options, this.element.data()); 

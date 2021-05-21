@@ -68,6 +68,10 @@
 					<td><code>true</code> o <code>false</code> indicant si la modal es pot tancar. Per defecte <code>true</code></td>
 				</tr>
 				<tr>
+					<td><code>dismissable</code></td>
+					<td><code>true</code> o <code>false</code> indicant si la modal es pot tancar prement la tecla ESC o fent clic a fora de la modal. Per defecte <code>true</code></td>
+				</tr>
+				<tr>
 					<td><code>draggable</code></td>
 					<td><code>true</code> o <code>false</code> indicant si la modal es pot arrossegar. Per defecte <code>true</code></td>
 				</tr>

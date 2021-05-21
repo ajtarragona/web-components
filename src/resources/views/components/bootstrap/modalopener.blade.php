@@ -22,6 +22,7 @@
 		data-draggable = "{{ isset($draggable)?$draggable:'true'}}"
 		data-padding = "{{ isset($padding)?$padding:'true'}}"
 		data-method = "{{ isset($method)?$method:'get'}}"
+		data-dismissable = "{{ isset($dismissable)?$dismissable:true}}"
 
 	>
 	    @include('ajtarragona-web-components::components.'.config("webcomponents.theme").'.parts.icontext')

@@ -6,6 +6,7 @@ var tgnmodaldefaults = {
 	url: '',
 	target: false,
 	method : 'get',
+	dismissable: true,
 	closable: true,
 	maximizable: true,
 	toggable: false,
@@ -79,7 +80,12 @@ TgnModal = function(options){
 	this.setProperties= function(){
 		var o=this;
 		
+		// al('setProperties', o.settings);
 		if(o.settings.animate) o.$dialog.addClass('fade');
+		if(!o.settings.dismissable){
+			o.$dialog.attr('data-backdrop','static');
+			o.$dialog.attr('data-keyboard',false);
+		}
 		o.$dialog.find('.modal-dialog').addClass('modal-'+o.settings.size);
 		o.$dialog.find('.modal-dialog').addClass('halign-'+o.settings.halign);
 		if(o.settings.valign=='center') o.$dialog.find('.modal-dialog').addClass('modal-dialog-centered');
@@ -410,6 +416,7 @@ TgnModal.confirm = function(body, callback, options){
 			var btn=$(this);
 			var settings=options;
 			if(btn.data()) settings = $.extend(true, {}, settings, btn.data()); 
+			// al('tgnModal',settings);
 			var modal=new TgnModal(settings);
 			modal.initOpener(btn);
 
