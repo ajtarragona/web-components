@@ -23,7 +23,11 @@
 			<tbody>
 				<tr>
 					<td><code>url</code></td>
-					<td>Url que retornarà les dades. Cal que es retorni un array d'objectes amb els atributs <code>"value"</code> i <code>"name"</code>, en format JSON.</td>
+					<td>
+						Url que retornarà les dades. Cal que es retorni un array d'objectes amb els atributs <code>"value"</code> i <code>"name"</code>, en format JSON.<br/>
+						L'atribut name no hauria d'incloure codi html, ja que no es pot visualitzar bé al camp de text.<br/>
+						Si incloem un tercer atribut "suggestion" al json retornat aquest serà el que es mostrarà al desplegable i aquest si que pot contenir codi html. 
+					</td>
 				</tr>
 				<tr>
 					<td><code>multiple</code></td>

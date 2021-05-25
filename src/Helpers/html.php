@@ -117,6 +117,7 @@ if (! function_exists('autocomplete')) {
 		if(isset($attributes["savevalue"])) $newdata["savevalue"]=$attributes["savevalue"];
 		if(isset($attributes["showvalue"])) $newdata["showvalue"]=$attributes["showvalue"];
 		if(isset($attributes["min-length"])) $newdata["min-length"]=$attributes["min-length"];
+		if(isset($attributes["highlight"])) $newdata["highlight"]=isTrue($attributes["highlight"]);
 
 		$newdata=array_merge($newdata,$data);
 		

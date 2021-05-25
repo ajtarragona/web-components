@@ -10,6 +10,19 @@
 	'min-length' => 1,
 ])
 
+
+
+@autocomplete([
+	'label'=>'Auto with html', 
+	'name'=>'field_auto_html',
+	'id' => 'autohtml',
+	'multiple'=> false,
+	'url' => route('webcomponents.combohtml'),
+	'savevalue' => false,
+	'icon' => 'ellipsis-h',
+	'min-length' => 1,
+])
+
 @autocomplete([
 	'label'=>'Auto valor', 
 	'name'=>'field_auto_valor',

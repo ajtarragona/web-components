@@ -30,6 +30,14 @@ $.widget( "ajtarragona.tgnAutocomplete", {
           ___("strings.No Items Found"),
           "</div>"
       ].join("\n"),
+
+      suggestion: function(data){
+        if(data.suggestion){
+          return "<div class='tt-suggestion tt-selectable'>"+data.suggestion+"</div>";
+        }else{
+          return "<div class='tt-suggestion tt-selectable'>"+data.name+"</div>";
+        }
+      }
       // pending : [
       //     "<div class='p-3 text-muted'>",
       //     ___("strings.Searching for items"),
@@ -263,17 +271,20 @@ $.widget( "ajtarragona.tgnAutocomplete", {
         });
 
 
-          
+        var args={
+          limit: this.options.limit, //10 no va
+          name: this.options.inputname,
+          displayKey: 'name',
+          //display: 'name',
+          source: this.datasource.ttAdapter(),
+          templates: this.templates,
+       };
+
+        // al('init typeahead', this.options);
+        // al(args);
         this.element.typeahead(
        		this.options,
-       		{
-              limit: this.options.limit, //10 no va
-              name: this.options.inputname,
-              displayKey: 'name',
-              //display: 'name',
-              source: this.datasource.ttAdapter(),
-              templates: this.templates,
-    		}
+       		args
         );
 
         this._createDeselector();

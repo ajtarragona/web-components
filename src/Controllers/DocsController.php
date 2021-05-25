@@ -43,12 +43,22 @@ class DocsController extends Controller
        
   }
 
-  private function getTestOptions($num=10, $combo=false, $dividers=false){
+  private function getTestOptions($num=10, $combo=false, $dividers=false, $html=false){
       $faker = FakerFactory::create();
       $ret = [];
       for($i=1;$i<=$num;$i++){
           if($combo){
-            $ret[] = ["value"=>$i, "name" =>"Opció $i - ".$faker->name];
+            $name=$faker->name;
+            if($html){
+              $suggestion= icon('star') . " <strong>"."Opció ".$i."</strong> - ".$name;
+              $name="Opció $i - ".$name;
+              $ret[] = ["value"=>$i, "name" =>$name, "suggestion"=>$suggestion];
+            }else{
+              $ret[] = ["value"=>$i, "name" =>"Opció $i - ".$name];
+
+            }
+
+            
             if($dividers){
               if(mt_rand(0,100)>90) $ret[]=["divider"=>true];
             }
@@ -112,6 +122,26 @@ class DocsController extends Controller
     // return "dsad sad sad sa";
 
     $options = collect($this->getTestOptions(50,true));
+   // dd($options);
+    if($request->term){
+      $term=strtolower($request->term);
+      
+      $options=$options->filter(function ($value, $key) use ($term){
+        return str_contains(strtolower($value["name"]), $term);// || $value["value"]==intval($term);
+      });
+
+
+    }
+    //var_dump($options->toArray());
+    return array_values($options->toArray());
+
+  }
+
+  public function testComboHtml(Request $request){
+    // abort(500,"Error");
+    // return "dsad sad sad sa";
+
+    $options = collect($this->getTestOptions(50,true, false,true));
    // dd($options);
     if($request->term){
       $term=strtolower($request->term);
