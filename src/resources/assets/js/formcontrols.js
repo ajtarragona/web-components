@@ -478,7 +478,8 @@ $.fn.initAutomention = function (){
           e.preventDefault();
           var pastedData = e.originalEvent.clipboardData.getData('text');
           document.execCommand("insertHTML", false, pastedData);
-
+          // al('paste',pastedData);
+          updateInput();
           
          
       } );
