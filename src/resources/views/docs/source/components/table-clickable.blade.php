@@ -1,5 +1,5 @@
 
-<table class="table table-hover" data-clickable="true" data-clicktype="click">
+<table class="table table-hover" data-clickable="true" data-clicktype="click" data-control-click="true">
 	<thead>
 		<tr>
 			<th>{{ $faker->word }}</th>

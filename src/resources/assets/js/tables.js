@@ -30,54 +30,78 @@ $.widget( "ajtarragona.tgnTable", {
 		if(this.options.clickable){
 			//al("is clickable");
 			var ev=this.element.data("clicktype")?this.element.data("clicktype"):"dblclick";
+			// var url=$(this).data("url");
 
-			this.element.on(ev,"> tbody > tr",function(e){
-				if(!o.options.selectable){
+			
+			var controlClick=this.element.data("control-click");
+
+
+				//control+click
+				
+				this.element.on('click',"> tbody > tr", function(e){
+					// al($(this));
 					var url=$(this).data("url");
-					if(url) window.location.href=url;
-				}
-			});
+					// al(url);
+					if(url){
+						if (controlClick && e.ctrlKey){
+							e.preventDefault();
+							e.stopPropagation();
+							window.open(url, '_blank');
+						}else if(ev =="click" && !o.options.selectable){
 
-			this.startY=0;
-			this.startX=0;
-			this.yDistance=0;
-			this.xDistance=0;
-			this.touch=null;
-			
-			this.element.find("> tbody > tr").on("touchstart", function(event){
-				o.touch = event.changedTouches[0];
-				// event.preventDefault();
-				o.startY = o.touch.clientY;
-				o.startX = o.touch.clientX;
-
-			});
-
-			this.element.find("> tbody > tr").on("touchmove", function(event){
-				o.touch = event.changedTouches[0];
-				// event.preventDefault();
-
-			});
-
-			
-			this.element.find("> tbody > tr").on('touchend', function(){
-
-				o.yDistance = o.startY - o.touch.clientY;
-				o.xDistance = o.startX - o.touch.clientX;
-
-				if(Math.abs(o.yDistance) < 30 && Math.abs(o.xDistance) < 30){
-					if(!o.options.selectable){
-						var url=$(this).data("url");
-						if(url) window.location.href=url;
+							window.location.href=url;
+						}
 					}
-				}
-			});
+				});
 
-			// this.element.on("touchend","> tbody > tr",function(e){
-			// 	if(!o.options.selectable){
-			// 		var url=$(this).data("url");
-			// 		if(url) window.location.href=url;
-			// 	}
-			// });
+				this.element.on('dblclick',"> tbody > tr",function(e){
+					var url=$(this).data("url");
+					if(url && ev =="dblclick" && !o.options.selectable){
+						window.location.href=url;
+					}
+				});
+
+				this.startY=0;
+				this.startX=0;
+				this.yDistance=0;
+				this.xDistance=0;
+				this.touch=null;
+				
+				this.element.find("> tbody > tr").on("touchstart", function(event){
+					o.touch = event.changedTouches[0];
+					// event.preventDefault();
+					o.startY = o.touch.clientY;
+					o.startX = o.touch.clientX;
+
+				});
+
+				this.element.find("> tbody > tr").on("touchmove", function(event){
+					o.touch = event.changedTouches[0];
+					// event.preventDefault();
+
+				});
+
+				
+				this.element.find("> tbody > tr").on('touchend', function(){
+
+					o.yDistance = o.startY - o.touch.clientY;
+					o.xDistance = o.startX - o.touch.clientX;
+					var url=$(this).data("url");
+					
+					if(Math.abs(o.yDistance) < 30 && Math.abs(o.xDistance) < 30){
+						if(url && !o.options.selectable){
+							window.location.href=url;
+						}
+					}
+				});
+
+				// this.element.on("touchend","> tbody > tr",function(e){
+				// 	if(!o.options.selectable){
+				// 		var url=$(this).data("url");
+				// 		if(url) window.location.href=url;
+				// 	}
+				// });
+			
 		}
 
 
