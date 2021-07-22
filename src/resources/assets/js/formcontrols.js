@@ -797,9 +797,17 @@ $.fn.initTextEditor = function(){
       ['style', ['bold', 'italic', 'underline', 'clear']],
       ['color', ['forecolor','backcolor']],
       ['para', ['ul', 'ol', 'paragraph','style']],
-      ['media', ['link']]
+      ['media', ['link']],
+      ['misc', ['fullscreen','codeview']]
      
   ];
+
+  var airtoolbar=[
+    ['style', ['bold', 'italic', 'underline', 'clear']],
+    ['color', ['forecolor','backcolor']],
+    ['para', ['ul', 'ol', 'paragraph','style']],
+    ['media', ['link']]
+ ];
 
   var lang=currentLanguage();
   if(lang=="es") lang="es-ES";
@@ -844,6 +852,8 @@ $.fn.initTextEditor = function(){
     var settings = $.extend({}, defaults, $(this).data()); 
     if(settings.toolbar=='advanced') settings.toolbar = advancedtoolbar;
     else settings.toolbar=simpletoolbar;
+
+    if(settings.airMode) settings.toolbar=airtoolbar;
     
     settings.popover = {
         air: settings.toolbar
