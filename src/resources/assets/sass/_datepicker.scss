@@ -20,7 +20,7 @@
   font-weight: 400;
 }
 .flatpickr-calendar{
-    border-radius:0;
+    border-radius: $border-radius-sm;
     outline:1px solid $default-border-color;//rgba( $primary, .2 );
     box-shadow: $box-shadow-sm;
 }
