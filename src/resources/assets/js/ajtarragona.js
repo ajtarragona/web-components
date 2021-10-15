@@ -72,8 +72,8 @@ require('clipboard');
 
 
 require('summernote/dist/summernote.min.js');
-require('summernote/dist/lang/summernote-es-ES.js');
-require('summernote/dist/lang/summernote-ca-ES.js');
+// require('summernote/dist/lang/summernote-es-ES.js');
+// require('summernote/dist/lang/summernote-ca-ES.js');
 
 require('is-in-viewport') 
 
