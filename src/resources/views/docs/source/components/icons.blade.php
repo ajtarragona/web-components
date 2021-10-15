@@ -23,7 +23,7 @@
 <h5>Bootstrap Icons</h5>
 @icon('bi-star')  Hola
 <br/>
-@icon('bi-collection') 
+@icon('bi-save') 
 @icon('bi-collection-fill') 
 @icon('bi-collection',['class'=>'spin','color'=>'info']) 
 @icon('bi-star',['class'=>'beat','color'=>'warning']) 
