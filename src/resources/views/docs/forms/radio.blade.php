@@ -89,7 +89,14 @@
 					<td><code>checked</code></td>
 					<td>Array amb els valors marcats</td>
 				</tr>
-				
+				<tr>
+					<td><code>horizontal</code></td>
+					<td>true per mostrar en horitzontal</td>
+				</tr>
+				<tr>
+					<td><code>horizontal_width</code></td>
+					<td>definir l'amplada de cada radio. Si no definim res serà automàtic, segons el contingut.</td>
+				</tr>
 			</tbody>
 		</table>
 		<hr/>

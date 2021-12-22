@@ -11,8 +11,16 @@
 	'name'=>'check_horizontal', 
 	'label'=>'Horizontales',
 	'container'=>true,
-	'options'=>[1=>"Horz. 1",2=>"Horz. 2"],
+	'options'=>[
+		1=>"Horz. 1",
+		2=>"Horz. 2",
+		3=>"Horz. 3",
+		4=>"Lalalala lala",
+		5=>"Bla bla",
+		6=>"Another option",
+	],
 	'horizontal'=>true,
+	'horizontal_width' => '33%',
 	'checked'=>[2]
 ]) 
 

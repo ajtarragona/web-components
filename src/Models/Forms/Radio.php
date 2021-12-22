@@ -10,6 +10,7 @@ class Radio extends FormControl
     public $checklabel=null;
     public $container = false;
     public $horizontal=false;
+    public $horizontal_width=null;
     public $options=[];
     public $checked=false;
     public $switch=false;
@@ -64,7 +65,9 @@ class Radio extends FormControl
             foreach($this->options as $key=>$option){
                 $id='radio_'. str_replace('[]', '', $this->getAttribute('name').'_'.kebab_case($key));
                     
-                $ret.="<div class='".$this->getAttribute("class")." ". $this->color ."'>";
+                $ret.="<div class='".$this->getAttribute("class")." ". $this->color ."' ";
+                if($this->horizontal && $this->horizontal_width) $ret.=" style='width:".$this->horizontal_width."'";
+                $ret.=">";
                 $ret.="   <input type='radio' ";
                 $ret.="        name=\"".$this->getAttribute('name')."\" "; 
                 $ret.="        id=\"".$id."\""; 

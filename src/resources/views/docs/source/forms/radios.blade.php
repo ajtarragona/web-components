@@ -21,7 +21,8 @@
 	'name'=>'radio_horizontal', 
 	'label'=>'Horizontales',
 	'container'=>true,
-	'options'=>[1=>"Horz. 1", 2=>"Horz. 2"],
+	'options'=>[1=>"Horz. 1", 2=>"Horz. 2",3=>"Another 3"],
+	'horizontal_width' => '30%',
 	'horizontal'=>true,
 	'checked'=> 1
 ]) 

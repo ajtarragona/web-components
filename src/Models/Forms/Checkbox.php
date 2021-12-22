@@ -12,6 +12,7 @@ class Checkbox extends FormControl
     public $checklabel=null;
     public $container = false;
     public $horizontal=false;
+    public $horizontal_width=null;
     public $options=[];
     public $checked=false;
     public $switch=false;
@@ -83,7 +84,9 @@ class Checkbox extends FormControl
                 // $id='checkbox_'. str_replace('[]', '', $this->getAttribute('name').'_'.kebab_case($key));
                 $id=$this->getAttribute("id").'_'. kebab_case($key);
                 
-                $ret.="<div class='".$this->getAttribute("class")." ".$color."' ".$datacolor.">";
+                $ret.="<div class='".$this->getAttribute("class")." ".$color."' ".$datacolor." ";
+                if($this->horizontal && $this->horizontal_width) $ret.=" style='width:".$this->horizontal_width."'";
+                $ret.=">";
                 $ret.="   <input type='checkbox' ";
                 $ret.="        name=\"".$this->getAttribute('name')."\" "; 
                 $ret.="        id=\"".$id."\""; 
