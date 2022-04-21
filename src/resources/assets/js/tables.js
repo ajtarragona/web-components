@@ -55,7 +55,7 @@ $.widget( "ajtarragona.tgnTable", {
 				});
 
 				this.element.on('dblclick',"> tbody > tr",function(e){
-					var url=$(this).data("url");
+					var url=$(this).attr("data-url");
 					if(url && ev =="dblclick" && !o.options.selectable){
 						window.location.href=url;
 					}
