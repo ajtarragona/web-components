@@ -393,9 +393,24 @@ TgnModal.prompt = function(body, callback, options){
 		'<button data-action="accept" type="button" class="btn btn-secondary btn-sm accept-button">'+options.strings.accept+'</button></div>');
 
 	modal.open();
+	setTimeout(function(e){
+		// al("focusing");
+		// al(modal.$dialog);
+		// al(modal.$dialog.find('input[name=prompt_value]'));
 
+		modal.$dialog.find('input[name=prompt_value]').focus();
+	},500);
+	
 	modal.$dialog.on('click','.modal-footer .cancel-button', function(e){
 		modal.$dialog.modal('hide');
+	});
+
+	modal.$dialog.on('keyup','input[name=prompt_value]', function(evt){
+		var code=evt.keyCode;
+		// al(code);
+		if (evt.keyCode == 13) { //Intro
+			modal.$dialog.find('.modal-footer .accept-button').trigger('click');
+		}
 	});
 
 	modal.$dialog.on('click','.modal-footer .accept-button', function(e){
@@ -407,6 +422,8 @@ TgnModal.prompt = function(body, callback, options){
 		modal.$dialog.modal('hide');
 		
 	});
+
+	
 };
 
 
