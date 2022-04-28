@@ -384,7 +384,7 @@ TgnModal.prompt = function(body, callback, options){
 	options.maximizable=false;
 	var modal = new TgnModal(options);
 	modal.construct();
-	if(!options.title) modal.setTitle(options.strings.confirmation);
+	modal.setTitle('<i class="bi bi-keyboard"></i>');
 
 	body+='<div class="form-group mt-2 outlined form-group-md"><div class="form-control-container"><input name="prompt_value" type="text" class="form-control"/></div></div>';
 	modal.setBody(body);
