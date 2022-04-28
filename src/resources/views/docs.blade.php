@@ -60,6 +60,21 @@
 		TgnFlash.success("Ok");
 	}
 
+	$('#prompt-button').on('click', function(e){
+		TgnModal.prompt("Introdueix un valor", function(ret){
+			al("ret",ret);
+		});
+		// var value=TgnModal.prompt("Holita?");
+		// alert("retorn:"+value);
+	});
+	$('#confirm-button').on('click', function(e){
+		TgnModal.confirm("N'estàs segur?", function(ret){
+			al("ret",ret);
+		});
+		// var value=TgnModal.prompt("Holita?");
+		// alert("retorn:"+value);
+	});
+
 </script>
 	{{-- <script>
 		$(window).on('load',function(){

@@ -23,6 +23,7 @@ var tgnmodaldefaults = {
 		cancel : ___('strings.cancel'),
 		confirmation : ___('strings.confirmation'),
 		confirm : ___('strings.confirm'),
+		accept : ___('strings.accept'),
 		loaderror : ___('strings.loaderror'),
 		loaderrormessage : ___('strings.loaderrormessage')
 	},
@@ -375,6 +376,37 @@ TgnModal.open = function(url,method,params,options){
 	modal.construct();
 	modal.doRequest();
 
+};
+
+
+TgnModal.prompt = function(body, callback, options){
+	options = $.extend(true, {}, tgnmodaldefaults, options ); 
+	options.maximizable=false;
+	var modal = new TgnModal(options);
+	modal.construct();
+	if(!options.title) modal.setTitle(options.strings.confirmation);
+
+	body+='<div class="form-group mt-2 outlined form-group-md"><div class="form-control-container"><input name="prompt_value" type="text" class="form-control"/></div></div>';
+	modal.setBody(body);
+	
+	modal.setFooter('<button data-action="cancel" type="button" class="btn btn-light btn-sm cancel-button">'+options.strings.cancel+'</button>'+
+		'<button data-action="accept" type="button" class="btn btn-secondary btn-sm accept-button">'+options.strings.accept+'</button></div>');
+
+	modal.open();
+
+	modal.$dialog.on('click','.modal-footer .cancel-button', function(e){
+		modal.$dialog.modal('hide');
+	});
+
+	modal.$dialog.on('click','.modal-footer .accept-button', function(e){
+		executeCallback(callback,{
+			value: modal.$dialog.find('input[name=prompt_value]').val(),
+			modal: modal
+		});
+
+		modal.$dialog.modal('hide');
+		
+	});
 };
 
 

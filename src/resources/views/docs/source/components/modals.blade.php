@@ -75,3 +75,7 @@
 	
 @endmodal
 
+
+<button class="btn btn-secondary btn-sm" id="prompt-button">Prompt</button>
+<button class="btn btn-secondary  btn-sm" id="confirm-button">Confirm</button>
+

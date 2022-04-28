@@ -10,6 +10,7 @@ return [
 	"cancel" => "Cancel·lar",
 	"confirmation" => "Confirmació",
 	"confirm" => "Confirmar",
+	"accept" => "Acceptar",
 	"loaderror" => "Error de càrrega",
 	"loaderrormessage" => "La pàgina no s'ha pogut carregar",
 	"copy" => "Copiar",

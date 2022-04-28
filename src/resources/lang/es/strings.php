@@ -10,6 +10,7 @@ return [
 	"cancel" => "Cancelar",
 	"confirmation" => "Confirmación",
 	"confirm" => "Confirmar",
+	"accept" => "Aceptar",
 	"loaderror" => "Error de carga",
 	"loaderrormessage" => "La página no ha podido cargarse",
 	"copy" => "Copiar",
