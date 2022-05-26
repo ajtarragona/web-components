@@ -71,48 +71,52 @@ class InstallDemo extends Command
 
 	        $this->line('');
 
-	        if (! $this->confirm("Proceed with the migration creation?", $defaultAnswer)) {
-	            return;
-	        }
-
-	        //$this->line('');
-
-            
-
-            
-	        $this->line("Creating migration...");
-
-	        if ($this->createMigration()) {
-	            $this->info("Migration created successfully.");
+	        if ( $this->confirm("Proceed with the migration creation?", $defaultAnswer)) {
 	            
+                
 
-	            if ($this->confirm("Do you want to create the database?", !$this->alreadyExistingTables() )) {
-	            	if($this->createDatabase()){
-	            		$this->info("Database created!");
-        	    	}else{
-        	    		$this->error("Demo tables already exist.");
-        	    	}
-	            }
+                //$this->line('');
 
+                
 
+                
+                $this->line("Creating migration...");
+
+                if ($this->createMigration()) {
+                    $this->info("Migration created successfully.");
+                    
+
+                    if ($this->confirm("Do you want to create the database?", !$this->alreadyExistingTables() )) {
+                        if($this->createDatabase()){
+                            $this->info("Database created!");
+                        }else{
+                            $this->error("Demo tables already exist.");
+                        }
+                    }
+
+                } else {
+                    $this->error(
+                        "Couldn't create migration.\n".
+                        "Check the write permissions within the database/migrations directory."
+                    );
+                }
+            }
+
+            if ($this->confirm("Do you want to create an admin user?")) {
                 $this->createAdminUser();
+            }
 
 
-	            if ($this->confirm("Do you want to seed the database?", $this->alreadyExistingTables())) {
-		        	if($this->seedDatabase()){
-		        		$this->info("Database seeded successfully!");
+            if ($this->confirm("Do you want to seed the database?", $this->alreadyExistingTables())) {
+                if($this->seedDatabase()){
+                    $this->info("Database seeded successfully!");
 
-		        	}else{
-		        		 $this->error("Couldn't seed the database.");
-		        	}
-		    	}
+                }else{
+                        $this->error("Couldn't seed the database.");
+                }
+            }
 
-	        } else {
-	            $this->error(
-	                "Couldn't create migration.\n".
-	                "Check the write permissions within the database/migrations directory."
-	            );
-	        }
+	        
 
 	        $this->line('');
 

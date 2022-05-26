@@ -143,7 +143,7 @@ class GMap extends FormControl
                 "map"=>"#".$this->attributes["id"]
             ];
 
-            $ret.='    <input type="hidden" '.self::html_attributes($inputdata,"data").' name="'.$this->getAttribute("name").'" />';
+            $ret.='    <input type="hidden" value=\''.json_encode($this->getMarkers()).'\' '.self::html_attributes($inputdata,"data").' name="'.$this->getAttribute("name").'" />';
             
 
             $ret.='   <div class="google-map" id="'.$this->attributes["id"].'"	';
