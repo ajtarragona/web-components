@@ -7,6 +7,7 @@ function tgnFormClass(obj,options){
 		confirm: false,
 		validateurl: '',
 		validator: false,
+		optionalvalidator: false,
 		validateOnSubmit: true,
 		validateOnStart: false,
 		validateOnChange: false,
@@ -93,7 +94,25 @@ function tgnFormClass(obj,options){
 		}
 	}
 
+	this.doSubmitConfirm = function(btn){
+		var o = this;
+		o.buton_submit = btn;
+		// al('doSubmitConfirm',o.buton_submit);
+		var validate=o.settings.validator || o.settings.optionalvalidator; 
 	
+		if(o.buton_submit && typeof o.buton_submit.data('validate') !== 'undefined' ){
+			validate=false;
+		}
+
+		if(validate){
+			// al("doSubmitConfirm validate");
+			o.validate();
+		}else {
+			// al("no validate");
+			o.validated=true;
+			   o.runSubmit();
+		   }
+	}
 
 	this.init = function(){
 		var o=this;
@@ -101,8 +120,8 @@ function tgnFormClass(obj,options){
 
 		
 		console.group("TgnForm");
-		//al($form);
-		//al(this.settings);
+		// al($form);
+		// al(this.settings);
 
 		if(!$form.is(".forminit")){
 
@@ -146,7 +165,9 @@ function tgnFormClass(obj,options){
 	           $input.closest('.form-group').addClass('focused');
 	        }
 	        
-	    	if(this.settings.validator){
+	    	// al(this.settings);
+	    	if(this.settings.validator || this.settings.optionalvalidator){
+				
 	    		$form.find('.form-group').append('<div class="feedback invalid-feedback"></div>');
 
 
@@ -160,7 +181,7 @@ function tgnFormClass(obj,options){
 		    	}
 		    	if(this.settings.validateOnSubmit){
 					$form.on('submit',function(e){
-						
+						// al("SUBMITTING", o.validated);
 			            if(o.validated) {
 			                var $form = $(this);
 			                if ($form.data('submitted') === true) {
@@ -189,23 +210,7 @@ function tgnFormClass(obj,options){
 	            e.preventDefault();
 	           	var btn=$(this);
 				
-	            function doSubmit(){
-					o.buton_submit = btn;
-					var validate=o.settings.validator; 
-				
-					if(typeof o.buton_submit.data('validate') !== 'undefined' ){
-						validate=false;
-					}
-
-					if(validate){
-						// al("validate");
-	            		o.validate();
-					}else {
-						// al("no validate");
-						o.validated=true;
-	           			o.runSubmit();
-	           		}
-	            }
+	           
 
 				//si el formulario tiene confirmacion y el botón no tiene definida confirmacion o si la tiene definida con algun valor no false
 	            if(o.settings.confirm && ( ( typeof btn.data('confirm') == 'undefined' ) || btn.data('confirm')) ){
@@ -213,7 +218,7 @@ function tgnFormClass(obj,options){
 					//al("is confirm");
 					TgnModal.confirm(o.settings.confirm, function(modal){
 						//al("callback");
-						doSubmit();
+						o.doSubmitConfirm(btn);
 						modal.hide();
 						
 					});
@@ -223,14 +228,14 @@ function tgnFormClass(obj,options){
 					//al("is confirm");
 					TgnModal.confirm(btn.data('confirm'), function(modal){
 						//al("callback");
-						doSubmit();
+						o.doSubmitConfirm(btn);
 						modal.hide();
 						
 					});
 
 					
 				}else{
-					doSubmit();
+					o.doSubmitConfirm(btn);
 				}
 	        });
 
@@ -266,6 +271,7 @@ function tgnFormClass(obj,options){
 		var data = $form.serializeArray();
 		data._token= csrfToken();
         data.push({name:'class',value:this.settings.validator});
+        data.push({name:'optional_class',value:this.settings.optionalvalidator});
 
         for(var i = 0; i < data.length; i++) {
             item = data[i];
@@ -307,72 +313,90 @@ function tgnFormClass(obj,options){
                         o.runSubmit();//$form.submit();
                     }
                 } else {
-                	
-                    var campos_error = [];
-					
-                    $.each(data.errors,function(key, data){
-                    	if(key.includes('.')){
-                    		key=key.split(".");
-                    		key= key.shift() +'['+ key.join('][') + ']';
-                    	
-                    	}
-                    	//al(key);
-                        var campo = $form.find("[name='"+key+"']");
-                        if(campo.length==0) campo= $form.find("[name^='"+key+"']");//empieza por, para campos multiples []
-                        
-                        var fathers = campo.parents('.form-group');
-                        var closestfather = campo.closest('.form-group');
-                        //campo.removeClass('is-valid');
-                        campo.addClass('is-invalid');
-                        closestfather.addClass('is-invalid').addClass('with-feedback');
-                        closestfather.find('div[class*=-feedback]').html(data[0]);
-                        campos_error.push(key);
+                	if(data.warnings){
+						// alert("Hi ha warnigs");
+						// al(data.warnings);
+						var btn=$form.find("[type=submit]");
+						var modaltxt="<ul>";
+						$.each(data.warnings,function(key, data){
+							modaltxt+="<li>"+data+"</li>";
+						});
+						modaltxt+="</ul>";
+						//al("is confirm");
+						TgnModal.confirm(modaltxt, function(modal){
+							// al("callback");
+							o.settings.optionalvalidator=null;
+							o.doSubmitConfirm(btn);
+							modal.hide();
+							
+						},{style:'warning'});
+					}else if(data.errors){
+						var campos_error = [];
+						
+						$.each(data.errors,function(key, data){
+							if(key.includes('.')){
+								key=key.split(".");
+								key= key.shift() +'['+ key.join('][') + ']';
+							
+							}
+							//al(key);
+							var campo = $form.find("[name='"+key+"']");
+							if(campo.length==0) campo= $form.find("[name^='"+key+"']");//empieza por, para campos multiples []
+							
+							var fathers = campo.parents('.form-group');
+							var closestfather = campo.closest('.form-group');
+							//campo.removeClass('is-valid');
+							campo.addClass('is-invalid');
+							closestfather.addClass('is-invalid').addClass('with-feedback');
+							closestfather.find('div[class*=-feedback]').html(data[0]);
+							campos_error.push(key);
 
 
-                        //resalto la pestaña si está oculta
-                        if(campo.closest('.tab-pane').length>0){
-                        	//al("EN TAB");
-                        	var tabpane=campo.closest('.tab-pane');
+							//resalto la pestaña si está oculta
+							if(campo.closest('.tab-pane').length>0){
+								//al("EN TAB");
+								var tabpane=campo.closest('.tab-pane');
 
-                        	if(!tabpane.is(".active")){
-                        		var tab=$('.nav-link[href="#'+tabpane.attr('id')+'"]');
-                        		//al(tab);
+								if(!tabpane.is(".active")){
+									var tab=$('.nav-link[href="#'+tabpane.attr('id')+'"]');
+									//al(tab);
 
-                        		tab.addClass("anim beat in");
-                        		tab.on('click',function(){
-                        			$(this).removeClass('anim').removeClass('beat').removeClass('in');
-                        		});
-                        	}
-                        }
-					});
-					var formFields=$form.serializeArray();
+									tab.addClass("anim beat in");
+									tab.on('click',function(){
+										$(this).removeClass('anim').removeClass('beat').removeClass('in');
+									});
+								}
+							}
+						});
+						var formFields=$form.serializeArray();
 
-                    $.each(formFields, function(i, field) {
-                    	if (!field.name.startsWith('content_') && $.inArray(field.name, campos_error) === -1)
-                        {
-                            var campo = $form.find('[name="'+field.name+'"],[name="'+field.name+'[]"]');
-                            var closestfather = campo.closest('.form-group');
-                            var fathers = campo.parents('.form-group');
-                            campo.removeClass('is-invalid');
-                            closestfather.removeClass('is-invalid');
-                            if(!campo.data('had-feedback')) closestfather.removeClass('with-feedback');
-                            //campo.addClass('is-valid');
+						$.each(formFields, function(i, field) {
+							if (!field.name.startsWith('content_') && $.inArray(field.name, campos_error) === -1)
+							{
+								var campo = $form.find('[name="'+field.name+'"],[name="'+field.name+'[]"]');
+								var closestfather = campo.closest('.form-group');
+								var fathers = campo.parents('.form-group');
+								campo.removeClass('is-invalid');
+								closestfather.removeClass('is-invalid');
+								if(!campo.data('had-feedback')) closestfather.removeClass('with-feedback');
+								//campo.addClass('is-valid');
 
-                            closestfather.find('div[class*=-feedback]').html('');
+								closestfather.find('div[class*=-feedback]').html('');
 
-                            
-                        }
-                    });
+								
+							}
+						});
 
-					$form.trigger("tgnform:validate-error", {element:$form, errors: data.errors });
-  	    
-                    TgnFlash.warning(___("strings.Form validation errors"));
-					
-					//scroll to element			
-					$('html, body').scrollToElement($form);
+						$form.trigger("tgnform:validate-error", {element:$form, errors: data.errors });
+			
+						TgnFlash.warning(___("strings.Form validation errors"));
+						
+						//scroll to element			
+						$('html, body').scrollToElement($form);
 
-                    o.validated = false;
-                    o.buton_submit = false;
+						o.validated = false;
+						o.buton_submit = false;
+					}
                 }
             },
             error: function(xhr){

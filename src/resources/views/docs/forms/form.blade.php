@@ -87,6 +87,23 @@
 		@endcode
 	@endcol
 @endrow
+<hr class="big"/>
+
+<h2>Validació opcional</h2>
+
+@row
+	
+	@col(['size'=>6])
+		<p>Es poden fer validacions AJAX opcionals. S'avisa a l'usuari però se li permet igualment enviar el formulari a través d'una modal de confirmació. Cal indicar la classe del validador amb el paràmetre <code>optionalvalidator</code>.</p>
+		@includeIf('ajtarragona-web-components::docs.source.forms.form_optional_validate')
+	@endcol
+	@col(['size'=>6])
+
+		@code(['lang'=>'java'])
+			@includeSrc('ajtarragona-web-components::docs.source.forms.form_optional_validate')
+		@endcode
+	@endcol
+@endrow
 
 <hr class="big"/>
 

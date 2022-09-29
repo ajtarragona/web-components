@@ -13,9 +13,9 @@ Route::group(['middleware' => ['web','language','auth']], function () {
 });
 
 
-Route::group(['prefix' => 'ajtarragona/webcomponents','middleware' => ['web']], function () {
+Route::group(['prefix' => 'ajtarragona/webcomponents','middleware' => ['web','language']], function () {
 	
-
+	
 	Route::get('/', 'Ajtarragona\WebComponents\Controllers\DocsController@docs')->name('webcomponents.home');
 	
 	

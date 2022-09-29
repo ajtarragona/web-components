@@ -6,7 +6,6 @@
 
 @section('body')
 	
-
 	@row(['class'=>''])
 	
 		@col(['size'=>2,'class'=>'docs-sidebar','style'=>''])
