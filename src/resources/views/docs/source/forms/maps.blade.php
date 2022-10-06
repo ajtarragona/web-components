@@ -52,7 +52,7 @@
     "animation" => true,
     "cluster" => true,
     "fitbounds" => true,
-    // "customicons"=>true,
+    "customicons"=>true,
     "inputicon" => "search",
     "color"=>"success",
     "markers"=>[
@@ -64,8 +64,10 @@
                 "lng"=>1.2460229000000709
             ],
             "icon" => 'ambulance',
-            'iconcolor' => "#ffff00",
-            "color" => '#ff4499'
+            'color' => "#ffff00",
+            'bordercolor'=>'#ffff00',
+            'borderwidth'=>'50px',
+            "backgroundcolor" => '#ff4499'
         ],
         [
             "name"=>"Pere Martell 49",
@@ -75,6 +77,7 @@
                 "lng"=>1.242945500000019
             ],
             "icon" => 'circle',
+            'color' => "#00ff00",
             
         ]
     ],
@@ -321,7 +324,7 @@
     "cluster"=>true,
     'url' => route('webcomponents.mapmarkers'),
     'method' => 'POST',
-    'readonly'=>true
+    'readonly'=>true,
 ])
 
 @gmap([

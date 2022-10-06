@@ -233,15 +233,22 @@ class DocsController extends Controller
 
   public function markerImage(Request $request){
     $options=[
-      "bgcolor" => "#bf002c",
+      "backgroundcolor" => "#bf002c",
       "color" => "#ffffff",
+      "bordercolor" => "#000000",
+      "borderwidth" => "10px"
     ];
+
     $options=array_merge($options, $request->all());
   // dd($options);
 
-    $svg  = '<svg x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" fill="'.$options["bgcolor"].'" xml:space="preserve">';
-    $svg .= '<g><path d="M500,10c-196.7,0-356.1,159.3-356.1,355.9c0,57.3,13.5,111.2,37.6,159.2c14.4,28.6,32.7,55.4,53.9,79L500,990l264.6-386c21.2-23.5,39.6-50.4,53.9-79c24.1-48,37.6-101.8,37.6-159.2C856.1,169.3,696.7,10,500,10L500,10z"/><path d="M690.6,357.8c0,105.1-85.5,190.3-190.7,190.3c-105.2,0-190.5-85.2-190.5-190.3c0-105.1,85.3-190.4,190.5-190.4C605.1,167.4,690.6,252.6,690.6,357.8z"/></g>';
-    $svg .= '</svg>';
+    $svg='<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">';
+    $svg.='<path d="M 425.736 185.636 C 425.736 282.694 250.15 490.101 250 490.101 C 249.849 490.101 74.263 282.694 74.263 185.636 C 74.263 88.578 152.942 9.899 250 9.899 C 347.058 9.899 425.736 88.578 425.736 185.636 Z" style="stroke: '.$options["bordercolor"].'; fill: '.$options["backgroundcolor"].'; stroke-width: '.$options["borderwidth"].';"/>';
+    $svg.='</svg>';
+
+    // $svg  = '<svg x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" fill="'.$options["bgcolor"].'" xml:space="preserve">';
+    // $svg .= '<g><path d="M500,10c-196.7,0-356.1,159.3-356.1,355.9c0,57.3,13.5,111.2,37.6,159.2c14.4,28.6,32.7,55.4,53.9,79L500,990l264.6-386c21.2-23.5,39.6-50.4,53.9-79c24.1-48,37.6-101.8,37.6-159.2C856.1,169.3,696.7,10,500,10L500,10z"/><path d="M690.6,357.8c0,105.1-85.5,190.3-190.7,190.3c-105.2,0-190.5-85.2-190.5-190.3c0-105.1,85.3-190.4,190.5-190.4C605.1,167.4,690.6,252.6,690.6,357.8z"/></g>';
+    // $svg .= '</svg>';
 
     $image = SVG::fromString($svg);
     $doc = $image->getDocument();

@@ -99,8 +99,12 @@ $.widget( "ajtarragona.tgnMap", {
   
       this.id=this.element.attr("id");
       this.options = $.extend({}, this.options, this.element.data()); 
-
-      
+      if(this.options.customicons){
+        //no compatible
+        // this.options.animation=false;
+        this.options.cluster=false;
+      }
+        
   
       if(this.options.url) this.options.fitbounds=false;
   
@@ -303,9 +307,13 @@ $.widget( "ajtarragona.tgnMap", {
               tmpmarker.name?tmpmarker.name:null, 
               tmpmarker.url?tmpmarker.url:(tmpmarker.infobox?tmpmarker.infobox:null),
               tmpmarker.id?tmpmarker.id:null,
-              tmpmarker.color?tmpmarker.color:null,
-              tmpmarker.icon?tmpmarker.icon:null,
-              tmpmarker.iconcolor?tmpmarker.iconcolor:null 
+              {
+                icon : tmpmarker.icon?tmpmarker.icon:null,
+                backgroundcolor : tmpmarker.backgroundcolor?tmpmarker.backgroundcolor:null,
+                color: tmpmarker.color?tmpmarker.color:null,
+                bordercolor: tmpmarker.bordercolor?tmpmarker.bordercolor:null,
+                borderwidth: tmpmarker.borderwidth?tmpmarker.borderwidth:null,
+              }
             );
           }
 
@@ -320,9 +328,13 @@ $.widget( "ajtarragona.tgnMap", {
             tmpmarker.name?tmpmarker.name:null, 
             tmpmarker.url?tmpmarker.url:(tmpmarker.infobox?tmpmarker.infobox:null),
             tmpmarker.id?tmpmarker.id:null,
-            tmpmarker.color?tmpmarker.color:null,
-            tmpmarker.icon?tmpmarker.icon:null,
-            tmpmarker.iconcolor?tmpmarker.iconcolor:null
+            {
+              icon : tmpmarker.icon?tmpmarker.icon:null,
+              backgroundcolor : tmpmarker.backgroundcolor?tmpmarker.backgroundcolor:null,
+              color: tmpmarker.color?tmpmarker.color:null,
+              bordercolor: tmpmarker.bordercolor?tmpmarker.bordercolor:null,
+              borderwidth: tmpmarker.borderwidth?tmpmarker.borderwidth:null,
+            }
           );
         }
       }
@@ -358,7 +370,7 @@ $.widget( "ajtarragona.tgnMap", {
   },
 
 
-  addMarker : function(coords,name,infobox,id,color,icon,iconcolor){
+  addMarker : function(coords,name,infobox,id, iconsettings){
     var o=this;
 
     // al("addMarker ", coords);
@@ -402,7 +414,7 @@ $.widget( "ajtarragona.tgnMap", {
       };
 
       if(this.options.customicons){
-        var imgurl = route('webcomponents.markerimage',{'bgcolor':color}).url();
+        var imgurl = route('webcomponents.markerimage',iconsettings).url();
       
         markerargs.icon= {
           url: imgurl,
@@ -418,15 +430,15 @@ $.widget( "ajtarragona.tgnMap", {
 
       marker = new google.maps.Marker(markerargs);
 
-      if(this.options.customicons && icon){
+      if(this.options.customicons && iconsettings.icon){
         // al("icon",icon);
         // al("coords",coords);
         // al("icon",icon);
         var iconargs={
-          icon: icon,
+          icon: iconsettings.icon,
         };
 
-        if(iconcolor) iconargs.iconcolor= iconcolor;
+        if(iconsettings.color) iconargs.iconcolor= iconsettings.color;
 
         var iconmarker = new CustomMarker(
             coords, 
@@ -617,9 +629,13 @@ $.widget( "ajtarragona.tgnMap", {
                     (marker.name?marker.name:null),
                     infobox,
                     (marker.id?marker.id:null) ,
-                    (marker.color?marker.color:null) ,
-                    (marker.icon?marker.icon:null),
-                    (marker.iconcolor?marker.iconcolor:null) 
+                    {
+                      icon: (marker.icon?marker.icon:null),
+                      backgroundcolor: (marker.backgroundcolor?marker.backgroundcolor:null) ,
+                      color: (marker.color?marker.color:null) ,
+                      bordercolor: (marker.bordercolor?marker.bordercolor:null) ,
+                      borderwidth: (marker.borderwidth?marker.borderwidth:null) 
+                    }
                   );
                 }
               });
