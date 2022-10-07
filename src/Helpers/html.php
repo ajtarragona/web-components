@@ -50,6 +50,7 @@ if (! function_exists('icon')) {
 }
 
 
+
 if (! function_exists('textAndIcon')) {
 	function textAndIcon($text,$icon,$options=[]){
 		return Icon::getIconHTML($text,$icon,$options);

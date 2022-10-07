@@ -128,6 +128,38 @@
 	color:#fff;
 	transform: translateX(-50%) translateY(-28px);
   }
+
+  .markerlabel-icon{
+	visibility: hidden;
+	// display:none;
+	position:relative;
+	&:before {
+		visibility: visible;
+		position: absolute;
+		left: 0;
+		top: 0;
+		display: block;
+		width: 100%;
+		text-align: center;
+		// display:block;
+	}
+	
+	// content: "";
+	// text-indent: -9999px;
+	// white-space: nowrap;
+    // overflow: hidden;
+  }
+
+  .markerlabel-internal{
+
+  }	
+  .markerlabel-external{
+	background-color:$gray-100;
+	border:1px solid $gray-500;
+	border-radius:$border-radius;
+	color:$gray-900;
+	padding:.3em;
+  }
   
 //   .map-custom-marker .after {
 // 	position: absolute;

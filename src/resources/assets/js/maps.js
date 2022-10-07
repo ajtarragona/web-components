@@ -1,10 +1,39 @@
 // var MarkerClusterer = require("@google/markerclusterer");
 var MarkerClusterer = require("@google/markerclustererplus");
+// import { MarkerWithLabel } from '@googlemaps/markerwithlabel';
+// import { library, icon  } from '@fortawesome/fontawesome-svg-core'
+// import { fas } from '@fortawesome/free-solid-svg-icons'
+// import { far } from '@fortawesome/free-regular-svg-icons'
+// import { fab } from '@fortawesome/free-brands-svg-icons'
+
 // var OverlappingMarkerSpiderfier = require("overlapping-marker-spiderfier");
 // import OverlappingMarkerSpiderfier from 'overlapping-marker-spiderfier';
 
 // var MAPS=[];
 
+
+/** fontawesome icons */
+// Define Marker Shapes
+
+var marker_shapes = {
+  MAP_PIN : 'M0-48c-9.8 0-17.7 7.8-17.7 17.4 0 15.5 17.7 30.6 17.7 30.6s17.7-15.4 17.7-30.6c0-9.6-7.9-17.4-17.7-17.4z',
+  SQUARE_PIN : 'M22-48h-44v43h16l6 5 6-5h16z',
+  SHIELD : 'M18.8-31.8c.3-3.4 1.3-6.6 3.2-9.5l-7-6.7c-2.2 1.8-4.8 2.8-7.6 3-2.6.2-5.1-.2-7.5-1.4-2.4 1.1-4.9 1.6-7.5 1.4-2.7-.2-5.1-1.1-7.3-2.7l-7.1 6.7c1.7 2.9 2.7 6 2.9 9.2.1 1.5-.3 3.5-1.3 6.1-.5 1.5-.9 2.7-1.2 3.8-.2 1-.4 1.9-.5 2.5 0 2.8.8 5.3 2.5 7.5 1.3 1.6 3.5 3.4 6.5 5.4 3.3 1.6 5.8 2.6 7.6 3.1.5.2 1 .4 1.5.7l1.5.6c1.2.7 2 1.4 2.4 2.1.5-.8 1.3-1.5 2.4-2.1.7-.3 1.3-.5 1.9-.8.5-.2.9-.4 1.1-.5.4-.1.9-.3 1.5-.6.6-.2 1.3-.5 2.2-.8 1.7-.6 3-1.1 3.8-1.6 2.9-2 5.1-3.8 6.4-5.3 1.7-2.2 2.6-4.8 2.5-7.6-.1-1.3-.7-3.3-1.7-6.1-.9-2.8-1.3-4.9-1.2-6.4z',
+  ROUTE : 'M24-28.3c-.2-13.3-7.9-18.5-8.3-18.7l-1.2-.8-1.2.8c-2 1.4-4.1 2-6.1 2-3.4 0-5.8-1.9-5.9-1.9l-1.3-1.1-1.3 1.1c-.1.1-2.5 1.9-5.9 1.9-2.1 0-4.1-.7-6.1-2l-1.2-.8-1.2.8c-.8.6-8 5.9-8.2 18.7-.2 1.1 2.9 22.2 23.9 28.3 22.9-6.7 24.1-26.9 24-28.3z',
+  SQUARE : 'M-24-48h48v48h-48z',
+  SQUARE_ROUNDED : 'M24-8c0 4.4-3.6 8-8 8h-32c-4.4 0-8-3.6-8-8v-32c0-4.4 3.6-8 8-8h32c4.4 0 8 3.6 8 8v32z',
+  CIRCLE : 'M 24 -24 C 24 -10.745 13.255 0 0 0 C -13.255 0 -24 -10.745 -24 -24 C -24 -37.255 -13.255 -48 0 -48 C 13.255 -48 24 -37.255 24 -24 Z',
+  CIRCLE_PIN : 'M -0.438 -0.028 L -4.618 -8.644 C -15.663 -10.797 -24 -20.525 -24 -32.2 C -24 -45.455 -13.255 -56.2 0 -56.2 C 13.255 -56.2 24 -45.455 24 -32.2 C 24 -20.19 15.179 -10.241 3.662 -8.478 L -0.438 -0.028 Z'
+}
+
+
+
+// library.add(fas, far, fab);
+
+// const camera = icon({ prefix: 'fas', iconName: 'camera' })
+// console.log("CAMERA", camera);
+
+/**map widget */
 $.widget( "ajtarragona.tgnMap", {
 
   options : {
@@ -102,7 +131,7 @@ $.widget( "ajtarragona.tgnMap", {
       if(this.options.customicons){
         //no compatible
         // this.options.animation=false;
-        this.options.cluster=false;
+        // this.options.cluster=false;
       }
         
   
@@ -312,7 +341,11 @@ $.widget( "ajtarragona.tgnMap", {
                 backgroundcolor : tmpmarker.backgroundcolor?tmpmarker.backgroundcolor:null,
                 color: tmpmarker.color?tmpmarker.color:null,
                 bordercolor: tmpmarker.bordercolor?tmpmarker.bordercolor:null,
-                borderwidth: tmpmarker.borderwidth?tmpmarker.borderwidth:null,
+                borderwidth: (tmpmarker.borderwidth || tmpmarker.borderwidth==0 ) ? tmpmarker.borderwidth :null,
+                label: (tmpmarker.label?tmpmarker.label:null),
+                opacity: ((tmpmarker.opacity || tmpmarker.opacity==0 )?tmpmarker.opacity:1) ,
+                shape: (tmpmarker.shape?tmpmarker.shape:'MAP_PIN') ,
+                labelposition: (tmpmarker.labelposition?tmpmarker.labelposition:'internal') ,
               }
             );
           }
@@ -333,7 +366,11 @@ $.widget( "ajtarragona.tgnMap", {
               backgroundcolor : tmpmarker.backgroundcolor?tmpmarker.backgroundcolor:null,
               color: tmpmarker.color?tmpmarker.color:null,
               bordercolor: tmpmarker.bordercolor?tmpmarker.bordercolor:null,
-              borderwidth: tmpmarker.borderwidth?tmpmarker.borderwidth:null,
+              borderwidth: (tmpmarker.borderwidth || tmpmarker.borderwidth==0 )?tmpmarker.borderwidth:null,
+              label: (tmpmarker.label?tmpmarker.label:null),
+              opacity: ((tmpmarker.opacity || tmpmarker.opacity==0 )?tmpmarker.opacity:1) ,
+              shape: (tmpmarker.shape?tmpmarker.shape:'MAP_PIN'),
+              labelposition: (tmpmarker.labelposition?tmpmarker.labelposition:'internal') ,
             }
           );
         }
@@ -413,42 +450,116 @@ $.widget( "ajtarragona.tgnMap", {
         
       };
 
+
       if(this.options.customicons){
-        var imgurl = route('webcomponents.markerimage',iconsettings).url();
-      
+
+        // al('iconsettings',iconsettings);
+        // var imgurl = route('webcomponents.markerimage',iconsettings).url();
+        // var imgpath='<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">';
+        // var pathstyle=''; //style="stroke: '+iconsettings.bordercolor+'; fill: '+iconsettings.backgroundcolor+'; stroke-width: '+iconsettings.borderwidth+';"
+        // var imgpath='M 19.001 0 C 22.866 0 26.155 1.295 28.865 3.88 C 31.575 6.466 32.933 9.604 32.933 13.291 C 32.933 15.135 32.453 17.246 31.482 19.624 C 30.516 22.003 29.345 24.233 27.976 26.316 C 26.606 28.397 25.249 30.343 23.909 32.158 C 22.568 33.971 21.431 35.412 20.498 36.484 L 18.999 38 C 18.626 37.582 18.129 37.034 17.502 36.351 C 16.878 35.667 15.76 34.298 14.137 32.247 C 12.514 30.197 11.097 28.204 9.881 26.269 C 8.668 24.336 7.56 22.151 6.564 19.713 C 5.564 17.275 5.066 15.135 5.066 13.291 C 5.066 9.604 6.425 6.466 9.133 3.88 C 11.845 1.295 15.133 0 18.998 0 L 19.001 0 Z';
+        // imgpath+='</svg>';
+        // console.log('svg',imgpath);
+        
+        //28x38
+
+        var markershape=iconsettings.shape ? iconsettings.shape.toUpperCase() : 'MAP_PIN';
+// al('markershape',markershape);
+        var labeltop=-25;
+        if($.inArray(markershape, ['SHIELD','ROUTE','SQUARE','CIRCLE','SQUARE_ROUNDED'])>=0){
+            labeltop=-22;
+        }else if($.inArray(markershape, ['CIRCLE_PIN'])>=0){
+          labeltop=-30;
+        }
+        if(iconsettings.labelposition && iconsettings.labelposition == "external"){
+          labeltop=20;
+        }
+
+        // var labelorigin=new google.maps.Point(0, -25);
+
+        // if (iconsettings.icon) labelorigin=new google.maps.Point(0, -22);
+        // else if(iconsettings.labelposition && iconsettings.labelposition == "external") labelorigin=new google.maps.Point(0, 20);
+        // console.log('labeltop',labeltop);
         markerargs.icon= {
-          url: imgurl,
-          size: new google.maps.Size(36, 36),
-          // origin: new google.maps.Point(0, 0),
-          // anchor: new google.maps.Point(17, 34),
-          scaledSize: new google.maps.Size(36, 36)
+          // url: imgurl,
+          path : marker_shapes[markershape],//imgpath,
+          // size: new google.maps.Size(40, 40),
+          // origin: new google.maps.Point(19, 38),
+          anchor: new google.maps.Point(0,0),
+          // scaledSize: new google.maps.Size(28,38),
+          // anchor: new google.maps.Point(7.8, 21),
+          rotation: 0,
+          scale: 0.9,
+          labelOrigin : new google.maps.Point(0, labeltop)
         };
+
+        markerargs.icon.strokeColor = iconsettings.bordercolor ? iconsettings.bordercolor:'#000000';
+        markerargs.icon.fillColor = iconsettings.backgroundcolor ? iconsettings.backgroundcolor:'#bf002c';
+        markerargs.icon.fillOpacity = (iconsettings.opacity || iconsettings.opacity === 0) ? iconsettings.opacity:1,
+        markerargs.icon.strokeWeight = (iconsettings.borderwidth || iconsettings.borderwidth === 0) ? iconsettings.borderwidth : 1;
+
+        // use a Material Icon as font
+        if(iconsettings.icon){
+          // console.log(iconsettings.icon, iconsettings.icon.startsWith('fa'))
+
+          if(!iconsettings.icon.startsWith('fa')){
+            iconsettings.icon='fa fa-'+iconsettings.icon;
+          }
+
+          markerargs.label = 
+          {
+              className : 'markerlabel-icon icon '+iconsettings.icon,
+              text: "", 
+              fontFamily: "Font Awesome 5 Free",
+              color: iconsettings.color ?? '',
+              fontSize: "16px"
+          };
+
+        }else if(iconsettings.label){
+          // markerargs.labelContent = iconsettings.label; // can also be HTMLElement
+          // markerargs.labelAnchor: new google.maps.Point(-21, 3),
+          // markerargs.labelClass: "labels", // the CSS class for the label
+          // markerargs.labelStyle: { opacity: 1.0 },
+          markerargs.label = 
+          {
+              className : 'markerlabel-' + (iconsettings.labelposition ? iconsettings.labelposition : 'internal'),
+              text: iconsettings.label, //"\ue530", // codepoint from https://fonts.google.com/icons
+              fontFamily: "Montserrat, Arial, sans-serif",
+              // fontWeight: "bold",
+              color: iconsettings.color ?? '',
+              fontSize: (iconsettings.labelposition && iconsettings.labelposition == "external") ? "12px" : "16px",
+          };
+        }
+
+        // al('addMARKER',markerargs);
+
 
         
 
       }
 
       marker = new google.maps.Marker(markerargs);
+      // marker= new MarkerWithLabel(markerargs);
 
-      if(this.options.customicons && iconsettings.icon){
-        // al("icon",icon);
-        // al("coords",coords);
-        // al("icon",icon);
-        var iconargs={
-          icon: iconsettings.icon,
-        };
+      // if(this.options.customicons && iconsettings.icon){
+      //   // al("icon",icon);
+      //   // al("coords",coords);
+      //   // al("icon",icon);
+      //   var iconargs={
+      //     icon: iconsettings.icon,
+      //   };
 
-        if(iconsettings.color) iconargs.iconcolor= iconsettings.color;
+      //   if(iconsettings.color) iconargs.iconcolor= iconsettings.color;
 
-        var iconmarker = new CustomMarker(
-            coords, 
-            this._getGmap(),
-            iconargs
-          );
-          marker.customicon=iconmarker;
-          // al("end");
+      //   var iconmarker = new CustomMarker(
+      //       coords, 
+      //       this._getGmap(),
+      //       iconargs
+      //     );
+      //     marker.customicon=iconmarker;
+      //     // al("end");
 
-      }
+      // }
      
       
     // }
@@ -577,10 +688,10 @@ $.widget( "ajtarragona.tgnMap", {
         if(markers.length>1){
           for( var j=0; j< markers.length; j++ ){
               marker = markers[j]; // <-- Here's your clustered marker
-              $(marker.customicon.div).hide();
+              // $(marker.customicon.div).hide();
           }
         }else{
-            $(markers[0].customicon.div).show();
+            // $(markers[0].customicon.div).show();
         }
       }
     }
@@ -634,7 +745,11 @@ $.widget( "ajtarragona.tgnMap", {
                       backgroundcolor: (marker.backgroundcolor?marker.backgroundcolor:null) ,
                       color: (marker.color?marker.color:null) ,
                       bordercolor: (marker.bordercolor?marker.bordercolor:null) ,
-                      borderwidth: (marker.borderwidth?marker.borderwidth:null) 
+                      borderwidth: ((marker.borderwidth || marker.borderwidth==0 ) ?marker.borderwidth:null) ,
+                      label: (marker.label?marker.label:null),
+                      opacity: ((marker.opacity||marker.opacity==0)?marker.opacity:1) ,
+                      shape: (marker.shape?marker.shape:'MAP_PIN') ,
+                      labelposition: (marker.labelposition?marker.labelposition:'internal') ,
                     }
                   );
                 }

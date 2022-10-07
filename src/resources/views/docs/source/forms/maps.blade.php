@@ -42,7 +42,7 @@
     
 ])
 
-
+{{-- @icon('star') --}}
 @gmap([
     "zoom" =>14,
     "multiple"=>true,
@@ -63,11 +63,14 @@
                 "lat"=>41.1176215,
                 "lng"=>1.2460229000000709
             ],
-            "icon" => 'ambulance',
-            'color' => "#ffff00",
+            "icon" => 'far fa-star',
+            'color' => "#ffffff",
             'bordercolor'=>'#ffff00',
-            'borderwidth'=>'50px',
-            "backgroundcolor" => '#ff4499'
+            'borderwidth'=>3,
+            "backgroundcolor" => '#ff4499',
+            // 'label'=>'<i class="fas icon fa-star">mierda</i>',
+            // 'labelposition'=>"external"
+            // 'shape' => 'SQUARE_PIN'
         ],
         [
             "name"=>"Pere Martell 49",
@@ -76,10 +79,32 @@
                 "lat"=>41.1126923, 
                 "lng"=>1.242945500000019
             ],
-            "icon" => 'circle',
-            'color' => "#00ff00",
+            "label" => "1",
+            'color' => "#ffffff",
+            'backgroundcolor' => "#0066ff",
+            "opacity"=>0.5,
+            'shape' => 'CIRCLE_PIN',
             
-        ]
+        //     'labelposition'=>"external"
+            
+        ],
+        [
+            "name"=>"Otro sitio",
+            "infobox"=>"Otro sitio",
+            "location"=> [
+                "lat"=>41.0999623021731, 
+                "lng"=>1.133002214129533
+            ],
+            "label" => "Text llarg",
+            "color"=>"#333",
+            'shape' => 'CIRCLE',
+            'labelposition'=>"external",
+            
+            
+            
+        ],
+        
+
     ],
     "controls" =>[
         "zoom" => false,
