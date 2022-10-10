@@ -221,8 +221,8 @@ $.fn.initColorPicker = function (){
         if($input.is(".colorpicker-init")) return;
         
         
-        $input.addClass(".colorpicker-init");
-        // al("initColorPicker");
+        $input.addClass("colorpicker-init");
+        al("initColorPicker");
         
         //generate html
         var $ig=$("<div class='input-group'/>");
