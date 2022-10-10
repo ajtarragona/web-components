@@ -43,6 +43,22 @@
 ])
 
 {{-- @icon('star') --}}
+<hr class="big"/>
+
+<h5>Marcadors personalitzats</h5>
+<p>Si activem el paràmetre <code>customicons</code> podem fer servir marcadors customitzats.</p>
+<p>Per a cada marcador, podem definir els següents atributs:</p>
+<ul>
+    <li><code>shape</code>: Defineix la forma (MAP_PIN, SQUARE_PIN, SHIELD, ROUTE, SQUARE, SQUARE_ROUNDED, CIRCLE, CIRCLE_PIN)</li>
+    <li><code>backgroundcolor</code>: Defineix el color de fons del marcador (hexadecimal)</li>
+    <li><code>borderwidth</code>: Mida de la vora</li>
+    <li><code>bordercolor</code>: Color de la vora</li>
+    <li><code>label</code>: etiqueta a mostrar. </li>
+    <li><code>labelposition</code>: Posició de l'etiqueta: internal o external</li>
+    <li><code>icon</code>: nom fontawesome de la icona</li>
+    <li><code>color</code>: color de l'etiqueta o icona</li>
+    <li><code>opacity</code>: Transparència de la icona (entre 0 i 1)</li>
+</ul>
 @gmap([
     "zoom" =>14,
     "multiple"=>true,
@@ -334,7 +350,7 @@
     ]
     
 ])  --}}
-
+<hr class="big"/>
 
 <h5>Ajax markers</h5>
 {{-- @dump(config('webcomponents.gmaps.tgn_coords')); --}}
