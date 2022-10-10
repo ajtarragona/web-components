@@ -451,7 +451,7 @@ $.widget( "ajtarragona.tgnMap", {
       };
 
 
-      if(this.options.customicons){
+      if(this.options.customicons && iconsettings){
 
         // al('iconsettings',iconsettings);
         // var imgurl = route('webcomponents.markerimage',iconsettings).url();
@@ -463,7 +463,7 @@ $.widget( "ajtarragona.tgnMap", {
         
         //28x38
 
-        var markershape=iconsettings.shape ? iconsettings.shape.toUpperCase() : 'MAP_PIN';
+        var markershape= iconsettings.shape ? iconsettings.shape.toUpperCase() : 'MAP_PIN';
 // al('markershape',markershape);
         var labeltop=-25;
         if($.inArray(markershape, ['SHIELD','ROUTE','SQUARE','CIRCLE','SQUARE_ROUNDED'])>=0){
