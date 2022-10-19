@@ -1,14 +1,15 @@
 <ul>
 	@if(!isset($hideintro)) @include('ajtarragona-web-components::docs.menuitem',['route'=>'components.introduction','title'=>'Introducció']) @endif
-	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.alerts','title'=>'Alerts'])
-	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.badges','title'=>'Badges'])
-	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.breadcrumb','title'=>'Breadcrumb'])
-	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.icons','title'=>'Icons'])
-	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.lists','title'=>'Lists'])
-	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.tables','title'=>'Tables'])
-	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.cards','title'=>'Cards'])
-	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.modals','title'=>'Modals'])
-	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.navs','title'=>'Navs'])
-	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.tabs','title'=>'Tabs'])
+	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.alerts','title'=>icon('exclamation-triangle').' Alerts'])
+	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.badges','title'=>icon('certificate').' Badges'])
+	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.breadcrumb','title'=>icon('angle-right').' Breadcrumb'])
+	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.icons','title'=>icon('file-image').' Icons'])
+	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.lists','title'=>icon('list').' Lists'])
+	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.tables','title'=>icon('table').' Tables'])
+	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.cards','title'=>icon('far fa-square').' Cards'])
+	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.modals','title'=>icon('window-maximize').' Modals'])
+	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.navs','title'=>icon('bars').' Navs'])
+	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.tabs','title'=>icon('angle-right').' Tabs'])
+	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.charts','title'=>icon('chart-pie').' Charts'])
 
 </ul>

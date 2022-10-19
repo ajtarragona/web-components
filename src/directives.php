@@ -382,6 +382,10 @@ return [
     'appVersion' => function($expression) {
         return "<?php echo appVersion({$expression}); ?>";
     },  
+
+    'chart' =>  function ($expression) {
+        return "<?php echo renderChart({$expression}); ?>";
+    }
 ];
         
 

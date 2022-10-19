@@ -3,6 +3,7 @@
 namespace Ajtarragona\WebComponents\Controllers; 
 
 use Ajtarragona\WebComponents\Controllers\BaseController as Controller;
+use Ajtarragona\WebComponents\Models\Charts\DemoChart;
 use Faker\Generator as Faker;
 use Faker\Factory as FakerFactory;
 use Illuminate\Http\Request;
@@ -77,9 +78,11 @@ class DocsController extends Controller
   public function docs($page='start.introduction',Faker $faker){ 
        $this->publishPackageAssets();
        $args=compact('faker','page');
-
        if($page=='forms.select'){
-          $args['selectoptions']=$this->getTestOptions(10);
+         $args['selectoptions']=$this->getTestOptions(10);
+        }else if($page=='components.charts'){
+          $args['demochart'] = new DemoChart();
+
        }
 
        
