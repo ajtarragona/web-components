@@ -379,6 +379,9 @@ return [
     'includeSrc' => function($expression) {
         return "<?php echo includeSrc({$expression}); ?>";
     },
+    'includeClassSrc' => function($expression) {
+        return "<?php echo includeClassSrc({$expression}); ?>";
+    },
     'appVersion' => function($expression) {
         return "<?php echo appVersion({$expression}); ?>";
     },  

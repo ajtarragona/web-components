@@ -3,7 +3,9 @@
 namespace Ajtarragona\WebComponents\Controllers; 
 
 use Ajtarragona\WebComponents\Controllers\BaseController as Controller;
-use Ajtarragona\WebComponents\Models\Charts\DemoChart;
+use Ajtarragona\WebComponents\Models\Charts\Examples\LinesAsyncChart;
+use Ajtarragona\WebComponents\Models\Charts\Examples\PieAsyncChart;
+use Ajtarragona\WebComponents\Models\Charts\Examples\DemoChart;
 use Faker\Generator as Faker;
 use Faker\Factory as FakerFactory;
 use Illuminate\Http\Request;
@@ -82,6 +84,8 @@ class DocsController extends Controller
          $args['selectoptions']=$this->getTestOptions(10);
         }else if($page=='components.charts'){
           $args['demochart'] = new DemoChart();
+          $args['linesasyncchart'] = new LinesAsyncChart();
+          $args['pieasyncchart'] = new PieAsyncChart();
 
        }
 

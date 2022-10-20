@@ -1,6 +1,9 @@
 <?php
 
-namespace Ajtarragona\WebComponents\Models\Charts;
+namespace Ajtarragona\WebComponents\Models\Charts\Examples;
+
+use Ajtarragona\WebComponents\Models\Charts\DatasetValue;
+use Ajtarragona\WebComponents\Models\Charts\LineChart;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Faker\Factory as FakerFactory;
@@ -14,9 +17,16 @@ class DemoChart extends LineChart
     protected $options = [
         'title.text'=>"Demo chart",
         'title.display'=> true,
-        // 'aspectRatio'=>1,
-        "datalabels.display" => false
-       
+        'legend.position' =>'right',
+        'legend.onClick'=>false,
+        'datalabels.display'=>false,
+        'tooltip.backgroundColor' => '#ffffff',
+        'tooltip.bodyColor' => '#333333',
+        'tooltip.titleColor' => '#666666',
+        'tooltip.caretSize' => 0,
+        'title.align'=>'start',
+        'title.font.size'=>'20pt',
+        'aspectRatio' => 2
     ];
 
     protected $colors=[
@@ -31,9 +41,9 @@ class DemoChart extends LineChart
      */
     public function __construct($options=[])
     {
-        $faker = FakerFactory::create();
         parent::__construct($options);
-       
+        
+        $faker = FakerFactory::create();
         $numseries=$faker->numberBetween(1,4);
         $numdata=$faker->numberBetween(3,8);
         

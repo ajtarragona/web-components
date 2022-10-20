@@ -15,10 +15,11 @@ class BaseChart
     protected $options = [];
     public $container_class;
     public $css_class;
-
+    public $preloader=true;
+    protected $option_params=[];
 
     protected $plugin_options = ["legend","title","subtitle","tooltip","datalabels"];
-    protected $fillable_attributes = ["id","chart_type","container_class","css_class"];
+    protected $fillable_attributes = ["id","chart_type","container_class","css_class",'preloader'];
 
 
 
@@ -30,6 +31,7 @@ class BaseChart
      */
     public function __construct($options=[])
     {   
+        
         $this->datasets=collect();
 
         foreach($this->fillable_attributes as $attribute_name){
@@ -47,6 +49,9 @@ class BaseChart
             
         ], $this->options);
         $this->setOptions($options);
+
+       
+
     }
 
 
@@ -106,6 +111,7 @@ class BaseChart
     }
 
     public function setOptions($options=[]){
+        $this->option_params=$options;
         $this->options =  array_merge($this->options, $options);
         $this->prepareOptions();
         return $this;
@@ -115,6 +121,9 @@ class BaseChart
         $this->prepareOptions();
         
         return $this;
+    }
+    public function getOptionParams(){
+        return $this->option_params;
     }
     public function getOptions(){
         return $this->options;
@@ -131,14 +140,10 @@ class BaseChart
         // dump($this);
         return view("ajtarragona-web-components::components.bootstrap.chart", ["chart"=>$this])->render();
     }
-    // public function renderScript(){
-    //     return view("charts.script",["chart"=>$this])->render();
-    // }
+   
+    
+    public function isAsync(){
+        return uses_trait($this, 'Ajtarragona\WebComponents\Traits\AsyncChart'); // && (!isset($this->async) || (isset($this->async) && $this->async)) );
+    }
 
-
-    // public static function renderScripts(){
-    //     return view("charts.scripts")->render();
-    // }
-
-    public function scripts(){}
 }

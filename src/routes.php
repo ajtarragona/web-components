@@ -104,4 +104,7 @@ Route::group(['prefix' => 'ajtarragona/webcomponents','middleware' => ['web','la
 	Route::post('validation','Ajtarragona\WebComponents\Controllers\ValidationController@validate')->name('webcomponents.formvalidator');
 
 
+	//rutas de  form ajax validation
+	Route::post('chart','Ajtarragona\WebComponents\Controllers\ChartsController@loadChart')->name('webcomponents.chart');
+
 });

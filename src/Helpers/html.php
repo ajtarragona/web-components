@@ -271,6 +271,23 @@ if (! function_exists('includeSrc')) {
 }
 
 
+if (! function_exists('includeClassSrc')) {
+	function includeClassSrc($classpath){
+		try{
+			$reflector = new ReflectionClass($classpath);//.'::class');
+			
+			$path= $reflector->getFileName();
+	
+			if(is_file($path)){
+				return file_get_contents($path);
+			}
+
+		}catch(Exception $e){
+			// dd($e);
+			return "";
+		}
+	}
+}
 
 if (! function_exists('makeLinks')) {
 	function makeLinks($str, $linkname=False,$attributes=[]) {
