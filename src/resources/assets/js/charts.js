@@ -23,11 +23,14 @@ function TgnChart(canvas, settings){
 	this.$canvas=canvas;
 	this.$container=canvas.closest('.chart-container');
 	
-   
-
+    
 	this.settings = $.extend(true, {}, tgnchartdefaults, this.$canvas.data()); 
+    // if(this.settings.async)  console.log("DATA",this.$canvas.data());
+    // delete this.settings.
+    // if(this.settings.async) al('TgnChart',this.$canvas.data());
+    
     if(settings) this.settings = $.extend(true, this.settings, settings);
-    // al('TgnChart',this.settings);
+    // if(this.settings.async) al('TgnChart',this.settings);
         
     this.datasets=[];
     this.labels=[];
@@ -120,13 +123,18 @@ function TgnChart(canvas, settings){
     this.loadData = function(){
         var o=this;
         var url=route('webcomponents.chart');
+        
         // console.log('loadData',url, this.settings.options);
         var params=this.settings.options ?? {};
+        // console.log(params);
         params._token = csrfToken();
         params.classname = this.settings.classname;
         
-        // al(params);
+        delete params.plugins;
+        delete params.scales;
+        al("PARAMS",params);
         if(o.settings.preloader) o.$container.startLoading();
+
         $.ajax({
             url: url,
             type: 'POST',
@@ -137,6 +145,7 @@ function TgnChart(canvas, settings){
             },
             success: function(data){
                 o.$container.stopLoading();
+                o.$container.find('.error-msg').remove();
                 // al("data", data);
                 o.prepareData(data.datasets);
                 o.setOptions(data.options);
@@ -145,8 +154,13 @@ function TgnChart(canvas, settings){
             error: function(xhr){
 
                 // al("ERROR",xhr.responseJSON.message);
-                
-                o.$container.html(xhr.responseJSON.message ?? 'Error');
+                if(o.$container.find('span.error-msg').length==0){
+                    o.$container.append($('<span class="error-msg"/>'));
+                }
+                var errormesg='Error loading Chart';
+                if(xhr.responseJSON && xhr.responseJSON.message) errormesg=xhr.responseJSON.message;
+
+                o.$container.find('.error-msg').html( errormesg );
                 if(o.settings.preloader)  o.$container.stopLoading();
                 // executeCallback(o.settings.onerror,o.$container);
             }
