@@ -137,7 +137,7 @@ function TgnChart(canvas, settings){
 
         $.ajax({
             url: url,
-            type: 'POST',
+            type: 'get',
             data: params,
             dataType: 'json',
             headers: {
