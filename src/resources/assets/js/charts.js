@@ -132,6 +132,9 @@ function TgnChart(canvas, settings){
             type: 'POST',
             data: params,
             dataType: 'json',
+            headers: {
+                'X-CSRF-TOKEN':params._token,
+            },
             success: function(data){
                 o.$container.stopLoading();
                 // al("data", data);
