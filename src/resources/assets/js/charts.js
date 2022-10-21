@@ -132,39 +132,82 @@ function TgnChart(canvas, settings){
         
         delete params.plugins;
         delete params.scales;
-        al("PARAMS",params);
+        // al("PARAMS",params);
         if(o.settings.preloader) o.$container.startLoading();
 
-        $.ajax({
-            url: url,
-            type: 'get',
-            data: params,
-            dataType: 'json',
-            headers: {
-                'X-CSRF-TOKEN':params._token,
-            },
-            success: function(data){
+
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("X-CSRF-TOKEN", params._token);
+        xhr.setRequestHeader('Content-type','application/json');
+
+        // function execute after request is successful 
+        xhr.onload  = function () {
+                var data=JSON.parse(xhr.responseText);
+                al('data',data);
+            // if (this.readyState == 4 && this.status == 200) {
                 o.$container.stopLoading();
                 o.$container.find('.error-msg').remove();
                 // al("data", data);
                 o.prepareData(data.datasets);
                 o.setOptions(data.options);
                 o.update();
-            },
-            error: function(xhr){
+                
+            // }else{
 
-                // al("ERROR",xhr.responseJSON.message);
-                if(o.$container.find('span.error-msg').length==0){
-                    o.$container.append($('<span class="error-msg"/>'));
-                }
-                var errormesg='Error loading Chart';
-                if(xhr.responseJSON && xhr.responseJSON.message) errormesg=xhr.responseJSON.message;
-
-                o.$container.find('.error-msg').html( errormesg );
-                if(o.settings.preloader)  o.$container.stopLoading();
-                // executeCallback(o.settings.onerror,o.$container);
+            // }
+        }
+        xhr.onerror = function(){ 
+            // al("ERROR",xhr.responseJSON.message);
+            if(o.$container.find('span.error-msg').length==0){
+                o.$container.append($('<span class="error-msg"/>'));
             }
-        });
+            var ret=JSON.parse(xhr.responseText);
+            var errormesg='Error loading Chart';
+            if(ret && ret.message) errormesg=ret.message;
+
+            o.$container.find('.error-msg').html( errormesg );
+            if(o.settings.preloader)  o.$container.stopLoading();
+            // executeCallback(o.settings.onerror,o.$container);
+        } // failure case
+
+
+        al('params',JSON.stringify(params));
+        xhr.send(JSON.stringify(params)) // Make sure to stringify
+
+
+
+        // $.ajax({
+        //     url: url,
+        //     type: 'post',
+        //     data: params,
+        //     dataType: 'json',
+        //     headers: {
+        //         'X-CSRF-TOKEN':params._token,
+        //     },
+        //     success: function(data){
+        //         o.$container.stopLoading();
+        //         o.$container.find('.error-msg').remove();
+        //         // al("data", data);
+        //         o.prepareData(data.datasets);
+        //         o.setOptions(data.options);
+        //         o.update();
+        //     },
+        //     error: function(xhr){
+
+        //         // al("ERROR",xhr.responseJSON.message);
+        //         if(o.$container.find('span.error-msg').length==0){
+        //             o.$container.append($('<span class="error-msg"/>'));
+        //         }
+        //         var errormesg='Error loading Chart';
+        //         if(xhr.responseJSON && xhr.responseJSON.message) errormesg=xhr.responseJSON.message;
+
+        //         o.$container.find('.error-msg').html( errormesg );
+        //         if(o.settings.preloader)  o.$container.stopLoading();
+        //         // executeCallback(o.settings.onerror,o.$container);
+        //     }
+        // });
     }
 
     this.randomIntFromInterval = function(min, max) { // min and max included 
