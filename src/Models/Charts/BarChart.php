@@ -17,20 +17,22 @@ class BarChart extends BaseChart
     
     public function __construct($options=[])
     {
-        if(isset($options["horizontal"]) && $options["horizontal"]){
-            $this->horizontal=true;
-            unset($options["horizontal"]);
-        }
-        if(isset($options["stacked"]) && $options["stacked"]){
-            $this->stacked=true;
-            unset($options["stacked"]);
-        }
 
-        $this->options['indexAxis'] = $this->horizontal?'y':'x';
-        $this->options['scales.x.stacked'] = $this->stacked;
-        $this->options['scales.y.stacked'] = $this->stacked;
-
+       
         parent::__construct($options);
+
+        if(isset($this->options["horizontal"]) && $this->options["horizontal"]){
+            $this->horizontal=true;
+            
+        }
+        if(isset($this->options["stacked"]) && $this->options["stacked"]){
+            $this->stacked=true;
+        }
+
+        $this->setOption('indexAxis',  $this->horizontal?'y':'x');
+        $this->setOption('scales.x.stacked',  $this->stacked);
+        $this->setOption('scales.y.stacked', $this->stacked);
+
         
     }
     

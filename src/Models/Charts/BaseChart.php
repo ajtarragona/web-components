@@ -11,7 +11,7 @@ class BaseChart
     public $id;
     public $chart_type;
     
-    protected $datasets;
+    private $datasets;
     protected $options = [];
     public $container_class;
     public $css_class;
@@ -48,6 +48,7 @@ class BaseChart
             "aspectRatio" => 2
             
         ], $this->options);
+        // dump($this->options, $this);
         $this->setOptions($options);
 
        
@@ -58,6 +59,7 @@ class BaseChart
     public function _id(){
         return $this->id ? $this->id :  uniqid('chart-');
     }
+
     private function prepareOptions(){
         foreach($this->options as $key=>$option){
             if(Str::contains($key,".")){

@@ -16,17 +16,17 @@ class PieChart extends BaseChart
     public function __construct($options=[])
     {
        
-        
-        if(isset($options["donut"]) && $options["donut"]){
+        parent::__construct($options);
+
+        if((isset($this->options["donut"]) && $this->options["donut"]) || (isset($this->options["doughnut"]) && $this->options["doughnut"])){
             $this->donut=true;
-            unset($options["donut"]);
         }
 
         if($this->donut){
             $this->chart_type="doughnut";
-            $this->options["cutout"] = '50%' ;
+            $this->setOption("cutout", '50%' );
         }
-        parent::__construct($options);
+
         
         // dump($this->options);
     }
