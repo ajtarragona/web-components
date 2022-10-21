@@ -124,90 +124,65 @@ function TgnChart(canvas, settings){
         var o=this;
         var url=route('webcomponents.chart');
         
-        // console.log('loadData',url, this.settings.options);
-        var params=this.settings.options ?? {};
+        // console.log('URL',url);
+        var data={};
+
+        if(this.settings.options){
+            for ( var key in this.settings.options ) {
+                if(key!='plugins' && key!='scales') data[key] = this.settings.options[key];
+            }
+
+        }
+
         // console.log(params);
-        params._token = csrfToken();
-        params.classname = this.settings.classname;
+        data["_token"] = csrfToken();
+        data["classname"] = this.settings.classname;
         
-        delete params.plugins;
-        delete params.scales;
-        // al("PARAMS",params);
+        
         if(o.settings.preloader) o.$container.startLoading();
 
 
 
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", url, true);
-        xhr.setRequestHeader("X-CSRF-TOKEN", params._token);
-        xhr.setRequestHeader('Content-type','application/json');
+        
+        // al("PARAMS",data);
+        
+        // al(data.length);
+        
+    
 
-        // function execute after request is successful 
-        xhr.onload  = function () {
-                var data=JSON.parse(xhr.responseText);
-                al('data',data);
-            // if (this.readyState == 4 && this.status == 200) {
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: data,
+            // processData: false,
+            dataType: 'json',
+            headers: {
+                'X-CSRF-TOKEN':data["_token"],
+                // 'Content-Type':'application/json',
+            },
+            success: function(data){
                 o.$container.stopLoading();
                 o.$container.find('.error-msg').remove();
                 // al("data", data);
                 o.prepareData(data.datasets);
                 o.setOptions(data.options);
                 o.update();
-                
-            // }else{
+            },
+            error: function(xhr){
 
-            // }
-        }
-        xhr.onerror = function(){ 
-            // al("ERROR",xhr.responseJSON.message);
-            if(o.$container.find('span.error-msg').length==0){
-                o.$container.append($('<span class="error-msg"/>'));
+                // al("ERROR",xhr.responseJSON.message);
+                if(o.$container.find('span.error-msg').length==0){
+                    o.$container.append($('<span class="error-msg"/>'));
+                }
+                var errormesg='Error loading Chart';
+                if(xhr.responseJSON && xhr.responseJSON.message) errormesg=xhr.responseJSON.message;
+
+                o.$container.find('.error-msg').html( errormesg );
+                if(o.settings.preloader)  o.$container.stopLoading();
+                // executeCallback(o.settings.onerror,o.$container);
             }
-            var ret=JSON.parse(xhr.responseText);
-            var errormesg='Error loading Chart';
-            if(ret && ret.message) errormesg=ret.message;
-
-            o.$container.find('.error-msg').html( errormesg );
-            if(o.settings.preloader)  o.$container.stopLoading();
-            // executeCallback(o.settings.onerror,o.$container);
-        } // failure case
-
-
-        al('params',JSON.stringify(params));
-        xhr.send(JSON.stringify(params)) // Make sure to stringify
-
-
-
-        // $.ajax({
-        //     url: url,
-        //     type: 'post',
-        //     data: params,
-        //     dataType: 'json',
-        //     headers: {
-        //         'X-CSRF-TOKEN':params._token,
-        //     },
-        //     success: function(data){
-        //         o.$container.stopLoading();
-        //         o.$container.find('.error-msg').remove();
-        //         // al("data", data);
-        //         o.prepareData(data.datasets);
-        //         o.setOptions(data.options);
-        //         o.update();
-        //     },
-        //     error: function(xhr){
-
-        //         // al("ERROR",xhr.responseJSON.message);
-        //         if(o.$container.find('span.error-msg').length==0){
-        //             o.$container.append($('<span class="error-msg"/>'));
-        //         }
-        //         var errormesg='Error loading Chart';
-        //         if(xhr.responseJSON && xhr.responseJSON.message) errormesg=xhr.responseJSON.message;
-
-        //         o.$container.find('.error-msg').html( errormesg );
-        //         if(o.settings.preloader)  o.$container.stopLoading();
-        //         // executeCallback(o.settings.onerror,o.$container);
-        //     }
-        // });
+        });
     }
 
     this.randomIntFromInterval = function(min, max) { // min and max included 

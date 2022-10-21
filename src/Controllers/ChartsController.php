@@ -13,7 +13,8 @@ class ChartsController extends Controller
 
     public function loadChart(Request $request){
        
-       try{ // dd($request->all());
+       try{ 
+            // dd($request->all());
             // abort(500, "LALALAL");
             $classname=$request->classname;
             $options=$request->except(['classname','_token']);

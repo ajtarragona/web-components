@@ -111,7 +111,7 @@ class BaseChart
     }
 
     public function setOptions($options=[]){
-        $this->option_params=$options;
+        $this->option_params=array_merge($this->option_params,$options);
         $this->options =  array_merge($this->options, $options);
         $this->prepareOptions();
         return $this;
