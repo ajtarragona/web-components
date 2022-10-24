@@ -1,5 +1,6 @@
 <div class="chart-container {{$chart->container_class}}">
      
+     {{-- @if($chart->chart_type=="bar") @dump($chart) @endif --}}
      <canvas 
           id="{{ $chart->_id() }}" 
           class="chart-canvas {{$chart->css_class}}" 

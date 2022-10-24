@@ -188,7 +188,8 @@
                 "borderColor"=>'rgb(75, 192, 192)',
                 'backgroundColor'=>'rgba(75, 192, 192,0.4)',
                 'fill' =>1,
-
+                'pointStyle' => 'star',
+                'pointRadius' =>10
             ],
             [   
                 "label"=> "Serie 2",
@@ -214,6 +215,10 @@
                 // "tension"=> 0.2,
                 'backgroundColor'=>'rgba(0, 0, 192,0.4)',
                 'fill' =>'origin',
+                'pointStyle' => 'triangle',
+                'pointRadius' =>10
+
+      
 
             ]
         ],[
@@ -224,7 +229,7 @@
             'borderWidth'=>3,
             "tension"=> 0.4,
             'css_class'=>'border',
-            
+            "tooltip.usePointStyle"=>true,
             "animations"=>[
                 "tension" => [
                     "duration" => 1000,
@@ -313,7 +318,19 @@
             'borderWidth'=>0,
             'css_class'=>'border',
             "datalabels.color"=>'#333333',
-            
+            'suffix' => '%',
+            // "tooltip.suffix"=>"%",
+            // "tooltip.prefix"=>"$",
+            "datalabels.display"=>true,
+            // "datalabels.suffix"=>"%",
+            "scales.x.title.display"=>true,
+            "scales.x.title.text"=>"Trimestres",
+            "scales.y.title.display"=>true,
+            "scales.y.title.text"=>"Money",
+            "scales.y.title.color"=>"red",
+            "scales.x.title.color"=>"blue",
+            // "scales.y.ticks.suffix"=>"%",
+            // "scales.x.ticks.prefix"=>"TRIMESTRE",
 
         ])
     </div>
