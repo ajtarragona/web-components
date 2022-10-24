@@ -30,6 +30,8 @@
             'title.color'=>'#ffffff',
             'borderColor'=>'#55595c',
             'legend.labels.color'=>'#ffffff',
+            "suffix" =>"€"
+
         ])
     </div>
     
@@ -331,6 +333,7 @@
             "scales.x.title.color"=>"blue",
             // "scales.y.ticks.suffix"=>"%",
             // "scales.x.ticks.prefix"=>"TRIMESTRE",
+            
 
         ])
     </div>
@@ -508,75 +511,41 @@
             'css_class'=>'border',
             "title.display"=>true,
             "title.text"=>"Random Bubble chart",
+            'prefix' => '$',
+            'datalabels.font.weight'=>'bold',
+            'datalabels.color'=>'#ffffff'
+            
                 
         ])
     </div>
     <div class="col-sm-12">
-        @chart("scatter",[
-            [   
-                "label"=> "Serie 1",
-                "data"=>[
-                    [
-                        "data"=> [ 
-                            "x"=>$faker->numberBetween(10,50),
-                            "y"=>$faker->numberBetween(10,50),
-                        ]                               
-                    ],
-                    [
-                        "data"=> [ 
-                            "x"=>$faker->numberBetween(10,50),
-                            "y"=>$faker->numberBetween(10,50),
-                        ]                               
-                    ],  
-                    [
-                        "data"=> [ 
-                            "x"=>$faker->numberBetween(10,50),
-                            "y"=>$faker->numberBetween(10,50),
-                        ]                               
-                    ],          
-                    [
-                        "data"=> [ 
-                            "x"=>$faker->numberBetween(10,50),
-                            "y"=>$faker->numberBetween(10,50),
-                        ]                               
-                    ]
-                ],
-                'backgroundColor'=>'rgb(255, 99, 132)'
+        @php
+            $numseries=2;
+            $colors=['rgb(255, 99, 132)','rgb(75, 192, 192)'];
+            $numdata=$faker->numberBetween(20,100);
 
-            ],
-            [   
-                "label"=> "Serie 2",
-                "data"=>[
-                    [
-                        "data"=> [ 
-                            "x"=>$faker->numberBetween(10,50),
-                            "y"=>$faker->numberBetween(10,50),
-                        ]                               
-                    ],
-                    [
-                        "data"=> [ 
-                            "x"=>$faker->numberBetween(10,50),
-                            "y"=>$faker->numberBetween(10,50),
-                        ]                               
-                    ],  
-                    [
-                        "data"=> [ 
-                            "x"=>$faker->numberBetween(10,50),
-                            "y"=>$faker->numberBetween(10,50),
-                        ]                               
-                    ],          
-                    [
-                        "data"=> [ 
-                            "x"=>$faker->numberBetween(10,50),
-                            "y"=>$faker->numberBetween(10,50),
-                        ]                               
-                    ]
-                ],
-                'backgroundColor'=>'rgb(75, 192, 192)'
-
-            ]
-        ],[
-            "legend.display"=>false,
+            $datasets=[];
+            for($i=0;$i<$numseries;$i++){
+                $data=[];
+                for($j=0;$j<$numdata;$j++){
+                    $data[]=
+                        [
+                            "data"=> [ 
+                                "x"=>$faker->numberBetween(10,50),
+                                "y"=>$faker->numberBetween(10,50),
+                            ]                               
+                        ];
+                }
+                $datasets[]=[
+                    "label"=> "Serie ".($i+1),
+                    "data" =>$data,
+                    'backgroundColor'=>$colors[$i]
+                ];
+            }
+            // dump($datasets);
+        @endphp
+        @chart("scatter",$datasets,[
+            "legend.display"=>true,
             "title.display"=>true,
             'css_class'=>'border',
             "title.text"=>"Random Scatter chart",

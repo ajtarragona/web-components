@@ -47,6 +47,7 @@ function TgnChart(canvas, settings){
 
     //    al('TgnChart',this);
     
+    // var chart_options=this.settings.options;
     var chart_options=this.prepareOptions(this.settings.options);
     // al('options', chart_options);
 
@@ -81,48 +82,60 @@ function TgnChart(canvas, settings){
 
 	
 	this.prepareOptions = function(options){
-        
+        var o=this;
+        // al(this.settings.type,options);
         var suffix_global=options.dotGet('suffix');
         var prefix_global=options.dotGet('prefix');
+        
+        if($.inArray(this.settings.type, ["pie","doughnut","radar","polarArea"]) < 0){
+            var suffix=options.dotGet('scales.y.ticks.suffix');
+            var horizontal = options.dotGet('horizontal',false);
+            
+            // console.log( options.dotGet('plugins.title.text'), horizontal, suffix , suffix_global);
 
-        var suffix=options.dotGet('scales.y.ticks.suffix');
-        if(suffix || suffix_global){
-            options.dotSet('scales.y.ticks.callback', function(value, index, ticks){
-                return value + ''+ (suffix?suffix:suffix_global);
-            });
-        }
-        var prefix=options.dotGet('scales.y.ticks.prefix');
-        if(prefix || prefix_global){
-            options.dotSet( 'scales.y.ticks.callback', function(value, index, ticks){
-                return (prefix?prefix:prefix_global)+''+value;
-            });
+            if(suffix || suffix_global){
+                options.dotSet('scales.y.ticks.callback', function(value, index, ticks){
+                    return value + ''+ (suffix?suffix:(horizontal?'':suffix_global));
+                });
+            }
+    
+            var prefix=options.dotGet('scales.y.ticks.prefix');
+            if(prefix || prefix_global){
+                options.dotSet( 'scales.y.ticks.callback', function(value, index, ticks){
+                    return (prefix?prefix:(horizontal?'':prefix_global))+''+value;
+                });
+            }
+
+            var suffix2=options.dotGet('scales.x.ticks.suffix');
+            if(suffix2 || suffix_global ){
+                options.dotSet( 'scales.x.ticks.callback', function(value, index, ticks){
+                    return value + ''+ (suffix2?suffix2:(horizontal?suffix_global:''));
+                });
+            }
+            
+            var prefix2=options.dotGet('scales.x.ticks.prefix');
+            if(prefix2 || prefix_global){
+                options.dotSet( 'scales.x.ticks.callback', function(value, index, ticks){
+                    return (prefix2?prefix2:(horizontal?suffix_global:''))+''+value;
+                });
+            }
         }
 
-        var suffix2=options.dotGet('scales.x.ticks.suffix');
-        if(suffix2){
-            options.dotSet( 'scales.x.ticks.callback', function(value, index, ticks){
-                return value + ''+ suffix2;
-            });
-        }
-        var prefix2=options.dotGet('scales.x.ticks.prefix');
-        if(prefix2){
-            options.dotSet( 'scales.x.ticks.callback', function(value, index, ticks){
-                return prefix2+''+value;
-            });
-        }
         var suffix3=options.dotGet('plugins.tooltip.suffix');
         var prefix3=options.dotGet('plugins.tooltip.prefix');
 
         // al('tooltip',suffix3);
+        // console.log(this.settings.type,suffix3,prefix3,suffix_global,prefix_global);
+
         if(suffix3 || prefix3 || suffix_global || prefix_global){
             options.dotSet( 'plugins.tooltip.callbacks.label', function(context){
                 let label = context.dataset.label || '';
-
+                // console.log('dotSet',context);
                 if (label) {
                     label += ': ';
                 }
-                if (context.parsed.y !== null) {
-                    label += (prefix3?prefix3:(prefix_global??'')) + '' + context.parsed.y + '' + (suffix3?suffix3:(suffix_global??''));
+                if (context.formattedValue !== null) {
+                    label += (prefix3?prefix3:(prefix_global??'')) + '' + context.formattedValue + '' + (suffix3?suffix3:(suffix_global??''));
                 }
                 return label;
             });
@@ -133,11 +146,14 @@ function TgnChart(canvas, settings){
         var suffix4=options.dotGet('plugins.datalabels.suffix');
         var prefix4=options.dotGet('plugins.datalabels.prefix');
 
-        // al('tooltip',suffix3);
+        // console.log('datalabels',suffix4 , prefix4 , suffix_global, prefix_global);
         if(suffix4 || prefix4 || suffix_global || prefix_global){
+            // console.log(this);  
             options.dotSet( 'plugins.datalabels.formatter', function(value, context){
-                
-               return  (prefix4?prefix4:(prefix_global??''))+''+value+''+(suffix4?suffix4:(suffix_global??''));
+            if(o.settings.type=="bubble") console.log('plugins.datalabels.formatter',value, context);
+                var val=$.isPlainObject(value) ? value.r : value;
+
+               return  (prefix4?prefix4:(prefix_global??''))+''+val+''+(suffix4?suffix4:(suffix_global??''));
                 
             });
         }
