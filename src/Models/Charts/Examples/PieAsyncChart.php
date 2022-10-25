@@ -20,6 +20,7 @@ class PieAsyncChart extends PieChart
 
     public $preloader=false;
 
+    protected $palette ="autumn";
 
     protected $options = [
         'title.text'=>"Demo async Pie chart",
@@ -31,14 +32,7 @@ class PieAsyncChart extends PieChart
         'aspectRatio' => 2
     ];
 
-    protected $colors=[
-        "255, 99, 132",
-        "54, 162, 235",
-        "255, 205, 86",
-        "0, 0, 132",
-        "247,234,0",
-        "170,183,31",
-    ];
+    
 
 
     public $refresh_rate=3; //seconds
@@ -53,9 +47,7 @@ class PieAsyncChart extends PieChart
         $this->setOption('legend.position', $pos[array_rand($pos)]);
 
         for($j=0;$j<6; $j++){
-            $this->addValueToDataset($dataset->id, new DatasetValue("Opcio ".rand(1,2)."-".($j+1), $faker->numberBetween(100,300), [
-                'backgroundColor'=>'rgb('.$this->colors[$j].')',
-            ]));
+            $this->addValueToDataset($dataset->id, "Opcio ".rand(1,2)."-".($j+1), $faker->numberBetween(100,300));
         }
 
         

@@ -6,17 +6,17 @@
                     [
                         "data"=>$faker->numberBetween(10,300),
                         "label"=>"A",
-                        "backgroundColor"=>"rgb(255, 99, 132)"
+                        // "backgroundColor"=>"rgb(255, 99, 132)"
                     ],
                     [
                         "data"=>$faker->numberBetween(10,300),
                         "label"=>"B",
-                        "backgroundColor"=>"rgb(54, 162, 235)"
+                        // "backgroundColor"=>"rgb(54, 162, 235)"
                     ],
                     [
                         "data"=>$faker->numberBetween(10,300),
                         "label"=>"C",
-                        "backgroundColor"=>"rgb(255, 205, 86)"
+                        // "backgroundColor"=>"rgb(255, 205, 86)"
                     ]
                 ]
             ]
@@ -30,7 +30,8 @@
             'title.color'=>'#ffffff',
             'borderColor'=>'#55595c',
             'legend.labels.color'=>'#ffffff',
-            "suffix" =>"€"
+            "suffix" =>"€",
+            "palette"=>"autumn"
 
         ])
     </div>
@@ -75,18 +76,15 @@
                 "data"=>[
                     [
                         "data"=>$faker->numberBetween(10,100),
-                        "label"=>"A",
-                        "backgroundColor"=>"rgb(255, 99, 132)"
+                        "label"=>"A"
                     ],
                     [
                         "data"=>$faker->numberBetween(10,100),
-                        "label"=>"B",
-                        "backgroundColor"=>"rgb(54, 162, 235)"
+                        "label"=>"B"
                     ],
                     [
                         "data"=>$faker->numberBetween(10,100),
-                        "label"=>"C",
-                        "backgroundColor"=>"rgb(255, 205, 86)"
+                        "label"=>"C"
                     ]
                 ]
             ]
@@ -97,7 +95,8 @@
             'css_class'=>'border',
             "title.text"=>"Random polar chart",
             'borderWidth'=>5,
-            "aspectRatio"=>1
+            "aspectRatio"=>1,
+            // 'palette'=>'autumn'
             
         ])
     </div>
@@ -187,8 +186,8 @@
                         "label"=>"4t T",
                   ]
                 ],
-                "borderColor"=>'rgb(75, 192, 192)',
-                'backgroundColor'=>'rgba(75, 192, 192,0.4)',
+                "borderColor"=>chartColor(0),
+                'backgroundColor'=>chartRGBAColor(0, 0.4),
                 'fill' =>1,
                 'pointStyle' => 'star',
                 'pointRadius' =>10
@@ -213,9 +212,9 @@
                         "label"=>"4t T",
                   ]
                 ],
-                "borderColor"=>'rgb(0, 0, 192)',
+                "borderColor"=>chartColor(1),
                 // "tension"=> 0.2,
-                'backgroundColor'=>'rgba(0, 0, 192,0.4)',
+                'backgroundColor'=>chartRGBAColor(1, 0.4),
                 'fill' =>'origin',
                 'pointStyle' => 'triangle',
                 'pointRadius' =>10
@@ -331,6 +330,8 @@
             "scales.y.title.text"=>"Money",
             "scales.y.title.color"=>"red",
             "scales.x.title.color"=>"blue",
+            'palette'=>'winter',
+            'color_mode'=>'element'
             // "scales.y.ticks.suffix"=>"%",
             // "scales.x.ticks.prefix"=>"TRIMESTRE",
             
@@ -362,7 +363,6 @@
 
                   ]
                 ],
-                'backgroundColor'=>'rgb(54, 162, 235)'
 
             ],
             [   
@@ -388,7 +388,6 @@
 
                   ]
                 ],
-                'backgroundColor'=>'rgb(255, 99, 132)'
 
             ],
             [   
@@ -413,11 +412,7 @@
                         "label"=>"4t T",
 
                   ]
-                ],
-                'borderColor'=>'rgb(255, 205, 86)',
-                'borderWidth'=>2,
-                'backgroundColor'=>'rgba(255, 205, 86,0.4)'
-
+                ]
             ]
         ],[
             "stacked"=>true,
@@ -428,6 +423,7 @@
             'css_class'=>'border',
             'borderWidth'=>0,
             "datalabels.color"=>'#333333',
+            'palette'=>'green'
 
         ])
     </div>
@@ -442,8 +438,7 @@
                         "data"=> [ 
                             "x"=>$faker->numberBetween(10,50),
                             "y"=>$faker->numberBetween(10,50),
-                            "r"=>$faker->numberBetween(2,50),
-                            'backgroundColor'=>'rgb(0, 0, 132)'
+                            "r"=>$faker->numberBetween(2,50)
                         ]                               
                     ],
                     [
@@ -467,8 +462,7 @@
                             "r"=>$faker->numberBetween(2,50),
                         ]                               
                     ]
-                ],
-                'backgroundColor'=>'rgb(255, 99, 132)'
+                ]
 
             ],
             [   
@@ -502,8 +496,7 @@
                             "r"=>$faker->numberBetween(2,50),
                         ]                               
                     ]
-                ],
-                'backgroundColor'=>'rgb(75, 192, 192)'
+                ]
 
             ]
         ],[
@@ -513,15 +506,14 @@
             "title.text"=>"Random Bubble chart",
             'prefix' => '$',
             'datalabels.font.weight'=>'bold',
-            'datalabels.color'=>'#ffffff'
-            
+            'datalabels.color'=>'#ffffff',
+            'palette'=>'winter'
                 
         ])
     </div>
     <div class="col-sm-12">
         @php
             $numseries=2;
-            $colors=['rgb(255, 99, 132)','rgb(75, 192, 192)'];
             $numdata=$faker->numberBetween(20,100);
 
             $datasets=[];
@@ -538,8 +530,7 @@
                 }
                 $datasets[]=[
                     "label"=> "Serie ".($i+1),
-                    "data" =>$data,
-                    'backgroundColor'=>$colors[$i]
+                    "data" =>$data
                 ];
             }
             // dump($datasets);

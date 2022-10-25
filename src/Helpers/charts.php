@@ -25,7 +25,8 @@ if (! function_exists('renderChart')) {
 						$value=$data["data"]??null;
 						$label=$data["label"]??null;
 						$options=Arr::except($data, ['data','label']);
-						$ch->addValueToDataset($ds->id, new DatasetValue($label, $value, $options));
+						// dump($options);
+						$ch->addValueToDataset($ds->id, $label, $value, $options);
 					}
 				}
 				// dump($ch);
@@ -33,6 +34,32 @@ if (! function_exists('renderChart')) {
 			}
 		}
 	}
+}
+
+
+if (! function_exists('chartColor')) {
+
+	function chartColor($index, $palette="default"){
+
+		return BaseChart::color($index, $palette);
+	}
+
+}
+
+if (! function_exists('chartRGBColor')) {
+
+	function chartRGBColor($index,  $palette="default"){
+		return BaseChart::rgbColor($index, $palette);
+	}
+
+}
+
+if (! function_exists('chartRGBAColor')) {
+
+	function chartRGBAColor($index, $opacity=1, $palette="default"){
+		return BaseChart::rgbaColor($index, $opacity, $palette);
+	}
+
 }
 
 // if (! function_exists('renderChartScripts')) {

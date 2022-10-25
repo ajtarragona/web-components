@@ -4,9 +4,14 @@ namespace Ajtarragona\WebComponents\Models\Charts;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
+use Ajtarragona\WebComponents\Models\DatasetValue;
+use Ajtarragona\WebComponents\Traits\ChartWithColors;
 
 class BaseChart
 {   
+
+    use ChartWithColors;
+    
 
     public $id;
     public $chart_type;
@@ -17,11 +22,15 @@ class BaseChart
     public $css_class;
     public $preloader=true;
     protected $option_params=[];
+    protected $color_mode = "dataset";
+    protected $palette = "default";
+    protected $auto_color = true;
 
     protected $plugin_options = ["legend","title","subtitle","tooltip","datalabels"];
-    protected $fillable_attributes = ["id","chart_type","container_class","css_class",'preloader'];
+    protected $fillable_attributes = ["id","chart_type","container_class","css_class",'preloader','palette','color_mode'];
 
-
+  
+ 
 
     /**
      * Cuando creo la instancia
@@ -34,6 +43,7 @@ class BaseChart
         
         $this->datasets=collect();
 
+        $this->palettes = config('webcomponents.charts.palettes',[]);
         foreach($this->fillable_attributes as $attribute_name){
             if(isset($options[$attribute_name])){
                 $this->{$attribute_name}=$options[$attribute_name];
@@ -55,6 +65,8 @@ class BaseChart
 
     }
 
+   
+    
 
     public function _id(){
         return $this->id ? $this->id :  uniqid('chart-');
@@ -80,6 +92,10 @@ class BaseChart
 
     public function addDataset($label, $data, $options=[]){
         // dump($label, $data, $options);
+        if($this->auto_color && $this->color_mode=="dataset"){
+            $options=$this->addColorToOptions($options,$this->datasets->count());
+        }
+
         $dataset=new Dataset($label,$data,$options);
         $this->datasets->push($dataset);  
         return $dataset;
@@ -106,10 +122,20 @@ class BaseChart
     }
 
 
-    public function addValueToDataset($id, $value){
-        $this->datasets->map(function($dataset) use($id,$value){
-            if($dataset->id == $id) $dataset->addDataValue($value);
-        });
+    public function addValueToDataset($id, $title, $value=null, $options=[]){
+        // dd("addvalue",$this,$id, $titleordatavalue,$value, $options);
+        foreach($this->datasets  as $i=>$dataset){
+        // $this->datasets->map(function($dataset) use($id,$titleordatavalue, $value, $options){
+            if($dataset->id == $id){
+                if($this->auto_color && $this->color_mode=="element"){
+                    // dump($options);
+                    $options=$this->addColorToOptions($options,count($dataset->data));
+                    // dump($options);
+                }
+                $dataset->addDataValue($title, $value, $options);
+            }
+        }
+        // });
     }
 
     public function setOptions($options=[]){

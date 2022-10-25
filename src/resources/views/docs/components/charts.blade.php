@@ -9,10 +9,61 @@
     <br/>
     <br/>O bé fer un chart dinàmic. Passant un string amb tipus de gràfica, els datasets i un array d'opcions:<br/>
     <code>&commat;chart($tipus, $datasets, $opcions=[])</code>
-
 </p>
 <p>Internament fem servir la llibreria <a href="https://www.chartjs.org/" target="_blank">@icon('external-link-alt')charts.js</a></p>
 
+<hr class="big">
+
+<p class="lead">
+    A les opcions dels charts podem passar gairebé tot el que està a la documentació de charts.js. Podem fer-ho amb notació punt.
+    A més, tenim disponibles aquestes opcions:
+</p>
+
+    <table class="table table-sm">
+       
+        <tbody>
+            
+            <tr>
+                <td><code>id</code></td>
+                <td>Identificador del chart. Si no s'assigna cap se'n generarà un d'aleatori.</td>
+            </tr>
+            
+            <tr>
+                <td><code>container_class</code></td>
+                <td>Class CSS del contenidor del chart.</td>
+            </tr>
+            <tr>
+                <td><code>css_class</code></td>
+                <td>Class CSS del l'objecte Canvas.</td>
+            </tr>
+            <tr>
+                <td><code>preloader</code></td>
+                <td>Amb charts asíncrons, mostra un preloader mentre carrega el chart. Per defecte <code>true</code></td>
+            </tr>
+            <tr>
+                <td><code>palette</code></td>
+                <td>Defineix la paleta de colors. Els colors s'assignen automàticament si no els assignem expressament als datasets o als elements d'aquests. <br/>
+                    Podem triar la paleta entre les següents:
+                    <code>default</code>, <code>autumn</code>, <code>winter</code>, <code>blue</code>, <code>red</code>, <code>green</code>, <code>orange</code>
+                </td>
+            </tr>
+            <tr>
+                <td><code>color_mode</code></td>
+                <td>Segons el tipus de gràfica automàticament es tria si s'assigna un color per cada dataset o per cada element d'aquest. Però podem sobrescriure-ho.<br/>
+                    Valors possibles: <code>dataset</code> o <code>element</code>.
+                </td>
+            </tr>
+           
+            
+        </tbody>
+    </table>
+
+   <p> Disposem també dels helpers <code>chartColor($index, $palette="default")</code>, <code>chartRGBColor($index, $palette="default")</code> i <code>chartRGBAColor($index, $opacity=1, $palette="default")</code> que ens retornaran colors.</p>
+    
+
+
+<hr class="big"/>
+<hr>
 <hr class="big"/>
 
 @row
@@ -38,11 +89,6 @@
                     <td>Opcions de visualització de la gràfica. Podem passar-les amb notació punt.</td>
                 </tr>
                 
-                {{-- <tr>
-                    <td><code>animate</code></td>
-                    <td>Id de l'element</td>
-                </tr>
-                --}}
                 
                 
             </tbody>

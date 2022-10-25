@@ -33,12 +33,7 @@ class LinesAsyncChart extends LineChart
         'aspectRatio' => 2
     ];
 
-    protected $colors=[
-        "255, 99, 132",
-        "54, 162, 235",
-        "255, 205, 86",
-        "0, 0, 132"
-    ];
+ 
 
     protected $numseries;
     protected $numdata;
@@ -60,19 +55,20 @@ class LinesAsyncChart extends LineChart
 
     public function reload(){
         $faker = FakerFactory::create();
-        
+        // try
         // $this->setOption('title.display', rand(1,2)==1);
         $this->setOption('title.font.size', rand(15,25).'pt');
-
+        
+        // dd($this->getRGBColor(0));
         for($i=0;$i<$this->numseries; $i++){
             $dataset=$this->addDataset("Serie " .($i+1), null, [
-                'borderColor'=>'rgb('.$this->colors[$i].')',
-                'backgroundColor'=>'rgba('.$this->colors[$i].',0.3)',
+                'borderColor'=>$this->getRGBColor($i),
+                'backgroundColor'=>$this->getRGBAColor($i, 0.2),
                 'fill'=>'origin'
             ]);
-
+            // dd($dataset);
             for($j=0;$j<$this->numdata; $j++){
-                $this->addValueToDataset($dataset->id, new DatasetValue("Opcio ".($j+1), $faker->numberBetween(100,300)));
+                $this->addValueToDataset($dataset->id, "Opcio ".($j+1), $faker->numberBetween(100,300));
             }
 
         }

@@ -83,8 +83,8 @@ class DocsController extends Controller
        if($page=='forms.select'){
          $args['selectoptions']=$this->getTestOptions(10);
         }else if($page=='components.charts'){
-          $args['demochart'] = new DemoChart();
           $args['linesasyncchart'] = new LinesAsyncChart();
+          $args['demochart'] = new DemoChart();
           $args['pieasyncchart'] = new PieAsyncChart();
 
        }

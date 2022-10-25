@@ -41,7 +41,7 @@
 
 				$r = hexdec($r); $g = hexdec($g); $b = hexdec($b);
 				return array($r, $g, $b);
-			}else if (starts_with($color,"rgb")){
+			}else if (starts_with($color,"rgb") || starts_with($color,"rgba")){
 				$colorcomps=explode(",",substr($color,strpos($color, "(")+1,-1));
 				return $colorcomps;
 

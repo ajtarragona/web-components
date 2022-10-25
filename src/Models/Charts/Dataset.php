@@ -47,10 +47,11 @@ class Dataset
         return implode(",",$this->getDataValues());
     }
 
-    public function addDataValue($value){
-        if($value instanceof DatasetValue) $this->data->push($value);
-        else $this->data->push(new DatasetValue("",$value));
+    public function addDataValue($title, $value, $options=[]){
+        $this->data->push(new DatasetValue($title,$value, $options));
+        
     }
+   
    
     public function getDataColors($dataset_id){
         return $this->data->pluck("options.backgroundColor")->all();

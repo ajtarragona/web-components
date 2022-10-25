@@ -9,15 +9,17 @@ class PieChart extends BaseChart
     
     protected $donut=false;
     
+    protected $color_mode="element";
+    
     protected $options = [
         "aspectRatio" => 1,  
     ];
 
     public function __construct($options=[])
     {
-       
         parent::__construct($options);
 
+        
         if((isset($this->options["donut"]) && $this->options["donut"]) || (isset($this->options["doughnut"]) && $this->options["doughnut"])){
             $this->donut=true;
         }
@@ -27,6 +29,7 @@ class PieChart extends BaseChart
             $this->setOption("cutout", '50%' );
         }
 
+        // dump($this);
         
         // dump($this->options);
     }
