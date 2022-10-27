@@ -32,7 +32,6 @@ $.fn.tgnInitAll = function( ){
   this.find('.anim').initAnimation();
   this.find('[data-toggle="popover"]').initPopover();
   this.find('.ajax-button').initAjaxButton();
-  this.find('.chart-canvas').tgnChart();
 
   
   

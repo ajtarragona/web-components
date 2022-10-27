@@ -3,9 +3,9 @@
 namespace Ajtarragona\WebComponents\Controllers; 
 
 use Ajtarragona\WebComponents\Controllers\BaseController as Controller;
-use Ajtarragona\WebComponents\Models\Charts\Examples\LinesAsyncChart;
-use Ajtarragona\WebComponents\Models\Charts\Examples\PieAsyncChart;
-use Ajtarragona\WebComponents\Models\Charts\Examples\DemoChart;
+use Ajtarragona\Charts\Models\Samples\LinesAsyncChart;
+use Ajtarragona\Charts\Models\Samples\PieAsyncChart;
+use Ajtarragona\Charts\Models\Samples\DemoChart;
 use Faker\Generator as Faker;
 use Faker\Factory as FakerFactory;
 use Illuminate\Http\Request;
@@ -89,7 +89,7 @@ class DocsController extends Controller
 
        }
 
-       
+      //  dd($args);
        return $this->view("docs",$args);
   }
 

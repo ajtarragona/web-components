@@ -76,6 +76,8 @@ class PrepareJs extends Command
 
         $this->line("Publishing assets ...");
         Artisan::call('vendor:publish',['--tag'=>'ajtarragona-web-components-assets','--force'=>true]);
+        $this->line("Publishing charts assets ...");
+        Artisan::call('ajtarragona:charts:assets');
         
 
 

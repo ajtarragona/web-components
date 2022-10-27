@@ -38,7 +38,7 @@
 
 
 @section('js')
-<script>
+<script language="JavaScript">
 	$(document).ready(function(e){
 		$('.select-toggle').on('click',function(e){
 			$($(this).data('for')).tgnTable('toggleSelectable');
@@ -50,12 +50,14 @@
 		$('.deselect-all').on('click',function(e){
 			$($(this).data('for')).tgnTable('deselectAll');
 		});
+		
 	});
+	
 
 	var successAjaxCallback = function (data, button){
-		al("successAjaxCallback");
-		al(data);
-		al(button);
+		// al("successAjaxCallback");
+		// al(data);
+		// al(button);
 		TgnFlash.success("Ok");
 	}
 
@@ -73,6 +75,10 @@
 		// var value=TgnModal.prompt("Holita?");
 		// alert("retorn:"+value);
 	});
+
+	$('.chart-canvas').tgnChart();
+
+	
 
 </script>
 	{{-- <script>

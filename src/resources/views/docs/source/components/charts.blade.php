@@ -31,7 +31,7 @@
             'borderColor'=>'#55595c',
             'legend.labels.color'=>'#ffffff',
             "suffix" =>"€",
-            "palette"=>"autumn"
+            "palette"=>"winter"
 
         ])
     </div>

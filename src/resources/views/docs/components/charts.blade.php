@@ -1,20 +1,31 @@
 <h1 class="display-4">Charts</h1>
 <p class="lead">
-	Podem crear gràfiques amb el component <mark><code>&commat;chart</code> </mark>
-
-    <br/>Tenim dues opcions:<br/>
-    O bé passar una instància de <code>BaseChart</code> i un array d'opcions:<br/>
+	Podem crear gràfiques fem serir el paquet <a href="https://github.com/ajtarragona/charts">https://github.com/ajtarragona/charts</a>.<br/>
+    <br/>
+    <p>Internament fem servir la llibreria <a href="https://www.chartjs.org/" target="_blank">@icon('external-link-alt')charts.js</a></p>
+    <br/>
+    <br/>
+    Per mostrar un chart ho fem mitjançant el component blade <mark><code>&commat;chart</code> </mark>. Per inicialitzar-lo tenim dues opcions:<br/>
+    <br/>
+    1. O bé passar una instància de <code>BaseChart</code> i un array d'opcions:<br/>
     <code>&commat;chart($chart, $opcions=[])</code>
 
     <br/>
-    <br/>O bé fer un chart dinàmic. Passant un string amb tipus de gràfica, els datasets i un array d'opcions:<br/>
+    <br/>2. O bé fer un chart dinàmic. Passant un string amb tipus de gràfica, els datasets i un array d'opcions:<br/>
     <code>&commat;chart($tipus, $datasets, $opcions=[])</code>
 </p>
-<p>Internament fem servir la llibreria <a href="https://www.chartjs.org/" target="_blank">@icon('external-link-alt')charts.js</a></p>
+<p> Cal inicialitzar els charts mitjançant jQuery just abans del <code>&lt;/body&gt;</code>:</p>
+@code
+<script language="JavaScript">
+	$('.chart-canvas').tgnChart();
+</script>
+@endcode
+
+
 
 <hr class="big">
 
-<p class="lead">
+<p >
     A les opcions dels charts podem passar gairebé tot el que està a la documentació de charts.js. Podem fer-ho amb notació punt.
     A més, tenim disponibles aquestes opcions:
 </p>
@@ -119,7 +130,7 @@
 
                 @tabpane(['id'=>'tab-charts-2'])
                     @code(['lang'=>'java'])
-                    @includeClassSrc('Ajtarragona\WebComponents\Models\Charts\Examples\DemoChart')
+                    @includeClassSrc('Ajtarragona\Charts\Models\Samples\DemoChart')
                     @endcode
                 @endtabpane
             
@@ -203,13 +214,13 @@
 
                 @tabpane(['id'=>'tab-async-charts-2'])
                     @code(['lang'=>'java'])
-                    @includeClassSrc('Ajtarragona\WebComponents\Models\Charts\Examples\LinesAsyncChart')
+                    @includeClassSrc('Ajtarragona\Charts\Models\Samples\LinesAsyncChart')
                     @endcode
                 @endtabpane
             
                 @tabpane(['id'=>'tab-async-charts-3'])
                     @code(['lang'=>'java'])
-                    @includeClassSrc('Ajtarragona\WebComponents\Models\Charts\Examples\PieAsyncChart')
+                    @includeClassSrc('Ajtarragona\Charts\Models\Samples\PieAsyncChart')
                     @endcode
                 @endtabpane
             
@@ -268,3 +279,4 @@
         @endcode
     @endcol
 @endrow
+

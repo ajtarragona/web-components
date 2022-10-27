@@ -9,6 +9,7 @@
 
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+	<link href="{{ asset('vendor/ajtarragona/css/charts.css') }}" rel="stylesheet">
 	<link href="{{ asset('vendor/ajtarragona/css/ajtarragona.css') }}" rel="stylesheet">
 	<link rel="shortcut icon" type="image/x-icon" href="{{ asset('vendor/ajtarragona/img/favicon.ico') }}"/>
 	
@@ -46,6 +47,7 @@
 	
 	<script src="{{ asset('vendor/ajtarragona/js/messages.js')}}" language="JavaScript"></script>
 	<script src="{{ asset('vendor/ajtarragona/js/ajtarragona.js')}}" language="JavaScript"></script>
+	<script src="{{ asset('vendor/ajtarragona/js/charts.js')}}" language="JavaScript"></script>
 	
     @yield('js')
 	
