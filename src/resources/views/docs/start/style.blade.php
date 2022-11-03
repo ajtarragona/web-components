@@ -45,5 +45,14 @@
 		@includeSrc('ajtarragona-web-components::docs.source.start.layout-themable-sidebar')
 	@endcode
 
+	
+	<p>Per defecte la plana de login no farà servir els nostres estils. <br/>
+		Per que ho faci, cal definir la variable d'entorn <code>APP_LOGIN_THEME</code> a l'arxiu <code>.env</code> amb el nom del nostres arxiu css.</p>
+
+	@code(['lang'=>'java'])
+		APP_LOGIN_THEME = app
+	@endcode
+
+
 		
 	

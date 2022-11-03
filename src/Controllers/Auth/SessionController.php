@@ -20,7 +20,8 @@ class SessionController extends Controller
 
 	public function showLoginForm()
     {
-     	return $this->view("layout.auth.login");
+		$theme=config('webcomponents.login_theme');
+     	return $this->view($theme ? "layout.auth.login-themable":"layout.auth.login");
 	}
 
 	public function username()
