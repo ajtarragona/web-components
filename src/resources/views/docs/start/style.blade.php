@@ -20,6 +20,16 @@
 	mix.sass('src/resources/assets/sass/app.scss', 'src/public/css')
 	@endcode
 
+	<p>Cal incloure les següents dependències a l'arxiu <code>package.json</code> de la nostra aplicació:</p>
+	@code
+		@includeSrc('ajtarragona-web-components::docs.source.start.theme-package-dependencies')
+	@endcode
+
+	<p>Instal·lar-les:</p>
+	@code(['lang'=>'java'])
+	npm install
+	@endcode
+	
 	<p>Aleshores, cal compilar els nostres assets mitjançant webpack:</p>
 	@code(['lang'=>'java'])
 	npm run prod
