@@ -11,6 +11,8 @@
 				@include('ajtarragona-web-components::docs.menuitem',['route'=>'start.config','title'=>'Configuració'])
 				@include('ajtarragona-web-components::docs.menuitem',['route'=>'start.auth','title'=>'Autenticació'])
 				@include('ajtarragona-web-components::docs.menuitem',['route'=>'start.language','title'=>'Idiomes'])
+				@include('ajtarragona-web-components::docs.menuitem',['route'=>'start.style','title'=>'Estils'])
+
 			</ul>
 	</li>
 	<li class="{{ starts_with($page,'layout')?'active':'' }}">

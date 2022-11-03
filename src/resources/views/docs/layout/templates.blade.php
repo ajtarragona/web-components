@@ -15,6 +15,9 @@
 			@includeSrc('ajtarragona-web-components::docs.source.layout.master')
 		@endcode
 				
+		@block
+		Si fem servir <a href="{{ route('webcomponents.docs',['page'=>'start.style']) }}">estils</a> cal fer servir la plantilla:<br/><mark>@icon('file') ajtarragona-web-components::layout/themable</mark>.
+		@endblock
 	@endcol
 	@col(['size'=>5])
 		<table class="table table-sm">
@@ -67,7 +70,9 @@
 		@code(['lang'=>'java'])
 			@includeSrc('ajtarragona-web-components::docs.source.layout.master-sidebar')
 		@endcode
-				
+		@block
+		Si fem servir <a href="{{ route('webcomponents.docs',['page'=>'start.style']) }}">estils</a> cal fer servir la plantilla:<br/> <mark>@icon('file') ajtarragona-web-components::layout/themable-sidebar</mark>.
+		@endblock	
 	@endcol
 	@col(['size'=>5])
 		<table class="table table-sm">
