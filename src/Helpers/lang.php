@@ -40,7 +40,8 @@ if (! function_exists('language_items')) {
 	       		"title" => $name ,
 	       		"active" => language()->getCode()==$code,
 				"url" => language()->back($code),
-				'icon' => ((language()->getCode()==$code)?'check-circle':'circle')
+				// 'icon'=> language_flag($code,['class'=>'','style'=>'width:20px'])
+				// 'icon' => ((language()->getCode()==$code)?'check-circle':'circle')
 	       ];
 	       // <li class="nav-item"><a class="nav-link {{ language()->getCode()==$code?"active":""}}" href="{{ language()->back($code) }}">{{ $name }}</a></li>
 			

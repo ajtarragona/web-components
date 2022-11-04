@@ -3,11 +3,13 @@
   display:inline-block;
   vertical-align: middle;
   position: relative;
-  top: -2px;
 
-  &[class^="bi-"],
-  &[class*=" bi-"]{
-	  top:-4px;
+  &.fa-icon{
+	top: -2px;
+  }
+
+  &.bi-icon{
+	  top:-1px;
   }
 
   &.size-xs{ 

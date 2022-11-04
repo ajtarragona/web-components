@@ -73,6 +73,9 @@ $nav-padding: $nav-padding-y $nav-padding-x;
 .tgn-nav-dropdown .nav-item{
 	position:relative;
 }
+.tgn-nav-dropdown .nav-item.active{
+	background-color: rgba(99, 99, 99, 0.1);
+}
 .tgn-nav-dropdown li.open>.dropdown-menu{
 	display:block;
 }

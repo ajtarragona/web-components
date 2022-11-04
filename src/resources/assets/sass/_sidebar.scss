@@ -77,7 +77,7 @@
       width:$sidebarwidth;
       background-color:$primary;
     
-      height: calc(100vh);
+      height: calc(100vh - 29px);
       /*overflow-x: hidden; */
       //overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
     }

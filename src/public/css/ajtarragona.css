@@ -17410,12 +17410,14 @@ body.modal-maximized.modal-open .modal {
   display: inline-block;
   vertical-align: middle;
   position: relative;
+}
+
+.icon.fa-icon {
   top: -2px;
 }
 
-.icon[class^=bi-],
-.icon[class*=" bi-"] {
-  top: -4px;
+.icon.bi-icon {
+  top: -1px;
 }
 
 .icon.size-xs {
@@ -17866,6 +17868,10 @@ body.modal-maximized.modal-open .modal {
 
 .tgn-nav-dropdown .nav-item {
   position: relative;
+}
+
+.tgn-nav-dropdown .nav-item.active {
+  background-color: rgba(99, 99, 99, 0.1);
 }
 
 .tgn-nav-dropdown li.open > .dropdown-menu {
@@ -18356,7 +18362,7 @@ body.modal-maximized.modal-open .modal {
 .with-sidebar .sidebar .sidebar-sticky {
   width: 300px;
   background-color: #a8113c;
-  height: 100vh;
+  height: calc(100vh - 29px);
   /*overflow-x: hidden; */
 }
 

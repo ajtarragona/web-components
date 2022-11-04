@@ -1,5 +1,6 @@
 <div class="row mb-3">
     <div class="col-sm-6">
+       
         @chart("doughnut",[
             [   
                 "data"=>[

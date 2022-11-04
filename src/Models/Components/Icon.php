@@ -67,6 +67,9 @@ class Icon Extends WebComponent
 			if(isset($this->attributes["type"]) && in_array($this->attributes["type"], $styles)){
 				$type=$this->attributes["type"];
 			}
+			$classes[]="fa-icon";
+		}else{
+			$classes[]="bi-icon";
 		}
 
 		
