@@ -42,6 +42,7 @@ $.fn.initConfirm = function(options){
  $.fn.initDatePicker = function(){
    return this.each(function(){
       var $input=$(this);
+      if($input.is('.native')) return;
 
       $input.wrap($("<div class='date-container'/>"));
       var args={

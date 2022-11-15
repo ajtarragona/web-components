@@ -31,10 +31,14 @@ class FormControl
 	
 	public $data = [];
 
-	
+	protected $errors=null;
+
 	public function __construct($attributes=[], $data=[]){
 		//$this->attributes=$attributes;
 		//$this->data=$data;
+		
+		$this->errors= isset($attributes["errors"])? $attributes["errors"] :  session()->get('errors');
+		
 		$this->prepareAttributes($attributes);
 		$this->prepareData($data);
 	}
@@ -155,8 +159,8 @@ class FormControl
 	protected function containerClass(){
 		
 		$ret=["form-group", "", $this->containerclass];
-		if($errors = session()->get('errors')) {
-			if($errors->has($this->getAttribute('name'))) $ret[]=' with-feedback is-invalid ';
+		if($this->errors) {
+			if($this->errors->has($this->getAttribute('name'))) $ret[]=' with-feedback is-invalid ';
 		}
 
 		if($this->outlined) $ret[]="outlined";
@@ -213,9 +217,10 @@ class FormControl
 
 
 	public function renderErrors(){
-		if($errors=session()->get('errors')){
+		// if($this->getAttribute('name')=="comici.nom")  dd($this->getAttribute('name'), session()->get('errors'));
+		if($this->errors){
 			if($name=$this->getAttribute('name')){
-				return "<div class='invalid-feedback'>". $errors->first($name) ."</div>";
+				return "<div class='invalid-feedback'>". $this->errors->first($name) ."</div>";
 			}
 		}
 	}
