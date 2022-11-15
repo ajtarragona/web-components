@@ -18,6 +18,8 @@ $.widget( "ajtarragona.tgnSelectPicker", {
 
     _create: function() {
         var o=this;
+        if(this.element.is('.native')) return;
+        
         // al("creating tgnSelectPicker");
         
         this.options = $.extend({}, this.options, this.element.data()); 

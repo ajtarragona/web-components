@@ -108,6 +108,8 @@ $.fn.initInputMask = function(){
 $.fn.initNumberInput = function (){
     return this.each(function(){
         var $input=$(this);
+        if($input.is('.native')) return;
+
         // al("initNumberInput");
         
         var defaults={
