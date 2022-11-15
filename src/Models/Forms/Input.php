@@ -38,8 +38,10 @@ class Input extends FormControl
 		}
 
 		if(isset($this->attributes['type']) &&  $this->attributes['type']=="number"){
-			$this->attributes["type"]="text";
-			$this->addClass("number");
+			if(!$this->hasClass("native")){
+				$this->attributes["type"]="text";
+				$this->addClass("number");
+			}
 		}
 		
 		if(isset($this->attributes["multiple"]) && $this->attributes["multiple"] && !Str::endsWith($this->attributes['name'],"[]")) $this->attributes["name"].="[]";

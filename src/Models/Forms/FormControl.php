@@ -152,6 +152,9 @@ class FormControl
 	
 
 	
+	public function hasClass($name){
+		return Str::contains($this->getAttribute('class'), $name);
+	}
 	public function addClass($name){
 		$this->setAttribute('class',  	$this->getAttribute('class')." ".$name);
 	}
