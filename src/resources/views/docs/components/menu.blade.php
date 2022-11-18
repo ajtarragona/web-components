@@ -11,5 +11,6 @@
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.navs','title'=>icon('bars').' Navs'])
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.tabs','title'=>icon('angle-right').' Tabs'])
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.charts','title'=>icon('chart-pie').' Charts'])
+	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.processes','title'=>icon('forward').' Batch Processes'])
 
 </ul>

@@ -6,6 +6,7 @@ use Ajtarragona\WebComponents\Controllers\BaseController as Controller;
 use Ajtarragona\Charts\Models\Samples\LinesAsyncChart;
 use Ajtarragona\Charts\Models\Samples\PieAsyncChart;
 use Ajtarragona\Charts\Models\Samples\DemoChart;
+use Ajtarragona\WebComponents\Processes\DemoProcess;
 use Faker\Generator as Faker;
 use Faker\Factory as FakerFactory;
 use Illuminate\Http\Request;
@@ -268,5 +269,9 @@ class DocsController extends Controller
     die();
   }
 
+  public function batchDemo(){
+    $process= new DemoProcess();
+    $process->run();
+  }
 }
 

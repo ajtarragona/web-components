@@ -93,5 +93,6 @@ require('./maps');
 require('./sessiontriggers');
 require('./prettyprint');
 require('./animations');
+require('./process');
 require('./main');
 

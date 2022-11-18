@@ -21,6 +21,7 @@ Route::group(['prefix' => 'ajtarragona/webcomponents','middleware' => ['web','la
 	
 
 	//rutas de Documentación
+	Route::get('/docs/batchdemo', 'Ajtarragona\WebComponents\Controllers\DocsController@batchDemo')->name('webcomponents.batchdemo');
 	Route::get('/docs/testcombo', 'Ajtarragona\WebComponents\Controllers\DocsController@testCombo')->name('webcomponents.combo');
 	Route::get('/docs/testcombohtml', 'Ajtarragona\WebComponents\Controllers\DocsController@testComboHtml')->name('webcomponents.combohtml');
 	Route::get('/docs/testcombogroups', 'Ajtarragona\WebComponents\Controllers\DocsController@testComboGroups')->name('webcomponents.combogroups');
@@ -103,5 +104,7 @@ Route::group(['prefix' => 'ajtarragona/webcomponents','middleware' => ['web','la
 	//rutas de  form ajax validation
 	Route::post('validation','Ajtarragona\WebComponents\Controllers\ValidationController@validate')->name('webcomponents.formvalidator');
 
+	//rutas de procesos batch
+	Route::post('process/run', 'Ajtarragona\WebComponents\Controllers\ProcessController@run')->name('webcomponents.process.run');
 
 });

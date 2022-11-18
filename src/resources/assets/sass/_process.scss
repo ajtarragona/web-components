@@ -1,0 +1,118 @@
+    .process-monitor{
+        display:block;
+        
+        &.inline{
+            width:100%;
+
+            .hide-progress{
+                display: none;
+            }
+        }
+        
+        .monitor-header{
+            padding:1em;
+            border-bottom:1px solid $border-color;
+            margin-bottom: 1em;
+            display: flex;
+        }
+        .monitor-footer{
+            padding:1em;
+            border-top:1px solid $border-color;
+        }
+
+        &:not(.inline){
+            display:flex;
+            position:static;
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background-color: rgba($black, 0.5);
+            justify-content: center;
+            align-items: flex-start;
+            z-index:2000;
+
+            .process-monitor-inner{
+                background-color: $white;
+                margin: 1.75rem;
+                width:100%;
+                box-shadow: $box-shadow;
+            }
+        }
+        
+        
+        .progress-confirm{
+            display:none;
+        }
+
+        &.confirm{
+            .progress-confirm{
+                display:block;
+            }
+            .progress-bar-container{
+                display: none;
+            }
+
+            &.confirmed{
+                .progress-confirm{
+                    display:none;
+                }
+                .progress-bar-container{
+                    display: block;
+                }
+            }
+        }
+
+        
+
+        
+
+        .progress-bar{
+            transition:none;
+        }
+
+        .process-console{
+            max-height:300px;
+            overflow-y: auto;
+            padding: .5em 1em;
+            color:$gray-100;
+            background-color:$gray-800;
+            &:empty{
+                display:none;
+            }
+            .step{
+                display:flex;
+                color:$gray-100;
+                &.text-error,
+                &.text-abort{
+                    color:$danger;
+                }
+                span{
+                    width:100px;
+                    padding:.2em 0 .2em 0em;
+                    // font-size:.9em;
+                    display: block;
+                }
+                p{
+                    padding:.2em 0em .2em 0;
+                    flex-grow: 1;
+                    margin:0;
+                    
+                    
+                }
+                
+            }
+        }
+    }
+
+
+    @media (min-width: 576px) {
+        
+        .process-monitor:not(.inline){
+            .process-monitor-inner{
+                max-width: 600px;
+                margin: 1.75rem auto;
+            }
+        }
+    }

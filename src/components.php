@@ -25,6 +25,8 @@ return [
 	'code' => 'ajtarragona-web-components::components.'.$theme.'.code',
 	'block' => 'ajtarragona-web-components::components.'.$theme.'.block',
 	'modal' => 'ajtarragona-web-components::components.'.$theme.'.modal',
-	'modalopener' => 'ajtarragona-web-components::components.'.$theme.'.modalopener'
+	'modalopener' => 'ajtarragona-web-components::components.'.$theme.'.modalopener',
+	'process'=> 'ajtarragona-web-components::components.'.$theme.'.process'
+       
 ];
 

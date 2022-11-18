@@ -25,4 +25,9 @@ return [
 	"language :code" => "Idioma (:code)",
 	"No Items Found" => "Cap resultat",
 	"Marcador" => "Marcador",
+	'Running: :name' => 'Executant > :name',
+    'Running process' => 'Executant procés',
+    'Process detail' => 'Detall del procés',
+	'With errors in the following steps:'=>'Amb errors als següents punts:'
+   
 ];
