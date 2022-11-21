@@ -20,8 +20,8 @@ class DemoProcess extends BaseProcess
                 usleep(100000);
                 return true;
             },[
-                 "message"=> "Demo step ". $i ." succesful",
-                "errormessage"=> "Error in demo step ". $i
+                 "message"=> "Running demo step :num",
+                // "errormessage"=> "Error in demo step ". $i
             ]);
         }
 

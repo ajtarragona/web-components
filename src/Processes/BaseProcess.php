@@ -34,13 +34,22 @@ class BaseProcess
         return json_encode($msg);
     }
 
-    protected function info($i, $step, $progress){
+    protected function running($i, $step, $progress){
         echo "\n".$this->toJson([
             "type" =>"info",
             "progress" =>$progress,
             "step" => $i,
             "totalsteps" => count($this->steps),
-            "message" =>$step->message,
+            "message" =>__($step->message,["num"=>$i]),
+        ]);
+    }
+    protected function info($i, $step, $progress){
+        echo "\n".$this->toJson([
+            "type" =>"success",
+            "progress" =>$progress,
+            "step" => $i,
+            "totalsteps" => count($this->steps),
+            "message" =>__($step->successmessage,["num"=>$i]),
         ]);
     }
 
@@ -50,7 +59,7 @@ class BaseProcess
             "progress" =>$progress,
             "step" => $i,
             "totalsteps" => count($this->steps),
-            "message" =>$step->errormessage,
+            "message" =>__($step->errormessage,["num"=>$i]),
         ]);
     }
 
@@ -110,8 +119,8 @@ class BaseProcess
             try{
                 $progress=0;
                 foreach($this->steps as $i=>$step){
+                    $this->running(($i+1), $step, $progress);
                     $progress = $progress + $step->weight;
-                            
                     if($step->run()){
                         $this->info(($i+1), $step, $progress);
                     }else{

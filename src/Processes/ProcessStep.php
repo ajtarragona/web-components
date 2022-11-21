@@ -4,8 +4,9 @@ namespace Ajtarragona\WebComponents\Processes;
 
 class ProcessStep
 {
-    public $message ="OK!";
-    public $errormessage ="Error!";
+    public $message ="tgn::strings.Executing step :num ...";
+    public $successmessage ="tgn::strings.OK!";
+    public $errormessage ="tgn::strings.Error!";
     public $wait = 0;
     public $weight = 0;
     protected $action;
@@ -34,6 +35,7 @@ class ProcessStep
     public function __construct($action=null, $args=[]) {
         
         if(isset($args["message"])) $this->message = $args["message"];
+        if(isset($args["successmessage"])) $this->message = $args["successmessage"];
         if(isset($args["errormessage"])) $this->errormessage = $args["errormessage"];
         if(isset($args["wait"])) $this->wait = intval($args["wait"]);
         if(isset($args["weight"])) $this->weight = floatval($args["weight"]);

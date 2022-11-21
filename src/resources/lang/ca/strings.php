@@ -27,6 +27,9 @@ return [
 	"Marcador" => "Marcador",
 	'Running: :name' => 'Executant > :name',
     'Running process' => 'Executant procés',
+    'Executing step :num ...' => 'Executant el pas :num ...',
+    'OK!' => 'OK!',
+    'Error!' => 'Error!',
     'Process detail' => 'Detall del procés',
 	'With errors in the following steps:'=>'Amb errors als següents punts:'
    

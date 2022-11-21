@@ -27,6 +27,9 @@ return [
 	"Marcador" => "Marcador",
 	'Running: :name' => 'Ejecutando > :name',
     'Running process' => 'Ejecutando proceso',
+    'Executing step :num' => 'Executando el paso :num ...',
+    'OK!' => 'OK!',
+    'Error!' => 'Error!',
     'Process detail' => 'Detalle del proceso',
 	'With errors in the following steps:'=>'Con errores en los siguientes puntos:'
    

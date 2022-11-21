@@ -357,7 +357,7 @@ $.fn.initProcessButton = function (){
 
           params = form.serializeObject();
 
-        //  al(params);
+          // al(params);
         //  return;
 
             //Files
@@ -380,6 +380,7 @@ $.fn.initProcessButton = function (){
           if(o.settings.process){
             url=route('webcomponents.process.run');
             params=o.settings.processParams;
+            if(!params) params={};
             params.process=o.settings.process;
           }else if(o.settings.url){
             url=o.settings.url;
@@ -392,10 +393,12 @@ $.fn.initProcessButton = function (){
             o.settings.method= o.$button.closest('form').attr('method');
           }
         }else{
-
+          // al(params);
           if(o.settings.process){
             url=route('webcomponents.process.run');
-            params=o.settings.processParams;
+            params=o.settings.processParams  ?? {};
+            if(!params) params={};
+            
             params.process=o.settings.process;
             o.settings.method='POST';
           }else if(o.settings.url){
