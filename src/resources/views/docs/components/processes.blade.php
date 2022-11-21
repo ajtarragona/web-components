@@ -61,6 +61,10 @@
                 <td>Si ho definim a false es mostrarà el procés en una finestra modal.</td>
             </tr>
             <tr>
+                <td><code>containerclass</code></td>
+                <td>Classes CSS que s'afegiran al contenidor de procés</td>
+            </tr>
+            <tr>
                 <td><code>monitorclass</code></td>
                 <td>Classes CSS que s'afegiran al monitor de procés</td>
             </tr>
