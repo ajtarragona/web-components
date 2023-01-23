@@ -23,7 +23,8 @@
 		data-padding = "{{ isset($padding)?$padding:'true'}}"
 		data-method = "{{ isset($method)?$method:'get'}}"
 		data-dismissable = "{{ isset($dismissable)?$dismissable:true}}"
-
+		data-onsuccess = "{{ isset($onsuccess)?$onsuccess:''}}"
+		data-onerror = "{{ isset($onerror)?$onerror:''}}"
 	>
 	    @include('ajtarragona-web-components::components.'.config("webcomponents.theme").'.parts.icontext')
 	</a>
