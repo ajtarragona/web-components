@@ -16,9 +16,10 @@
 			</thead>
 			<tbody>
 				
+				
 				<tr>
-					<td><code>type</code></td>
-					{{-- <td>Tipus de l'element (per defecte <code>text</code>)</td> --}}
+					<td><code>hidebutton</code></td>
+					<td>Permet amagar el botó</td>
 				</tr>
 				
 			</tbody>

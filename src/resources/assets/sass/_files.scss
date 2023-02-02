@@ -19,3 +19,11 @@
 		}
 	}
 }
+
+.form-group.hidebutton{	
+	.custom-file-label{
+		&::after{
+			display:none !important;
+		}
+	}
+}

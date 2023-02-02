@@ -145,8 +145,10 @@ if (! function_exists('gmap')) {
 if (! function_exists('fileinput')) {
 	function fileinput($attributes=[],$data=[]){
 		if(!isset($attributes["class"])) $attributes["class"]="";
+		if(!isset($attributes["containerclass"])) $attributes["containerclass"]="";
 		$attributes["class"].=" custom-file-input ";
 		$attributes["type"]="file";
+		if(isset($attributes["hidebutton"]) && isTrue($attributes["hidebutton"])) $attributes["containerclass"].=" hidebutton";
 
 		$ret = new Input($attributes,$data);
 		return $ret->render();
