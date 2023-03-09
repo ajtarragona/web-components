@@ -213,7 +213,7 @@ $sidelabel-size : 160px;
 
 
 
-	&.focused{
+	&.focused:not(.readonly){
 
 		border-color:rgba( $primary, .2 );
 		//outline:3px solid rgba( $primary, .2 );
