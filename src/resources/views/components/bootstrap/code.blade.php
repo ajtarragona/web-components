@@ -1,6 +1,6 @@
 <pre 
 	@isset($id) id="{{$id}}" @endif
-	class="prettyprint 
+	class="prettyprint theme-{{ $theme ?? 'dark'}} 
 		{!! (isset($linenums) && $linenums)?'linenums':'' !!}
 		{!! (isset($lang))?'lang-'.$lang:'' !!}
 	"

@@ -2,6 +2,7 @@
 	@if(!isset($hideintro)) @include('ajtarragona-web-components::docs.menuitem',['route'=>'components.introduction','title'=>'Introducció']) @endif
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.alerts','title'=>icon('exclamation-triangle').' Alerts'])
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.badges','title'=>icon('certificate').' Badges'])
+	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.code','title'=>icon('terminal').' Code'])
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.breadcrumb','title'=>icon('angle-right').' Breadcrumb'])
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.icons','title'=>icon('file-image').' Icons'])
 	@include('ajtarragona-web-components::docs.menuitem',['route'=>'components.lists','title'=>icon('list').' Lists'])
