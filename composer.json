@@ -9,7 +9,7 @@
             "email": "tmedrano@tarragona.cat"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "require": {
         "php": ">=7.0.0",
         "laravel/framework": "^6.0",

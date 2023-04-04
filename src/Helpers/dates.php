@@ -1,5 +1,5 @@
 <?php 
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
 
 if (! function_exists('_now')) {
 	
