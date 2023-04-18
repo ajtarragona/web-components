@@ -55,7 +55,7 @@ class Select extends FormControl
                     $ret.="</optgroup>";
                 }else{
                     if(is_null($value)) $ret.='<option data-divider="true"></option>';
-                    else $ret.="<option value='{$key}' ".(in_array($key,$this->selected)?'selected':'').">{$value}</option>";
+                    else $ret.="<option value='{$key}' data-content='{$value}' ".(in_array($key,$this->selected)?'selected':'').">{$value}</option>";
                 }
             }
         }
