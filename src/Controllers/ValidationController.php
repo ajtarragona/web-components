@@ -20,6 +20,7 @@ class ValidationController extends BaseController
             $validator = Validator::make($request->all(), $my_request->rules(), $my_request->messages());
             $validator->setAttributeNames($my_request->attributes());
             if($request->ajax()){
+               
                 if ($validator->fails())
                 {
                     return response()->json(array(
@@ -27,10 +28,7 @@ class ValidationController extends BaseController
                         'warnings' => $validator->getMessageBag()->toArray()
 
                     ));
-                }else{
-                    return response()->json(array(
-                        'success' => true,
-                    ));
+                
                 }
             }
         }
@@ -49,13 +47,14 @@ class ValidationController extends BaseController
                         'errors' => $validator->getMessageBag()->toArray()
 
                     ));
-                }else{
-                    return response()->json(array(
-                        'success' => true,
-                    ));
                 }
+                
             }
         }
+
+        return response()->json(array(
+            'success' => true,
+        ));
     }
 
 }

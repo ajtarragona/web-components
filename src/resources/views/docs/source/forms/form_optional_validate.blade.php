@@ -2,7 +2,8 @@
 	'method' => 'POST', 
 	'id'=>'validate-form1', 
 	'action' => route('webcomponents.docs.handle',['forms.form']), 
-	'optionalvalidator'=>'Ajtarragona\WebComponents\Requests\TestValidate'
+	'validator'=>'Ajtarragona\WebComponents\Requests\TestValidate', 
+	'optionalvalidator'=>'Ajtarragona\WebComponents\Requests\OptionalValidate'
 ])	
 
 	@input(['name'=>'campo_texto_mascara','icon'=>'plus','label'=>'Camp text','required'=>true,'helptext'=>'fds'])	
