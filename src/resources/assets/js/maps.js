@@ -16,10 +16,12 @@ var MarkerClusterer = require("@google/markerclustererplus");
 // Define Marker Shapes
 
 var marker_shapes = {
-  MAP_PIN : 'M0-48c-9.8 0-17.7 7.8-17.7 17.4 0 15.5 17.7 30.6 17.7 30.6s17.7-15.4 17.7-30.6c0-9.6-7.9-17.4-17.7-17.4z',
-  SQUARE_PIN : 'M22-48h-44v43h16l6 5 6-5h16z',
+  MAP_PIN_HOLE : 'm-0.06,-44.61c-8.38,0 -15.17,6.79 -15.17,15.17c0,8.55 4.24,10.37 8.93,16.06c5.6,6.81 6.25,13.83 6.25,13.83s0.64,-7.03 6.25,-13.83c4.69,-5.69 8.93,-7.51 8.93,-16.06c0,-8.38 -6.79,-15.17 -15.17,-15.17zm0,20.42c-2.9,0 -5.24,-2.35 -5.24,-5.24s2.35,-5.24 5.24,-5.24c2.9,0 5.24,2.35 5.24,5.24s-2.35,5.24 -5.24,5.24z',
+  MAP_PIN : 'm0.17,-45c-8.38,0 -15.17,6.79 -15.17,15.17c0,8.55 4.24,10.37 8.93,16.06c5.6,6.81 6.25,13.83 6.25,13.83s0.64,-7.03 6.25,-13.83c4.69,-5.69 8.93,-7.51 8.93,-16.06c0,-8.38 -6.79,-15.17 -15.17,-15.17l-0.02,0z',
+  MAP_PIN_ALT : 'M0-48c-9.8 0-17.7 7.8-17.7 17.4 0 15.5 17.7 30.6 17.7 30.6s17.7-15.4 17.7-30.6c0-9.6-7.9-17.4-17.7-17.4z',
   SHIELD : 'M18.8-31.8c.3-3.4 1.3-6.6 3.2-9.5l-7-6.7c-2.2 1.8-4.8 2.8-7.6 3-2.6.2-5.1-.2-7.5-1.4-2.4 1.1-4.9 1.6-7.5 1.4-2.7-.2-5.1-1.1-7.3-2.7l-7.1 6.7c1.7 2.9 2.7 6 2.9 9.2.1 1.5-.3 3.5-1.3 6.1-.5 1.5-.9 2.7-1.2 3.8-.2 1-.4 1.9-.5 2.5 0 2.8.8 5.3 2.5 7.5 1.3 1.6 3.5 3.4 6.5 5.4 3.3 1.6 5.8 2.6 7.6 3.1.5.2 1 .4 1.5.7l1.5.6c1.2.7 2 1.4 2.4 2.1.5-.8 1.3-1.5 2.4-2.1.7-.3 1.3-.5 1.9-.8.5-.2.9-.4 1.1-.5.4-.1.9-.3 1.5-.6.6-.2 1.3-.5 2.2-.8 1.7-.6 3-1.1 3.8-1.6 2.9-2 5.1-3.8 6.4-5.3 1.7-2.2 2.6-4.8 2.5-7.6-.1-1.3-.7-3.3-1.7-6.1-.9-2.8-1.3-4.9-1.2-6.4z',
   ROUTE : 'M24-28.3c-.2-13.3-7.9-18.5-8.3-18.7l-1.2-.8-1.2.8c-2 1.4-4.1 2-6.1 2-3.4 0-5.8-1.9-5.9-1.9l-1.3-1.1-1.3 1.1c-.1.1-2.5 1.9-5.9 1.9-2.1 0-4.1-.7-6.1-2l-1.2-.8-1.2.8c-.8.6-8 5.9-8.2 18.7-.2 1.1 2.9 22.2 23.9 28.3 22.9-6.7 24.1-26.9 24-28.3z',
+  SQUARE_PIN : 'M22-48h-44v43h16l6 5 6-5h16z',
   SQUARE : 'M-24-48h48v48h-48z',
   SQUARE_ROUNDED : 'M24-8c0 4.4-3.6 8-8 8h-32c-4.4 0-8-3.6-8-8v-32c0-4.4 3.6-8 8-8h32c4.4 0 8 3.6 8 8v32z',
   CIRCLE : 'M 24 -24 C 24 -10.745 13.255 0 0 0 C -13.255 0 -24 -10.745 -24 -24 C -24 -37.255 -13.255 -48 0 -48 C 13.255 -48 24 -37.255 24 -24 Z',
@@ -27,6 +29,18 @@ var marker_shapes = {
 }
 
 
+var marker_shapes_label_top =  {
+  MAP_PIN_HOLE : -30,
+  MAP_PIN : -30,
+  MAP_PIN_ALT : -30,
+  SQUARE_PIN : -27,
+  SHIELD : -27,
+  ROUTE : -27,
+  SQUARE : -25,
+  SQUARE_ROUNDED :-25,
+  CIRCLE : -25,
+  CIRCLE_PIN : -33,
+}
 
 // library.add(fas, far, fab);
 
@@ -50,8 +64,9 @@ $.widget( "ajtarragona.tgnMap", {
     mapType: 'roadmap',
     method:'get',
     url:false,
-    customicons:false,
+    custommarkers:false,
     showInfobox: false,
+    showCoords: false,
     controls : {
       zoom: true,
       mapType: false,
@@ -61,6 +76,7 @@ $.widget( "ajtarragona.tgnMap", {
       fullscreen: true,
 
     },
+    shapes : ['marker'],
     theme: 
       [
     
@@ -80,14 +96,32 @@ $.widget( "ajtarragona.tgnMap", {
             }
           ]
         }
-    ]
+    ],
+    markerDefaultOptions: {
+      borderwidth:0,
+      bordercolor:"#bf002c",
+      backgroundcolor : "#bf002c",
+      opacity:1,
+      shape: 'MAP_PIN_HOLE',
+      scale:1,
+    },
+    shapesOptions: {
+        borderwidth:3,
+        bordercolor:"#bf002c",
+        backgroundcolor : "#bf002c",
+        opacity:0.5,
+    },
       
   },
 
   markers : [],
+  shapes : [],
   initialized: false,
   gmap: null,
-
+  drawingManager: null,
+  selectedShapeId: null,
+  selectedShape: null,
+  isActive:false,
   _getGmap: function() {
     if(!this.gmap){
         this.gmap = new google.maps.Map(this.element[0], {
@@ -128,7 +162,11 @@ $.widget( "ajtarragona.tgnMap", {
   
       this.id=this.element.attr("id");
       this.options = $.extend({}, this.options, this.element.data()); 
-      if(this.options.customicons){
+      if(this.options.readonly){
+        this.options.shapes=null;
+      }
+      // al(this.options);
+      if(this.options.custommarkers){
         //no compatible
         // this.options.animation=false;
         // this.options.cluster=false;
@@ -194,26 +232,13 @@ $.widget( "ajtarragona.tgnMap", {
       
         
 
-        this.$coordsdisplay=this.element.closest('.map-container').find('.coords-display');
-
-        this.$autocompleteinput=$('[type=text][data-map="#'+this.id+'"]');
-        if(this.$autocompleteinput.length>0)
-          this.autocompleteinput = this.$autocompleteinput[0];
-        
-        this.$addmarkerbtn=$('button.add-marker-btn[data-map="#'+this.id+'"]');
-        if(this.$addmarkerbtn.length>0)
-          this.addmarkerbtn = this.$addmarkerbtn[0];
-        
-        this.$forminput=$('[data-value][data-map="#'+this.id+'"]');
-        if(this.$forminput.length>0)
-          this.forminput = this.$forminput[0];
-
+       
 
       
 
-      this.$addmarkerbtn.on('click',function(){
-        o.addMarker(o._getGmap().getCenter());
-      });
+      // this.$addmarkerbtn.on('click',function(){
+      //   o.addMarker(o._getGmap().getCenter());
+      // });
 
 
 //   },
@@ -292,8 +317,80 @@ $.widget( "ajtarragona.tgnMap", {
       
   },
 
+  _createNewShape : function(marker){
+    var options={
+        ...this.options.shapesOptions,
+        ...marker,
+        zIndex: this.shapes.length+1,
+        clickable: true,
+        geodesic:false,
+        // draggable: !this._isReadonly()
+    };
+    
+    // _d('duplicate layer',options);
+
+    switch(marker.type??'marker'){
+        case 'rectangle':
+            var shape=new google.maps.Rectangle(options);
+            shape.setBounds(this.selectedOverlay.getBounds());
+            shape.setMap(this.gmap);
+            this.addShapeEvents(marker.type, shape);
+            
+            break;
+
+        case 'circle':
+            var shape=new google.maps.Circle(options);
+            shape.setCenter(this.selectedOverlay.getCenter());
+            shape.setRadius(this.selectedOverlay.getRadius());
+            shape.setMap(this.gmap);
+            this.addShapeEvents(marker.type, shape);
+            
+            break;
+        case 'polyline':
+            var shape=new google.maps.Polyline(options);
+            shape.setPath(layer.content.path);
+            shape.setMap(this.gmap);
+            this.addOverlayEvents(marker.type, shape);
+            
+            break;
+        case 'polygon':
+            var shape=new google.maps.Polygon(options);
+            shape.setPath(layer.content.path);
+            shape.setMap(this.gmap);
+            this.addShapeEvents(marker.type, shape);
+            
+            break;
+        case 'marker':
+            
+            var shape= this.addMarker(marker);
+
+            //   marker.location, 
+            //   marker.name?marker.name:null, 
+            //   marker.url?marker.url:(marker.infobox?marker.infobox:null),
+            //   marker.id?marker.id:null,
+            //   {
+            //     icon : marker.icon?marker.icon:null,
+            //     backgroundcolor : marker.backgroundcolor?marker.backgroundcolor:null,
+            //     color: marker.color?marker.color:null,
+            //     bordercolor: marker.bordercolor?marker.bordercolor:null,
+            //     borderwidth: (marker.borderwidth || marker.borderwidth==0 )?marker.borderwidth:null,
+            //     label: (marker.label?marker.label:null),
+            //     opacity: ((marker.opacity || marker.opacity==0 )?marker.opacity:1) ,
+            //     shape: (marker.shape?marker.shape:'MAP_PIN_HOLE'),
+            //     labelposition: (marker.labelposition?marker.labelposition:'internal') ,
+            //   }
+            // );
+            
+            
+            this.addShapeEvents('marker', shape);
+            this._updateValue();
+            break;
+        default:break;
+    }
+  },
+  /**crea los marcadores o formas por defecto */
   _initMarkers : function(){
-    // al('initMarkers');
+    // al('initMarkers', this.options.markers);
     var o=this;
  
     o.bounds = new google.maps.LatLngBounds();
@@ -328,52 +425,21 @@ $.widget( "ajtarragona.tgnMap", {
 
     // al(o.markerClusterer);
     if(!this.options.multiple){
+
         if(this.options.markers.length>0){
           var tmpmarker=this.options.markers[0];
-          if(tmpmarker.location){
-            this.addMarker(
-              tmpmarker.location, 
-              tmpmarker.name?tmpmarker.name:null, 
-              tmpmarker.url?tmpmarker.url:(tmpmarker.infobox?tmpmarker.infobox:null),
-              tmpmarker.id?tmpmarker.id:null,
-              {
-                icon : tmpmarker.icon?tmpmarker.icon:null,
-                backgroundcolor : tmpmarker.backgroundcolor?tmpmarker.backgroundcolor:null,
-                color: tmpmarker.color?tmpmarker.color:null,
-                bordercolor: tmpmarker.bordercolor?tmpmarker.bordercolor:null,
-                borderwidth: (tmpmarker.borderwidth || tmpmarker.borderwidth==0 ) ? tmpmarker.borderwidth :null,
-                label: (tmpmarker.label?tmpmarker.label:null),
-                opacity: ((tmpmarker.opacity || tmpmarker.opacity==0 )?tmpmarker.opacity:1) ,
-                shape: (tmpmarker.shape?tmpmarker.shape:'MAP_PIN') ,
-                labelposition: (tmpmarker.labelposition?tmpmarker.labelposition:'internal') ,
-              }
-            );
-          }
+          // if(tmpmarker.location){
+            this._createNewShape(tmpmarker);
+
+   
 
         }
     }else{
       // var markers=[];
       for(var i in this.options.markers){
         var tmpmarker=this.options.markers[i];
-        if(tmpmarker.location){
-          this.addMarker(
-            tmpmarker.location, 
-            tmpmarker.name?tmpmarker.name:null, 
-            tmpmarker.url?tmpmarker.url:(tmpmarker.infobox?tmpmarker.infobox:null),
-            tmpmarker.id?tmpmarker.id:null,
-            {
-              icon : tmpmarker.icon?tmpmarker.icon:null,
-              backgroundcolor : tmpmarker.backgroundcolor?tmpmarker.backgroundcolor:null,
-              color: tmpmarker.color?tmpmarker.color:null,
-              bordercolor: tmpmarker.bordercolor?tmpmarker.bordercolor:null,
-              borderwidth: (tmpmarker.borderwidth || tmpmarker.borderwidth==0 )?tmpmarker.borderwidth:null,
-              label: (tmpmarker.label?tmpmarker.label:null),
-              opacity: ((tmpmarker.opacity || tmpmarker.opacity==0 )?tmpmarker.opacity:1) ,
-              shape: (tmpmarker.shape?tmpmarker.shape:'MAP_PIN'),
-              labelposition: (tmpmarker.labelposition?tmpmarker.labelposition:'internal') ,
-            }
-          );
-        }
+        this._createNewShape(tmpmarker);
+
       }
       
     }
@@ -407,243 +473,130 @@ $.widget( "ajtarragona.tgnMap", {
   },
 
 
-  addMarker : function(coords,name,infobox,id, iconsettings){
-    var o=this;
+  addMarker : function(markeroptions){
+    console.log('addMarker',markeroptions);
+    var o=this;    
+    if(!markeroptions.location) return;
 
-    // al("addMarker ", coords);
-    // al(coords);
-    // al(o.markers);
-    var id = id ? id : o._uniqueId();
-    if(o.markers[id]) return;
-    // al("addMarker " + id);
-    // al("markers",o.markers);
-
-    
-
-    if(!this.options.multiple) this.deleteMarkers();
-
+    if(!this.options.multiple){
+      // this.deleteMarkers();
+      this.deleteShapes();
+    }
 
     var marker = null;
-    
-    // if(color || icon ){
-    //   al("CUSTOM",coords);
-    //   marker = new CustomMarker(
-    //     coords, 
-    //     this.gmap,
-    //     {
-    //       color: color,
-    //       draggable: !this._isReadonly(),
-    //       animation: this.options.animation?google.maps.Animation.DROP:false,
-    //       icon: icon,
-    //     }
-    //   );
 
-    // }else{
-
-      // var image = route('webcomponents.markerimage');//'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
-      // al("markerurl",imgurl);
-      var markerargs={
-        position: coords, 
-        draggable: !this._isReadonly(),
-        animation: this.options.animation?google.maps.Animation.DROP:false,
-        map: this._getGmap(),
-        
-      };
+    var markerargs={
+      position: new google.maps.LatLng(markeroptions.location.lat, markeroptions.location.lng), 
+      draggable: !this._isReadonly(),
+      // animation: this.options.animation?google.maps.Animation.DROP:false,
+      map: this._getGmap(),
+    };
 
 
-      if(this.options.customicons && iconsettings){
-
-        // al('iconsettings',iconsettings);
-        // var imgurl = route('webcomponents.markerimage',iconsettings).url();
-        // var imgpath='<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">';
-        // var pathstyle=''; //style="stroke: '+iconsettings.bordercolor+'; fill: '+iconsettings.backgroundcolor+'; stroke-width: '+iconsettings.borderwidth+';"
-        // var imgpath='M 19.001 0 C 22.866 0 26.155 1.295 28.865 3.88 C 31.575 6.466 32.933 9.604 32.933 13.291 C 32.933 15.135 32.453 17.246 31.482 19.624 C 30.516 22.003 29.345 24.233 27.976 26.316 C 26.606 28.397 25.249 30.343 23.909 32.158 C 22.568 33.971 21.431 35.412 20.498 36.484 L 18.999 38 C 18.626 37.582 18.129 37.034 17.502 36.351 C 16.878 35.667 15.76 34.298 14.137 32.247 C 12.514 30.197 11.097 28.204 9.881 26.269 C 8.668 24.336 7.56 22.151 6.564 19.713 C 5.564 17.275 5.066 15.135 5.066 13.291 C 5.066 9.604 6.425 6.466 9.133 3.88 C 11.845 1.295 15.133 0 18.998 0 L 19.001 0 Z';
-        // imgpath+='</svg>';
-        // console.log('svg',imgpath);
-        
-        //28x38
-
-        var markershape= iconsettings.shape ? iconsettings.shape.toUpperCase() : 'MAP_PIN';
-// al('markershape',markershape);
-        var labeltop=-25;
-        if($.inArray(markershape, ['SHIELD','ROUTE','SQUARE','CIRCLE','SQUARE_ROUNDED'])>=0){
-            labeltop=-22;
-        }else if($.inArray(markershape, ['CIRCLE_PIN'])>=0){
-          labeltop=-30;
-        }
-        if(iconsettings.labelposition && iconsettings.labelposition == "external"){
-          labeltop=20;
-        }
-
-        // var labelorigin=new google.maps.Point(0, -25);
-
-        // if (iconsettings.icon) labelorigin=new google.maps.Point(0, -22);
-        // else if(iconsettings.labelposition && iconsettings.labelposition == "external") labelorigin=new google.maps.Point(0, 20);
-        // console.log('labeltop',labeltop);
-        markerargs.icon= {
-          // url: imgurl,
-          path : marker_shapes[markershape],//imgpath,
-          // size: new google.maps.Size(40, 40),
-          // origin: new google.maps.Point(19, 38),
-          anchor: new google.maps.Point(0,0),
-          // scaledSize: new google.maps.Size(28,38),
-          // anchor: new google.maps.Point(7.8, 21),
-          rotation: 0,
-          scale: 0.9,
-          labelOrigin : new google.maps.Point(0, labeltop)
+    if(this.options.custommarkers){
+        var custommarker=this._makeCustomMarker({
+          ...o.options.markerDefaultOptions,
+          ...o.options.markeroptions,
+          ...markeroptions
+        });
+        markerargs={
+          ...markerargs,
+          ...custommarker
         };
+    }
+    console.log('markerargs',markerargs);
 
-        markerargs.icon.strokeColor = iconsettings.bordercolor ? iconsettings.bordercolor:'#000000';
-        markerargs.icon.fillColor = iconsettings.backgroundcolor ? iconsettings.backgroundcolor:'#bf002c';
-        markerargs.icon.fillOpacity = (iconsettings.opacity || iconsettings.opacity === 0) ? iconsettings.opacity:1,
-        markerargs.icon.strokeWeight = (iconsettings.borderwidth || iconsettings.borderwidth === 0) ? iconsettings.borderwidth : 1;
-
-        // use a Material Icon as font
-        if(iconsettings.icon){
-          // console.log(iconsettings.icon, iconsettings.icon.startsWith('fa'))
-
-          if(!iconsettings.icon.startsWith('fa')){
-            iconsettings.icon='fa fa-'+iconsettings.icon;
-          }
-
-          markerargs.label = 
-          {
-              className : 'markerlabel-icon icon '+iconsettings.icon,
-              text: "", 
-              fontFamily: "Font Awesome 5 Free",
-              color: iconsettings.color ?? '',
-              fontSize: "16px"
-          };
-
-        }else if(iconsettings.label){
-          // markerargs.labelContent = iconsettings.label; // can also be HTMLElement
-          // markerargs.labelAnchor: new google.maps.Point(-21, 3),
-          // markerargs.labelClass: "labels", // the CSS class for the label
-          // markerargs.labelStyle: { opacity: 1.0 },
-          markerargs.label = 
-          {
-              className : 'markerlabel-' + (iconsettings.labelposition ? iconsettings.labelposition : 'internal'),
-              text: iconsettings.label, //"\ue530", // codepoint from https://fonts.google.com/icons
-              fontFamily: "Montserrat, Arial, sans-serif",
-              // fontWeight: "bold",
-              color: iconsettings.color ?? '',
-              fontSize: (iconsettings.labelposition && iconsettings.labelposition == "external") ? "12px" : "16px",
-          };
-        }
-
-        // al('addMARKER',markerargs);
-
-
-        
-
-      }
-
-      marker = new google.maps.Marker(markerargs);
-      // marker= new MarkerWithLabel(markerargs);
-
-      // if(this.options.customicons && iconsettings.icon){
-      //   // al("icon",icon);
-      //   // al("coords",coords);
-      //   // al("icon",icon);
-      //   var iconargs={
-      //     icon: iconsettings.icon,
-      //   };
-
-      //   if(iconsettings.color) iconargs.iconcolor= iconsettings.color;
-
-      //   var iconmarker = new CustomMarker(
-      //       coords, 
-      //       this._getGmap(),
-      //       iconargs
-      //     );
-      //     marker.customicon=iconmarker;
-      //     // al("end");
-
-      // }
+    marker = new google.maps.Marker(markerargs);
      
-      
-    // }
-    //al(marker);
-    marker.name=name;
-    marker.uid=id;
-    
-    
-    marker.addListener('drag', function() {
-      // al("DRAG");
-      if(this.customicon){
-        this.customicon.setPosition(this.position);
-      }
-    });
-
-    marker.addListener('dragend', function() {
-      //al("marker drooped");
-      //al(this);
-      o._displayCoords(this);
-      o._updateValue();
-
-    });
-
-
-    
-    marker.addListener('rightclick', function(point) {
-      if(!o._isReadonly()){
-       if(this.customicon){
-          // al(this.customicon);
-          this.customicon.remove();
-       }
-        o.deleteMarker(this);
-      }
-
-    });
-
-    //al(marker);
-    
-      // marker.addListener('mouseout', function() {
-      //     o.hideInfo();
-      // });
-      
-
-    // marker.addListener('click', function() {
-    marker.addListener('spider_click', function() {
-        // al("marker clicked");
-        // al(this);
-        if(this.infobox){
-          o._showInfo(this,this.infobox);
-        }
-        o._displayCoords(this);
-    });
-    
-    
-    
-    if(infobox){
-      marker.infobox=infobox;
+    if(markeroptions.infobox){
+      marker.infobox=markeroptions.infobox;
       // al('show',o.options);
       if(o.options.showInfobox){
-        o._showInfo(marker, infobox);
+        o._showInfo(marker, marker.infobox);
       }
     }
 
-    
-    // al("position",marker.getPosition());
-    o.bounds.extend(marker.getPosition());
-    
-    o.overlappingmarkers.addMarker(marker); 
-
-    if(o.options.cluster)  o.markerClusterer.addMarker(marker);
-
-    // al(marker);
-    //añado al array de markers
-    o.markers[id] = marker; 
-    
-    // o.markers.push(marker);
-    // al("markers  ",o.markers);
-
-    if(o.options.fitbounds) o.setCenter(coords);
     o._updateValue();
     return marker;
   },
 
+  _makeCustomMarker : function(iconsettings){
+    // console.log('_makeCustomMarker', iconsettings);
+    
 
+    var markershape= iconsettings.shape ? iconsettings.shape.toUpperCase() : 'MAP_PIN_HOLE';
+  
+    if(iconsettings.icon && iconsettings.shape=='MAP_PIN_HOLE') markershape = 'MAP_PIN';
+
+    // console.log('markershape',markershape, marker_shapes_label_top[markershape]);
+    var labeltop=(marker_shapes_label_top[markershape] ?? -25) ;
+
+   
+    if(iconsettings.labelposition && iconsettings.labelposition == "external"){
+      labeltop=20;
+    }
+    var markerargs={};
+    // var labelorigin=new google.maps.Point(0, -25);
+
+    // if (iconsettings.icon) labelorigin=new google.maps.Point(0, -22);
+    // else if(iconsettings.labelposition && iconsettings.labelposition == "external") labelorigin=new google.maps.Point(0, 20);
+    // console.log('labeltop',labeltop);
+    markerargs.icon= {
+      // url: imgurl,
+      path : marker_shapes[markershape],//imgpath,
+      // size: new google.maps.Size(40, 40),
+      // origin: new google.maps.Point(19, 38),
+      anchor: new google.maps.Point(0,0),
+      // scaledSize: new google.maps.Size(28,38),
+      // anchor: new google.maps.Point(7.8, 21),
+      rotation: 0,
+      // scale: 1,
+      labelOrigin : new google.maps.Point(0, labeltop)
+    };
+
+    markerargs.icon.strokeColor = iconsettings.bordercolor ? iconsettings.bordercolor:'bf002c';
+    markerargs.icon.fillColor = iconsettings.backgroundcolor ? iconsettings.backgroundcolor:'#bf002c';
+    markerargs.icon.fillOpacity = (iconsettings.opacity || iconsettings.opacity === 0) ? iconsettings.opacity:1,
+    markerargs.icon.strokeWeight = (iconsettings.borderwidth || iconsettings.borderwidth === 0) ? iconsettings.borderwidth : 0;
+    markerargs.icon.scale = iconsettings.scale ? iconsettings.scale:1;
+
+    // use a Material Icon as font
+    if(iconsettings.icon){
+      // console.log(iconsettings.icon, iconsettings.icon.startsWith('fa'))
+
+      if(!iconsettings.icon.startsWith('fa')){
+        iconsettings.icon='fa fa-'+iconsettings.icon;
+      }
+
+      markerargs.label = 
+      {
+          className : 'markerlabel-icon icon '+iconsettings.icon,
+          text: "", 
+          fontFamily: "Font Awesome 5 Free",
+          color: iconsettings.color ?? '',
+          fontSize: ((1.5)*iconsettings.scale)+"em"
+                
+          // fontSize: "16px"
+      };
+
+    }else if(iconsettings.label){
+      // markerargs.labelContent = iconsettings.label; // can also be HTMLElement
+      // markerargs.labelAnchor: new google.maps.Point(-21, 3),
+      // markerargs.labelClass: "labels", // the CSS class for the label
+      // markerargs.labelStyle: { opacity: 1.0 },
+      markerargs.label = 
+      {
+          className : 'markerlabel-' + (iconsettings.labelposition ? iconsettings.labelposition : 'internal'),
+          text: iconsettings.label, //"\ue530", // codepoint from https://fonts.google.com/icons
+          fontFamily: "Montserrat, Arial, sans-serif",
+          // fontWeight: "bold",
+          color: iconsettings.color ?? '',
+          fontSize: (iconsettings.labelposition && iconsettings.labelposition == "external") ? "12px" : "16px",
+      };
+    }
+    // console.log('markerargs',markerargs);
+    return markerargs;
+  },
 
   clearMarkers : function() {
     for ( marker of Object.values(this.markers)) {
@@ -672,10 +625,18 @@ $.widget( "ajtarragona.tgnMap", {
       this.markers = {};
       this._updateValue();
   },
+  deleteShapes : function() {
+    for (shape of Object.values(this.shapes)) {
+      shape.setMap(null);
+    }
+    this.shapes=[];
+    this._updateValue();
+    if(this.options.cluster) this.markerClusterer.clearMarkers();
+  },
 
   
   _lookForClusteredMarkers : function(e){
-    if(!this.options.customicons) return;
+    if(!this.options.custommarkers) return;
 
     // al('lookForClusteredMarkers');
     // al(this.markerClusterer);
@@ -830,6 +791,7 @@ $.widget( "ajtarragona.tgnMap", {
           if(place.address_components){
             var loc={lat:place.geometry.location.lat(),lng:place.geometry.location.lng()};
               o.addMarker(loc,place.name,place.name);
+
               o._updateValue();
           }else{
             o._updateValue();
@@ -848,15 +810,116 @@ $.widget( "ajtarragona.tgnMap", {
   value : function(){
     return this.$forminput.val();
   },
+  
+  _getShapeHtml: function(shapevalue, current){
+    var html = '<li class="'+(current?'selected':'')+'">';
+      switch(shapevalue.type){
+        case 'circle':
+            html+="<u>CIRCLE</u><br> - CENTER: LAT "+shapevalue.center.lat +", LNG "+shapevalue.center.lng +"<br> - RADIUS: "+shapevalue.radius +" m<br> - AREA: "+shapevalue.area+" m<sup>2</sup>"
+            break;
+        case 'rectangle':
+            html+="<u>RECTANGLE</u><br> - EAST: "+shapevalue.bounds.east +"<br> - NORTH: "+shapevalue.bounds.north +"<br> - SOUTH: "+shapevalue.bounds.south+"<br> - WEST: "+shapevalue.bounds.west+"<br> - AREA: "+shapevalue.area+" m<sup>2</sup>"
+          
+            break;
+        case 'polygon':
+            html+="<u>POLYGON</u><br>";
+            
+            for(var vertex of shapevalue.path){
+              html+=" - LAT "+vertex.lat +", LNG "+vertex.lng+"<br>";
+            }
+            html+=" - AREA: "+shapevalue.area+" m<sup>2</sup>";
+           
+            break;
+        case 'polyline':
+            html+="<u>POLYLINE</u><br>";
+            
+            for(var vertex of shapevalue.path){
+              html+=" - LAT "+vertex.lat +", LNG "+vertex.lng+"<br>";
+            }
+            html+="- LENGTH: "+shapevalue.length+" m";
+            break;
+        case 'marker':
+            html+="<u>MARKER</u><br/> - LAT "+shapevalue.location.lat +", LNG "+shapevalue.location.lng+"";
+            break;
+        default:break;
+      }
+      html+"</li>";
+
+      return html;
+  },
+  _getShapeValue : function(shape){
+      var value;
+      switch(shape.type){
+        case 'circle':
+            var radius=shape.getRadius();
+            value = {
+                center: {
+                  lat:shape.getCenter().lat(),
+                  lng:shape.getCenter().lng()
+                },
+                radius: radius,//+" m",
+                area: radius*radius*Math.PI,//+" m2"
+            };
+            
+            break;
+        case 'rectangle':
+            value = {
+                bounds: shape.getBounds().toJSON(),
+                area: google.maps.geometry.spherical.computeArea(shape.getBounds()),//+" m2"
+            
+            };
+            break;
+        case 'polygon':
+            var path=[];
+            for(var vertex of shape.getPath().getArray()){
+              path.push({
+                lat:vertex.lat(),
+                lng:vertex.lng()
+              })
+            }
+            value = {
+              path: path,
+              area: (shape.getPath().getArray().length>2 ?  google.maps.geometry.spherical.computeArea(shape.getPath()) : "0") ,// +" m2" 
+            };
+            break;
+        case 'polyline':
+            var path=[];
+            for(var vertex of shape.getPath().getArray()){
+              path.push({
+                lat:vertex.lat(),
+                lng:vertex.lng()
+              })
+            }
+            value = {
+              path: path,
+              length: google.maps.geometry.spherical.computeLength(shape.getPath()),//+" m"
+            };
+            break;
+        case 'marker':
+            value = {
+              location: {
+                lat:shape.getPosition().lat(),
+                lng:shape.getPosition().lng()
+              }
+            };
+            break;
+        default:break;
+      }
+      return value;
+
+  },
   _updateValue : function(settings){
-      //  al('updateValue');
-      if(this._isReadonly()) return;
+      var a=this;  
+    //  al('updateValue');
+      // if(this._isReadonly()) return;
       
       var value=[];
-      
+      var html="";
+      html+="<ul class='list-unstyled mb-4'>";
       for (marker of Object.values(this.markers)) {
 
         var val={
+          type:'marker',
           name: marker.name,
           infobox: marker.name,
           location: {
@@ -865,22 +928,66 @@ $.widget( "ajtarragona.tgnMap", {
           }
         };
         value.push(val);
-        
+        html+="<li>LAT:"+val.location.lat+", LNG:"+val.location.lng+"</li>";
       }
 
 
+      for (shape of Object.values(this.shapes)) {
+        
+        var val={
+          ... a._getShapeValue(shape),
+          type: shape.type,
+        };
+        value.push(val);
+        
+        html+=a._getShapeHtml(val, shape.uid==a.selectedShapeId);
+      }
+      html+="</ul>";
       // al("UPDATE",value, this.markers);
       // al("MARKERS",this.markers);
 
       if(!this.options.multiple){
         // al("length:", Object.keys(this.markers).length);
-        if(Object.keys(this.markers).length>0){
-          this.$addmarkerbtn.prop('disabled',true).addClass('disabled');
+        if(Object.keys(this.markers).length>0 || Object.keys(this.shapes).length>0){
+          // this.$addmarkerbtn.prop('disabled',true).addClass('disabled');
+
+          if(this.drawingManager){
+            // this.drawingManager.setOptions({
+            //   // drawingMode : null,
+            //   drawingControlOptions : {
+            //       position : google.maps.ControlPosition.TOP_RIGHT,
+            //       drawingModes : []
+            //   }
+            // });
+            // this.drawingManager.setMap(this.gmap);
+            
+          }
+
         }else{
-          this.$addmarkerbtn.prop('disabled',false).removeClass('disabled');
+          // this.$addmarkerbtn.prop('disabled',false).removeClass('disabled');
+          if(this.drawingManager){
+            // this.drawingManager.setOptions({
+            //   // drawingMode : null,
+            //   drawingControlOptions : {
+            //       position : google.maps.ControlPosition.TOP_RIGHT,
+            //       drawingModes : a.options.shapes
+            //   }
+            // });
+            // this.drawingManager.setMap(this.gmap);        
+          }
         }
       }
-      this.$forminput.val(JSON.stringify(value));
+      // console.log('value',value);
+      if(value.length==0){
+        if(this.$forminput) this.$forminput.val('');
+        if(this.$coordscontainer)  this.$coordscontainer.find('button').prop('disabled',true).addClass('disabled');
+      }else{
+        if(this.$forminput)  this.$forminput.val(JSON.stringify(value));
+        if(this.$coordscontainer) this.$coordscontainer.find('button').prop('disabled',false).removeClass('disabled');
+        
+      }
+      if(this.$coordscontainer) this.$coordscontainer.find('.coords-display').html(html); 
+
       if(this.initialized){
         // al("CHANGED");
         this.$forminput.trigger('change');
@@ -890,27 +997,325 @@ $.widget( "ajtarragona.tgnMap", {
   },
 
   
-  _displayCoords : function(marker){
-    if(marker){
-      this.$coordsdisplay.html("LAT:"+marker.position.lat()+", LNG:"+marker.position.lng());  
-    }
-  },
+  
 
 
   _initAll : function(){
     // al("initAll",this.options);
-   
+    var a=this;
+    this.$coordscontainer=this.element.closest('.map-container').find('.coords-container');
+
+    this.$autocompleteinput=$('[type=text][data-map="#'+this.id+'"]');
+    if(this.$autocompleteinput.length>0)
+      this.autocompleteinput = this.$autocompleteinput[0];
+    
+    // this.$addmarkerbtn=$('button.add-marker-btn[data-map="#'+this.id+'"]');
+    // if(this.$addmarkerbtn.length>0)
+    //   this.addmarkerbtn = this.$addmarkerbtn[0];
+    
+    this.$forminput=$('[data-value][data-map="#'+this.id+'"]');
+    if(this.$forminput.length>0){
+      this.forminput = this.$forminput[0];
+    }
+
     this._initTextField();
     // if(this.options.url){ 
     //   this.loadAjaxMarkers();
     // }
+
+
     if(this.options.markers){
       this._initMarkers();
     }
 
+
+    var custommarker={};
+
+
+    if(this.options.custommarkers){
+
+      var custommarker=this._makeCustomMarker({
+        ...this.options.markerDefaultOptions,
+        ...this.options.markeroptions
+      });
+
+    }
+
+    
+    if(!this._isReadonly()){
+      // console.log(this.options.shapes, this.options.shapesOptions);
+      
+      
+      this.drawingManager = new google.maps.drawing.DrawingManager({
+          drawingMode: null,
+          drawingControl: true,
+          drawingControlOptions: {
+            position: google.maps.ControlPosition.LEFT_BOTTOM,
+            drawingModes: this.options.shapes,
+          },
+          markerOptions: {
+            ...custommarker,
+            clickable: true,
+            zIndex: 1,
+            draggable:true
+          },
+          circleOptions: {
+              fillColor: this.options.shapesOptions.backgroundcolor,
+              strokeColor: this.options.shapesOptions.bordercolor,
+              fillOpacity: this.options.shapesOptions.opacity,
+              strokeWeight: this.options.shapesOptions.borderwidth,
+              clickable: true,
+              // editable: true,
+              zIndex: 1,
+              draggable:true,
+              geodesic:false
+          },
+          rectangleOptions: {
+              fillColor: this.options.shapesOptions.backgroundcolor,
+              strokeColor: this.options.shapesOptions.bordercolor,
+              fillOpacity: this.options.shapesOptions.opacity,
+              strokeWeight: this.options.shapesOptions.borderwidth,
+              clickable: true,
+              // editable: true,
+              zIndex: 1,
+              draggable:true,
+              geodesic:false
+          },
+          polygonOptions: {
+              fillColor: this.options.shapesOptions.backgroundcolor,
+              strokeColor: this.options.shapesOptions.bordercolor,
+              fillOpacity: this.options.shapesOptions.opacity,
+              strokeWeight: this.options.shapesOptions.borderwidth,
+              clickable: true,
+              // editable: true,
+              zIndex: 1,
+              draggable:true,
+              geodesic:false
+          },
+          polylineOptions: {
+              strokeColor: this.options.shapesOptions.bordercolor,
+              strokeWeight: this.options.shapesOptions.borderwidth,
+              clickable: true,
+              // editable: true,
+              zIndex: 1,
+              draggable:true,
+              geodesic:false
+          },
+      });
+
+      this.drawingManager.setMap(this.gmap);
+
+      google.maps.event.addListener(this.drawingManager, 'overlaycomplete', function(event) {
+         
+        if(!a.options.multiple){
+          // a.deleteMarkers();
+          a.deleteShapes();
+         
+        }
+        
+        a.addShapeEvents(event.type, event.overlay);
+        a._updateValue();
+        
+      });
+
+      //
+      a._addKeyboardEvents();
+      a._updateValue();
+    }
+
+  },
+  generateUid(type){
+    return type+"_"+Date.now().toString(36) + Math.random().toString(36).substring(2);
+
+  },
+  clearShapeSelection(e){
+    // _d('clearShapeSelection');
+    if(this.selectedShape){
+        if(this.selectedShape.type!='marker'){
+            this.selectedShape.setEditable(false);
+        }else{
+            this.selectedShape.setAnimation(null);
+        }
+        this.selectedShapeId=null;
+    }
+
   },
 
+  removeSelectedShape() {
+    // _d('deleteSelectedShape');
+    this.removeShape(this.selectedShapeId);
+    
+      
 
+  },
+  shapeIndex(uid){
+      return this.shapes.findIndex((shape) => {
+          return(shape.uid==uid);
+      } );
+  },
+  removeShape(id){
+      var index=this.shapeIndex(id);
+      if(index>=0){
+          // console.log('removeShape '+id, index,  this.selectedShape);
+          if(this.selectedShape.type=='marker'){
+            if(this.options.cluster)  this.markerClusterer.removeMarker(this.selectedShape);
+          }
+
+          this.selectedShape.setMap(null);
+          this.selectedShape.setVisible(false);
+          
+          this.shapes.splice(index,1);
+      }
+      this.clearShapeSelection();
+      this._updateValue();
+      if(this.shapes.length==0){
+        //amago el codi
+          this.$coordsdisplay.closest('.coords-container').find('.collapse').collapse('hide');
+      }
+  },
+  selectShape(shape){
+      // console.log('selectShape',shape.uid,this.selectedLayerId);
+      if(!this.selectedShapeId || shape.uid!=this.selectedShapeId){
+          this.clearShapeSelection();
+          this.selectedShape=shape;
+          
+          if(shape.type!='marker'){
+            shape.setEditable(true);
+              
+          }else{
+            if(this.options.multiple){
+              // shape.setAnimation(google.maps.Animation.BOUNCE);
+            }
+          }
+          // shape.setEditable(true);
+          this.selectedShapeId=shape.uid;
+      }else{
+          // this.clearShapeSelection();
+
+      }
+      this._updateValue();
+      
+  },
+  addShapeEvents: function (type, shape){
+    var a =this;
+    // console.log('addShapeEvents',type,shape);
+    shape.uid=a.generateUid(type);
+    shape.type=type;
+    // google.maps.event.addListener(shape, 'rightclick', function(event2) {
+    //   // console.log(event2.domEvent, shape);
+    //   event2.domEvent.preventDefault();
+    //   event2.domEvent.stopPropagation();
+      
+    //   // if(shape.uid==a.selectedShapeId){
+    //     a.selectShape(shape);
+    //     a.removeShape(shape.uid);
+    //   // }else{
+    //   //   a.selectShape(shape);
+
+    //   // }
+
+    // });
+    google.maps.event.addListener(shape, 'click', function(event2) {
+      if (event2.vertex !== undefined) {
+        console.log('removing vertex', event2);
+          event2.domEvent.preventDefault();
+          event2.domEvent.stopPropagation();
+          if (shape.type === google.maps.drawing.OverlayType.POLYGON) {
+              var path = shape.getPaths().getAt(event2.path);
+              path.removeAt(event2.vertex);
+              if (path.length < 2) {
+                a.removeShape(shape.uid);
+              }
+          }
+          if (shape.type === google.maps.drawing.OverlayType.POLYLINE) {
+              var path = shape.getPath();
+              path.removeAt(event2.vertex);
+              if (path.length < 2) {
+                a.removeShape(shape.uid);
+              }
+          }
+      }else{
+          a.selectShape(shape);
+      }
+  });
+  
+  google.maps.event.addListener(shape, 'dragstart', function (e) {
+      // e.domEvent.stopPropagation();
+      a.selectedLayerId=null;
+      a.selectShape(shape);
+  });
+  
+  
+
+  if( type === google.maps.drawing.OverlayType.MARKER ){
+      google.maps.event.addListener(shape, 'dragend', function (e) {
+          a._updateValue();
+      });
+
+   
+      // marker.addListener('click', function() {
+      shape.addListener('spider_click', function() {
+          al("marker clicked");
+          al(this);
+          if(this.infobox){
+            a._showInfo(this,this.infobox);
+          }
+          
+      });
+      
+
+      
+      // al("position",marker.getPosition());
+      a.bounds.extend(shape.getPosition());
+      
+      a.overlappingmarkers.addMarker(shape); 
+
+      
+      // console.log('a.options.cluster',a.options.cluster,shape);
+
+      if(a.options.cluster){
+         a.markerClusterer.addMarker(shape);
+      }
+
+      // al(marker);
+      //añado al array de markers
+      // o.markers[id] = marker; 
+      
+      // o.markers.push(marker);
+      // al("markers  ",o.markers);
+
+      // if(a.options.fitbounds) a.setCenter(shape.getPosition());
+  }
+
+  if( type === google.maps.drawing.OverlayType.RECTANGLE || type === google.maps.drawing.OverlayType.CIRCLE ){
+      google.maps.event.addListener(shape, "bounds_changed", (e) => {
+          a._updateValue();
+
+      });
+
+  }
+
+  if( type === google.maps.drawing.OverlayType.POLYGON || type === google.maps.drawing.OverlayType.POLYLINE ){
+      google.maps.event.addListener(shape.getPath(), 'insert_at', (e) => {
+          // _d('We inserted a point');
+          a._updateValue();
+      });
+  
+      google.maps.event.addListener(shape.getPath(), 'remove_at', (e) => {
+          // _d('We removed a point');
+          a._updateValue();
+      });
+  
+      google.maps.event.addListener(shape.getPath(), 'set_at', (e) => {
+          // _d('We set a point');
+          a._updateValue();
+      });
+ 
+    }
+
+    a.shapes.push(shape);
+    a.selectShape(shape);
+  },
   _geoLocate : function(callback){
     var o = this;
     //al("Geolocating");
@@ -948,8 +1353,76 @@ $.widget( "ajtarragona.tgnMap", {
       o.infoWindow.setPosition(o._getGmap().getCenter());
       o.infoWindow.open(o.map);
      
-  }
+  },
+
+  _addKeyboardEvents : function(e){
+    var a=this;
+
+    document.addEventListener("click", function(e){
+      console.log('click doc', $(e.target).closest('.map-container').is(a.element.closest('.map-container')));
+
+       if($(e.target).closest('.map-container').is(a.element.closest('.map-container'))){
+        a.isActive=true;
+      }else{
+         a.isActive=false;
+         a.clearShapeSelection();
+         a.drawingManager.setDrawingMode(null);
+
+       }
+    });
+
+    document.addEventListener("keydown", function(e){
+      // console.log('keypress', e.key);
+      // console.log(  a.element.closest('.map-container').is(':focus-within') ) ;
+      let isInput = /^(?:input|select|textarea)$/i.test(e.target.nodeName);
+      if(isInput) return;
+      if(!a.isActive) return;
+
+      // console.log(e.target.nodeName );
+      switch(e.key){
+          case "Delete":
+          case "Backspace":
+              a.removeSelectedShape();
+              // if(!a.options.multiple) a.deleteMarkers();
+              break;
+          case "g":
+              a.drawingManager.setDrawingMode(null);
+              a.clearShapeSelection();
+              break;
+          case "c":
+              a.drawingManager.setDrawingMode(google.maps.drawing.OverlayType.CIRCLE);
+              a.clearShapeSelection();
+              break;
+          case "r":
+              a.drawingManager.setDrawingMode(google.maps.drawing.OverlayType.RECTANGLE);
+              a.clearShapeSelection();
+              break;
+          case "p":
+              a.drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
+              a.clearShapeSelection();
+              break;
+          case "l":
+              a.drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYLINE);
+              a.clearShapeSelection();
+              break;
+          case "m":
+              a.drawingManager.setDrawingMode(google.maps.drawing.OverlayType.MARKER);
+              a.clearShapeSelection();
+              break;
+          // case "d":
+          //     if(this.selectedShape){
+          //         this.duplicateShape();
+          //     }
+          //     break;
+          default:break;
+      }
+    });
 
 
+    // if(isInput) return;
+
+    // console.log('_addKeyboardEvents', e.which,e.key);
+    
+  },
 
 });

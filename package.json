@@ -18,15 +18,16 @@
     "axios": "^0.18.1",
     "bootstrap": "^4.5.3",
     "cross-env": "^5.2.1",
-    "jquery": "^3.5.1",
-    "laravel-mix": "^4.1.4",
-    "lodash": "^4.17.20",
-    "popper.js": "^1.16.1",
+    "laravel-mix": "^4.0.14",
+    "lodash": "^4.17.4",
     "resolve-url-loader": "^2.3.2",
-    "sass": "^1.32.4",
-    "sass-loader": "^7.3.1",
+    "sass": "^1.17.0",
+    "sass-loader": "^7.1.0",
     "vue": "^2.6.12",
-    "vue-template-compiler": "^2.6.12"
+    "vue-template-compiler": "^2.6.12",
+    "jquery": "^3.5.1",
+    "popper.js": "^1.16.1"
+    
   },
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.8",

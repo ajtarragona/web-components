@@ -1,6 +1,7 @@
 
-{{-- @gmap([
+@gmap([
     "name"=>"map_simple",
+    
 ])
 
 
@@ -10,13 +11,15 @@
     "addmarkerbtn" => false,
     "center" =>"43.3051042,-1.9774373999999852",
     "geolocate"=>false,
-    'maptype'=>'hybrid'
+    'maptype'=>'hybrid',
+    "readonly"=>false,
+    
 ])
- --}}
+
 
 @gmap([
     "zoom" =>12,
-    "multiple"=>false,
+    "multiple"=>true,
     "name"=>"map_simple2",
     "id"=>"iddelcampo",
     "placeholder"=>"Buscador",
@@ -29,27 +32,46 @@
     "readonly"=>true,
     "fitbounds"=>true,
     "show-infobox" =>true,
-    "value"=>
+    "cluster" => true,
+   
+    "value"=>[
         [
             "name"=>"Avinguda 'Prat de la Riba",
+            "location"=> [
+                "lat"=>41.11826840786932,
+                "lng"=>1.2491561674552365
+            ],
+            "infobox" => "<h5>Títol</h5><div>Infobox amb HTML i <strong>apostrofs</strong> 'simples'  i \"dobles\"</div> ",
+        ],
+        [
             "location"=> [
                 "lat"=>41.1176215,
                 "lng"=>1.2460229000000709
             ],
-            "infobox" => "<h5>Títol</h5><div>Infobox amb HTML i <strong>apostrofs</strong> 'simples'  i \"dobles\"</div> ",
+        ],
+        [
+            "location"=> [
+                "lat"=>41.1176215,
+                "lng"=>1.2460229000000709
+            ],
+        ],
+        [
+            "location"=> [
+                "lat"=>41.1176215,
+                "lng"=>1.2460229000000709
+            ],
         ]
-    
+    ]
     
 ])
 
-{{-- @icon('star') --}}
 <hr class="big"/>
 
 <h5>Marcadors personalitzats</h5>
-<p>Si activem el paràmetre <code>customicons</code> podem fer servir marcadors customitzats.</p>
+<p>Si activem el paràmetre <code>custommarkers</code> podem fer servir marcadors customitzats.</p>
 <p>Per a cada marcador, podem definir els següents atributs:</p>
 <ul>
-    <li><code>shape</code>: Defineix la forma (MAP_PIN, SQUARE_PIN, SHIELD, ROUTE, SQUARE, SQUARE_ROUNDED, CIRCLE, CIRCLE_PIN)</li>
+    <li><code>shape</code>: Defineix la forma (MAP_PIN,MAP_PIN_HOLE,MAP_PIN_ALT,SQUARE_PIN, SHIELD, ROUTE, SQUARE, SQUARE_ROUNDED, CIRCLE, CIRCLE_PIN)</li>
     <li><code>backgroundcolor</code>: Defineix el color de fons del marcador (hexadecimal)</li>
     <li><code>borderwidth</code>: Mida de la vora</li>
     <li><code>bordercolor</code>: Color de la vora</li>
@@ -58,17 +80,35 @@
     <li><code>icon</code>: nom fontawesome de la icona</li>
     <li><code>color</code>: color de l'etiqueta o icona</li>
     <li><code>opacity</code>: Transparència de la icona (entre 0 i 1)</li>
+    <li><code>scale</code>: Escala. És un multiplicador. És a dir que escala 1 és la mida normal, 2 el doble, 0.5 la meitat, etc.</li>
 </ul>
+
+@gmap([
+    "name"=>"map_custom_1",
+    'custommarkers'=>true,
+    'markeroptions'=>[
+        // 'shape'=>'SHIELD',
+        "icon" => 'far fa-star',
+        'color' => "#ffff00",
+        'bordercolor'=>'#00ff00',
+        'borderwidth'=>2,
+        "backgroundcolor" => '#ff4499',
+        // 'opacity'=>0.5,
+        // 'scale'=>3
+    ]
+])
+
 @gmap([
     "zoom" =>14,
     "multiple"=>true,
     "name"=>"map_multiple",
-    "search"=>false,
+    "search"=>true,
+    'placeholder'=>"Busca ubicació!",
     "addmarkerbtn" => true,
     "animation" => true,
     "cluster" => true,
     "fitbounds" => true,
-    "customicons"=>true,
+    "custommarkers"=>true,
     "inputicon" => "search",
     "color"=>"success",
     "markers"=>[
@@ -295,7 +335,7 @@
     
 ])
 
-{{-- 
+ 
 <hr/>
 
 <h4>Como imágen</h4>
@@ -349,11 +389,13 @@
         ]
     ]
     
-])  --}}
+])  
 <hr class="big"/>
 
+
+
 <h5>Ajax markers</h5>
-{{-- @dump(config('webcomponents.gmaps.tgn_coords')); --}}
+
 
 @gmap([
     "name"=>"map_ajax",
@@ -379,4 +421,59 @@
     'url' => route('webcomponents.mapmarkers'),
     'method' => 'POST',
     'readonly'=>true
+])
+
+
+
+
+ @gmap([
+    "zoom" =>12,
+    "multiple"=>false,
+    "center" =>config('webcomponents.gmaps.tgn_coords'),
+    "name"=>"map_shapes",
+    "search"=>true,
+    "label"=>"Amb formes",
+    'helptext'=>"Pots esborrar seleccionant la forma o marcador i prement SUPR o DELETE",
+    "sidelabel"=>false,
+    "shapes"=>[
+        'polygon','rectangle','circle','polyline'
+    ],
+    "shapes_options"=>[
+        "borderwidth"=>2,
+        "bordercolor"=>"#0000ff",
+        "backgroundcolor" =>"#000066",
+    ],
+    "addmarkerbtn" => true,
+    "controls" =>[
+        "zoom" => true,
+        "mapType"=> true,
+        "scale"=> true,
+        "streetView" => true,
+        "rotate" => true,
+        "fullscreen"=> true,
+
+    ],
+    'showcoords'=>true
+    
+])
+
+
+
+
+@gmap([
+    "zoom" =>12,
+    "multiple"=>true,
+    "center" =>config('webcomponents.gmaps.tgn_coords'),
+    "name"=>"map_shapes_multi",
+    "search"=>true,
+    "label"=>"Amb formes multiple",
+    "sidelabel"=>true,
+    "shapes"=>[
+        'polygon','rectangle','circle','polyline'
+    ],
+    "addmarkerbtn" => true
+    ,
+    'showcoords'=>true
+    
+    
 ])

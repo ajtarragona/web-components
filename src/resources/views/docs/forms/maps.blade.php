@@ -134,9 +134,28 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><code>customicons</code></td>
+                    <td><code>custommarkers</code></td>
                     <td>
-                        <p>Defineix si es faran servir les icones customitzades de marcadors</p>                    
+                        <p>Defineix si es faran servir marcadors personalitzats</p>                    
+                    </td>
+                </tr>
+            
+                <tr>
+                    <td><code>markeroptions</code></td>
+                    <td>
+                        <p>Defineix l'estil per defecte de les icones customitzades. Els estils de cada marcador sobrescriuran aquests.</p>                    
+                        <ul>
+                            <li><code>shape</code>: Defineix la forma (MAP_PIN, MAP_PIN_HOLE, MAP_PIN_ALT, SQUARE_PIN, SHIELD, ROUTE, SQUARE, SQUARE_ROUNDED, CIRCLE, CIRCLE_PIN)</li>
+                            <li><code>backgroundcolor</code>: Defineix el color de fons del marcador (hexadecimal)</li>
+                            <li><code>borderwidth</code>: Mida de la vora</li>
+                            <li><code>bordercolor</code>: Color de la vora</li>
+                            {{-- <li><code>label</code>: etiqueta a mostrar. </li>
+                            <li><code>labelposition</code>: Posició de l'etiqueta: internal o external</li> --}}
+                            <li><code>icon</code>: nom fontawesome de la icona</li>
+                            <li><code>color</code>: color de l'etiqueta o icona</li>
+                            <li><code>opacity</code>: Transparència de la icona (entre 0 i 1)</li>
+                            <li><code>scale</code>: Escala. És un multiplicador. És a dir que escala 1 és la mida normal, 2 el doble, 0.5 la meitat, etc.</li>
+                        </ul>
                     </td>
                 </tr>
             
@@ -144,6 +163,32 @@
                     <td><code>theme</code></td>
                     <td>
                         <p>Podem personalitzar l'estil visual del mapa passant un array d'estils. <a href="https://mapstyle.withgoogle.com/">https://mapstyle.withgoogle.com/</a></p>                    
+                    </td>
+                </tr>
+                <tr>
+                    <td><code>shapes</code></td>
+                    <td>
+                        <p>Podem habilitar el dibuix de formes bàsiques, passant-les com array (rectangle, circle, polygon i polyline)</p>                    
+                    </td>
+                </tr>
+                <tr>
+                    <td><code>shapes_options</code></td>
+                    <td>
+                        <p>Podem definir l'estil de les formes dibuixades.</p>  
+                        <ul>
+                            <li><code>borderwidth</code>: Mida de la vora</li>
+                            <li><code>bordercolor</code>: Color de la vora</li> 
+                            <li><code>backgroundcolor</code>: Defineix el color de fons de la forma (hexadecimal)</li> 
+                            <li><code>opacity</code>: Transparència de la forma (entre 0 i 1)</li>
+                        </ul>
+                                           
+                    </td>
+                </tr>
+                </tr>
+                <tr>
+                    <td><code>showcoords</code></td>
+                    <td>
+                        <p>Posant true es mostrarà a sota un botó que mostrarà les coordenades dels diferents elements (marcadors, o formes) pintats al mapa.</p>                    
                     </td>
                 </tr>
             

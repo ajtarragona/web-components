@@ -6,7 +6,8 @@ use Illuminate\Support\Arr;
 class GMap extends FormControl
 {	
 	public $tag ="div";
-
+    
+    public $outlined=true;
     
     public $height=false;  
     public $width=false;   
@@ -23,14 +24,18 @@ class GMap extends FormControl
     public $animation= false;
     public $center= false;
     public $controls= [];
+    public $shapes= false;
+    public $shapes_options= [];
     public $search= true;
     public $multiple= false;
     public $static= false;
     public $isreadonly= false;
     public $url= false;
-    public $customicons= false;
+    public $custommarkers= false;
+    public $markeroptions= null;
     public $method= 'get';
     public $theme= false;
+    public $showcoords = true;
 
 	public $attributes=[
 	];
@@ -63,9 +68,14 @@ class GMap extends FormControl
             $center=0;
             foreach($this->getMarkers() as $marker){
                 $marker=to_array($marker);
-                
-                $center= $marker["location"]["lat"].",".$marker["location"]["lng"];
-                $markers[]=$center;
+                switch($marker["type"]??"marker"){
+                    case "marker":
+                        $center= $marker["location"]["lat"].",".$marker["location"]["lng"];
+                        $markers[]=$center;
+                        break;
+                    default:break;
+                    
+                }
             }
             $url.="&markers=".implode("|",$markers);
         }else{
@@ -79,9 +89,8 @@ class GMap extends FormControl
     public function render($args=[]){
     	if(!$this->isVisible()) return;        
         
-        // dd($this);
 		$ret="";
-        
+       
         if($this->static){
             
             $ret.='<div class="map-container '.$this->getAttribute("mapcontainerclass").'">';
@@ -93,7 +102,7 @@ class GMap extends FormControl
 				$ret.=$this->renderFormGroupStart();
 			}
 			
-
+            
 			if($this->sidelabel){
 				$ret.="<div class='d-flex flex-row'>";
 			}
@@ -102,15 +111,18 @@ class GMap extends FormControl
 			
 			$ret.="<div class='input-group' >";
 			
-			$ret.="<div class='flex-grow-1 form-control-container mw-100' >";
+			$ret.="<div class='flex-grow-1 form-control-container mw-100 ' >";
 			
 			
             $ret.='<div class="map-container '.$this->getAttribute("mapcontainerclass").'">';
+// $ret.="[".$this->isreadonly ."-". $this->search ."-". $this->addmarkerbtn."]";
 
-            if(!$this->isreadonly && ($this->search || $this->addmarkerbtn )){
+            if(!$this->isreadonly && ($this->search )){
+            // if(!$this->isreadonly && ($this->search || $this->addmarkerbtn )){
                 $ret.="<div class='input-group map-search-input ".($this->search?'with-search':'')."'>";
                 
                 $inputattrs=Arr::only($this->attributes, ["placeholder","class","color","inputicon","required","label","helptext","size"]);
+                if(!isset($inputattrs["placeholder"])) $inputattrs["placeholder"] = __("tgn::strings.Introdueix una ubicació a buscar...");
                 $inputattrs["containerclass"]=$this->containerClass("containerclass","").' flex-grow-1';
                 $inputattrs["icon"]=$inputattrs["inputicon"] ?? null;
 
@@ -118,21 +130,22 @@ class GMap extends FormControl
                 if($this->search){
 
                     if(isset($inputattrs["color"])) $inputattrs["containerclass"].=" bg-".$inputattrs["color"];
-                    // dd($inputattrs);
+                    // $ret.=json_encode($inputattrs);
                     $ret.=input($inputattrs, array_merge($this->data,[
                         'map' => "#".$this->getAttribute("id")
                     ]));
+                    
                         
                 }
                     
-                if($this->addmarkerbtn){
-                    $txt=$this->getAttribute("addmarkerbtntext", (icon('plus')." ".__("tgn::strings.Marcador")) );
+                // if($this->addmarkerbtn){
+                //     $txt=$this->getAttribute("addmarkerbtntext", (icon('plus')." ".__("tgn::strings.Marcador")) );
 
-                    $ret.="<div class='input-group-append'>";
-                    $ret.="<button type='button' class='btn btn-". (isset($inputattrs["color"])?$inputattrs["color"]:'light') ." btn-sm add-marker-btn border' data-map='#".$this->attributes["id"]."' >". $txt."</button>";
-                    $ret.="</div>";
+                //     $ret.="<div class='input-group-append'>";
+                //     $ret.="<button type='button' class='btn btn-". (isset($inputattrs["color"])?$inputattrs["color"]:'light') ." btn-sm add-marker-btn border' data-map='#".$this->attributes["id"]."' >". $txt."</button>";
+                //     $ret.="</div>";
 
-                }
+                // }
 
                 $ret.="</div>";
             } 
@@ -148,12 +161,14 @@ class GMap extends FormControl
 
             $ret.='   <div class="google-map" id="'.$this->attributes["id"].'"	';
             if($this->height) $ret.=" data-height='".$this->height."' ";
+            $ret.='    data-search="'. ($this->search?'true':'false') .'"';
+            $ret.='    data-addmarkerbtn="'. ($this->addmarkerbtn?'true':'false') .'"';
             $ret.='    data-center="'. $this->center .'"';
             $ret.='    data-geolocate="'. $this->geolocate .'"';
             $ret.='    data-zoom="'. $this->zoom .'"';
             $ret.='    data-multiple="'. ($this->multiple?'true':'false') .'"';
             $ret.='    data-animation="'. ($this->animation?'true':'false') .'"';
-            $ret.='    data-customicons="'. ($this->customicons?'true':'false') .'"';
+            $ret.='    data-custommarkers="'. ($this->custommarkers?'true':'false') .'"';
             $ret.='    data-map-type="'. $this->maptype .'"';
             $ret.='    data-cluster="'. ($this->cluster?'true':'false') .'"';
             $ret.='    data-fitbounds="'. ($this->fitbounds?'true':'false') .'"';
@@ -169,12 +184,41 @@ class GMap extends FormControl
                 $ret.='    data-controls=\''. json_encode($this->controls) .'\'';
 
             }
+            if($this->addmarkerbtn){
+                if(!$this->shapes) $this->shapes=[];
+                $this->shapes[]="marker";
+            }
+            
+            if($this->shapes ){
+                $this->shapes=array_unique($this->shapes);
+                // dd($this->shapes);
+                $ret.='    data-shapes=\''. json_encode($this->shapes) .'\'';
+
+            }
+            if($this->shapes_options ){
+                // dd($this->shapes);
+                $ret.='    data-shapes-options=\''. json_encode($this->shapes_options) .'\'';
+
+            }
+            if($this->markeroptions ){
+                // dd($this->shapes);
+                $ret.='    data-markeroptions=\''. json_encode($this->markeroptions) .'\'';
+            
+
+            }
                 // $ret.='    data-click-add="true"';
 
 
             $ret.='    ></div>';
-            $ret.='    <small class="coords-display border p-2  bg-light text-muted text-right" ></small>';
-
+            if($this->showcoords){
+                $ret.='    
+                <div class="coords-container bg-light border" >
+                    <div id="collapse-map-coords-'.$this->attributes["id"].'" class="collapse ">
+                        <small class="coords-display text-muted" ></small>
+                    </div>
+                    <button type="button" class="btn btn-xs btn-light border-0" data-toggle="collapse" href="#collapse-map-coords-'.$this->attributes["id"].'" role="button" >'.icon('code').'</button>
+                </div>';
+            }
             
             // $ret = new Input($attributes,$newdata);
             $ret.='</div>';

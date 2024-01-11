@@ -240,13 +240,13 @@ function tgnFormClass(obj,options){
 	        });
 
 		     //focus groups
-		     $form.on('focus',':input:not(.btn)',function(e){
+		     $form.on('focus',':input:not(.btn):not(button)',function(e){
 				if(!($(this).is(':checkbox') || $(this).is(':radio'))){
 					var group=$(this).closest('.form-group');
 					if(!group.is(".disabled"))
 						group.addClass('focused');
 				}
-		     }).on('blur',':input:not(.btn)',function(){
+		     }).on('blur',':input:not(.btn):not(button)',function(){
 				 
 		     	var group=$(this).closest('.form-group');
 		     	if(!group.is(".disabled"))

@@ -31,6 +31,7 @@ return [
     'OK!' => 'OK!',
     'Error!' => 'Error!',
     'Process detail' => 'Detalle del proceso',
-	'With errors in the following steps:'=>'Con errores en los siguientes puntos:'
+	'With errors in the following steps:'=>'Con errores en los siguientes puntos:',
+	"Introdueix una ubicació a buscar..." =>"Introduce una ubicación a buscar..."
    
 ];

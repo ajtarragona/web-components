@@ -11,7 +11,7 @@
 		left: 10px;
 		top: 10px;
 		z-index: 1;
-		// width:auto;
+		width:auto;
 		box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.1);//$box-shadow-sm;
 		background: #fff;
 		width: auto;
@@ -24,11 +24,33 @@
 			
 			.form-control{
 				height: 2.5rem;
+				border-width: 0px;
 				&:focus{
 					// background-color:white;
 				}
 
 			}
+		}
+	}
+	.coords-container{
+		position: absolute;
+		bottom:6px;
+		left:6px;
+		z-index:10;
+		box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.1);//$box-shadow-sm;
+		max-height:400px;
+		min-height:21px;
+		min-width:25px;
+		overflow:hidden;
+		button{
+			position:absolute;
+			bottom:0;
+			left:0;
+		}
+		.collapse{
+			max-height:400px;
+			overflow-y: auto;
+			
 		}
 	}
 
@@ -37,6 +59,18 @@
 		&:empty{
 			display: none;
 		}
+		li{
+			padding:1em;
+			border-top:1px solid $gray-300;
+			&.selected{
+				// background-color:rgba($info,0.3);
+				color:$info;
+			}
+			&:first-child{
+				border-top-width:0px;
+			}
+		}
+
 	}
 
 		
@@ -51,6 +85,7 @@
 
 
 }
+
 
 
 .pac-container {
