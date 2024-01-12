@@ -100,6 +100,8 @@ class GMap extends FormControl
                             }
 
                         }
+                        $bordercolor=str_replace("#","",$bordercolor);
+                        $backgroundcolor=str_replace("#","",$backgroundcolor);
 
                         $polygonurl= "color:0x" . $bordercolor . "|weight:" . $borderweight . "|fillcolor:0x". $backgroundcolor . "|";
 

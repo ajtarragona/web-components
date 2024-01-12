@@ -360,8 +360,8 @@
         ],
         [
             "type"=>"polygon",
-            'bordercolor'=>'ffff00',
-            'backgroundcolor'=>'ffff00',
+            'bordercolor'=>'#ffff00',
+            'backgroundcolor'=>'#ffff00',
             'opacity'=>0.3,
             'borderweight'=>1,
             "path"=> [
@@ -373,7 +373,7 @@
        
         [
             "type"=>"polyline",
-            // 'bordercolor'=>'00ff00',
+            // 'bordercolor'=>'#00ff00',
             // 'borderweight'=>5,
             "path"=> [
                 ["lat"=>41.104366721973975, "lng"=> 1.2641910439247273],
@@ -385,8 +385,8 @@
         ],
         [
             "type"=>"rectangle",
-            'bordercolor'=>'0000ff',
-            'backgroundcolor'=>'0000ff',
+            'bordercolor'=>'#0000ff',
+            'backgroundcolor'=>'#0000ff',
             // 'borderweight'=>0,
             // 'opacity'=>1,
             "bounds"=> [
@@ -398,8 +398,8 @@
         ],
         [
             "type"=>"circle",
-            'bordercolor'=>'00ff00',
-            'backgroundcolor'=>'00ff00',
+            'bordercolor'=>'#00ff00',
+            'backgroundcolor'=>'#00ff00',
             "center"=> ["lat"=> 41.11724518181344, "lng"=> 1.2545549258297095],
             "radius" =>1201.5089211410261 
 
@@ -409,7 +409,8 @@
     
 ])
 
- 
+
+
 @gmap([
     "multiple"=>true,
     "static"=>true,
@@ -526,6 +527,80 @@
     "addmarkerbtn" => false
     ,
     'showcoords'=>true
+    
+    
+])
+
+
+@gmap([
+    "zoom" =>12,
+    "multiple"=>true,
+    "center" =>config('webcomponents.gmaps.tgn_coords'),
+    "name"=>"map_shapes_multi_def_value",
+    "search"=>true,
+    "label"=>"Amb formes amb valor per defecte",
+    "sidelabel"=>true,
+    "shapes"=>[
+        'polygon','rectangle','circle','polyline'
+    ],
+    "addmarkerbtn" => false,
+    'showcoords'=>true,
+    'markers'=>[
+        [
+            "name"=>"Avinguda Prat de la Riba",
+            
+            "location"=> [
+                "lat"=>41.1176215,
+                "lng"=>1.2460229000000709
+            ]
+        ],
+        [
+            "type"=>"polygon",
+            'bordercolor'=>'#ffff00',
+            'backgroundcolor'=>'#ffff00',
+            'opacity'=>0.3,
+            'borderweight'=>1,
+            "path"=> [
+                ["lat"=>41.12247630285357, "lng"=> 1.2344448815315445],
+                ["lat"=>41.119631345252984, "lng"=> 1.2656872521370133],
+                ["lat"=>41.100748047319826, "lng"=> 1.2656872521370133],
+            ]
+        ],
+       
+        [
+            "type"=>"polyline",
+            // 'bordercolor'=>'#00ff00',
+            // 'borderweight'=>5,
+            "path"=> [
+                ["lat"=>41.104366721973975, "lng"=> 1.2641910439247273],
+                ["lat"=>41.11264454441927, "lng"=> 1.2727741127723835],
+                ["lat"=>41.11962814534913, "lng"=> 1.2710574990028523],
+                ["lat"=>41.118593584686224, "lng"=> 1.2827304726356648],
+                ["lat"=>41.12583516687488, "lng"=> 1.2823871498817585],
+            ]
+        ],
+        [
+            "type"=>"rectangle",
+            'bordercolor'=>'#0000ff',
+            'backgroundcolor'=>'#0000ff',
+            // 'borderweight'=>0,
+            // 'opacity'=>1,
+            "bounds"=> [
+                "east"=> 1.2785078400642202,
+                "north"=> 41.13281836412454,
+                "south"=> 41.12324997916519,
+                "west"=> 1.2517286652595327
+            ]
+        ],
+        [
+            "type"=>"circle",
+            'bordercolor'=>'#00ff00',
+            'backgroundcolor'=>'#00ff00',
+            "center"=> ["lat"=> 41.11724518181344, "lng"=> 1.2545549258297095],
+            "radius" =>1201.5089211410261 
+
+        ]
+    ]
     
     
 ])

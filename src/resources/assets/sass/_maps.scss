@@ -51,13 +51,14 @@
 			right:10px;
 		}
 		.coords-opener{
-			opacity:.8;
+			opacity:0;
 			box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.1);//$box-shadow-sm;
 			pointer-events: none;
 			position: absolute;
 			bottom:0px;
 			left:0px;
 			border-radius: 0;
+			background-color:rgba(245,245,245,0.8);
 		}
 
 		

@@ -327,21 +327,31 @@ $.widget( "ajtarragona.tgnMap", {
   },
 
   _createNewShape : function(marker){
+
+    var shapesoptions= {};
+
+    if(marker.type??'marker' !='marker'){
+      shapesoptions.strokeColor = marker.bordercolor ? marker.bordercolor : this.options.shapesOptions.bordercolor;
+      shapesoptions.fillColor = marker.backgroundcolor ? marker.backgroundcolor : this.options.shapesOptions.backgroundcolor;
+      shapesoptions.fillOpacity = (marker.opacity || marker.opacity === 0) ? marker.opacity : this.options.shapesOptions.opacity,
+      shapesoptions.strokeWeight = (marker.borderwidth || marker.borderwidth === 0) ? marker.borderwidth  : this.options.shapesOptions.borderwidth;
+    }
+
     var options={
-        ...this.options.shapesOptions,
+        ...shapesoptions,
         ...marker,
         zIndex: this.shapes.length+1,
         clickable: true,
         geodesic:false,
-        // draggable: !this._isReadonly()
+        draggable: !this._isReadonly()
     };
     
     // _d('duplicate layer',options);
 
     switch(marker.type??'marker'){
         case 'rectangle':
+            // console.log('add rectangle',options);
             var shape=new google.maps.Rectangle(options);
-            shape.setBounds(this.selectedOverlay.getBounds());
             shape.setMap(this.gmap);
             this.addShapeEvents(marker.type, shape);
             
@@ -349,22 +359,18 @@ $.widget( "ajtarragona.tgnMap", {
 
         case 'circle':
             var shape=new google.maps.Circle(options);
-            shape.setCenter(this.selectedOverlay.getCenter());
-            shape.setRadius(this.selectedOverlay.getRadius());
             shape.setMap(this.gmap);
             this.addShapeEvents(marker.type, shape);
             
             break;
         case 'polyline':
             var shape=new google.maps.Polyline(options);
-            shape.setPath(layer.content.path);
             shape.setMap(this.gmap);
-            this.addOverlayEvents(marker.type, shape);
+            this.addShapeEvents(marker.type, shape);
             
             break;
         case 'polygon':
             var shape=new google.maps.Polygon(options);
-            shape.setPath(layer.content.path);
             shape.setMap(this.gmap);
             this.addShapeEvents(marker.type, shape);
             
@@ -681,35 +687,11 @@ $.widget( "ajtarragona.tgnMap", {
             // al('loaded', data);
             if(data){
               $.each(data,function(key, marker){
-                // al(marker);
-                // al(key);
-                // if(marker.location){
-                  // var location= new google.maps.LatLng(marker.location.lat, marker.location.lng);
+          
                   marker.infobox= (marker.url?marker.url:(marker.infobox?marker.infobox:null));
-                  
                   o._createNewShape(marker);
 
-                  //   location: {
-                  //     lat: marker.location.lat, marker.location.lng
-                  //    }
-                  // o.addMarker(
-                  //   location,
-                  //   (marker.name?marker.name:null),
-                  //   infobox,
-                  //   (marker.id?marker.id:null) ,
-                  //   {
-                  //     icon: (marker.icon?marker.icon:null),
-                  //     backgroundcolor: (marker.backgroundcolor?marker.backgroundcolor:null) ,
-                  //     color: (marker.color?marker.color:null) ,
-                  //     bordercolor: (marker.bordercolor?marker.bordercolor:null) ,
-                  //     borderwidth: ((marker.borderwidth || marker.borderwidth==0 ) ?marker.borderwidth:null) ,
-                  //     label: (marker.label?marker.label:null),
-                  //     opacity: ((marker.opacity||marker.opacity==0)?marker.opacity:1) ,
-                  //     shape: (marker.shape?marker.shape:'MAP_PIN') ,
-                  //     labelposition: (marker.labelposition?marker.labelposition:'internal') ,
-                  //   }
-                  // );
-                // }
+               
               });
             }
             o.initialized=true;
