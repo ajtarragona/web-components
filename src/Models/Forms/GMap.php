@@ -1,6 +1,8 @@
 <?php
 namespace Ajtarragona\WebComponents\Models\Forms;
 
+use Ajtarragona\WebComponents\Helpers\GMapsHelper;
+use Ajtarragona\WebComponents\Helpers\GMapsPolylineHelper;
 use Illuminate\Support\Arr;
 
 class GMap extends FormControl
@@ -36,6 +38,8 @@ class GMap extends FormControl
     public $method= 'get';
     public $theme= false;
     public $showcoords = true;
+    public $circlesides=100;
+
 
 	public $attributes=[
 	];
@@ -48,8 +52,11 @@ class GMap extends FormControl
 
 	protected function miniMap(){
         
-        // dump($this);
-        $size= (($this->width&&is_int(intval($this->width)))?$this->width:"300")."x".(($this->height&&is_int(intval($this->height)))?$this->height:"180");
+        // dump($this->circlesides);
+        $w = (($this->width&&is_int(intval($this->width)))?$this->width:"300");
+        $h = (($this->height&&is_int(intval($this->height)))?$this->height:"180");
+
+        $size= $w."x".$h;
 
         $options= [
             // "zoom"=>$this->zoom, 
@@ -62,26 +69,73 @@ class GMap extends FormControl
 
         // dd($this->center);
         $url="https://maps.googleapis.com/maps/api/staticmap?".http_build_query($options)."&key=".$apikey;
-        
         if($this->getMarkers()){
             $markers=[];
+            $polygons=[];
             $center=0;
             foreach($this->getMarkers() as $marker){
                 $marker=to_array($marker);
-                switch($marker["type"]??"marker"){
+                switch($marker["type"]??"marker"){  
                     case "marker":
-                        $center= $marker["location"]["lat"].",".$marker["location"]["lng"];
-                        $markers[]=$center;
+                        if(isset($marker["location"])){
+                            $center= $marker["location"]["lat"].",".$marker["location"]["lng"];
+                            $markers[]=$center;
+                        }
                         break;
-                    default:break;
+                    default: //la resta    
+                        
+
+                        //definir los colores:
+                        $bordercolor= isset($marker["bordercolor"]) ? ($marker["bordercolor"]."ff") : "bf002cff";
+                        $borderweight=$marker["borderweight"]??2;
+
+                        if($marker["type"]=="polyline"){
+                            $backgroundcolor=$marker["backgroundcolor"]??"00000000"; //bg transparente
+                        }else{
+                            $backgroundcolor=$marker["backgroundcolor"]??"bf002c";
+                            if(isset($marker["opacity"])){
+                                $backgroundcolor.= dechex( round($marker["opacity"]*255));
+                            }else{
+                                $backgroundcolor.=dechex( round(0.5*255 ) ); //50%
+                            }
+
+                        }
+
+                        $polygonurl= "color:0x" . $bordercolor . "|weight:" . $borderweight . "|fillcolor:0x". $backgroundcolor . "|";
+
+                        if($marker["type"] =="circle" && isset($marker["center"]) && isset($marker["radius"])){
+                            $marker["path"]=GMapsHelper::generateCirclePoints($marker["center"], $marker["radius"], $this->circlesides);
+                            // dd($marker["path"]);
+                        }else if($marker["type"]=="rectangle" && isset($marker["bounds"])){
+                            $marker["path"]= GMapsHelper::generateRectanglePoints($marker["bounds"]);
+                        }
+
+
+                        if($marker["path"] ??null){
+                            // dd($path);
+                            if(in_array($marker["type"], ["polygon","circle","rectangle"])){
+                                $marker["path"][]=$marker["path"][0]; //añado el primero para cerrar el polígono
+                            }
+                            //codifico las coordenadas
+                            $encodedcoords=GMapsHelper::encodePolygons($marker["path"]);
+                            // dd($marker["path"],$encodedcoords);
+                            $polygonurl.= "enc:".$encodedcoords ;
+                        }
+                        
+                        $polygons[]= $polygonurl;
+                        break;
+                   
                     
                 }
             }
-            $url.="&markers=".implode("|",$markers);
+           
+            if($markers) $url.="&markers=".implode("|",$markers);
+            if($polygons) $url.="&path=".implode("&path=",$polygons);
         }else{
             $url.="&zoom=".$this->zoom."&center=".$this->center;
         }
 
+        
             
         return "<img src=\"".$url."\" class='".$this->getAttribute("class")."'/>";
     }
@@ -178,6 +232,7 @@ class GMap extends FormControl
             $ret.='    data-readonly="'. ($this->isreadonly?'true':'false') .'"';
             $ret.='    data-markers=\''. json_encode($this->getMarkers()) .'\'';
             $ret.='    data-theme=\''. json_encode($this->theme) .'\'';
+            $ret.='    data-showcoords="'. ($this->showcoords?'true':'false') .'"';
 
 
             if($this->controls){
@@ -212,11 +267,9 @@ class GMap extends FormControl
             $ret.='    ></div>';
             if($this->showcoords){
                 $ret.='    
-                <div class="coords-container bg-light border" >
-                    <div id="collapse-map-coords-'.$this->attributes["id"].'" class="collapse ">
-                        <small class="coords-display text-muted" ></small>
-                    </div>
-                    <button type="button" class="btn btn-xs btn-light border-0" data-toggle="collapse" href="#collapse-map-coords-'.$this->attributes["id"].'" role="button" >'.icon('code').'</button>
+                <div class="coords-container " >
+                    <div id="collapse-map-coords-'.$this->attributes["id"].'" class="coords-display" ><button type="button" class="btn btn-sm btn-light border-0 coords-closer px-3" role="button" >'.icon('times').'</button><div class="coords-content"></div></div>
+                    <button type="button" class="btn btn-xs btn-light border-0 coords-opener" href="#collapse-map-coords-'.$this->attributes["id"].'" role="button" >'.icon('code').'</button>
                 </div>';
             }
             

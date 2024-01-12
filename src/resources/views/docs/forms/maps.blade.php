@@ -87,7 +87,8 @@
                     <td><code>markers</code></td>
                     <td>
                         <p>Array de marcadors o bé un sol marcador.</p>
-                        <p>Cada marcador pot tenir els atributs: <code>name</code>, <code>location</code> (array <code>lat</code> i <code>lng</code>) i opcionalment <code>infobox</code>.</p>                    
+                        <p>Cada marcador pot tenir els atributs: <code>name</code>, <code>location</code> (array <code>lat</code> i <code>lng</code>) i opcionalment <code>infobox</code>.</p>  
+                        <p>Si el contingut d'infobox és una url, es carregarà via AJAX.</p>                  
                     </td>
                 </tr>
 
@@ -191,6 +192,20 @@
                         <p>Posant true es mostrarà a sota un botó que mostrarà les coordenades dels diferents elements (marcadors, o formes) pintats al mapa.</p>                    
                     </td>
                 </tr>
+                
+                <tr>
+                    <td><code>static</code></td>
+                    <td>
+                        <p>Posant true es mostrarà el mapa com una imatge</p>                    
+                    </td>
+                </tr>
+                <tr>
+                    <td><code>circlesides</code></td>
+                    <td>
+                        <p>En el cas de fer servir mapa estàtic. Per una limitació de la api els cercles s'aproximen a partir d'un polígon. Per defecte és un polígon de 100 vertexts, però ho podem sobrescriure amb aquest paràmetre.</p>                    
+                    </td>
+                </tr>
+                
             
 		
 				

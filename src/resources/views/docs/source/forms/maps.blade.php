@@ -1,4 +1,4 @@
-
+ 
 @gmap([
     "name"=>"map_simple",
     
@@ -37,6 +37,7 @@
     "value"=>[
         [
             "name"=>"Avinguda 'Prat de la Riba",
+            
             "location"=> [
                 "lat"=>41.11826840786932,
                 "lng"=>1.2491561674552365
@@ -48,6 +49,8 @@
                 "lat"=>41.1176215,
                 "lng"=>1.2460229000000709
             ],
+            // "infobox" => route('webcomponents.markerinfobox',['id'=>1]),
+
         ],
         [
             "location"=> [
@@ -336,7 +339,7 @@
 ])
 
  
-<hr/>
+<hr/> 
 
 <h4>Como imágen</h4>
 
@@ -346,6 +349,7 @@
     "multiple"=>false,
     "mapcontainerclass"=>"mb-3",
     "class"=>"img-fluid img-thumbnail",
+    // 'circlesides' => 10,
     "markers"=>[
         [
             "name"=>"Avinguda Prat de la Riba",
@@ -353,12 +357,59 @@
                 "lat"=>41.1176215,
                 "lng"=>1.2460229000000709
             ]
+        ],
+        [
+            "type"=>"polygon",
+            'bordercolor'=>'ffff00',
+            'backgroundcolor'=>'ffff00',
+            'opacity'=>0.3,
+            'borderweight'=>1,
+            "path"=> [
+                ["lat"=>41.12247630285357, "lng"=> 1.2344448815315445],
+                ["lat"=>41.119631345252984, "lng"=> 1.2656872521370133],
+                ["lat"=>41.100748047319826, "lng"=> 1.2656872521370133],
+            ]
+        ],
+       
+        [
+            "type"=>"polyline",
+            // 'bordercolor'=>'00ff00',
+            // 'borderweight'=>5,
+            "path"=> [
+                ["lat"=>41.104366721973975, "lng"=> 1.2641910439247273],
+                ["lat"=>41.11264454441927, "lng"=> 1.2727741127723835],
+                ["lat"=>41.11962814534913, "lng"=> 1.2710574990028523],
+                ["lat"=>41.118593584686224, "lng"=> 1.2827304726356648],
+                ["lat"=>41.12583516687488, "lng"=> 1.2823871498817585],
+            ]
+        ],
+        [
+            "type"=>"rectangle",
+            'bordercolor'=>'0000ff',
+            'backgroundcolor'=>'0000ff',
+            // 'borderweight'=>0,
+            // 'opacity'=>1,
+            "bounds"=> [
+                "east"=> 1.2785078400642202,
+                "north"=> 41.13281836412454,
+                "south"=> 41.12324997916519,
+                "west"=> 1.2517286652595327
+            ]
+        ],
+        [
+            "type"=>"circle",
+            'bordercolor'=>'00ff00',
+            'backgroundcolor'=>'00ff00',
+            "center"=> ["lat"=> 41.11724518181344, "lng"=> 1.2545549258297095],
+            "radius" =>1201.5089211410261 
+
         ]
+
     ]
     
 ])
 
-
+ 
 @gmap([
     "multiple"=>true,
     "static"=>true,
@@ -367,6 +418,7 @@
     "markers"=>[
         [
             "name"=>"Avinguda Prat de la Riba",
+            
             "location"=> [
                 "lat"=>41.1176215,
                 "lng"=>1.2460229000000709
@@ -410,7 +462,7 @@
     'readonly'=>true,
 ])
 
-@gmap([
+ @gmap([
     "name"=>"map_ajax_2",
     "zoom"=>config('webcomponents.gmaps.default_zoom'),
     "center" =>config('webcomponents.gmaps.tgn_coords'),
@@ -421,11 +473,11 @@
     'url' => route('webcomponents.mapmarkers'),
     'method' => 'POST',
     'readonly'=>true
-])
+])  
 
 
 
-
+ 
  @gmap([
     "zoom" =>12,
     "multiple"=>false,
@@ -471,9 +523,10 @@
     "shapes"=>[
         'polygon','rectangle','circle','polyline'
     ],
-    "addmarkerbtn" => true
+    "addmarkerbtn" => false
     ,
     'showcoords'=>true
     
     
 ])
+

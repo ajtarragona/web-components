@@ -66,7 +66,7 @@ $.widget( "ajtarragona.tgnMap", {
     url:false,
     custommarkers:false,
     showInfobox: false,
-    showCoords: false,
+    showcoords: false,
     controls : {
       zoom: true,
       mapType: false,
@@ -114,14 +114,15 @@ $.widget( "ajtarragona.tgnMap", {
       
   },
 
-  markers : [],
-  shapes : [],
+  // markers : [],
+  // shapes : [],
   initialized: false,
   gmap: null,
   drawingManager: null,
   selectedShapeId: null,
   selectedShape: null,
   isActive:false,
+
   _getGmap: function() {
     if(!this.gmap){
         this.gmap = new google.maps.Map(this.element[0], {
@@ -152,8 +153,9 @@ $.widget( "ajtarragona.tgnMap", {
       this.gmap=null;
     
       // if(this.element.is('.map-init')) return;
-  
-      this.markers=[];
+      this.shapes=[];
+
+      // this.markers=[];
   
       this.element.addClass('map-init');
   
@@ -162,6 +164,13 @@ $.widget( "ajtarragona.tgnMap", {
   
       this.id=this.element.attr("id");
       this.options = $.extend({}, this.options, this.element.data()); 
+
+      // $.extend(true,this.options, this.element.data());
+      // $.extend(true,this.shapes);
+      // this.shapes=[];
+
+
+      // console.log(this.shapes);
       if(this.options.readonly){
         this.options.shapes=null;
       }
@@ -361,35 +370,17 @@ $.widget( "ajtarragona.tgnMap", {
             
             break;
         case 'marker':
-            
-            var shape= this.addMarker(marker);
-
-            //   marker.location, 
-            //   marker.name?marker.name:null, 
-            //   marker.url?marker.url:(marker.infobox?marker.infobox:null),
-            //   marker.id?marker.id:null,
-            //   {
-            //     icon : marker.icon?marker.icon:null,
-            //     backgroundcolor : marker.backgroundcolor?marker.backgroundcolor:null,
-            //     color: marker.color?marker.color:null,
-            //     bordercolor: marker.bordercolor?marker.bordercolor:null,
-            //     borderwidth: (marker.borderwidth || marker.borderwidth==0 )?marker.borderwidth:null,
-            //     label: (marker.label?marker.label:null),
-            //     opacity: ((marker.opacity || marker.opacity==0 )?marker.opacity:1) ,
-            //     shape: (marker.shape?marker.shape:'MAP_PIN_HOLE'),
-            //     labelposition: (marker.labelposition?marker.labelposition:'internal') ,
-            //   }
-            // );
-            
-            
-            this.addShapeEvents('marker', shape);
+            // if(marker.location){
+              var shape= this.addMarker(marker);
+              this.addShapeEvents('marker', shape);
+            // }
             this._updateValue();
             break;
         default:break;
     }
   },
   /**crea los marcadores o formas por defecto */
-  _initMarkers : function(){
+  _initMarkersAndShapes : function(){
     // al('initMarkers', this.options.markers);
     var o=this;
  
@@ -474,7 +465,7 @@ $.widget( "ajtarragona.tgnMap", {
 
 
   addMarker : function(markeroptions){
-    console.log('addMarker',markeroptions);
+    // console.log('addMarker',markeroptions);
     var o=this;    
     if(!markeroptions.location) return;
 
@@ -504,7 +495,7 @@ $.widget( "ajtarragona.tgnMap", {
           ...custommarker
         };
     }
-    console.log('markerargs',markerargs);
+    // console.log('markerargs',markerargs);
 
     marker = new google.maps.Marker(markerargs);
      
@@ -598,33 +589,33 @@ $.widget( "ajtarragona.tgnMap", {
     return markerargs;
   },
 
-  clearMarkers : function() {
-    for ( marker of Object.values(this.markers)) {
-      marker.setMap(null);
-    }
-    if(this.options.cluster) this.markerClusterer.clearMarkers();
+  // clearMarkers : function() {
+  //   for ( marker of Object.values(this.markers)) {
+  //     marker.setMap(null);
+  //   }
+  //   if(this.options.cluster) this.markerClusterer.clearMarkers();
     
-  },
+  // },
 
-  // Deletes all markers in the array by removing references to them.
-  deleteMarker : function(marker) {
-    marker.setMap(null);
-    // al("Deletemarker",marker);
-    if(this.options.cluster)  this.markerClusterer.removeMarker(marker);
+  // // Deletes all markers in the array by removing references to them.
+  // deleteMarker : function(marker) {
+  //   marker.setMap(null);
+  //   // al("Deletemarker",marker);
+  //   if(this.options.cluster)  this.markerClusterer.removeMarker(marker);
     
-    delete this.markers[marker.uid];
+  //   delete this.markers[marker.uid];
     
-    this._updateValue();
-  },
+  //   this._updateValue();
+  // },
 
 
 
-  deleteMarkers : function() {
-      this.clearMarkers();
+  // deleteMarkers : function() {
+  //     this.clearMarkers();
      
-      this.markers = {};
-      this._updateValue();
-  },
+  //     this.markers = {};
+  //     this._updateValue();
+  // },
   deleteShapes : function() {
     for (shape of Object.values(this.shapes)) {
       shape.setMap(null);
@@ -676,7 +667,7 @@ $.widget( "ajtarragona.tgnMap", {
       // $target.startLoading();
       //data._token= csrfToken();
       // al(o.markers);
-      params.ids= Object.keys(o.markers);
+      params.ids= Object.keys(o.shapes);
       
       o.element.closest('.map-container').startLoading();
       // al(o.options.method);
@@ -692,28 +683,33 @@ $.widget( "ajtarragona.tgnMap", {
               $.each(data,function(key, marker){
                 // al(marker);
                 // al(key);
-                if(marker.location){
-                  var location= new google.maps.LatLng(marker.location.lat, marker.location.lng);
-                  var infobox= (marker.url?marker.url:(marker.infobox?marker.infobox:null));
+                // if(marker.location){
+                  // var location= new google.maps.LatLng(marker.location.lat, marker.location.lng);
+                  marker.infobox= (marker.url?marker.url:(marker.infobox?marker.infobox:null));
+                  
+                  o._createNewShape(marker);
 
-                  o.addMarker(
-                    location,
-                    (marker.name?marker.name:null),
-                    infobox,
-                    (marker.id?marker.id:null) ,
-                    {
-                      icon: (marker.icon?marker.icon:null),
-                      backgroundcolor: (marker.backgroundcolor?marker.backgroundcolor:null) ,
-                      color: (marker.color?marker.color:null) ,
-                      bordercolor: (marker.bordercolor?marker.bordercolor:null) ,
-                      borderwidth: ((marker.borderwidth || marker.borderwidth==0 ) ?marker.borderwidth:null) ,
-                      label: (marker.label?marker.label:null),
-                      opacity: ((marker.opacity||marker.opacity==0)?marker.opacity:1) ,
-                      shape: (marker.shape?marker.shape:'MAP_PIN') ,
-                      labelposition: (marker.labelposition?marker.labelposition:'internal') ,
-                    }
-                  );
-                }
+                  //   location: {
+                  //     lat: marker.location.lat, marker.location.lng
+                  //    }
+                  // o.addMarker(
+                  //   location,
+                  //   (marker.name?marker.name:null),
+                  //   infobox,
+                  //   (marker.id?marker.id:null) ,
+                  //   {
+                  //     icon: (marker.icon?marker.icon:null),
+                  //     backgroundcolor: (marker.backgroundcolor?marker.backgroundcolor:null) ,
+                  //     color: (marker.color?marker.color:null) ,
+                  //     bordercolor: (marker.bordercolor?marker.bordercolor:null) ,
+                  //     borderwidth: ((marker.borderwidth || marker.borderwidth==0 ) ?marker.borderwidth:null) ,
+                  //     label: (marker.label?marker.label:null),
+                  //     opacity: ((marker.opacity||marker.opacity==0)?marker.opacity:1) ,
+                  //     shape: (marker.shape?marker.shape:'MAP_PIN') ,
+                  //     labelposition: (marker.labelposition?marker.labelposition:'internal') ,
+                  //   }
+                  // );
+                // }
               });
             }
             o.initialized=true;
@@ -789,10 +785,17 @@ $.widget( "ajtarragona.tgnMap", {
           var place = o.autocomplete.getPlace();
 
           if(place.address_components){
-            var loc={lat:place.geometry.location.lat(),lng:place.geometry.location.lng()};
-              o.addMarker(loc,place.name,place.name);
-
-              o._updateValue();
+            
+              o._createNewShape({
+                name:place.name, 
+                infobox:place.name,
+                location: {
+                  lat:place.geometry.location.lat(),
+                  lng:place.geometry.location.lng()
+                }
+              });
+              
+              
           }else{
             o._updateValue();
           }
@@ -802,49 +805,49 @@ $.widget( "ajtarragona.tgnMap", {
 
 
   clearValue : function(settings){
-    this.markers={};
-    this._updateValue();
-    
+    this.deleteShapes();
   },
 
   value : function(){
-    return this.$forminput.val();
+    var val=this.$forminput.val();
+    if(val) return JSON.parse(val);
+    return null;
   },
   
   _getShapeHtml: function(shapevalue, current){
-    var html = '<li class="'+(current?'selected':'')+'">';
+    var html = '<li class=" '+(current?'selected':'')+'"><small>';
       switch(shapevalue.type){
         case 'circle':
-            html+="<u>CIRCLE</u><br> - CENTER: LAT "+shapevalue.center.lat +", LNG "+shapevalue.center.lng +"<br> - RADIUS: "+shapevalue.radius +" m<br> - AREA: "+shapevalue.area+" m<sup>2</sup>"
+            html+="<h5>CIRCLE</h5> - CENTER: LAT "+shapevalue.center.lat +", LNG "+shapevalue.center.lng +"<br/> - RADIUS: "+shapevalue.radius +" m<br/> - AREA: "+shapevalue.area+" m<sup>2</sup>"
             break;
         case 'rectangle':
-            html+="<u>RECTANGLE</u><br> - EAST: "+shapevalue.bounds.east +"<br> - NORTH: "+shapevalue.bounds.north +"<br> - SOUTH: "+shapevalue.bounds.south+"<br> - WEST: "+shapevalue.bounds.west+"<br> - AREA: "+shapevalue.area+" m<sup>2</sup>"
+            html+="<h5>RECTANGLE</h5> - EAST: "+shapevalue.bounds.east +"<br/> - NORTH: "+shapevalue.bounds.north +"<br/> - SOUTH: "+shapevalue.bounds.south+"<br/> - WEST: "+shapevalue.bounds.west+"<br/> - AREA: "+shapevalue.area+" m<sup>2</sup>"
           
             break;
         case 'polygon':
-            html+="<u>POLYGON</u><br>";
+            html+="<h5>POLYGON</h5>";
             
             for(var vertex of shapevalue.path){
-              html+=" - LAT "+vertex.lat +", LNG "+vertex.lng+"<br>";
+              html+=" - LAT "+vertex.lat +", LNG "+vertex.lng+"<br/>";
             }
             html+=" - AREA: "+shapevalue.area+" m<sup>2</sup>";
            
             break;
         case 'polyline':
-            html+="<u>POLYLINE</u><br>";
+            html+="<h5>POLYLINE</h5>";
             
             for(var vertex of shapevalue.path){
-              html+=" - LAT "+vertex.lat +", LNG "+vertex.lng+"<br>";
+              html+=" - LAT "+vertex.lat +", LNG "+vertex.lng+"<br/>";
             }
             html+="- LENGTH: "+shapevalue.length+" m";
             break;
         case 'marker':
-            html+="<u>MARKER</u><br/> - LAT "+shapevalue.location.lat +", LNG "+shapevalue.location.lng+"";
+            html+="<h5>MARKER</h5> - LAT "+shapevalue.location.lat +", LNG "+shapevalue.location.lng+"";
             break;
         default:break;
       }
-      html+"</li>";
-
+      html+="</small></li>";
+      // console.log(html);
       return html;
   },
   _getShapeValue : function(shape){
@@ -908,30 +911,46 @@ $.widget( "ajtarragona.tgnMap", {
       return value;
 
   },
+
+  _refreshCoords : function(html){
+    var a=this;
+    
+    // console.log('_refreshCoords',this.options);
+    if(this.options.showcoords){
+      var value=this.value();
+      // console.log('_refreshCoords',value);
+      
+      if(value && (value.length>0)){
+        this.$coordscontainer.addClass('with-value');
+      }else{
+        this.$coordscontainer.removeClass('with-value');
+      }
+
+      if(!html){
+        html="";
+        html+="<ul class='list-unstyled '>";
+        for (shape of Object.values(this.shapes)) {
+          var val={
+            ... a._getShapeValue(shape),
+            type: shape.type,
+          };
+          html+= this._getShapeHtml(val, shape.uid==this.selectedShapeId);
+        }
+        html+="</ul>";
+      }
+
+      this.$coordscontainer.find('.coords-content').html(html); 
+    }
+
+  },
   _updateValue : function(settings){
       var a=this;  
-    //  al('updateValue');
+      // al('updateValue', this.shapes);
       // if(this._isReadonly()) return;
       
       var value=[];
       var html="";
-      html+="<ul class='list-unstyled mb-4'>";
-      for (marker of Object.values(this.markers)) {
-
-        var val={
-          type:'marker',
-          name: marker.name,
-          infobox: marker.name,
-          location: {
-            lat:marker.getPosition().lat(),
-            lng:marker.getPosition().lng()
-          }
-        };
-        value.push(val);
-        html+="<li>LAT:"+val.location.lat+", LNG:"+val.location.lng+"</li>";
-      }
-
-
+      html+="<ul class='list-unstyled'>";
       for (shape of Object.values(this.shapes)) {
         
         var val={
@@ -940,60 +959,27 @@ $.widget( "ajtarragona.tgnMap", {
         };
         value.push(val);
         
-        html+=a._getShapeHtml(val, shape.uid==a.selectedShapeId);
+        html+= a._getShapeHtml(val, shape.uid==a.selectedShapeId);
       }
       html+="</ul>";
       // al("UPDATE",value, this.markers);
       // al("MARKERS",this.markers);
 
-      if(!this.options.multiple){
-        // al("length:", Object.keys(this.markers).length);
-        if(Object.keys(this.markers).length>0 || Object.keys(this.shapes).length>0){
-          // this.$addmarkerbtn.prop('disabled',true).addClass('disabled');
-
-          if(this.drawingManager){
-            // this.drawingManager.setOptions({
-            //   // drawingMode : null,
-            //   drawingControlOptions : {
-            //       position : google.maps.ControlPosition.TOP_RIGHT,
-            //       drawingModes : []
-            //   }
-            // });
-            // this.drawingManager.setMap(this.gmap);
-            
-          }
-
-        }else{
-          // this.$addmarkerbtn.prop('disabled',false).removeClass('disabled');
-          if(this.drawingManager){
-            // this.drawingManager.setOptions({
-            //   // drawingMode : null,
-            //   drawingControlOptions : {
-            //       position : google.maps.ControlPosition.TOP_RIGHT,
-            //       drawingModes : a.options.shapes
-            //   }
-            // });
-            // this.drawingManager.setMap(this.gmap);        
-          }
-        }
-      }
+      
       // console.log('value',value);
       if(value.length==0){
         if(this.$forminput) this.$forminput.val('');
-        if(this.$coordscontainer)  this.$coordscontainer.find('button').prop('disabled',true).addClass('disabled');
       }else{
         if(this.$forminput)  this.$forminput.val(JSON.stringify(value));
-        if(this.$coordscontainer) this.$coordscontainer.find('button').prop('disabled',false).removeClass('disabled');
-        
       }
-      if(this.$coordscontainer) this.$coordscontainer.find('.coords-display').html(html); 
+
 
       if(this.initialized){
         // al("CHANGED");
         this.$forminput.trigger('change');
 
       }
-      
+      a._refreshCoords(html);
   },
 
   
@@ -1004,7 +990,16 @@ $.widget( "ajtarragona.tgnMap", {
     // al("initAll",this.options);
     var a=this;
     this.$coordscontainer=this.element.closest('.map-container').find('.coords-container');
+    if(this.options.showcoords){
+        this.$coordscontainer.find('.coords-opener').on('click', function(e){
+            $(this).closest('.coords-container').addClass('opened');
+        });
+        this.$coordscontainer.find('.coords-closer').on('click', function(e){
+            $(this).closest('.coords-container').removeClass('opened');
+        });
+    }
 
+    // console.log(this.$coordscontainer);
     this.$autocompleteinput=$('[type=text][data-map="#'+this.id+'"]');
     if(this.$autocompleteinput.length>0)
       this.autocompleteinput = this.$autocompleteinput[0];
@@ -1015,6 +1010,7 @@ $.widget( "ajtarragona.tgnMap", {
     
     this.$forminput=$('[data-value][data-map="#'+this.id+'"]');
     if(this.$forminput.length>0){
+      // console.log('input',this.$forminput);
       this.forminput = this.$forminput[0];
     }
 
@@ -1025,9 +1021,10 @@ $.widget( "ajtarragona.tgnMap", {
 
 
     if(this.options.markers){
-      this._initMarkers();
+      this._initMarkersAndShapes();
     }
 
+    this._refreshCoords();
 
     var custommarker={};
 
@@ -1110,25 +1107,24 @@ $.widget( "ajtarragona.tgnMap", {
         if(!a.options.multiple){
           // a.deleteMarkers();
           a.deleteShapes();
-         
         }
-        
         a.addShapeEvents(event.type, event.overlay);
         a._updateValue();
         
       });
-
+      
       //
       a._addKeyboardEvents();
-      a._updateValue();
+      
     }
+    a._refreshCoords();
 
   },
   generateUid(type){
     return type+"_"+Date.now().toString(36) + Math.random().toString(36).substring(2);
 
   },
-  clearShapeSelection(e){
+  _clearShapeSelection(e){
     // _d('clearShapeSelection');
     if(this.selectedShape){
         if(this.selectedShape.type!='marker'){
@@ -1166,17 +1162,17 @@ $.widget( "ajtarragona.tgnMap", {
           
           this.shapes.splice(index,1);
       }
-      this.clearShapeSelection();
+      this._clearShapeSelection();
       this._updateValue();
       if(this.shapes.length==0){
         //amago el codi
-          this.$coordsdisplay.closest('.coords-container').find('.collapse').collapse('hide');
+          this.$coordscontainer.removeClass('opened');
       }
   },
   selectShape(shape){
       // console.log('selectShape',shape.uid,this.selectedLayerId);
       if(!this.selectedShapeId || shape.uid!=this.selectedShapeId){
-          this.clearShapeSelection();
+          this._clearShapeSelection();
           this.selectedShape=shape;
           
           if(shape.type!='marker'){
@@ -1190,10 +1186,10 @@ $.widget( "ajtarragona.tgnMap", {
           // shape.setEditable(true);
           this.selectedShapeId=shape.uid;
       }else{
-          // this.clearShapeSelection();
+          // this._clearShapeSelection();
 
       }
-      this._updateValue();
+      
       
   },
   addShapeEvents: function (type, shape){
@@ -1217,7 +1213,7 @@ $.widget( "ajtarragona.tgnMap", {
     // });
     google.maps.event.addListener(shape, 'click', function(event2) {
       if (event2.vertex !== undefined) {
-        console.log('removing vertex', event2);
+        // console.log('removing vertex', event2);
           event2.domEvent.preventDefault();
           event2.domEvent.stopPropagation();
           if (shape.type === google.maps.drawing.OverlayType.POLYGON) {
@@ -1236,6 +1232,7 @@ $.widget( "ajtarragona.tgnMap", {
           }
       }else{
           a.selectShape(shape);
+          a._refreshCoords();
       }
   });
   
@@ -1243,6 +1240,7 @@ $.widget( "ajtarragona.tgnMap", {
       // e.domEvent.stopPropagation();
       a.selectedLayerId=null;
       a.selectShape(shape);
+      a._refreshCoords();
   });
   
   
@@ -1255,8 +1253,8 @@ $.widget( "ajtarragona.tgnMap", {
    
       // marker.addListener('click', function() {
       shape.addListener('spider_click', function() {
-          al("marker clicked");
-          al(this);
+          // al("marker clicked");
+          // al(this);
           if(this.infobox){
             a._showInfo(this,this.infobox);
           }
@@ -1359,15 +1357,21 @@ $.widget( "ajtarragona.tgnMap", {
     var a=this;
 
     document.addEventListener("click", function(e){
-      console.log('click doc', $(e.target).closest('.map-container').is(a.element.closest('.map-container')));
+      // console.log('click doc', $(e.target).closest('.map-container').is(a.element.closest('.map-container')));
 
        if($(e.target).closest('.map-container').is(a.element.closest('.map-container'))){
         a.isActive=true;
       }else{
          a.isActive=false;
-         a.clearShapeSelection();
+         a._clearShapeSelection();
          a.drawingManager.setDrawingMode(null);
 
+       }
+
+      //  console.log($(e.target).is('.coords-container') , $(e.target).closest('.coords-container').length);
+
+       if(!a.isActive || $(e.target).is('.coords-container') ){
+        a.$coordscontainer.removeClass('opened');
        }
     });
 
@@ -1387,27 +1391,27 @@ $.widget( "ajtarragona.tgnMap", {
               break;
           case "g":
               a.drawingManager.setDrawingMode(null);
-              a.clearShapeSelection();
+              a._clearShapeSelection();
               break;
           case "c":
               a.drawingManager.setDrawingMode(google.maps.drawing.OverlayType.CIRCLE);
-              a.clearShapeSelection();
+              a._clearShapeSelection();
               break;
           case "r":
               a.drawingManager.setDrawingMode(google.maps.drawing.OverlayType.RECTANGLE);
-              a.clearShapeSelection();
+              a._clearShapeSelection();
               break;
           case "p":
               a.drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
-              a.clearShapeSelection();
+              a._clearShapeSelection();
               break;
           case "l":
               a.drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYLINE);
-              a.clearShapeSelection();
+              a._clearShapeSelection();
               break;
           case "m":
               a.drawingManager.setDrawingMode(google.maps.drawing.OverlayType.MARKER);
-              a.clearShapeSelection();
+              a._clearShapeSelection();
               break;
           // case "d":
           //     if(this.selectedShape){
