@@ -540,6 +540,7 @@
     "search"=>true,
     "label"=>"Amb formes amb valor per defecte",
     "sidelabel"=>true,
+    'fitbounds'=>true,
     "shapes"=>[
         'polygon','rectangle','circle','polyline'
     ],

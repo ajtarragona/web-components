@@ -327,7 +327,7 @@ $.widget( "ajtarragona.tgnMap", {
   },
 
   _createNewShape : function(marker){
-
+    var o=this;
     var shapesoptions= {};
 
     if(marker.type??'marker' !='marker'){
@@ -353,6 +353,10 @@ $.widget( "ajtarragona.tgnMap", {
             // console.log('add rectangle',options);
             var shape=new google.maps.Rectangle(options);
             shape.setMap(this.gmap);
+            var bounds=shape.getBounds();
+            o.bounds.extend(bounds.getNorthEast());
+            o.bounds.extend(bounds.getSouthWest());
+      
             this.addShapeEvents(marker.type, shape);
             
             break;
@@ -360,18 +364,30 @@ $.widget( "ajtarragona.tgnMap", {
         case 'circle':
             var shape=new google.maps.Circle(options);
             shape.setMap(this.gmap);
+            var bounds=shape.getBounds();
+            o.bounds.extend(bounds.getNorthEast());
+            o.bounds.extend(bounds.getSouthWest());
+      
             this.addShapeEvents(marker.type, shape);
+            
             
             break;
         case 'polyline':
             var shape=new google.maps.Polyline(options);
             shape.setMap(this.gmap);
+            for(var vertex of shape.getPath().getArray()){
+              o.bounds.extend(vertex);
+            }
+            
             this.addShapeEvents(marker.type, shape);
             
             break;
         case 'polygon':
             var shape=new google.maps.Polygon(options);
             shape.setMap(this.gmap);
+            for(var vertex of shape.getPath().getArray()){
+              o.bounds.extend(vertex);
+            }
             this.addShapeEvents(marker.type, shape);
             
             break;
