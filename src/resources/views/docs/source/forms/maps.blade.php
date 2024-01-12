@@ -98,6 +98,16 @@
         "backgroundcolor" => '#ff4499',
         // 'opacity'=>0.5,
         // 'scale'=>3
+    ],
+    "markers"=>[
+        [
+            "name"=>"Avinguda Prat de la Riba",
+            "infobox"=>"Avinguda Prat de la Riba",
+            "location"=> [
+                "lat"=>41.1176215,
+                "lng"=>1.2460229000000709
+            ]
+        ],
     ]
 ])
 
