@@ -28,7 +28,7 @@ class EsconsPieChart extends DoughnutChart
         "datalabels"=> [
             "font"=>[
                 "weight"=>'bold',
-                "family"=>'Montserrat'
+                "family"=>'system-ui'
             ],
             "labels" =>[
                 "valor"=>[

@@ -601,7 +601,7 @@ $.widget( "ajtarragona.tgnMap", {
       {
           className : 'markerlabel-' + (iconsettings.labelposition ? iconsettings.labelposition : 'internal'),
           text: iconsettings.label, //"\ue530", // codepoint from https://fonts.google.com/icons
-          fontFamily: "Montserrat, Arial, sans-serif",
+          fontFamily: "system-ui, sans-serif",
           // fontWeight: "bold",
           color: iconsettings.color ?? '',
           fontSize: (iconsettings.labelposition && iconsettings.labelposition == "external") ? "12px" : "16px",
