@@ -6,7 +6,7 @@
             <a class="sidebar-toggle ml-auto " href="#" data-session-setting="sidebar" data-session-toggle="true" data-session-value="{{ session('sidebar') }}" >@icon('bars')</a>
         </header>
 
-        <div id="main-menu" class="flex-grow-1 d-flex">
+        <div id="main-menu" class="flex-grow-1 ">
 	        @includeIf('layout.menu')
 	        
 			@yield('menu')
