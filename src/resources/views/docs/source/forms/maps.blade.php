@@ -556,10 +556,11 @@
     ],
     "addmarkerbtn" => false,
     'showcoords'=>true,
+    'readonly'=>true,
     'markers'=>[
         [
             "name"=>"Avinguda Prat de la Riba",
-            
+            "infobox"=>"Lal lala",
             "location"=> [
                 "lat"=>41.1176215,
                 "lng"=>1.2460229000000709
@@ -571,6 +572,7 @@
             'backgroundcolor'=>'#ffff00',
             'opacity'=>0.3,
             'borderweight'=>1,
+            "infobox" => route('webcomponents.markerinfobox',['id'=>1]),
             "path"=> [
                 ["lat"=>41.12247630285357, "lng"=> 1.2344448815315445],
                 ["lat"=>41.119631345252984, "lng"=> 1.2656872521370133],
@@ -582,6 +584,7 @@
             "type"=>"polyline",
             // 'bordercolor'=>'#00ff00',
             // 'borderweight'=>5,
+            "infobox" => route('webcomponents.markerinfobox',['id'=>1]),
             "path"=> [
                 ["lat"=>41.104366721973975, "lng"=> 1.2641910439247273],
                 ["lat"=>41.11264454441927, "lng"=> 1.2727741127723835],
@@ -594,6 +597,7 @@
             "type"=>"rectangle",
             'bordercolor'=>'#0000ff',
             'backgroundcolor'=>'#0000ff',
+            "infobox" => route('webcomponents.markerinfobox',['id'=>1]),
             // 'borderweight'=>0,
             // 'opacity'=>1,
             "bounds"=> [
@@ -607,6 +611,7 @@
             "type"=>"circle",
             'bordercolor'=>'#00ff00',
             'backgroundcolor'=>'#00ff00',
+            "infobox" => route('webcomponents.markerinfobox',['id'=>1]),
             "center"=> ["lat"=> 41.11724518181344, "lng"=> 1.2545549258297095],
             "radius" =>1201.5089211410261 
 

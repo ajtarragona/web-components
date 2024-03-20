@@ -9,6 +9,15 @@
 		
 	]
 ) 
+@input(
+	[
+		'type'=>'date', 
+		'icon'=>'calendar-alt', 
+		'name'=>'campo_fecha_input', 
+		'label'=>'Write Data', 
+		'placeholder'=>'Type date...'		
+],['allow-input' => 'true']
+) 
 
 @input(
 	[

@@ -291,7 +291,8 @@ $.widget( "ajtarragona.tgnMap", {
   _loadInfobox : function(url,marker){
     var o=this;
     o.infoWindow.open(o.map,marker);
-    
+    // al('_loadInfobox',o.infoWindow);
+
     o.infoWindow.setContent('<div class="loading px-4 py-2">'+___("strings.loading")+'...</div>');
     $.ajax({
       url: url,
@@ -312,10 +313,37 @@ $.widget( "ajtarragona.tgnMap", {
     });
   },
 
+  _getShapeCenter(shape){
+      var center;
+     
+
+      // The Center of the Bermuda Triangle - (25.3939245, -72.473816)
+      switch(shape.type??'marker'){
+          case 'polygon':
+          case 'polyline':
+            var bounds = new google.maps.LatLngBounds();
+            
+            for(var vertex of shape.getPath().getArray()){
+                bounds.extend(vertex);
+              }
+              center = bounds.getCenter();
+              break;
+          case 'rectangle': center=shape.getBounds().getCenter(); break;
+          case 'marker': center=shape.getPosition(); break;
+          case 'circle': center=shape.getCenter(); break;
+          default: break;
+      }
+
+      return center;
+  },
 
   _showInfo : function(marker,content){
     var o=this;
-    // al('showInfo',content);
+    // al('showInfo',marker);
+    if((marker.type??'marker')!='marker'){
+      o.infoWindow.setPosition(o._getShapeCenter(marker));
+    }
+
     if(o._isURL(content)){
         o._loadInfobox(content,marker);
         
@@ -1209,108 +1237,124 @@ $.widget( "ajtarragona.tgnMap", {
     //   // }
 
     // });
-    google.maps.event.addListener(shape, 'click', function(event2) {
-      if (event2.vertex !== undefined) {
-        // console.log('removing vertex', event2);
-          event2.domEvent.preventDefault();
-          event2.domEvent.stopPropagation();
-          if (shape.type === google.maps.drawing.OverlayType.POLYGON) {
-              var path = shape.getPaths().getAt(event2.path);
-              path.removeAt(event2.vertex);
-              if (path.length < 2) {
-                a.removeShape(shape.uid);
-              }
-          }
-          if (shape.type === google.maps.drawing.OverlayType.POLYLINE) {
-              var path = shape.getPath();
-              path.removeAt(event2.vertex);
-              if (path.length < 2) {
-                a.removeShape(shape.uid);
-              }
-          }
-      }else{
-          a.selectShape(shape);
-          a._refreshCoords();
-      }
-  });
-  
-  google.maps.event.addListener(shape, 'dragstart', function (e) {
-      // e.domEvent.stopPropagation();
-      a.selectedLayerId=null;
-      a.selectShape(shape);
-      a._refreshCoords();
-  });
-  
-  
-
-  if( type === google.maps.drawing.OverlayType.MARKER ){
-      google.maps.event.addListener(shape, 'dragend', function (e) {
-          a._updateValue();
-      });
-
-   
+    if(this._isReadonly()){
+      // console.log('READONLY',shape);
+      // shape.setEditable(false);
+      // shape.setDraggable(false);
       // marker.addListener('click', function() {
-      shape.addListener('spider_click', function() {
-          // al("marker clicked");
-          // al(this);
+
+      google.maps.event.addListener(shape, 'click', function(event2) {
+          // al("shape clicked",this);
           if(this.infobox){
             a._showInfo(this,this.infobox);
           }
           
       });
-      
+    }else{
+      google.maps.event.addListener(shape, 'click', function(event2) {
+        if (event2.vertex !== undefined) {
+          // console.log('removing vertex', event2);
+            event2.domEvent.preventDefault();
+            event2.domEvent.stopPropagation();
+            if (shape.type === google.maps.drawing.OverlayType.POLYGON) {
+                var path = shape.getPaths().getAt(event2.path);
+                path.removeAt(event2.vertex);
+                if (path.length < 2) {
+                  a.removeShape(shape.uid);
+                }
+            }
+            if (shape.type === google.maps.drawing.OverlayType.POLYLINE) {
+                var path = shape.getPath();
+                path.removeAt(event2.vertex);
+                if (path.length < 2) {
+                  a.removeShape(shape.uid);
+                }
+            }
+        }else{
+            a.selectShape(shape);
+            a._refreshCoords();
+        }
+    });
+    
+    google.maps.event.addListener(shape, 'dragstart', function (e) {
+        // e.domEvent.stopPropagation();
+        a.selectedLayerId=null;
+        a.selectShape(shape);
+        a._refreshCoords();
+    });
+    
+    
 
-      
-      // al("position",marker.getPosition());
-      a.bounds.extend(shape.getPosition());
-      
-      a.overlappingmarkers.addMarker(shape); 
+    if( type === google.maps.drawing.OverlayType.MARKER ){
+        google.maps.event.addListener(shape, 'dragend', function (e) {
+            a._updateValue();
+        });
 
-      
-      // console.log('a.options.cluster',a.options.cluster,shape);
+    
+        // marker.addListener('click', function() {
+        shape.addListener('spider_click', function() {
+            // al("marker clicked");
+            // al(this);
+            if(this.infobox){
+              a._showInfo(this,this.infobox);
+            }
+            
+        });
+        
 
-      if(a.options.cluster){
-         a.markerClusterer.addMarker(shape);
-      }
+        
+        // al("position",marker.getPosition());
+        a.bounds.extend(shape.getPosition());
+        
+        a.overlappingmarkers.addMarker(shape); 
 
-      // al(marker);
-      //añado al array de markers
-      // o.markers[id] = marker; 
-      
-      // o.markers.push(marker);
-      // al("markers  ",o.markers);
+        
+        // console.log('a.options.cluster',a.options.cluster,shape);
 
-      // if(a.options.fitbounds) a.setCenter(shape.getPosition());
-  }
+        if(a.options.cluster){
+          a.markerClusterer.addMarker(shape);
+        }
 
-  if( type === google.maps.drawing.OverlayType.RECTANGLE || type === google.maps.drawing.OverlayType.CIRCLE ){
-      google.maps.event.addListener(shape, "bounds_changed", (e) => {
-          a._updateValue();
+        // al(marker);
+        //añado al array de markers
+        // o.markers[id] = marker; 
+        
+        // o.markers.push(marker);
+        // al("markers  ",o.markers);
 
-      });
-
-  }
-
-  if( type === google.maps.drawing.OverlayType.POLYGON || type === google.maps.drawing.OverlayType.POLYLINE ){
-      google.maps.event.addListener(shape.getPath(), 'insert_at', (e) => {
-          // _d('We inserted a point');
-          a._updateValue();
-      });
-  
-      google.maps.event.addListener(shape.getPath(), 'remove_at', (e) => {
-          // _d('We removed a point');
-          a._updateValue();
-      });
-  
-      google.maps.event.addListener(shape.getPath(), 'set_at', (e) => {
-          // _d('We set a point');
-          a._updateValue();
-      });
- 
+        // if(a.options.fitbounds) a.setCenter(shape.getPosition());
     }
 
+    if( type === google.maps.drawing.OverlayType.RECTANGLE || type === google.maps.drawing.OverlayType.CIRCLE ){
+        google.maps.event.addListener(shape, "bounds_changed", (e) => {
+            a._updateValue();
+
+        });
+
+    }
+
+    if( type === google.maps.drawing.OverlayType.POLYGON || type === google.maps.drawing.OverlayType.POLYLINE ){
+        google.maps.event.addListener(shape.getPath(), 'insert_at', (e) => {
+            // _d('We inserted a point');
+            a._updateValue();
+        });
+    
+        google.maps.event.addListener(shape.getPath(), 'remove_at', (e) => {
+            // _d('We removed a point');
+            a._updateValue();
+        });
+    
+        google.maps.event.addListener(shape.getPath(), 'set_at', (e) => {
+            // _d('We set a point');
+            a._updateValue();
+        });
+  
+      }
+      a.selectShape(shape);
+    }
+    
     a.shapes.push(shape);
-    a.selectShape(shape);
+
   },
   _geoLocate : function(callback){
     var o = this;
