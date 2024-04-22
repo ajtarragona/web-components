@@ -75,6 +75,8 @@
 				Test @icon('chevron-right') 
 			@endbutton
 		@endform
+
+		{{-- @livewire('form-tester',['view'=>'autocompletes']) --}}
 		
 	@endcol
 

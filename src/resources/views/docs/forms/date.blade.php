@@ -40,6 +40,9 @@
 			@button(['type'=>'submit','size'=>'sm'])
 				Test @icon('chevron-right') 
 			@endbutton
+
+
+			@livewire('form-tester',['view'=>'dates'])
 		@endform
 		
 	@endcol

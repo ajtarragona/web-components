@@ -33,8 +33,10 @@ class Input extends FormControl
 
 
 		if(isset($this->attributes['type']) && $this->attributes['type']=="color"){
-			$this->attributes["type"]="text";
-			$this->addClass("colorinput");
+			if(!$this->hasClass("native")){
+				$this->attributes["type"]="text";
+				$this->addClass("colorinput");
+			}
 		}
 
 		if(isset($this->attributes['type']) &&  $this->attributes['type']=="number"){

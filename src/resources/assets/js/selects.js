@@ -24,7 +24,7 @@ $.widget( "ajtarragona.tgnSelectPicker", {
         
         this.options = $.extend({}, this.options, this.element.data()); 
 
-        this._startLoading();
+        // this._startLoading();
 
 
         this.options.multiple = this.element.attr('multiple');
@@ -331,7 +331,7 @@ $.widget( "ajtarragona.tgnSelectPicker", {
        this.element.on('loaded.bs.select', function (e, clickedIndex, isSelected, previousValue) {
             
             o.container = $(this).closest('.bootstrap-select');
-            o.container.wrap($("<div class='selectpicker-wrapper'/>"));
+            o.container.wrap($("<div class='selectpicker-wrapper' wire:ignore/>"));
             o.wrapper=o.container.parent();
             o.button = $(this).siblings('.dropdown-toggle');
             o.dropdown = $(this).siblings('.dropdown-menu');

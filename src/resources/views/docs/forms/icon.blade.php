@@ -13,6 +13,8 @@
 		
 		@form
 			@includeIf('ajtarragona-web-components::docs.source.forms.icon')
+			@livewire('form-tester',['view'=>'icons'])
+
 		@endform
 		
 	@endcol

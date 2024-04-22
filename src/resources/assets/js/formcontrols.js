@@ -149,12 +149,12 @@ $.fn.initIconPicker = function (){
         
         
         $input.addClass("iconpicker-init");
-        // al("initIconPicker");
+        al("initIconPicker");
         
        
          
         //generate html
-        var $ig=$("<div class='input-group iconpicker-container'/>");
+        var $ig=$("<div class='input-group iconpicker-container' />");
         $input.wrap($ig);
 
 
@@ -195,6 +195,9 @@ $.fn.initIconPicker = function (){
             setIcon($input);
             // al('trigger change');
             $input.trigger('change');
+            $input[0].dispatchEvent(new Event('input'));
+
+            // $input.trigger('input');
             
             $(this).prop('hidden',true);
         });
@@ -207,6 +210,9 @@ $.fn.initIconPicker = function (){
            setIcon(input);
           //  al('trigger change');
            input.trigger('change');
+           $input[0].dispatchEvent(new Event('input'));
+
+          //  input.trigger('input');
            
         });
 
@@ -260,16 +266,26 @@ $.fn.initColorPicker = function (){
           ];
         }
  //       al(defaults);
+
+         
+        $input.on('change.colorpicker', function(event){
+            // al('changeColorpicker', event);
+            $input[0].dispatchEvent(new Event('input'));
+
+        });
+
+                
         $input.parent().find('.deselect-btn').on('click',function(e){
             e.preventDefault();
             e.stopPropagation();
-            //al($input.colorpicker('getValue'));
+            // al('clear color');
             // al($(this).closest('.colorpicker-element'));
             $(this).closest('.colorpicker-element').colorpicker('setValue','');
             $(this).closest('.colorpicker-element').find('.colorpicker-input-addon i').attr('style','');
             $input.val('');
             $input.trigger('change');
-           
+            $input[0].dispatchEvent(new Event('input'));
+
             // input.trigger('change');
             //$input.colorpicker('update');
             

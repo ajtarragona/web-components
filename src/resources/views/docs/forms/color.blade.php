@@ -32,6 +32,7 @@
 
 		@form
 			@includeIf('ajtarragona-web-components::docs.source.forms.color')
+			@livewire('form-tester',['view'=>'colors'])
 		@endform
 		
 	@endcol

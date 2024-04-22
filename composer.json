@@ -25,7 +25,8 @@
         "meyfa/php-svg": "^0.9.1",
         "laravel/helpers": "^1.0",
         "akaunting/laravel-language": "^1.0",
-        "ajtarragona/charts": "dev-main"
+        "ajtarragona/charts": "dev-main",
+        "livewire/livewire": "^1.0"
         
     },
     "autoload": {

@@ -84,3 +84,4 @@ onDocumentReady(function(){
   // al(__('ajtarragona-web-components::auth.throttle',{seconds:2}));
 
 });
+

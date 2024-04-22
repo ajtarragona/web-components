@@ -94,5 +94,6 @@ require('./sessiontriggers');
 require('./prettyprint');
 require('./animations');
 require('./process');
+require('./livewire');
 require('./main');
 

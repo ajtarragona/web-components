@@ -9,6 +9,8 @@ use Ajtarragona\WebComponents\DirectivesRepository;
 use Ajtarragona\WebComponents\Commands\InstallDemo;
 use Ajtarragona\WebComponents\Commands\PrepareJs;
 use Ajtarragona\WebComponents\Commands\SetupAuth;
+use Ajtarragona\WebComponents\Livewire\FormTester;
+use Livewire\Livewire;
 
 
 class WebComponentsServiceProvider extends ServiceProvider
@@ -66,6 +68,7 @@ class WebComponentsServiceProvider extends ServiceProvider
         $this->registerComponents();
         
         $this->registerCommands();
+        Livewire::component('form-tester', FormTester::class);
 
     }
 
