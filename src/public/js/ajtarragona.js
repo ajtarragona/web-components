@@ -38026,14 +38026,14 @@ return $.widget( "ui.sortable", $.ui.mouse, {
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
- * jQuery JavaScript Library v3.7.0
+ * jQuery JavaScript Library v3.7.1
  * https://jquery.com/
  *
  * Copyright OpenJS Foundation and other contributors
  * Released under the MIT license
  * https://jquery.org/license
  *
- * Date: 2023-05-11T18:29Z
+ * Date: 2023-08-28T13:37Z
  */
 ( function( global, factory ) {
 
@@ -38174,7 +38174,7 @@ function toType( obj ) {
 
 
 
-var version = "3.7.0",
+var version = "3.7.1",
 
 	rhtmlSuffix = /HTML$/i,
 
@@ -38438,9 +38438,14 @@ jQuery.extend( {
 				// Do not traverse comment nodes
 				ret += jQuery.text( node );
 			}
-		} else if ( nodeType === 1 || nodeType === 9 || nodeType === 11 ) {
+		}
+		if ( nodeType === 1 || nodeType === 11 ) {
 			return elem.textContent;
-		} else if ( nodeType === 3 || nodeType === 4 ) {
+		}
+		if ( nodeType === 9 ) {
+			return elem.documentElement.textContent;
+		}
+		if ( nodeType === 3 || nodeType === 4 ) {
 			return elem.nodeValue;
 		}
 
@@ -39153,12 +39158,17 @@ function setDocument( node ) {
 		documentElement.msMatchesSelector;
 
 	// Support: IE 9 - 11+, Edge 12 - 18+
-	// Accessing iframe documents after unload throws "permission denied" errors (see trac-13936)
-	// Support: IE 11+, Edge 17 - 18+
-	// IE/Edge sometimes throw a "Permission denied" error when strict-comparing
-	// two documents; shallow comparisons work.
-	// eslint-disable-next-line eqeqeq
-	if ( preferredDoc != document &&
+	// Accessing iframe documents after unload throws "permission denied" errors
+	// (see trac-13936).
+	// Limit the fix to IE & Edge Legacy; despite Edge 15+ implementing `matches`,
+	// all IE 9+ and Edge Legacy versions implement `msMatchesSelector` as well.
+	if ( documentElement.msMatchesSelector &&
+
+		// Support: IE 11+, Edge 17 - 18+
+		// IE/Edge sometimes throw a "Permission denied" error when strict-comparing
+		// two documents; shallow comparisons work.
+		// eslint-disable-next-line eqeqeq
+		preferredDoc != document &&
 		( subWindow = document.defaultView ) && subWindow.top !== subWindow ) {
 
 		// Support: IE 9 - 11+, Edge 12 - 18+
@@ -40721,12 +40731,12 @@ jQuery.find = find;
 jQuery.expr[ ":" ] = jQuery.expr.pseudos;
 jQuery.unique = jQuery.uniqueSort;
 
-// These have always been private, but they used to be documented
-// as part of Sizzle so let's maintain them in the 3.x line
-// for backwards compatibility purposes.
+// These have always been private, but they used to be documented as part of
+// Sizzle so let's maintain them for now for backwards compatibility purposes.
 find.compile = compile;
 find.select = select;
 find.setDocument = setDocument;
+find.tokenize = tokenize;
 
 find.escape = jQuery.escapeSelector;
 find.getText = jQuery.text;
@@ -43940,7 +43950,7 @@ function domManip( collection, args, callback, ignored ) {
 			if ( hasScripts ) {
 				doc = scripts[ scripts.length - 1 ].ownerDocument;
 
-				// Reenable scripts
+				// Re-enable scripts
 				jQuery.map( scripts, restoreScript );
 
 				// Evaluate executable scripts on first document insertion
@@ -44397,7 +44407,7 @@ var rboxStyle = new RegExp( cssExpand.join( "|" ), "i" );
 				trChild = document.createElement( "div" );
 
 				table.style.cssText = "position:absolute;left:-11111px;border-collapse:separate";
-				tr.style.cssText = "border:1px solid";
+				tr.style.cssText = "box-sizing:content-box;border:1px solid";
 
 				// Support: Chrome 86+
 				// Height set through cssText does not get applied.
@@ -44409,7 +44419,7 @@ var rboxStyle = new RegExp( cssExpand.join( "|" ), "i" );
 				// In our bodyBackground.html iframe,
 				// display for all div elements is set to "inline",
 				// which causes a problem only in Android 8 Chrome 86.
-				// Ensuring the div is display: block
+				// Ensuring the div is `display: block`
 				// gets around this issue.
 				trChild.style.display = "block";
 
@@ -48577,7 +48587,9 @@ jQuery.fn.extend( {
 	},
 
 	hover: function( fnOver, fnOut ) {
-		return this.mouseenter( fnOver ).mouseleave( fnOut || fnOver );
+		return this
+			.on( "mouseenter", fnOver )
+			.on( "mouseleave", fnOut || fnOver );
 	}
 } );
 
@@ -67091,7 +67103,6 @@ $.widget("ajtarragona.tgnAutocomplete", {
     //     "</div>"
     // ].join("\n")
   },
-
   _create: function _create() {
     var o = this;
 
@@ -67158,7 +67169,6 @@ $.widget("ajtarragona.tgnAutocomplete", {
           // }
           // });
         },
-
         filter: function filter(parsedResponse) {
           o._stopLoading();
           return parsedResponse;
@@ -67260,7 +67270,6 @@ $.widget("ajtarragona.tgnAutocomplete", {
       // this._stopLoading();
     }
   },
-
   _initSingle: function _initSingle() {
     var o = this;
     this.input = this.element;
@@ -67334,7 +67343,6 @@ $.widget("ajtarragona.tgnAutocomplete", {
       //executeCallback( $input.data('on-select'), {target: ev.currentTarget, data:suggestion});
     });
   },
-
   disable: function disable() {
     this.options.disabled = true;
     if (this.options.multiple) {
@@ -67604,7 +67612,6 @@ TgnFlash = function TgnFlash(body, title, options) {
 
     //this.$alert.append('<div class="alert-footer">'+this.footer+'</div>');
   };
-
   this.show = function () {
     var o = this;
     $('#messages').append(this.$alert);
@@ -67833,7 +67840,6 @@ $.fn.initIconPicker = function () {
     // });
   });
 };
-
 $.fn.initColorPicker = function () {
   return this.each(function () {
     var $input = $(this);
@@ -67883,7 +67889,6 @@ $.fn.initColorPicker = function () {
       // input.trigger('change');
       //$input.colorpicker('update');
     });
-
     $input.parent().colorpicker(defaults);
   });
 };
@@ -67935,7 +67940,6 @@ $.fn.initAutomention = function () {
       // al('Original event that triggered text replacement:', e.detail.event);
       // al('Matched item:', e.detail.item);
     };
-
     var setInitialValue = function setInitialValue() {
       var content = $input.val();
 
@@ -67989,7 +67993,6 @@ $.fn.initAutomention = function () {
 
       // return settings.pre + item.original.value + settings.post;
     };
-
     settings.menuItemTemplate = function (item) {
       return item.string;
     };
@@ -68320,7 +68323,6 @@ $.fn.initTextEditor = function () {
     // 'link-tooltip': true  
     // }
   };
-
   return this.each(function () {
     var o = this;
     o.$element = $(this);
@@ -68473,7 +68475,6 @@ function tgnFormClass(obj, options) {
             $target.html(data).tgnInitAll().stopLoading();
             //$form.stopLoading();
           },
-
           error: function error(xhr) {
             // $form.stopLoading();
             $('html').stopLoading();
@@ -68482,7 +68483,6 @@ function tgnFormClass(obj, options) {
           }
         });
       }
-
       return false;
     } else {
       if (o.settings.loadOnSubmit) $('html').startLoading();
@@ -68783,7 +68783,7 @@ function tgnFormClass(obj, options) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 al = function al(msg, params) {
   if (params) console.log(msg, params);else console.log(msg);
 };
@@ -68833,7 +68833,6 @@ rhtmlspecialchars = function rhtmlspecialchars(str) {
     str = str.replace(/&quot;/ig, '"');
     str = str.replace(/&amp;/ig, '&'); /* must do &amp; last */
   }
-
   return str;
 };
 
@@ -68963,13 +68962,11 @@ $.fn.startLoading = function () {
   return this;
   //initNavs(this);
 };
-
 $.fn.stopLoading = function () {
   this.removeClass('loading').addClass("loaded");
   return this;
   //initNavs(this);
 };
-
 function getMonthIndex(name) {
   name = name.toLowerCase();
   if (name == "jan" || name == "january") {
@@ -69090,7 +69087,6 @@ $.fn.livewireCall = function (callback) {
   return this;
   //initNavs(this);
 };
-
 document.addEventListener("livewire:load", function (event) {
   window.livewire.hook('beforeDomUpdate', function (component) {
     // Add your custom JavaScript here.
@@ -69197,12 +69193,12 @@ onDocumentReady(function () {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
@@ -69338,7 +69334,6 @@ $.widget("ajtarragona.tgnMap", {
       });
       // al('gmap',this.gmap);
     }
-
     return this.gmap;
   },
   _create: function _create() {
@@ -69421,7 +69416,6 @@ $.widget("ajtarragona.tgnMap", {
     //     var o= this;
     //     al('_init');
   },
-
   _uniqueId: function _uniqueId() {
     return ++this.currentId;
   },
@@ -69661,7 +69655,6 @@ $.widget("ajtarragona.tgnMap", {
 
     //al(bounds);
   },
-
   _isReadonly: function _isReadonly() {
     return this.options.readonly || this.options.disabled;
   },
@@ -69875,7 +69868,6 @@ $.widget("ajtarragona.tgnMap", {
     AND lng <= $maxLng
     AND lng >= $minLng"; */
   },
-
   _initTextField: function _initTextField() {
     var o = this;
     if (!this.autocompleteinput) return;
@@ -70004,14 +69996,12 @@ $.widget("ajtarragona.tgnMap", {
           //+" m",
           area: radius * radius * Math.PI //+" m2"
         };
-
         break;
       case 'rectangle':
         value = {
           bounds: shape.getBounds().toJSON(),
           area: google.maps.geometry.spherical.computeArea(shape.getBounds()) //+" m2"
         };
-
         break;
       case 'polygon':
         var path = [];
@@ -70034,7 +70024,6 @@ $.widget("ajtarragona.tgnMap", {
           path: path,
           area: shape.getPath().getArray().length > 2 ? google.maps.geometry.spherical.computeArea(shape.getPath()) : "0" // +" m2" 
         };
-
         break;
       case 'polyline':
         var path = [];
@@ -70057,7 +70046,6 @@ $.widget("ajtarragona.tgnMap", {
           path: path,
           length: google.maps.geometry.spherical.computeLength(shape.getPath()) //+" m"
         };
-
         break;
       case 'marker':
         value = {
@@ -70398,7 +70386,6 @@ $.widget("ajtarragona.tgnMap", {
 
         // if(a.options.fitbounds) a.setCenter(shape.getPosition());
       }
-
       if (type === google.maps.drawing.OverlayType.RECTANGLE || type === google.maps.drawing.OverlayType.CIRCLE) {
         google.maps.event.addListener(shape, "bounds_changed", function (e) {
           a._updateValue();
@@ -70594,7 +70581,6 @@ TgnModal = function TgnModal(options) {
     this.render();
     //}
   };
-
   this.setProperties = function () {
     var o = this;
 
@@ -70616,7 +70602,6 @@ TgnModal = function TgnModal(options) {
     }
     //this.render();
   };
-
   this.setId = function (id) {
     // al("setID",id)
     if (!id || id.trim() == "") {
@@ -70745,7 +70730,6 @@ TgnModal = function TgnModal(options) {
     //al("tgnModal destroyed");
     //o.$opener.off('click');
   };
-
   this.isLocal = function () {
     //al("isLocal:"+this.settings.url + "."+this.settings.target);
     return this.settings.url == '#';
@@ -70811,7 +70795,6 @@ TgnModal = function TgnModal(options) {
     }
   };
 };
-
 TgnModal.alert = function (body, title, options) {
   options = $.extend(true, {}, tgnmodaldefaults, options);
   options.maximizable = false;
@@ -70887,7 +70870,6 @@ TgnModal.confirm = function (body, callback, options) {
     //modal.$dialog.modal('hide');
   });
 };
-
 (function ($) {
   $.fn.tgnModal = function (options) {
     return this.each(function () {
@@ -70961,7 +70943,6 @@ TgnNav = function TgnNav(obj, options) {
       $(this).parent().toggleClass("open");
       //item.siblings().removeClass("open");
     });
-
     $nav.find('.has-submenu > span').on("click", function (e) {
       $(this).parent().find("> .toggler ").click();
     });
@@ -70970,7 +70951,6 @@ TgnNav = function TgnNav(obj, options) {
     $(this).parent().children(".collapse").collapse('toggle');
     		*/
   };
-
   this.initDropdownNav = function () {
     // al('DropdownNav');
     var o = this;
@@ -71040,7 +71020,6 @@ TgnNav = function TgnNav(obj, options) {
       $(this).closest("li").closest("ul").addClass("opened");
       //$(".wrapper").css("height", $('[data-drilldown-sub]').outerHeight())
     });
-
     $nav.find(".back").on("click", function (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -71154,7 +71133,6 @@ $.fn.initPrettyprint = function (options) {
       }
     }
   });
-
   prettyPrint();
   return ret;
 };
@@ -71365,7 +71343,6 @@ $.fn.initProcessButton = function () {
 
           // }
         }
-
         o.$bar.removeClass('progress-bar-animated');
       } else {
         o.$bar.find('.progress-bar').removeClass('bg-' + o.settings.color).addClass('bg-success').removeClass('progress-bar-animated');
@@ -71416,7 +71393,6 @@ $.fn.initProcessButton = function () {
       // report.find("span").html(result.message +"...");
       // $('#report-progress .bar').html(result.progress + "%").css({"width": result.progress + "%"});
     };
-
     o.handleResults = function (xhr) {
       // al(xhr);
       var new_response = xhr.responseText.substring(xhr.previous_text.length);
@@ -71613,7 +71589,6 @@ $.widget("ajtarragona.tgnSelectPicker", {
     if (this.element.closest(".modal").length > 0) {
       this.options.container = false; //"#"+this.element.closest(".modal").attr('id');
     }
-
     if (!this.isInit) {
       this.isInit = true;
       this.element = this.element.selectpicker(this.options);
@@ -71626,7 +71601,6 @@ $.widget("ajtarragona.tgnSelectPicker", {
     //   al('select changed', $(this).val());
     // });
   },
-
   setUrl: function setUrl(url) {
     this.options.url = url;
     //this.reload();
@@ -71837,7 +71811,6 @@ $.widget("ajtarragona.tgnSelectPicker", {
         // o.element.trigger( "change" );
       }
     });
-
     o.button.append(o.deselector);
   },
   _prepare: function _prepare(argument) {
@@ -72068,7 +72041,6 @@ $.widget("ajtarragona.tgnTable", {
         o.touch = event.changedTouches[0];
         // event.preventDefault();
       });
-
       this.element.find("> tbody > tr").on('touchend', function () {
         o.yDistance = o.startY - o.touch.clientY;
         o.xDistance = o.startX - o.touch.clientX;
@@ -72087,7 +72059,6 @@ $.widget("ajtarragona.tgnTable", {
       // 	}
       // });
     }
-
     o.element.trigger("tgntable:ready");
   },
   _initSelectable: function _initSelectable() {
@@ -72225,14 +72196,12 @@ initToolbar = function initToolbar() {
         //$('body').removeClass('sidebar-open');
       }
     });
-
     $('body').on('click', function (e) {
       if ($(e.target).closest('.toolbar-content').length == 0 && $(e.target).closest('.toolbar-toggle').length == 0 && $(e.target).closest('.sidebar-toggle').length == 0) {
         if ($(this).is('.toolbar-open')) $(this).removeClass('toolbar-open');
         //if($(this).is('.sidebar-open')) $(this).removeClass('sidebar-open');
       }
     });
-
     $('#maintoolbar .toolbar-toggle').on('click', function () {
       $('body').toggleClass('toolbar-open');
     });
@@ -72251,7 +72220,7 @@ initToolbar = function initToolbar() {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 buildFormData = function (_buildFormData) {
   function buildFormData(_x, _x2, _x3) {
     return _buildFormData.apply(this, arguments);
@@ -72348,7 +72317,7 @@ $.fn.serializeObject = function () {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(setImmediate) {var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+/* WEBPACK VAR INJECTION */(function(setImmediate) {var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 /*!
  * typeahead.js 0.11.1
  * https://github.com/twitter/typeahead.js

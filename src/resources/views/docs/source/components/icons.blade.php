@@ -26,8 +26,8 @@
 @icon('bi-save') 
 @icon('bi-collection-fill') 
 @icon('bi-collection',['class'=>'spin','color'=>'info']) 
-@icon('bi-star',['class'=>'beat','color'=>'warning']) 
-@icon('bi-star',['class'=>'bounce','color'=>'success']) 
+@icon('bi-database-fill-check',['class'=>'beat','color'=>'success']) 
+@icon('bi-database-exclamation',['class'=>'bounce','color'=>'warning']) 
 @icon('bi-star',['class'=>'blink','color'=>'#ff00ff']) 
 
 <hr/>
