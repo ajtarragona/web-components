@@ -382,6 +382,38 @@ $.widget( "ajtarragona.tgnAutocomplete", {
        this.value({value:'',name:''})
     },
    
+    valueview : function(  ){
+    // console.log('valueview',this.options.multiple ?'multi':'single', this.element);
+      if(this.options.multiple){
+        var ids=this.value();
+        var tags=this.element.siblings('.bootstrap-tagsinput').find('.tag');
+        let ret=[];
+        
+        tags.each(function(i){
+          ret.push({
+            value: ids[i],
+            name: $(this).html().replace('<span data-role="remove"></span>','')
+          });
+        });
+        // al(ret);
+        return ret;
+        
+      }else{
+        let value=(this.options.savevalue) ? this.hidden.val(): this.element.val();
+        let ret=null;
+        if(value){
+           ret={
+            value: value,
+            name: this.element.val()
+          };
+        }
+        
+        // al(ret);
+        return ret;
+        
+      }
+    },
+
     value : function( argument ){
     
 

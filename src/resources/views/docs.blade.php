@@ -82,20 +82,21 @@
 		
 
 	</script>
-		{{-- <script>
+		<script>
 			$(window).on('load',function(){
-
-				$("#auto3").bind('tgnautocomplete:select',function(e,data){
-					al("selected");
-					al(data.element.tgnAutocomplete('value'));
+				
+				$("#auto3,  #auto4").bind('tgnautocomplete:change',function(e,data){
+					// al("selected");
+					let val=data.element.tgnAutocomplete('valueview');
+					al(val);
 				});
-				$("#auto3").bind('tgnautocomplete:change',function(e,data){
-					al("changed");
-					al(data);
-					al(data.element.tgnAutocomplete('value'));
-				});
+				// $("#auto3").bind('tgnautocomplete:change',function(e,data){
+				// 	al("changed");
+				// 	al(data);
+				// 	al(data.element.tgnAutocomplete('valueview'));
+				// });
 			});
-		</script> --}}
+		</script>
 	{{-- <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
 	<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?skin=desert"></script> --}}
 

@@ -67393,6 +67393,34 @@ $.widget("ajtarragona.tgnAutocomplete", {
       name: ''
     });
   },
+  valueview: function valueview() {
+    // console.log('valueview',this.options.multiple ?'multi':'single', this.element);
+    if (this.options.multiple) {
+      var ids = this.value();
+      var tags = this.element.siblings('.bootstrap-tagsinput').find('.tag');
+      var ret = [];
+      tags.each(function (i) {
+        ret.push({
+          value: ids[i],
+          name: $(this).html().replace('<span data-role="remove"></span>', '')
+        });
+      });
+      // al(ret);
+      return ret;
+    } else {
+      var value = this.options.savevalue ? this.hidden.val() : this.element.val();
+      var _ret = null;
+      if (value) {
+        _ret = {
+          value: value,
+          name: this.element.val()
+        };
+      }
+
+      // al(ret);
+      return _ret;
+    }
+  },
   value: function value(argument) {
     if (argument === undefined) {
       //al("getValue");
