@@ -391,8 +391,8 @@ $.widget( "ajtarragona.tgnAutocomplete", {
         
         tags.each(function(i){
           ret.push({
-            value: ids[i],
-            name: $(this).html().replace('<span data-role="remove"></span>','')
+            id: ids[i],
+            value: $(this).html().replace('<span data-role="remove"></span>','')
           });
         });
         // al(ret);
@@ -403,8 +403,8 @@ $.widget( "ajtarragona.tgnAutocomplete", {
         let ret=null;
         if(value){
            ret={
-            value: value,
-            name: this.element.val()
+            id: value,
+            value: this.element.val()
           };
         }
         
