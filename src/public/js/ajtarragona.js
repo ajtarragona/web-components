@@ -67236,8 +67236,9 @@ $.widget("ajtarragona.tgnAutocomplete", {
     });
     this.input.bind('typeahead:open', function () {
       // al('typeahead:open');
+      var $menu = $(this).parent().find('.tt-menu');
+      $menu.addClass('menu-opened');
       if (o.options.parent) {
-        var $menu = $(this).parent().find('.tt-menu');
         var offset = $(this).offset();
         offset.top += $(this).outerHeight();
         $(o.options.parent).append($menu);
@@ -67251,9 +67252,10 @@ $.widget("ajtarragona.tgnAutocomplete", {
     });
     this.input.bind('typeahead:close', function () {
       // al('typeahead:close');
+      var $menu = $(this).parent().find('.tt-menu');
+      $menu.removeClass('menu-opened');
       if (o.options.parent) {
         $(this).parent().append($(this).data("myDropdownMenu"));
-        var $menu = $(this).parent().find('.tt-menu');
         $menu.css('display', '');
         $menu.css('top', '100%');
         $menu.css('left', '0px');
@@ -74518,7 +74520,7 @@ $.fn.serializeObject = function () {
         var $selectable;
         al('_onEnterKeyed');
         if ($selectable = this.menu.getActiveSelectable()) {
-          al($selectable);
+          // al($selectable);
           this.select($selectable);
           $e.preventDefault();
           $e.stopPropagation();

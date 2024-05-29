@@ -193,8 +193,10 @@ $.widget( "ajtarragona.tgnAutocomplete", {
 
       this.input.bind('typeahead:open', function() {
         // al('typeahead:open');
+        var $menu = $(this).parent().find('.tt-menu');
+        $menu.addClass('menu-opened');
+
         if(o.options.parent){
-           var $menu = $(this).parent().find('.tt-menu');
            let offset = $(this).offset();
            offset.top += $(this).outerHeight();
            
@@ -210,9 +212,11 @@ $.widget( "ajtarragona.tgnAutocomplete", {
 
      this.input.bind('typeahead:close', function() {
       // al('typeahead:close');
+      var $menu = $(this).parent().find('.tt-menu');
+      $menu.removeClass('menu-opened');
+
        if(o.options.parent){
            $(this).parent().append($(this).data("myDropdownMenu"));
-           var $menu = $(this).parent().find('.tt-menu');
            $menu.css('display', '');
             $menu.css('top', '100%');
            $menu.css('left', '0px');
@@ -220,13 +224,13 @@ $.widget( "ajtarragona.tgnAutocomplete", {
      });
     	
     	this.element.on('itemAdded', function(event) {
-  		  o.element.trigger("tgnautocomplete:change", {element:o.element, item: event.item });
+  		    o.element.trigger("tgnautocomplete:change", {element:o.element, item: event.item });
   	      o.element.trigger("tgnautocomplete:select", {element:o.element, item: event.item});
 
   		});
 
   		this.element.on('itemRemoved', function(event) {
-  		  o.element.trigger("tgnautocomplete:change", {element:o.element, item: event.item });
+  		    o.element.trigger("tgnautocomplete:change", {element:o.element, item: event.item });
   	      o.element.trigger("tgnautocomplete:select", {element:o.element, item: event.item});
   		});
 
