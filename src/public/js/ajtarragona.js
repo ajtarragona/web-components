@@ -73902,11 +73902,11 @@ $.fn.serializeObject = function () {
         onFocus = _.bind(this._onFocus, this);
         onKeydown = _.bind(this._onKeydown, this);
         onInput = _.bind(this._onInput, this);
-        this.$input.on("blur.tt", onBlur).on("focus.tt", onFocus).on("keydown.tt", onKeydown);
+        this.$input.on("blur.tt", onBlur).on("focus.tt", onFocus).on("keydown", onKeydown);
         if (!_.isMsie() || _.isMsie() > 9) {
           this.$input.on("input.tt", onInput);
         } else {
-          this.$input.on("keydown.tt keypress.tt cut.tt paste.tt", function ($e) {
+          this.$input.on("keydown keypress cut.tt paste.tt", function ($e) {
             if (specialKeyCodeMap[$e.which || $e.keyCode]) {
               return;
             }
@@ -74454,9 +74454,9 @@ $.fn.serializeObject = function () {
       this.dir = this.input.getLangDir();
       this._hacks();
       this.menu.bind().onSync("selectableClicked", this._onSelectableClicked, this).onSync("asyncRequested", this._onAsyncRequested, this).onSync("asyncCanceled", this._onAsyncCanceled, this).onSync("asyncReceived", this._onAsyncReceived, this).onSync("datasetRendered", this._onDatasetRendered, this).onSync("datasetCleared", this._onDatasetCleared, this);
-      onFocused = c(this, "activate", "open", "_onFocused");
+      onFocused = c(this, "activate", "_onFocused");
       onBlurred = c(this, "deactivate", "_onBlurred");
-      onEnterKeyed = c(this, "isActive", "isOpen", "_onEnterKeyed");
+      onEnterKeyed = c(this, "isActive", "_onEnterKeyed");
       onTabKeyed = c(this, "isActive", "isOpen", "_onTabKeyed");
       onEscKeyed = c(this, "isActive", "_onEscKeyed");
       onUpKeyed = c(this, "isActive", "open", "_onUpKeyed");
@@ -74474,6 +74474,7 @@ $.fn.serializeObject = function () {
         $menu = this.menu.$node || $("<div>");
         $input.on("blur.tt", function ($e) {
           var active, isActive, hasActive;
+          // al('document.activeElement',document.activeElement);
           active = document.activeElement;
           isActive = $menu.is(active);
           hasActive = $menu.has(active).length > 0;
@@ -74525,6 +74526,8 @@ $.fn.serializeObject = function () {
           $e.preventDefault();
           $e.stopPropagation();
         } else {
+          // $e.preventDefault();
+          // $e.stopPropagation();
           al('no selection');
         }
       },
@@ -74604,6 +74607,7 @@ $.fn.serializeObject = function () {
         this.enabled = false;
       },
       isActive: function isActive() {
+        // al('isActive', this.active);
         return this.active;
       },
       activate: function activate() {
@@ -74630,6 +74634,7 @@ $.fn.serializeObject = function () {
         }
       },
       isOpen: function isOpen() {
+        // al('isOpen', this.menu.isOpen());
         return this.menu.isOpen();
       },
       open: function open() {
