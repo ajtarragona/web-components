@@ -52,10 +52,11 @@ $.widget( "ajtarragona.tgnAutocomplete", {
       //al(this.element);
 
       this.options = $.extend({}, this.options, this.element.data()); 
-     //al(this.options);
+    //  al(this.options);
 		  this.options.inputname=this.element.attr('name').replaceAll('[','_').replaceAll(']','_');
 
       this.options.query='';
+      // this.options.parent='';
         
       //this.addParam('lala','12');
       this.addParam('term','WILDCARD');
@@ -145,7 +146,18 @@ $.widget( "ajtarragona.tgnAutocomplete", {
     _initMultiple : function(){
      	var o=this;
      	this.element.addClass("autocompleteinit");
-      
+      var args= {
+        limit: this.options.limit,
+        name: this.options.inputname,
+        displayKey: 'name',
+        source: this.datasource.ttAdapter(),
+        templates: this.templates
+        
+      };
+
+       if(this.options.parent){
+        args.menu=$(this.options.parent);
+     }
       this.element.tagsinput({
           itemValue: this.options.saved,
           itemText: 'name',
@@ -156,14 +168,7 @@ $.widget( "ajtarragona.tgnAutocomplete", {
             {
               minLength: this.options.minLength
             },
-            {
-              limit: this.options.limit,
-              name: this.options.inputname,
-              displayKey: 'name',
-              source: this.datasource.ttAdapter(),
-              templates: this.templates
-              
-            }
+            args
           ]
     	});
 
@@ -182,6 +187,34 @@ $.widget( "ajtarragona.tgnAutocomplete", {
         // al("RECEIVE multi");
         o._stopLoading();
     	});
+
+      this.input.bind('typeahead:open', function() {
+        // al('typeahead:open');
+        if(o.options.parent){
+           var $menu = $(this).parent().find('.tt-menu');
+           let offset = $(this).offset();
+           offset.top += $(this).outerHeight();
+           
+           $(o.options.parent).append($menu);
+           $menu.show();
+           $menu.css('display', '');
+            $menu.css('position', 'absolute');
+           $menu.css('top', (offset.top) + 'px');
+           $menu.css('left', (offset.left) + 'px');
+           $(this).data("myDropdownMenu", $menu);
+         }
+     });
+
+     this.input.bind('typeahead:close', function() {
+      // al('typeahead:close');
+       if(o.options.parent){
+           $(this).parent().append($(this).data("myDropdownMenu"));
+           var $menu = $(this).parent().find('.tt-menu');
+           $menu.css('display', '');
+            $menu.css('top', '100%');
+           $menu.css('left', '0px');
+       }
+     });
     	
     	this.element.on('itemAdded', function(event) {
   		  o.element.trigger("tgnautocomplete:change", {element:o.element, item: event.item });
@@ -277,9 +310,13 @@ $.widget( "ajtarragona.tgnAutocomplete", {
           displayKey: 'name',
           //display: 'name',
           source: this.datasource.ttAdapter(),
-          templates: this.templates,
+          templates: this.templates
+
        };
 
+      //  if(this.options.parent){
+      //     args.menu=$(this.options.parent);
+      //  }
         // al('init typeahead', this.options);
         // al(args);
         this.element.typeahead(
@@ -303,6 +340,34 @@ $.widget( "ajtarragona.tgnAutocomplete", {
            o._stopLoading();
         });
 
+
+        this.element.bind('typeahead:open', function() {
+          // al('typeahead:open');
+         if(o.options.parent){
+            var $menu = $(this).parent().find('.tt-menu');
+            let offset = $(this).offset();
+            offset.top += $(this).outerHeight();
+            
+            $(o.options.parent).append($menu);
+            $menu.show();
+            $menu.css('display', '');
+            $menu.css('position', 'absolute');
+            $menu.css('top', (offset.top) + 'px');
+            $menu.css('left', (offset.left) + 'px');
+            $(this).data("myDropdownMenu", $menu);
+          }
+      });
+
+      this.element.bind('typeahead:close', function() {
+        // al('typeahead:close');
+        if(o.options.parent){
+            $(this).parent().append($(this).data("myDropdownMenu"));
+            var $menu = $(this).parent().find('.tt-menu');
+            $menu.css('display', '');
+            $menu.css('top', '100%');
+            $menu.css('left', '0px');
+        }
+      });
         
         //callback
         this.element.bind('typeahead:select', function(ev, suggestion) {

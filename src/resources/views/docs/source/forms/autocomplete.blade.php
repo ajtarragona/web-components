@@ -7,10 +7,23 @@
 	'url' => route('webcomponents.combo'),
 	'savevalue' => false,
 	'icon' => 'ellipsis-h',
-	'min-length' => 1,
+	'min-length' => 0,
 ])
 
+<div class="mb-2" style="height:100px;overflow:hidden;outline:1px solid blue">
 
+@autocomplete([
+	'label'=>'Parent', 
+	'name'=>'auto_parent',
+	'id' => 'auto_parent',
+	'multiple'=> false,
+	'url' => route('webcomponents.combo'),
+	'savevalue' => false,
+	'icon' => 'ellipsis-h',
+	'min-length' => 1,
+	'parent'=>'body'
+])
+</div>
 
 @autocomplete([
 	'label'=>'Auto with html', 
@@ -69,3 +82,22 @@
 	'iconposition'=>'right',
 	'sidelabel' => true
 ])
+
+<div class="mb-2" style="height:100px;overflow:hidden;outline:1px solid blue">
+
+@autocomplete([
+	'label'=>'Auto multiple', 
+	'name'=>'field_auto_multi_parent',
+	'id' => 'field_auto_multi_parent',
+	'value' => [3,5],
+	'valuename' => 'Opció 3##Opció 5',
+	'multiple'=> true,
+	'url' => route('webcomponents.combo'),
+	'savevalue' => true,
+	'showvalue' => false,
+	'icon' => 'ellipsis-h',
+	'iconposition'=>'right',
+	'sidelabel' => true,
+	'parent'=>'body'
+])
+</div>

@@ -63,6 +63,13 @@ a.ui-button:active,
   background-color: $white;
   border: 1px solid $border-color;
   box-shadow: $box-shadow-sm;
+  display:none;
+  
+  &.tt-open:not(.tt-empty){
+    display:block;
+  }
+
+ 
 }
 
 .tt-suggestion {
