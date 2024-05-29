@@ -127,12 +127,12 @@ $.widget( "ajtarragona.tgnAutocomplete", {
 
       //al(this.options);
 
-
       if(this.options.multiple){
      		this._initMultiple();
       }else{
      		this._initSingle();
       }
+      this.element.siblings('.bootstrap-tagsinput').addClass('style-'+(this.options.selectedStyle??'bottom'));
         
     },
 
@@ -164,6 +164,9 @@ $.widget( "ajtarragona.tgnAutocomplete", {
           hint: true,
           highlight: true,
           delimiter:'##',
+          tagClass : function(item) {
+            if( o.options.selectedStyle=='chips') return 'badge badge-pill badge-info';
+          },
           typeaheadjs: [
             {
               minLength: this.options.minLength

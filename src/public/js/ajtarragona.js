@@ -67104,6 +67104,7 @@ $.widget("ajtarragona.tgnAutocomplete", {
     // ].join("\n")
   },
   _create: function _create() {
+    var _this$options$selecte;
     var o = this;
 
     //al("creating tgnAutocomplete()");
@@ -67184,6 +67185,7 @@ $.widget("ajtarragona.tgnAutocomplete", {
     } else {
       this._initSingle();
     }
+    this.element.siblings('.bootstrap-tagsinput').addClass('style-' + ((_this$options$selecte = this.options.selectedStyle) !== null && _this$options$selecte !== void 0 ? _this$options$selecte : 'bottom'));
   },
   addOption: function addOption(value, name) {
     if (this.options.multiple) {
@@ -67212,6 +67214,9 @@ $.widget("ajtarragona.tgnAutocomplete", {
       hint: true,
       highlight: true,
       delimiter: '##',
+      tagClass: function tagClass(item) {
+        if (o.options.selectedStyle == 'chips') return 'badge badge-pill badge-info';
+      },
       typeaheadjs: [{
         minLength: this.options.minLength
       }, args]

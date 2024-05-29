@@ -19972,6 +19972,11 @@ a.ui-button:active,
   width:auto;*/
 }
 
+.bootstrap-tagsinput.style-bottom {
+  display: inline-flex;
+  flex-direction: column-reverse;
+}
+
 .bootstrap-tagsinput input {
   border: none;
   box-shadow: none;
@@ -20002,7 +20007,8 @@ a.ui-button:active,
   border-color: #bf002c;
 }
 
-.bootstrap-tagsinput .tag {
+.bootstrap-tagsinput.style-bottom .tag,
+.bootstrap-tagsinput.style-top .tag {
   margin-right: 0px;
   margin-bottom: 0px;
   color: #55595c;
@@ -20010,30 +20016,45 @@ a.ui-button:active,
   display: block;
   padding: 0.4rem 1rem;
   background-color: transparent;
-  border-top: 1px solid rgba(85, 89, 92, 0.1);
 }
 
-.bootstrap-tagsinput .tag:first-child {
-  border-top-width: 0px;
-}
-
-.bootstrap-tagsinput .tag [data-role=remove] {
+.bootstrap-tagsinput.style-bottom .tag [data-role=remove],
+.bootstrap-tagsinput.style-top .tag [data-role=remove] {
   margin-left: 8px;
   cursor: pointer;
   float: right;
 }
 
-.bootstrap-tagsinput .tag [data-role=remove]:after {
+.bootstrap-tagsinput.style-bottom .tag [data-role=remove]:after,
+.bootstrap-tagsinput.style-top .tag [data-role=remove]:after {
   content: "x";
   padding: 0px 2px;
 }
 
-.bootstrap-tagsinput .tag [data-role=remove]:hover {
+.bootstrap-tagsinput.style-bottom .tag [data-role=remove]:hover,
+.bootstrap-tagsinput.style-top .tag [data-role=remove]:hover {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.bootstrap-tagsinput .tag [data-role=remove]:hover:active {
+.bootstrap-tagsinput.style-bottom .tag [data-role=remove]:hover:active,
+.bootstrap-tagsinput.style-top .tag [data-role=remove]:hover:active {
   box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+
+.bootstrap-tagsinput.style-top .tag {
+  border-top: 1px solid rgba(85, 89, 92, 0.1);
+}
+
+.bootstrap-tagsinput.style-top .tag:first-child {
+  border-top-width: 0px;
+}
+
+.bootstrap-tagsinput.style-bottom .tag {
+  border-top: 1px solid rgba(85, 89, 92, 0.1);
+}
+
+.bootstrap-tagsinput.style-bottom .tag:last-of-type {
+  border-top-width: 0px;
 }
 
 select {

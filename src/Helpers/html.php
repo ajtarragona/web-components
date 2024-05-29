@@ -106,9 +106,7 @@ if (! function_exists('select')) {
 
 if (! function_exists('autocomplete')) {
 	function autocomplete($attributes=[],$data=[]){
-		if(!isset($attributes["class"])) $attributes["class"]="";
-		$attributes["class"].=" autocomplete";
-
+		
 		$newdata=[];
 
 		if(isset($attributes["multiple"])) $newdata["multiple"]=$attributes["multiple"];
@@ -120,6 +118,15 @@ if (! function_exists('autocomplete')) {
 		if(isset($attributes["min-length"])) $newdata["min-length"]=$attributes["min-length"];
 		if(isset($attributes["highlight"])) $newdata["highlight"]=isTrue($attributes["highlight"]);
 		if(isset($attributes["parent"])) $newdata["parent"]=$attributes["parent"];
+		$newdata["selected-style"]=$attributes["selected-style"]??'top';
+
+
+		if(!isset($attributes["class"])) $attributes["class"]="";
+		$attributes["class"].=" autocomplete style-".$newdata["selected-style"];
+		
+		if(!isset($attributes["containerclass"])) $attributes["containerclass"]="";
+		$attributes["containerclass"].=" autocomplete-style-".$newdata["selected-style"];
+
 
 		$newdata=array_merge($newdata,$data);
 		
