@@ -74516,16 +74516,17 @@ $.fn.serializeObject = function () {
       },
       _onEnterKeyed: function onEnterKeyed(type, $e) {
         var $selectable;
+        al('_onEnterKeyed');
         if ($selectable = this.menu.getActiveSelectable()) {
-          this.select($selectable) && $e.preventDefault();
+          this.select($selectable) && $e.preventDefault() && $e.stopPropagation();
         }
       },
       _onTabKeyed: function onTabKeyed(type, $e) {
         var $selectable;
         if ($selectable = this.menu.getActiveSelectable()) {
-          this.select($selectable) && $e.preventDefault();
+          this.select($selectable) && $e.preventDefault() && $e.stopPropagation();
         } else if ($selectable = this.menu.getTopSelectable()) {
-          this.autocomplete($selectable) && $e.preventDefault();
+          this.autocomplete($selectable) && $e.preventDefault() && $e.stopPropagation();
         }
       },
       _onEscKeyed: function onEscKeyed() {
