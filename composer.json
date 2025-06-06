@@ -12,7 +12,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.0.0",
-        "laravel/framework": "^6.0",
+        "laravel/framework": ">=6.0",
         "laravelista/ekko": "^3.2.0",
         "kyslik/column-sortable": "^6.0",
         "laraveles/spanish": "^1.0",

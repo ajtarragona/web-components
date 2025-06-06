@@ -12,6 +12,7 @@ class Select extends FormControl
     public $liveSearch=false;
     public $actionsBox=false;
     public $width='100%';
+    public $length='auto';
     public $url=false;
     public $type='default';
     public $renderhelper=false;
@@ -86,7 +87,7 @@ class Select extends FormControl
     
 	public function __construct( $attributes=[], $data=[] ){
 		parent::__construct($attributes,$data);
-
+        // dd($attributes,$this->attributes, $this->getAttribute("length"), $this->length);
         if( $this->getAttribute("multiple") && !ends_with( $this->getAttribute('name'),"[]" ) ) $this->setAttribute("name", $this->getAttribute('name')."[]");
         
         if( $this->getAttribute("placeholder") ) $this->setAttribute('title',$this->getAttribute("placeholder"));
@@ -95,16 +96,16 @@ class Select extends FormControl
 		$this->data["actions-box"] = $this->actionsBox;
         $this->data["width"] = $this->width;
         $this->data["style"] = 'btn-'.$this->type;
-        $this->data["style"] = 'btn-'.$this->type;
+        // $this->data["style"] = 'btn-'.$this->type;
 
 		// $this->data["style"] = 'btn-'.$this->getAttribute("type");
-		// $this->data["size"] = $this->getAttribute("size");
+		$this->data["size"] = $this->length;
 
 		if($this->url){
 			$this->data["url"]=$this->url;
 			$this->data["value"]=$this->selected;
 		}
-		//dump($this->data);
+		// dump($this->data);
 
 		if(ends_with($this->getAttribute('id'), "[]" )) $this->setAttribute('id', str_replace("[]", "", $this->getAttribute('id')) );
 		if(!is_array($this->selected)) $this->selected = [$this->selected];
