@@ -9,7 +9,7 @@ class Select extends FormControl
     public $options=[];
     public $selected=[];
     public $showDeselector=true;
-    public $liveSearch=false;
+    public $liveSearch="auto";
     public $actionsBox=false;
     public $width='100%';
     public $length='auto';
@@ -92,6 +92,19 @@ class Select extends FormControl
         
         if( $this->getAttribute("placeholder") ) $this->setAttribute('title',$this->getAttribute("placeholder"));
 		$this->data["show-deselector"] = $this->showDeselector;
+        // dump($this->liveSearch,is_integer(intval($this->liveSearch)), intval($this->liveSearch));
+
+        if($this->liveSearch =="auto" && $this->options && !$this->url){
+            $this->liveSearch=count($this->options)>10;
+        }else if(is_integer(intval($this->liveSearch)) && intval($this->liveSearch)>0 && $this->options && !$this->url){
+            // dump($this->liveSearch,$this->options);
+            $this->liveSearch = count($this->options) > intval($this->liveSearch);
+            // dump($this->liveSearch);
+        }else{
+            
+            $this->liveSearch=isTrue($this->liveSearch);
+        }
+
 		$this->data["live-search"] = $this->liveSearch;
 		$this->data["actions-box"] = $this->actionsBox;
         $this->data["width"] = $this->width;

@@ -53,7 +53,11 @@
 				</tr>
 				<tr>
 					<td><code>live-search</code></td>
-					<td>Mostra o amaga la caixa de búsqueda</td>
+					<td>
+						Mostra o amaga la caixa de búsqueda. Podem especificar <code>true</code>, <code>false</code>, <code>auto</code> o un valor numèric. <br>
+						El valor <code>auto</code>  (per defecte) s'activa si hi han més de 10 elements (només si no treballem amb ajax).<br/> 
+						Passant un valor numèric s'activarà a partir del valor numèric passat (només si no treballem amb ajax).
+					</td>
 				</tr>
 				{{-- <tr>
 					<td><code>width</code></td>
