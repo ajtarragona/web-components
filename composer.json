@@ -26,7 +26,8 @@
         "laravel/helpers": "^1.0",
         "akaunting/laravel-language": "^1.0",
         "ajtarragona/charts": "dev-main",
-        "livewire/livewire": "^2.0"
+        "livewire/livewire": "^1.0|^2.0",
+         "laravel/ui": "^2.0"
         
     },
     "autoload": {
