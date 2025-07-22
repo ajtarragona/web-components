@@ -30,7 +30,7 @@ class DirectivesRepository
     {
         
         collect($components)->each(function ($view, $name) {
-            Blade::component($view, $name);
+            Blade::aliasComponent($view, $name);
         
            // Blade::directive($key, $item);
         });
