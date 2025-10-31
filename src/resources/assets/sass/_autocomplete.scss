@@ -244,5 +244,35 @@ a.ui-button:active,
       }
     }
   }
+    &.style-chips{
+      padding:0.4rem 1rem 0 1rem;;
+      .twitter-typeahead{
+        display:inline-block !important;
+        width:auto;
+      }
+      .tag{
+        font-size: 1em;
+        font-weight: normal;
+        margin-bottom:.3rem;
+        margin-top:0rem;
+        
+      }
+      .tt-input{
+        padding:0.3rem 0;
+      }
+    }
   
+}
+
+.form-group.sidelabel{
+  .bootstrap-tagsinput.style-chips{
+    padding:0.4rem 1rem 0.4rem 1rem;
+    .tag{
+        margin-top:0.2rem;
+        margin-bottom:0.2rem;
+    }
+    .tt-input{
+        padding:0;
+      }
+  }
 }

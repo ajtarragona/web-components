@@ -101,7 +101,7 @@
 
 
 @autocomplete([
-	'label'=>'Auto multiple chips', 
+	'label'=>'chips', 
 	'name'=>'field_auto_multi_chips',
 	'id' => 'auto4_3',
 	'value' => [3,5],
@@ -113,7 +113,27 @@
 	'icon' => 'ellipsis-h',
 	'iconposition'=>'right',
 	'sidelabel' => true,
-	'selected-style'=>'chips'
+	'selected-style'=>'chips',
+	'placeholder'=>'Escriu opcions...'
+])
+
+
+@autocomplete([
+	'label'=>'chips2', 
+	'name'=>'field_auto_multi_chips2',
+	'id' => 'auto4_3',
+	'value' => [3,5],
+	'valuename' => 'Opció 3##Opció 5',
+	'multiple'=> true,
+	'url' => route('webcomponents.combo'),
+	'savevalue' => true,
+	'showvalue' => false,
+	'icon' => 'ellipsis-h',
+	'iconposition'=>'right',
+	'sidelabel' => false,
+	'selected-style'=>'chips',
+	'chips-color'=>'warning',
+	'placeholder'=>'Escriu opcions...'
 ])
 
 

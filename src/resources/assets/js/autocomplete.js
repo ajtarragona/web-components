@@ -17,6 +17,7 @@ $.widget( "ajtarragona.tgnAutocomplete", {
   	    showvalue:false,
   	    limit:10,
         disabled: false,
+        chipsColor: 'primary',
         
     },
 
@@ -48,11 +49,11 @@ $.widget( "ajtarragona.tgnAutocomplete", {
     _create: function() {
 		  var o=this;
      	
-     	//al("creating tgnAutocomplete()");
+     	al("creating tgnAutocomplete()");
       //al(this.element);
 
       this.options = $.extend({}, this.options, this.element.data()); 
-    //  al(this.options);
+      al(this.options);
 		  this.options.inputname=this.element.attr('name').replaceAll('[','_').replaceAll(']','_');
 
       this.options.query='';
@@ -165,7 +166,10 @@ $.widget( "ajtarragona.tgnAutocomplete", {
           highlight: true,
           delimiter:'##',
           tagClass : function(item) {
-            if( o.options.selectedStyle=='chips') return 'badge badge-pill badge-info';
+            if( o.options.selectedStyle=='chips'){
+              
+                return 'badge badge-pill badge-' + o.options.chipsColor + ' ' + (['light','warning','white'].includes(o.options.chipsColor) ? 'text-dark' : '');
+            }
           },
           typeaheadjs: [
             {

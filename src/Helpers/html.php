@@ -117,6 +117,8 @@ if (! function_exists('autocomplete')) {
 		if(isset($attributes["showvalue"])) $newdata["showvalue"]=$attributes["showvalue"];
 		if(isset($attributes["min-length"])) $newdata["min-length"]=$attributes["min-length"];
 		if(isset($attributes["highlight"])) $newdata["highlight"]=isTrue($attributes["highlight"]);
+		if(isset($attributes["chips-color"])) $newdata["chips-color"]=$attributes["chips-color"];
+		
 		if(isset($attributes["parent"])) $newdata["parent"]=$attributes["parent"];
 		$newdata["selected-style"]=$attributes["selected-style"]??'top';
 

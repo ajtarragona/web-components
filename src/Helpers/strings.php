@@ -8,6 +8,7 @@ if (! function_exists('sanitizeName')) {
 	function sanitizeName($str){
 
 		//preg_replace(, '_', $name)
+		// dd($str);
 		return preg_replace('/[^a-zA-Z0-9-_\.]/', '',snake_case(strtolower(removeAccents( $str))));
 	}
 }
