@@ -11,6 +11,17 @@ let mix = require('laravel-mix');
  |
  */
 
+ const path = require('path');
+
+mix.webpackConfig({
+    resolve: {
+        alias: {
+            // Fuerzas a que cualquier importación apunte siempre a la carpeta en minúsculas
+            'jQuery': path.resolve(__dirname, 'node_modules/jquery'),
+            'jquery': path.resolve(__dirname, 'node_modules/jquery')
+        }
+    }
+});
 mix.js('src/resources/assets/js/ajtarragona.js', 'src/public/js')
 	.sass('src/resources/assets/sass/ajtarragona.scss', 'src/public/css')
 	.copyDirectory('src/resources/assets/img', 'src/public/img')
