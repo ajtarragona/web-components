@@ -119,7 +119,7 @@ function tgnFormClass(obj,options){
 		var $form=this.$element;
 
 		
-		console.group("TgnForm");
+		// console.group("TgnForm");
 		// al($form);
 		// al(this.settings);
 
@@ -255,7 +255,7 @@ function tgnFormClass(obj,options){
 			
 
 		}
-		console.groupEnd();
+		// console.groupEnd();
 
 	};
 

@@ -757,7 +757,46 @@ $.widget( "ajtarragona.tgnMap", {
   },
 
 
-  _initTextField : function(){
+  _initTextField : async function(){
+
+    // var o = this;
+    
+    // if(!this.$autocompleteinput.length) return;
+
+    // // Cargar la librería de Places moderna de Google
+    // const { PlaceAutocompleteElement } = await google.maps.importLibrary("places");
+
+    // // Crear el nuevo elemento Autocomplete de la API
+    // const placeAutocomplete = new PlaceAutocompleteElement({
+    //   locationBias: {
+    //     center: this.options.center,
+    //     radius: 3143
+    //   }
+    // });
+
+    // // Insertar el nuevo elemento en el DOM reemplazando o acompañando al input antiguo
+    // const container = this.$autocompleteinput.parent();
+    // this.$autocompleteinput.hide(); // Ocultamos el input de texto clásico
+    // container.append(placeAutocomplete);
+
+    // // Escuchar el evento de selección de lugar (equivale a 'place_changed')
+    // placeAutocomplete.addEventListener('gmp-placeselect', async ({ placePrediction }) => {
+    //   const place = placePrediction.toPlace();
+    //   await place.fetchFields({ fields: ['displayName', 'location'] });
+
+    //   if (place.location) {
+    //     o._createNewShape({
+    //       name: place.displayName, 
+    //       infobox: place.displayName,
+    //       location: {
+    //         lat: place.location.lat(),
+    //         lng: place.location.lng()
+    //       }
+    //     });
+    //   } else {
+    //     o._updateValue();
+    //   }
+    // });
     var o=this;
     
     if(!this.autocompleteinput) return;

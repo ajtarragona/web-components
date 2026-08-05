@@ -35,6 +35,10 @@
 	</div>
 
 	@routes
+	<script>
+		window.APP_ENV = "{{ config('app.env') }}";
+	</script>
+	
 	@yield('pre-js')
 	
 	<script src="{{ asset('vendor/ajtarragona/js/messages.js')}}" language="JavaScript"></script>

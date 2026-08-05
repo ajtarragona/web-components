@@ -1,9 +1,8 @@
-al = function (msg, params){
-  if(params)
-	   console.log(msg,params);
-  else
-     console.log(msg);
-}
+al = function (...args) {
+    if (window.APP_ENV === 'production') return;
+    
+    console.log(...args);
+};
 
 __ = function( text, params ){
   if(Lang){

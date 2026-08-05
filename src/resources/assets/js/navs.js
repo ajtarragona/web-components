@@ -38,7 +38,7 @@ TgnNav = function(obj,options){
 		var o=this;
 		var $nav=this.$element;
 
-		console.group("TgnNav");
+		// console.group("TgnNav");
 		//al(o.settings);
 		
 		if(!$nav.is(".init")){
@@ -54,7 +54,7 @@ TgnNav = function(obj,options){
 
 			$nav.addClass("init");
 		}
-		console.groupEnd();
+		// console.groupEnd();
 	};
 
 
