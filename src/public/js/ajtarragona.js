@@ -71887,7 +71887,9 @@ $.widget("ajtarragona.tgnSelectPicker", {
         e.preventDefault();
         e.stopPropagation();
         o.clear();
-        //o.element.trigger( "tgnselect:change", {element: o.element });
+        o.element.trigger("tgnselect:change", {
+          element: o.element
+        });
 
         // o.element.trigger( "change" );
       }

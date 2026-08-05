@@ -276,6 +276,8 @@ $.widget( "ajtarragona.tgnSelectPicker", {
        }else{
          o.element.selectpicker('val', '');
          o.element.trigger('change');
+         o.element.trigger( "tgnselect:clear", {element: o.element });
+
        }
        o._refreshDeselector();
     },
@@ -296,8 +298,7 @@ $.widget( "ajtarragona.tgnSelectPicker", {
            e.stopPropagation();
            
            o.clear();
-           //o.element.trigger( "tgnselect:change", {element: o.element });
-
+           
           // o.element.trigger( "change" );
            
         }

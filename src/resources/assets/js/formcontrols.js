@@ -618,7 +618,7 @@ $.fn.initAjaxContainer = function (){
         }
 
         if(o.$watched.length>0){
-           o.$watched.on('tgnselect:change',function(){
+           o.$watched.on('tgnselect:change tgnselect:clear',function(){
               //al("watched changed");
               //al(this);
               o.loadContainer();
